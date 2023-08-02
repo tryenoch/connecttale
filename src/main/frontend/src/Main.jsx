@@ -5,6 +5,9 @@ import Board from "./board/Board";
 import MyPage from "./member/MyPage";
 import Join from "./member/Join";
 import Login from "./member/Login";
+import NovelDetail from "./novel/NovelDetail";
+import NovelCate from "./novel/NovelCate";
+import NovelSearch from "./novel/NovelSearch";
 
 function Main(props) {
 
@@ -13,6 +16,9 @@ function Main(props) {
             <Routes>
                 <Route index path={"/"} element={<Novel/>}/>
                 <Route path={'/novel'} element={<Novel/>}/>
+                <Route path={'/novelCate'} element={<NovelCate/>}/>
+                <Route path={'/novelDetail'} element={<NovelDetail/>}/>
+                <Route path={'/novelSearch'} element={<NovelSearch/>}/>
                 <Route path={'/board'} element={<Board/>}/>
                 <Route path={'/myPage'} element={<MyPage/>}/>
                 <Route path={'/join'} element={<Join/>}/>
