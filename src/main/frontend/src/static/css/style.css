@@ -1,5 +1,34 @@
+/* default*/
+@import "default.css";
+/* Header, Footer 또는 사이트 공통 적용 */
+@import "commonStyle.css";
+
 @import "board.css";
 @import "novel.css";
 @import "member.css";
 @import "novelDetail.css";
 @import "novelSearch.css";
+
+/*
+작성자 : chanmi
+사이트 전체 기본 적용 폰트
+추가 폰트는 default.css 에 넣어뒀습니다.
+*/
+
+@import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css);
+
+body		{ font-family: 'NanumSquare', sans-serif }
+.normal		{ font-weight: 400 }
+.bold		{ font-weight: 700 }
+.bolder		{ font-weight: 800 }
+.light		{ font-weight: 300 }
+
+/* input password 타입에서 nanumsquare 은 오류가 발생함 */
+input[type=password] {
+  font-family: sans-serif;
+}
+
+input[type=password]::placeholder {
+  font-family: 'NanumSquare', sans-serif;
+  opacity: 1; /* Firefox */
+}
