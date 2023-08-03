@@ -4,7 +4,7 @@ import JoinLogoTop1 from "./JoinLogoTop1";
 import JoinLogoTop2 from "./JoinLogoTop2";
 import JoinLogoTop3 from "./JoinLogoTop3";
 
-function Join(props) {
+function Join1(props) {
 
     return (
         <div className={'container'}>
@@ -16,9 +16,11 @@ function Join(props) {
                     <JoinLogoTop3/>
                 </div>
             </div>
-
+            <div>
+                <input type="radio" />
+            </div>
         </div>
     )
 }
 
-export default Join;
+export default Join1;
