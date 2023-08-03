@@ -4,15 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Main from "./Main";
-import Header from "./layout/Header";
-import Footer from "./layout/Footer";
+import AppPage from "./AppPage";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <Header />
-        <Main/>
-        <Footer />
+      {/*<App/>*/}
+      <AppPage />
     </React.StrictMode>
 );
 
