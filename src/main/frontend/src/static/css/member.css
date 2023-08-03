@@ -1,2 +1,22 @@
 /* 로그인, 회원가입페이지 클래스 모음 */
 .fs-7 {font-size: 6px;}
+.block {width: 200px; height: 200px;}
+.fs-button {font-size: 50px;}
+.text-color-red {-webkit-text-fill-color: #ff2626
+}
+.btn-outline-primary-low {
+    --bs-btn-color: #70a8ff;
+    --bs-btn-border-color: #0d6efd;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #70a8ff;
+    --bs-btn-hover-border-color: #0d6efd;
+    --bs-btn-focus-shadow-rgb: 13,110,253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #70a8ff;
+    --bs-btn-active-border-color: #0d6efd;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #70a8ff;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #0d6efd;
+    --bs-gradient: none;
+}

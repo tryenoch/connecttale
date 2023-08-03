@@ -7,7 +7,7 @@ import NovelDetail from "./novel/NovelDetail";
 import NovelSearch from "./novel/NovelSearch";
 import Board from "./board/Board";
 import MyPage from "./member/MyPage";
-import Join from "./member/Join";
+import Join1 from "./member/Join1";
 import Login from "./member/Login";
 import Footer from "./layout/Footer";
 import Main from "./Main";
@@ -26,7 +26,7 @@ function AppPage(props) {
           <Route path={'/novelSearch'} element={<NovelSearch/>}/>
           <Route path={'/board'} element={<Board/>}/>
           <Route path={'/myPage'} element={<MyPage/>}/>
-          <Route path={'/join'} element={<Join/>}/>
+          <Route path={'/join'} element={<Join1/>}/>
           <Route path={'/login'} element={<Login/>}/>
         </Routes>
       </Container>
