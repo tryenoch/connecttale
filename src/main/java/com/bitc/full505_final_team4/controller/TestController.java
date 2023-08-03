@@ -28,9 +28,11 @@ public class TestController {
   }
 
 
+  // 검색 결과 데이터 가져오기
   @RequestMapping(value = "/jsoup", method = RequestMethod.GET)
   public Object searchList() throws Exception {
 
+    // 네이버 검색결과 데이터 Jsoup 활용하여 가져오기
     List<String> titleList = new ArrayList<>();
     String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=사람";
 
