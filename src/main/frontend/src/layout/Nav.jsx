@@ -9,10 +9,10 @@ function Nav(props) {
 
   /* 로그인 관련 state 추후 설정*/
   // const [loginInfo, setLoginInfo] = setLoginInfo(false);
-  const loginInfo = true;
+  const loginInfo = false;
 
   return (
-    <Navbar expand={"lg"} className={''}>
+    <Navbar expand={"md"} className={''}>
       <Container className={"py-1 nav-style board d-flex justify-content-between"}>
         <div className={'d-flex justify-content-start'}>
           {/* */}
