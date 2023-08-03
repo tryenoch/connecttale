@@ -3,11 +3,14 @@ import axios from "axios";
 import {getElement} from "bootstrap/js/src/util";
 
 function NovelDetail(props) {
-  const [title, setTitle] = useState();
+  const [titleList, setTitleList] = useState([]);
   
   useEffect(() => {
-    axios.get('https://ridibooks.com/books/4159000001?_rdt_sid=bestseller_romance_fantasy_serial&_rdt_idx=3')
+    axios.get('/jsoup')
       .then(res => {
+        console.log(res.data);
+        const titles = res.data;
+        setTitleList(titles);
       })
       .catch(err => {
         alert('서버와 통신 실패');
@@ -18,6 +21,13 @@ function NovelDetail(props) {
   return (
     <div className={'container my-4'}>
       <h1>Novel Detail</h1>
+      {
+        titleList.map((title, index) => {
+          return (
+            <li key={index}>{title}</li>
+          )
+        })
+      }
     </div>
   )
 }
