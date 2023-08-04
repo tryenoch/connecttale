@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "platform")
+@IdClass(NovelPlatformGroupKey.class)
 @Getter
 @Setter
 @ToString
@@ -22,6 +23,8 @@ public class NovelPlatformEntity {
   private String platformId;
 
   @Id
+  @JoinColumn(name = "novel_idx")
+  @ToString.Exclude
   private int novelIdx;
 
   @Column(nullable = false, length = 100)

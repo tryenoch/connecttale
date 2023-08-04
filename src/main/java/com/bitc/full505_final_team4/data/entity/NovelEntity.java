@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "novel")
 @Getter
@@ -26,5 +29,9 @@ public class NovelEntity {
   @Column(nullable = false)
   @ColumnDefault("N")
   private char novelAdult;
+
+  @OneToMany(mappedBy = "novel")
+  @ToString.Exclude
+  private List<NovelPlatformEntity> novelPlatformList = new ArrayList<>();
 
 }
