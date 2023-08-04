@@ -1,16 +1,176 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
+import axios from "axios";
+
+const boardList = [
+    {
+        idx: 1,
+        title: '제목 1',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 2,
+        title: '제목 2',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 3,
+        title: '제목 3',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 4,
+        title: '제목 4',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 5,
+        title: '제목 5',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 6,
+        title: '제목 6',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 7,
+        title: '제목 7',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 8,
+        title: '제목 8',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 9,
+        title: '제목 9',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 10,
+        title: '제목 10',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 11,
+        title: '제목 11',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 12,
+        title: '제목 12',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 13,
+        title: '제목 13',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 14,
+        title: '제목 14',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 15,
+        title: '제목 15',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 16,
+        title: '제목 16',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 17,
+        title: '제목 17',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 18,
+        title: '제목 18',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 19,
+        title: '제목 19',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 20,
+        title: '제목 20',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 21,
+        title: '제목 21',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 22,
+        title: '제목 22',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+    {
+        idx: 23,
+        title: '제목 23',
+        createId: 'tester1',
+        createDt: '2023.08.04',
+    },
+]
 
 function BoardList(props) {
 
     //페이지가 변할 때 cate 값 0으로 초기화
     const [cate, setCate] = useState(0);
     const [keyword, setKeyword] = useState('');
+    const [totalCount, setTotalCount] = useState(0);
+    const [nowPage, setNowPage] = useState(1);
+    const [endPage, setEndPage] = useState(0);
 
-    const HandleSubmit = (event) => {
+    useEffect(() => {
+        axios.get(`/board/${nowPage}`)
+            .then(res => {
+                console.log(res);
+                setTotalCount(res.data.totalCount);
+                setEndPage(Math.ceil(res.data.totalCount / 5));
+            })
+            .catch(err => {
+                alert(`통신에 실패했습니다. err : ${err}`);
+            })
+    }, [nowPage]);
+
+    const handleSubmit = (event) => {
         alert(`검색어 : ${keyword}, 종류 : ${cate}`);
         event.preventDefault();
+    }
 
+    const handlePage = (event) => {
+        setNowPage(event.target.value);
     }
 
     return (
@@ -19,7 +179,7 @@ function BoardList(props) {
                 <Row className={'border-3 border-black border-bottom py-2'}>
                     <Col className={'ps-0'}><h3 className={'fw-bold'}>{props.data.title}</h3></Col>
                     <Col className={'pe-0'}>
-                        <form onSubmit={HandleSubmit}>
+                        <form onSubmit={handleSubmit}>
                             <Row>
                                 <Col className={'px-0'}>
                                     <Form.Select
@@ -61,32 +221,42 @@ function BoardList(props) {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td className={'text-start cursor'}>비밀글 입니다.</td>
-                            <td>tester1</td>
-                            <td>2023.08.04</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td className={'text-start cursor'}>비밀글 입니다.</td>
-                            <td>tester1</td>
-                            <td>2023.08.04</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td className={'text-start cursor'}>비밀글 입니다.</td>
-                            <td>tester1</td>
-                            <td>2023.08.04</td>
-                        </tr>
+                        {
+                            boardList.map((board, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td>{index}</td>
+                                        <td className={'text-start cursor'}>{board.title}</td>
+                                        <td>{board.createId}</td>
+                                        <td>{board.createDt}</td>
+                                    </tr>
+                                )
+                            })
+                        }
                         </tbody>
                     </table>
                     <div className={'d-flex justify-content-center mx-auto my-3'}>
-                        <button>처음 페이지</button>
-                        <button>이전 페이지</button>
-                        <button>1</button>
-                        <button>다음 페이지</button>
-                        <button>마지막 페이지</button>
+
+                        <button
+                            className={nowPage === 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
+                            onClick={() => setNowPage(1)}
+                        >처음 페이지
+                        </button>
+                        <button
+                            className={nowPage === 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
+                            onClick={() => setNowPage(nowPage - 1)}>이전 페이지
+                        </button>
+                        <span>{totalCount}, {endPage}</span>
+                        <button
+                            className={nowPage === endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
+                            onClick={() => setNowPage(nowPage + 1)}
+                        >다음 페이지
+                        </button>
+                        <button
+                            className={nowPage === endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
+                            onClick={() => setNowPage(endPage)}
+                        >마지막 페이지
+                        </button>
 
                     </div>
                 </Row>
