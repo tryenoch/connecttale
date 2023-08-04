@@ -15,7 +15,7 @@
 추가 폰트는 default.css 에 넣어뒀습니다.
 */
 
-@import url(https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css);
+@import url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@2.0/nanumsquare.css');
 
 body		{ font-family: 'NanumSquare', sans-serif }
 .normal		{ font-weight: 400 }
