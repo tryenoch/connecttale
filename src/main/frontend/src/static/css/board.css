@@ -34,7 +34,7 @@
 }
 
 .search-bar input {
-    width: 400px;
+    width: 375px;
     height: 42px;
     padding-left: 15px;
     border-radius: 42px;
@@ -53,5 +53,5 @@
     border: none;
     position: absolute;
     top: 0;
-    right: 0;
+    right: 12px;
 }
