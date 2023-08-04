@@ -1,10 +1,8 @@
 package com.bitc.full505_final_team4.data.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "novel")
@@ -21,9 +19,11 @@ public class NovelEntity {
   private String novelTitle;
 
   @Column(nullable = false, length = 200)
+  @ColumnDefault("N")
   private String novelPoster;
 
   @Column(nullable = false)
+  @ColumnDefault("N")
   private char novelAdult;
 
 }

@@ -14,6 +14,7 @@ import org.hibernate.annotations.ColumnDefault;
 @ToString
 @NoArgsConstructor
 public class NovelPlatformEntity {
+
   @Id
   private int platform;
 
