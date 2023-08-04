@@ -3,19 +3,27 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.data.entity.NovelCateEntity;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
+import com.bitc.full505_final_team4.data.repository.NovelCateRepository;
+import com.bitc.full505_final_team4.data.repository.NovelPlatformRepository;
+import com.bitc.full505_final_team4.data.repository.NovelRepository;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-@RequiredArgsConstructor
+
+/*@EnableJpaRepositories(basePackages = {"com.bitc.full505_final_team4.data.entity"})*/
 @Service
+@RequiredArgsConstructor
 public class NovelSearchServiceImpl implements NovelSearchService {
-  private final NovelEntity novelEntity;
-  private final NovelPlatformEntity novelPlatformEntity;
-  private final NovelCateEntity novelCateEntity;
+  private final NovelRepository novelRepository;
+  private final NovelPlatformRepository novelPlatformRepository;
+  private final NovelCateRepository novelCateRepository;
 
   // 셀레니움을 통한 크롤링(카카오페이지)
   private WebDriver driver;
