@@ -5,6 +5,7 @@
 .text-color-red {-webkit-text-fill-color: #ff2626
 }
 .btn-pupple {
+    vertical-align: middle;
     --bs-btn-color: #9766ff;
     --bs-btn-border-color: #9766ff;
     --bs-btn-hover-color: #fff;
@@ -22,6 +23,7 @@
 }
 
 .btn-light-pupple {
+    vertical-align: middle;
     --bs-btn-color: #b998ff;
     --bs-btn-border-color: #9766ff;
     --bs-btn-hover-color: #fff;
