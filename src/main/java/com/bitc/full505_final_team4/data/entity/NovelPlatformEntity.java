@@ -8,7 +8,6 @@ import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
 
-@IdClass(NovelPlatFormIdx.class)
 @Entity
 @Table(name = "platform")
 @IdClass(NovelPlatFormIdx.class)
@@ -27,7 +26,6 @@ public class NovelPlatformEntity {
   private String platformId;
 
   @Id
-
   @ManyToOne
   @JoinColumn(name = "novel_idx")
   private NovelEntity novelEntity;

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +24,11 @@ public class NovelSearchController {
 
   // 검색 결과 데이터 가져오기
   @RequestMapping(value = "/searchResult", method = RequestMethod.GET)
-  public Object searchResultList(@RequestParam("searchWord") String searchWord) throws Exception {
+  public Object searchResultList() throws Exception {
 
-    Map<String, Object> novelSearchList = new HashMap<>();
-    novelSearchList = novelSearchService.getKakaoSearchList(searchWord);
+    List<String> kakaoSearchIdList = new ArrayList<>();
+    kakaoSearchIdList = novelSearchService.getKakaoSearchList("사람");
 
-    return novelSearchList;
+    return kakaoSearchIdList;
   }
 }
