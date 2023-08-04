@@ -15,12 +15,12 @@ import {Container} from "react-bootstrap";
 
 function AppPage(props) {
   return (
-    <BrowserRouter>
+    <div>
       <Header />
       <Container fluid={'md'}>
         <Routes>
           <Route index path={"/"} element={<Main />}/>
-          <Route path={'/novel'} element={<Novel/>}/>
+          <Route path={'/novel/*'} element={<Novel/>}/>
           <Route path={'/novelCate'} element={<NovelCate/>}/>
           <Route path={'/novelDetail'} element={<NovelDetail/>}/>
           <Route path={'/novelSearch'} element={<NovelSearch/>}/>
@@ -31,7 +31,7 @@ function AppPage(props) {
         </Routes>
       </Container>
       <Footer />
-    </BrowserRouter>
+    </div>
   )
 }
 
