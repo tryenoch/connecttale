@@ -21,11 +21,12 @@ public class NovelSearchController {
   private final NovelDetailService novelDetailService;
 
 
+  // 검색 결과 데이터 가져오기
   @RequestMapping(value = "/searchResult", method = RequestMethod.GET)
-  public Object searchResult(@RequestParam("searchWord") String searchWord) throws Exception {
+  public Object searchResultList(@RequestParam("searchWord") String searchWord) throws Exception {
 
     Map<String, Object> novelSearchList = new HashMap<>();
-
+    novelSearchList = novelSearchService.getKakaoSearchList(searchWord);
 
     return novelSearchList;
   }
