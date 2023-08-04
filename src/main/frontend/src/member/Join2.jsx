@@ -17,25 +17,23 @@ function Join2(props) {
                         </div>
                     </div>
                     <div className={'row mt-4 ms-4 mb-2'}>
-                        <h2>회원정보 입력</h2>
+                        <h2>필수 입력 정보</h2>
+                        <h6>아래의 내용을 입력해 주세요</h6>
+                        <hr/>
                     </div>
-                    <div className={'row justify-content-center'}>
-                        <button className={'btn btn-outline-primary block m-3'} type="button" id="upper14" name="14YO">14세 이상<br/>
-                            <i className="bi bi-person fs-button"></i>
-                        </button>
-                        <button className={'btn btn-outline-primary-low block m-3'} type="button" id="lower14" name="14YO">14세 미만 <br/>
-                            <i className="bi bi-people fs-button"></i>
-                        </button>
-                    </div>
-                    <div className={'row mt-3 ms-5'}>
-                        <div className={'col-sm-8'}>
-                            <input type="checkbox" id={'useOk'} className={'ms-3'}/>
-                            <label htmlFor="useOk" className={'ms-2'}><span className={'text-color-red'}>[필수]</span>개인정보 수집 및 이용동의</label>
+                    <form action="" method={'POST'}>
+                        <div className={'row'}>
+                            <div className={'col-sm-3'}>
+                                <h4 className={'fw-bold'}>아이디</h4>
+                            </div>
+                            <div className={'col-sm-9 form-floating'}>
+                                <input type="text" name={'id'} id={'id'} className={'form-control'}/>
+                                <label htmlFor="{'id'}">아이디 입력</label>
+                                <button type={'button'} id={'confirm'} className={'btn btn-pupple'}>중복확인</button>
+                                <span id={'idCheckMessage'}></span>
+                            </div>
                         </div>
-                        <div className={'col-sm-4'}>
-                            <a href="#" className={'text-decoration-none'}>[전문보기]</a>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
