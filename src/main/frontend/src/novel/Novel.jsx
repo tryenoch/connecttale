@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link, Route} from "react-router-dom";
-import NovelDetail from "./NovelDetail";
 
 function novel(props) {
 
