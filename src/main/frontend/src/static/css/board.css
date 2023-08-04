@@ -1,2 +1,19 @@
 /* 게시판 클래스 모음 */
 
+
+/*Tabs 관련 css*/
+.nav.tabs-bg-yellow{
+    background-color: rgba(253, 243, 203, 0.8);
+    border-radius: 5px;
+}
+
+.nav-link.unselected {
+    color: gray;
+}
+
+.nav-link:hover.unselect,
+.nav-link:focus.unselect,
+.nav-link.active.selected{
+    color: black;
+    font-weight: bold;
+}
