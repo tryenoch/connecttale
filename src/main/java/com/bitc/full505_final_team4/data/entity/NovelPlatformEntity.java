@@ -7,6 +7,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.io.Serializable;
+
+
+@IdClass(NovelPlatFormIdx.class)
 @Entity
 @Table(name = "platform")
 @IdClass(NovelPlatformGroupKey.class)
@@ -16,16 +20,24 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 public class NovelPlatformEntity {
 
+  /* 복합키 구성 클래스 @IdClass(NovelPlatFormIdx.class) */
   @Id
+  @Column(name = "platform")
   private int platform;
 
   @Column(nullable = false, unique = true)
   private String platformId;
 
   @Id
+<<<<<<< HEAD
   @JoinColumn(name = "novel_idx")
   @ToString.Exclude
   private int novelIdx;
+=======
+  @ManyToOne
+  @JoinColumn(name = "novel_idx")
+  private NovelEntity novelEntity;
+>>>>>>> origin/chanmi
 
   @Column(nullable = false, length = 100)
   private String novelTitle;

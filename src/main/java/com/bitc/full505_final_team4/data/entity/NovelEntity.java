@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class NovelEntity {
   @Id
+  @Column(name = "novel_idx")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int novelIdx;
 
