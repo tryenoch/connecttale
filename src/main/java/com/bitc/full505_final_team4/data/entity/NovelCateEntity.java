@@ -18,6 +18,6 @@ public class NovelCateEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int cateIdx;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, length = 100)
   private String cateName;
 }

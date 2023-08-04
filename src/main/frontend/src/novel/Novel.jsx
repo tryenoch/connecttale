@@ -1,12 +1,8 @@
 import React from 'react';
-<<<<<<< HEAD
 
-import {Link} from "react-router-dom";
-=======
 import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
 import NovelTest from "./NovelTest";
 import NovelMain from "./NovelMain";
->>>>>>> origin/main
 
 function novel(props) {
 
