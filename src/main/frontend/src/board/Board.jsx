@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {Col, Container, Nav, Row} from "react-bootstrap";
+import {Col, Container, Row} from "react-bootstrap";
+import BoardList from "./BoardList";
 
 const boardList = [
     {
@@ -39,7 +40,7 @@ function Board(props) {
                                     key={value.id}
                                     className={'nav-item'}>
                                     <a
-                                        className={index === selectBoard ? 'nav-link active selected' : 'nav-link unselected'}
+                                        className={index === selectBoard ? 'nav-link active selected cursor' : 'nav-link unselected cursor'}
                                         onClick={() => selectTabHandler(index)}>{value.title}</a>
                                 </li>
                             })
@@ -48,7 +49,7 @@ function Board(props) {
                 </Col>
             </Row>
             <div>
-                {boardList[selectBoard].title}
+                <BoardList data={boardList[selectBoard]}/>
             </div>
         </Container>
     )

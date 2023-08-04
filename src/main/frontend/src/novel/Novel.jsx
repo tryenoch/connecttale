@@ -1,17 +1,22 @@
 import React from 'react';
+<<<<<<< HEAD
 
 import {Link} from "react-router-dom";
+=======
+import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
+import NovelTest from "./NovelTest";
+import NovelMain from "./NovelMain";
+>>>>>>> origin/main
 
 function novel(props) {
 
     return (
         <div>
-          <h1>novel</h1>
-          <Link to={'/login'}>login</Link><br/>
-          <Link to={'/join'}>join</Link><br/>
-          <Link to={'/myPage'}>mypage</Link><br/>
-          <Link to={'/board'}>board</Link><br/>
-          <Link to={'/novelDetail'}>novel detail</Link>
+          <Routes>
+            <Route index element={<NovelMain />} />
+            <Route path={"/novelMain"} element={<NovelMain />}/>
+            <Route path={"/novelTest"} element={<NovelTest />}/>
+          </Routes>
         </div>
     )
 }
