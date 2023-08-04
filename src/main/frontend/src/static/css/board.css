@@ -2,8 +2,7 @@
 
 
 /*Tabs 관련 css*/
-.nav.tabs-bg-yellow {
-    background-color: rgba(253, 243, 203, 0.8);
+.nav.tabs-bg {
     border-radius: 5px;
 }
 
@@ -29,6 +28,7 @@
     width: 400px;
     margin: 0 auto;
 }
+
 .search-bar:after {
     clear: both;
 }
@@ -38,9 +38,7 @@
     height: 42px;
     padding-left: 15px;
     border-radius: 42px;
-    /*theme 색상으로 수정*/
-    border: 2px solid #45324e;
-    background: #F9F0DA;
+    border: 2px solid black;
     outline: none;
     position: relative;
     transition: .3s linear;
@@ -54,4 +52,21 @@
     position: absolute;
     top: 0;
     right: 12px;
+}
+
+/*selectbox 선택 시 css*/
+.form-select:focus.select-box {
+    box-shadow: none;
+}
+
+.select-box > option {
+    font-weight: bold;
+}
+
+/*selectbox input tabs background css*/
+
+.search-bar input,
+.select-box,
+.nav.tabs-bg{
+    background-color: rgba(123, 60, 250, 0.36);
 }

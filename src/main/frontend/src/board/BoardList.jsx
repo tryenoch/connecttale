@@ -20,8 +20,9 @@ function BoardList(props) {
                     <Col className={'pe-0'}>
                         <form onSubmit={HandleSubmit}>
                             <Row>
-                                <Col>
+                                <Col className={'px-0'}>
                                     <Form.Select
+                                        className={'border-2 border-black select-box fw-bold'}
                                         value={cate}
                                         onChange={(e) => setCate(e.target.value)}
                                     >

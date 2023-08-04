@@ -33,7 +33,7 @@ function Board(props) {
 
             <Row>
                 <Col xs={6} className={'mx-auto'}>
-                    <div className={'nav justify-content-between px-5 py-3 tabs-bg-yellow'}>
+                    <div className={'nav justify-content-between px-5 py-3 tabs-bg'}>
                         {
                             boardList.map((value, index) => {
                                 return <li
