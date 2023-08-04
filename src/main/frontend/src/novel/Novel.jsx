@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
 import {Link, Route} from "react-router-dom";
+=======
+import {Link} from "react-router-dom";
+>>>>>>> origin/main
 
 function novel(props) {
 
@@ -11,7 +15,6 @@ function novel(props) {
           <Link to={'/myPage'}>mypage</Link><br/>
           <Link to={'/board'}>board</Link><br/>
           <Link to={'/novelDetail'}>novel detail</Link>
-          
         </div>
     )
 }
