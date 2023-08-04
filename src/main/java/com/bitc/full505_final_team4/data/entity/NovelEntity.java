@@ -12,6 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 public class NovelEntity {
   @Id
+  @Column(name = "novel_idx")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int novelIdx;
 
