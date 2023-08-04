@@ -1,6 +1,5 @@
 import React from 'react';
-import {Link, Route} from "react-router-dom";
-import NovelDetail from "./NovelDetail";
+import {Link} from "react-router-dom";
 
 function novel(props) {
 
@@ -12,7 +11,6 @@ function novel(props) {
           <Link to={'/myPage'}>mypage</Link><br/>
           <Link to={'/board'}>board</Link><br/>
           <Link to={'/novelDetail'}>novel detail</Link>
-          
         </div>
     )
 }
