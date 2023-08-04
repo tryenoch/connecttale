@@ -1,0 +1,91 @@
+
+/* 로고 */
+
+.logo {
+  font-family: 'yg-jalnan';
+  font-size: 1.5rem;
+  font-weight:800;
+}
+
+.logo span:first-of-type {
+  background: linear-gradient(to Right, #7b3cfa, #f388dd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.05rem;
+}
+
+/*
+.logo span:last-of-type {
+  color: #7d3dff;
+}*/
+
+/* 테마 버튼*/
+.btn-purple {
+  background: #8244ff;
+  color: #fff;
+  padding: 5px 15px;
+  font-size: 1.03rem;
+}
+
+.btn-purple.round {
+  border-radius: 20px;
+}
+
+.btn-purple:hover {
+  background: #9766ff;
+  color: #fff;
+}
+
+.nav-style {
+  font-size: 1.05rem;
+}
+
+.nav-style .menu {
+  font-weight: bold;
+  color: #545454;
+  padding-top: 0.6rem !important;
+}
+
+.nav-style .menu:hover {
+  color: #7b3cfa;
+}
+
+/*
+Container.board, div.board {
+  padding: 10px 20px;
+}
+*/
+
+/* nav novel search */
+.novel-search-input input{
+  border : none;
+}
+
+.novel-search-input input:focus {
+  outline: none;
+}
+
+.novel-search-input form {
+  border : 1px solid #ddd;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 0.95rem;
+}
+
+/* logout */
+
+.logout {
+  border : 1px dashed #b292fd;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.logout a {
+  color: #9b71ff;
+}
+
+.logout a:hover {
+  color: #5d1bec;
+}

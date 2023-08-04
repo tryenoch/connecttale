@@ -4,7 +4,7 @@ import Nav from "./Nav";
 
 function Header(props) {
   return (
-    <Container fluid>
+    <Container fluid className={"shadow-sm mb-4"}>
       <Nav />
     </Container>
   )
