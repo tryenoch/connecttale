@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Col, Container, Row} from "react-bootstrap";
+import BoardList from "./BoardList";
 
 const boardList = [
     {
@@ -48,7 +49,7 @@ function Board(props) {
                 </Col>
             </Row>
             <div>
-                {boardList[selectBoard].title}
+                <BoardList data={boardList[selectBoard]}/>
             </div>
         </Container>
     )
