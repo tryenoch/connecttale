@@ -7,13 +7,11 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.io.Serializable;
-
 
 @IdClass(NovelPlatFormIdx.class)
 @Entity
 @Table(name = "platform")
-@IdClass(NovelPlatformGroupKey.class)
+@IdClass(NovelPlatFormIdx.class)
 @Getter
 @Setter
 @ToString
@@ -29,15 +27,10 @@ public class NovelPlatformEntity {
   private String platformId;
 
   @Id
-<<<<<<< HEAD
-  @JoinColumn(name = "novel_idx")
-  @ToString.Exclude
-  private int novelIdx;
-=======
+
   @ManyToOne
   @JoinColumn(name = "novel_idx")
   private NovelEntity novelEntity;
->>>>>>> origin/chanmi
 
   @Column(nullable = false, length = 100)
   private String novelTitle;

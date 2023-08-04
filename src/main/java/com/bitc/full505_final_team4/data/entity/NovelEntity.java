@@ -31,8 +31,4 @@ public class NovelEntity {
   @ColumnDefault("N")
   private char novelAdult;
 
-  @OneToMany(mappedBy = "novel")
-  @ToString.Exclude
-  private List<NovelPlatformEntity> novelPlatformList = new ArrayList<>();
-
 }
