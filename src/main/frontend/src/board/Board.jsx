@@ -6,16 +6,19 @@ const boardList = [
     {
         id: 0,
         title: '문의사항',
+        type: 'res',
     },
 
     {
         id: 1,
         title: '공지사항',
+        type: 'notice',
     },
 
     {
         id: 2,
         title: '이벤트',
+        type: 'event',
     }
 ];
 

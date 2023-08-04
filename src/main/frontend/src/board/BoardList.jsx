@@ -153,7 +153,15 @@ function BoardList(props) {
     const [endPage, setEndPage] = useState(0);
 
     useEffect(() => {
-        axios.get(`/board/${nowPage}`)
+        requestData();
+    }, [nowPage]);
+
+    useEffect(() => {
+        setNowPage(1)
+    }, [props]);
+
+    const requestData = () => {
+        axios.get(`/${props.data.type}/${nowPage}`)
             .then(res => {
                 console.log(res);
                 setTotalCount(res.data.totalCount);
@@ -162,7 +170,7 @@ function BoardList(props) {
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);
             })
-    }, [nowPage]);
+    }
 
     const handleSubmit = (event) => {
         alert(`검색어 : ${keyword}, 종류 : ${cate}`);
@@ -238,22 +246,22 @@ function BoardList(props) {
                     <div className={'d-flex justify-content-center mx-auto my-3'}>
 
                         <button
-                            className={nowPage === 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
+                            className={nowPage <= 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
                             onClick={() => setNowPage(1)}
                         >처음 페이지
                         </button>
                         <button
-                            className={nowPage === 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
+                            className={nowPage <= 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
                             onClick={() => setNowPage(nowPage - 1)}>이전 페이지
                         </button>
                         <span>{totalCount}, {endPage}</span>
                         <button
-                            className={nowPage === endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
+                            className={nowPage >= endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
                             onClick={() => setNowPage(nowPage + 1)}
                         >다음 페이지
                         </button>
                         <button
-                            className={nowPage === endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
+                            className={nowPage >= endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
                             onClick={() => setNowPage(endPage)}
                         >마지막 페이지
                         </button>
