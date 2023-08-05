@@ -2,7 +2,29 @@
 .fs-7 {font-size: 6px;}
 .block {width: 200px; height: 200px;}
 .fs-button {font-size: 50px;}
-.text-color-red {-webkit-text-fill-color: #ff2626
+.text-color-red {-webkit-text-fill-color: #ff2626}
+
+.input-s1 {width: 100px}
+.input-s2 {width: 200px}
+.input-s3 {width: 300px}
+.input-s4 {width: 400px}
+.input-s5 {width: 500px}
+
+.btn-pupple-inline {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #9766ff;
+    --bs-btn-border-color: #9766ff;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #b998ff;
+    --bs-btn-hover-border-color: #b998ff;
+    --bs-btn-focus-shadow-rgb: 49,132,253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #b998ff;
+    --bs-btn-active-border-color: #b998ff;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #9766ff;
+    --bs-btn-disabled-border-color: #9766ff;
 }
 .btn-pupple {
     vertical-align: middle;
