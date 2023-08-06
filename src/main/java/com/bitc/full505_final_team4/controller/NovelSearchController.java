@@ -23,12 +23,14 @@ public class NovelSearchController {
 
 
   // 검색 결과 데이터 가져오기
-  @RequestMapping(value = "/searchResult", method = RequestMethod.GET)
+  @RequestMapping(value = "/search", method = RequestMethod.GET)
   public Object searchResultList() throws Exception {
 
+    // 카카오 검색 결과에 대한 작품 id 리스트 가져오기
     List<String> kakaoSearchIdList = new ArrayList<>();
-    kakaoSearchIdList = novelSearchService.getKakaoSearchList("사람");
+    kakaoSearchIdList = novelSearchService.getKakaoSearchIdList("사람");
 
     return kakaoSearchIdList;
   }
+
 }

@@ -41,11 +41,12 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
 
   @Override
-  public List<String> getKakaoSearchList(String searchWord) throws Exception {
+  public List<String> getKakaoSearchIdList(String searchWord) throws Exception {
     // 셀레니움을 통해 검색 결과에 따른 작품 id 리스트 가져오기
     String url = "https://page.kakao.com/search/result?keyword=" + searchWord + "&categoryUid=11";
 
     List<String> kakaoSearchIdList = new ArrayList<>();
+    kakaoSearchIdList.add("kakaoIdList");
 
     System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
@@ -67,25 +68,26 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
       driver.get(url);
 
-      while (true) {
-//        long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
-
-        long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
-
-
-        // Scroll down to bottom
-        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.getElementById('__next').scrollHeight);");
-
-        // Wait for new content to load
-        Thread.sleep(1000);
-
-        long newHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
-
-        // 새로운 콘텐츠가 로드되지 않을 때, 스크롤이 끝났다고 판단하여 반복문 종료
-        if (newHeight == lastHeight) {
-          break;
-        }
-      }
+      // 페이지 끝까지 스크롤 내리는 로직
+//      while (true) {
+////        long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
+//
+//        long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
+//
+//
+//        // Scroll down to bottom
+//        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.getElementById('__next').scrollHeight);");
+//
+//        // Wait for new content to load
+//        Thread.sleep(1000);
+//
+//        long newHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
+//
+//        // 새로운 콘텐츠가 로드되지 않을 때, 스크롤이 끝났다고 판단하여 반복문 종료
+//        if (newHeight == lastHeight) {
+//          break;
+//        }
+//      }
 
       //      wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector(".flex-1.cursor-pointer")));
 //

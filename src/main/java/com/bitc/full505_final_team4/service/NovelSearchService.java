@@ -5,5 +5,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface NovelSearchService {
-  List<String> getKakaoSearchList(String searchWord) throws Exception;
+  List<String> getKakaoSearchIdList(String searchWord) throws Exception;
 }
