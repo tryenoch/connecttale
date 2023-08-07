@@ -7,12 +7,10 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.io.Serializable;
 
-
-@IdClass(NovelPlatFormIdx.class)
 @Entity
 @Table(name = "platform")
+@IdClass(NovelPlatFormIdx.class)
 @Getter
 @Setter
 @ToString
@@ -70,6 +68,9 @@ public class NovelPlatformEntity {
 
   @Column(length = 45)
   private String novelRelease;
+
+  @Column(length = 45)
+  private String novelRecentUpdate;
 
   @Column(nullable = false, length = 100)
   public String cateList;
