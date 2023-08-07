@@ -39,7 +39,10 @@ public class TestController {
     Elements titles = doc.getElementsByClass("N=a:nov.title");
 
     for (Element e : titles) {
-      titleList.add(e.text());
+      int titleIndex = e.text().indexOf("(");
+      String title = e.text().substring(0, titleIndex);
+
+      titleList.add(title);
     }
 
     return titleList;
