@@ -1,15 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useParams, useSearchParams} from "react-router-dom";
 
 import axios from "axios";
 import KakaoSearchResult from "./novelSearch/KakaoSearchResult";
 
 function NovelSearch(props) {
-  const [platform, setPlatform] = useState('카카오');
-  const [searchWord, setSearchWord] = useState();
+  const [keyword, setKeyword] = useSearchParams();
   
-  // const [kakaoSearchList, setKakaoSearchList] = useState([]);
-
+  const [platform, setPlatform] = useState('카카오');
+  const [searchWord, setSearchWord] = useState(keyword.get('keyword'));
+  
+  useEffect(() => {
+    setSearchWord(keyword.get('keyword'));
+  }, [keyword])
+  
   const platformChange = e => setPlatform(e.target.value);
 
   return (
@@ -29,7 +33,7 @@ function NovelSearch(props) {
             </div>
           </div>
           {
-            platform == '카카오' && <KakaoSearchResult />
+            platform == '카카오' && <KakaoSearchResult keyword={searchWord}/>
           }
         </div>
       </div>

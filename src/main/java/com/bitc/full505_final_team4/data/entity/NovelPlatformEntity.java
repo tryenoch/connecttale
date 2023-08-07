@@ -69,6 +69,9 @@ public class NovelPlatformEntity {
   @Column(length = 45)
   private String novelRelease;
 
+  @Column(length = 45)
+  private String novelRecentUpdate;
+
   @Column(nullable = false, length = 100)
   public String cateList;
 

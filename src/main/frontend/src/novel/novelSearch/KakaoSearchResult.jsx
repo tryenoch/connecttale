@@ -1,31 +1,35 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import axios from "axios";
 
 function KakaoSearchResult(props) {
-  const [searchWord, setSearchWord] = useState();
+  const [keyword, setKeyword] = useState(props.keyword);
+  const [searchWord, setSearchWord] = useState(keyword);
   // const [kakaoSearchList, setKakaoSearchList] = useState([]);
   const [novelSearchList, setNovelSearchList] = useState([]);
   
   useEffect(() => {
-    setSearchWord();
-  }, [])
+    setKeyword(props.keyword)
+  }, [props.keyword])
   
   useEffect(() => {
+    setSearchWord(keyword);
+  
     axios.get('/search', {
       params : {
-        searchWord: searchWord
+        searchWord: keyword
       }
     })
       .then(res => {
         // 카카오 페이지 검색결과 가져오기
         if (res.data[0] == 'kakaoIdList') {
+          console.log(res);
           let kakaoSearchResult = [];
-          
+        
           // Promise.all을 사용하여 반복되는 axios 통신이 모두 완료된 후, 가져온 데이터들을 kakaoSearchResult에 저장하는 로직
           Promise.all(res.data.slice(1).map(item => axios.get('https://page.kakao.com/_next/data/2.12.2/ko/content/' + item + '.json')))
             .then(res => {
-              
+            
               for (let i = 0; i < res.length; i++) {
                 const item = res[i].data.pageProps
                 const data = {
@@ -42,19 +46,23 @@ function KakaoSearchResult(props) {
                 }
                 kakaoSearchResult.push(data);
               }
-              
+            
               setNovelSearchList(prevState => [...prevState, ...kakaoSearchResult]);
+            
             })
             .catch(err => {
               console.log(err.message);
             });
         }
-        
       })
       .catch(err => {
         console.log(err.message);
       })
-  }, [searchWord])
+  }, [keyword])
+  
+  // useEffect(() => {
+  //
+  // }, [searchWord])
   
   return (
     <div>
