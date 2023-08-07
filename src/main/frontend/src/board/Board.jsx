@@ -6,16 +6,19 @@ const boardList = [
     {
         id: 0,
         title: '문의사항',
+        type: 'res',
     },
 
     {
         id: 1,
         title: '공지사항',
+        type: 'notice',
     },
 
     {
         id: 2,
         title: '이벤트',
+        type: 'event',
     }
 ];
 
@@ -33,7 +36,7 @@ function Board(props) {
 
             <Row>
                 <Col xs={6} className={'mx-auto'}>
-                    <div className={'nav justify-content-between px-5 py-3 tabs-bg-yellow'}>
+                    <div className={'nav justify-content-between px-5 py-3 tabs-bg'}>
                         {
                             boardList.map((value, index) => {
                                 return <li
