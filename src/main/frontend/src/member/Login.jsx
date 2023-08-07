@@ -2,16 +2,15 @@ import React from 'react';
 import {Link} from "react-router-dom";
 
 function login(props) {
-    const goBack = () => {
-        props.history.back();
-    };
 
-    return (<div className={'container'}>
+
+    return (
+        <div className={'container'}>
             <h1>login</h1>
             <div className={'my-5'}><br/><br/></div>
             <div className={'row my-5 justify-content-center'}>
                 <div className={'col-sm-6'}>
-                    <form action="" method={'POST'}>
+                    <form action="">
                         <div className={'row'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>아이디</h4>
@@ -30,7 +29,7 @@ function login(props) {
                         </div>
                         <div className={'row justify-content-center ms-5 mt-5'}>
                             <div className={'col-sm-3'}>
-                                <button onClick={() => goBack()} className={'btn btn-secondary input-s1'}>돌아가기</button>
+                                <button className={'btn btn-secondary input-s1'}>돌아가기</button>
                             </div>
                             <div className={'col-sm-3 ms-2'}>
                                 <Link to={'/'}>
@@ -41,7 +40,8 @@ function login(props) {
                     </form>
                 </div>
             </div>
-        </div>)
+        </div>
+    )
 }
 
 export default login;
