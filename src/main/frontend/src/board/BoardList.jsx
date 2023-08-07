@@ -151,13 +151,15 @@ function BoardList(props) {
     const [totalCount, setTotalCount] = useState(0);
     const [nowPage, setNowPage] = useState(1);
     const [endPage, setEndPage] = useState(0);
+    const [pages, setPages] = useState([]);
 
     useEffect(() => {
         requestData();
     }, [nowPage]);
 
     useEffect(() => {
-        setNowPage(1)
+        setPages([1, 2, 3, 4, 5]);
+        setNowPage(1);
     }, [props]);
 
     const requestData = () => {
@@ -166,6 +168,13 @@ function BoardList(props) {
                 console.log(res);
                 setTotalCount(res.data.totalCount);
                 setEndPage(Math.ceil(res.data.totalCount / 5));
+                let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
+                let arr = [];
+                for (let i = offset; i < offset + 5; i++) {
+                    arr.push(i);
+                }
+                setPages(arr);
+
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);
@@ -244,27 +253,34 @@ function BoardList(props) {
                         </tbody>
                     </table>
                     <div className={'d-flex justify-content-center mx-auto my-3'}>
-
-                        <button
+                        <a
                             className={nowPage <= 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
                             onClick={() => setNowPage(1)}
                         >처음 페이지
-                        </button>
-                        <button
+                        </a>
+                        <a
                             className={nowPage <= 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
                             onClick={() => setNowPage(nowPage - 1)}>이전 페이지
-                        </button>
-                        <span>{totalCount}, {endPage}</span>
-                        <button
+                        </a>
+                        {
+                            pages.map((value) => {
+                                return (
+                                    <a
+                                        className={nowPage === value ? 'text-black' : 'text-black-50'}
+                                        onClick={() => setNowPage(value)}
+                                    >{value}</a>);
+                            })
+                        }
+                        <a
                             className={nowPage >= endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
                             onClick={() => setNowPage(nowPage + 1)}
                         >다음 페이지
-                        </button>
-                        <button
+                        </a>
+                        <a
                             className={nowPage >= endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
                             onClick={() => setNowPage(endPage)}
                         >마지막 페이지
-                        </button>
+                        </a>
 
                     </div>
                 </Row>
