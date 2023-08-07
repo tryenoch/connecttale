@@ -3,21 +3,16 @@ import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import axios from "axios";
 
 function KakaoSearchResult(props) {
-  const [keyword, setKeyword] = useState(props.keyword);
-  const [searchWord, setSearchWord] = useState(keyword);
+  const [searchWord, setSearchWord] = useState(props.keyword);
   // const [kakaoSearchList, setKakaoSearchList] = useState([]);
   const [novelSearchList, setNovelSearchList] = useState([]);
   
   useEffect(() => {
-    setKeyword(props.keyword)
-  }, [props.keyword])
-  
-  useEffect(() => {
-    setSearchWord(keyword);
-  
+    setSearchWord(props.keyword);
+    
     axios.get('/search', {
       params : {
-        searchWord: keyword
+        searchWord: searchWord
       }
     })
       .then(res => {
@@ -58,11 +53,8 @@ function KakaoSearchResult(props) {
       .catch(err => {
         console.log(err.message);
       })
-  }, [keyword])
-  
-  // useEffect(() => {
-  //
-  // }, [searchWord])
+  }, [props.keyword])
+
   
   return (
     <div>
