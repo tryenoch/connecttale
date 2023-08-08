@@ -6,8 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.annotation.Nullable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "member")
@@ -36,11 +39,13 @@ public class MemberEntity {
   @Column(nullable = false)
   private String birthday;
 
+  @CreatedDate
   @Column(length = 100)
-  private String Ofile;
+  private LocalDateTime Ofile;
 
+  @LastModifiedDate
   @Column(length = 100)
-  private String Sfile;
+  private LocalDateTime Sfile;
 
   @Column(nullable = false)
   @ColumnDefault("1")
