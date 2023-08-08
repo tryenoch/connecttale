@@ -1,6 +1,7 @@
 package com.bitc.full505_final_team4.controller;
 
 
+import com.bitc.full505_final_team4.data.dto.NovelSearchDTO;
 import com.bitc.full505_final_team4.service.NovelDetailService;
 import com.bitc.full505_final_team4.service.NovelSearchService;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,8 @@ public class NovelSearchController {
 
 
   // 검색 결과 데이터 가져오기
-  @RequestMapping(value = "/search", method = RequestMethod.GET)
-  public Object searchResultList(@RequestParam("searchWord") String searchWord) throws Exception {
+  @RequestMapping(value = "/searchKakao", method = RequestMethod.GET)
+  public Object searchKakaoResult(@RequestParam("searchWord") String searchWord) throws Exception {
 
     // 카카오 검색 결과에 대한 작품 id 리스트 가져오기
     List<String> kakaoSearchIdList = new ArrayList<>();
@@ -32,5 +33,17 @@ public class NovelSearchController {
 
     return kakaoSearchIdList;
   }
+
+  @RequestMapping(value = "/searchNaver", method = RequestMethod.GET)
+  public Object searchNaverResult(@RequestParam("searchWord") String searchWord) throws Exception {
+
+    // jsoup을 이용해서 naver시리즈 검색결과 리스트 가져오기
+    Map<String, Object> naverSearchList = novelSearchService.getNaverSearchList(searchWord);
+
+    return naverSearchList;
+  }
+
+
+
 
 }

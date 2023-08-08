@@ -10,7 +10,7 @@ function KakaoSearchResult(props) {
   useEffect(() => {
     setSearchWord(props.keyword);
     
-    axios.get('/search', {
+    axios.get('/searchKakao', {
       params : {
         searchWord: searchWord
       }
