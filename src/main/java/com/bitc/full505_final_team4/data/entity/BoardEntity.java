@@ -31,8 +31,10 @@ public class BoardEntity {
     @ToString.Exclude
     private BoardCateEntity boardCate;
 
-    @Column(nullable = false)
-    private String createId;
+    @ManyToOne
+    @JoinColumn(name = "create_id", nullable = false)
+    @ToString.Exclude
+    private MemberEntity createId;
 
     @Column(nullable = false)
     private LocalDateTime createDt = LocalDateTime.now();
