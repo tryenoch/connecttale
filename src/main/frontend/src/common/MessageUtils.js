@@ -6,7 +6,7 @@ export function errorMessage(unitName, message) {
   console.log(`오류 내용 : ${message}`);
 }
 
-/* 안내 메세지 */
+/* 안내 메세지, 페이지 이동 설정은 별도 추가해야함 */
 export function infoMessage(message) {
   alert(`${message}`);
   /*navigate(-1);*/
