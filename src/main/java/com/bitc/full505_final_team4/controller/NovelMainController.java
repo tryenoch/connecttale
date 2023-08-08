@@ -1,17 +1,14 @@
 package com.bitc.full505_final_team4.controller;
 
+import com.bitc.full505_final_team4.common.JsonUtils;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
 import java.util.*;
 
 
@@ -20,53 +17,31 @@ import java.util.*;
 @RequestMapping("/novel")
 public class NovelMainController {
 
-  /* 리디북스 테스트 */
-  @GetMapping("/testRidi")
-  public Object testRidi() throws Exception {
+  /* Json 데이터 변환 및 가져오기 테스트 */
+  @GetMapping("/testJson")
+  public Object testJson(@RequestParam("novelId") String novelId) throws Exception {
 
     // 최종 결과값을 전달할 Object
-    Map<String, Object> resultList = new HashMap<>();
+    Map<String, Object> result = new HashMap<>();
 
-    URL url = null;
-    HttpURLConnection con = null;
-    JSONObject result = null;
-    StringBuilder sb = new StringBuilder();
+    String urlStr = "https://book-api.ridibooks.com/books/";
+    urlStr += novelId;
+    urlStr += "/notices";
 
-    String novelId = "3049037206";
+    JSONObject resultJson = JsonUtils.jsonUrlParser(urlStr);
 
-    try {
-      String urlStr = "https://book-api.ridibooks.com/books/";
-      urlStr += novelId;
-      urlStr += "/notices";
+    JSONArray noticeList = (JSONArray) resultJson.get("notices");
+    JSONObject notice = (JSONObject) noticeList.get(0);
+    String noticeTitle = (String) notice.get("title");
 
-      // URL 객체 생성, json ur 연결
-      url = new URL(urlStr);
-      con = (HttpURLConnection) url.openConnection();
-      con.setRequestMethod("GET");
-      con.setRequestProperty("Content-type", "application/json");
-      con.setDoOutput(true);
-
-      BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"));
-
-      while (br.ready()){
-        // url 에서 가져온 값들이 모두 sb 에 저장이 된다.
-        sb.append(br.readLine());
-      }
-
-      con.disconnect();
-      result = (JSONObject) new JSONParser().parse(sb.toString());
-
-      resultList.put("result", "success");
-      System.out.println(result);
-
-
-    } catch (Exception e){
-      e.printStackTrace();
-      resultList.put("result", "fail");
+    if(resultJson != null){
+      result.put("result", "success");
+      result.put("notice", noticeTitle);
+    } else {
+      result.put("result", "fail");
     }
 
-
-    return resultList;
+    return result;
   }
 
 }
