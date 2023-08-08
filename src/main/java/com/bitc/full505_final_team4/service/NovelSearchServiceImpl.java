@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.service;
 
+import com.bitc.full505_final_team4.data.dto.NovelSearchDTO;
 import com.bitc.full505_final_team4.data.entity.NovelCateEntity;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
@@ -8,6 +9,10 @@ import com.bitc.full505_final_team4.data.repository.NovelPlatformRepository;
 import com.bitc.full505_final_team4.data.repository.NovelRepository;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -19,11 +24,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*@EnableJpaRepositories(basePackages = {"com.bitc.full505_final_team4.data.entity"})*/
 @Service
@@ -40,9 +44,9 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
 
 
+  // 셀레니움을 통해 검색 결과에 따른 카카오페이지 작품 id 리스트 가져오기
   @Override
   public List<String> getKakaoSearchIdList(String searchWord) throws Exception {
-    // 셀레니움을 통해 검색 결과에 따른 작품 id 리스트 가져오기
     String url = "https://page.kakao.com/search/result?keyword=" + searchWord + "&categoryUid=11";
 
     List<String> kakaoSearchIdList = new ArrayList<>();
@@ -115,6 +119,85 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     }
     return kakaoSearchIdList;
   }
+
+  @Override
+  public Map<String, Object> getNaverSearchList(String searchWord) throws Exception {
+    Map<String, Object> naverSearchList = new HashMap<>();
+
+    List<String> platform = new ArrayList<>();
+    List<String> platformIdList = new ArrayList<>();
+    List<String> titleList = new ArrayList<>();
+    List<String> thumbnailList = new ArrayList<>();
+    List<String> countList = new ArrayList<>();
+    List<String> completeList = new ArrayList<>();
+    List<String> starRateList = new ArrayList<>();
+    List<String> authorList = new ArrayList<>();
+    List<String> lastUpdateList  = new ArrayList<>();
+    List<String> descriptionList = new ArrayList<>();
+    List<String> publiList = new ArrayList<>();
+    List<String> categoryList = new ArrayList<>();
+    List<String> priceList = new ArrayList<>();
+    List<String> ageGradeList = new ArrayList<>();
+
+    NovelSearchDTO novelSearchDTO = new NovelSearchDTO();
+
+    String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord;
+    Document doc = Jsoup.connect(searchUrl).get();
+
+    Elements titles = doc.getElementsByClass("N=a:nov.title");
+    Elements starRates = doc.getElementsByClass("score_num");
+    Elements authors = doc.getElementsByClass("author");
+    Elements lastUpdates = doc.getElementsByClass("info");
+
+
+
+
+    for (Element e : titles) {
+      int titleIndex = e.text().indexOf("(");
+      int completeStartIndex = e.text().indexOf("/");
+      int completeEndIndex = e.text().indexOf(")");
+      int countStartIndex = e.text().indexOf("총");
+      int countEndIndex = e.text().indexOf("화");
+
+      titleList.add(e.text().substring(0, titleIndex - 1));
+      completeList.add(e.text().substring(completeStartIndex + 1, completeEndIndex));
+
+      if (countEndIndex == -1) {
+        countEndIndex = e.text().indexOf("권");
+      }
+      countList.add(e.text().substring(countStartIndex + 1, countEndIndex));
+
+    }
+
+
+    for (Element e : starRates) {
+      starRateList.add(e.text());
+    }
+
+    for (Element e : authors) {
+      authorList.add(e.text());
+    }
+
+    for (Element e : lastUpdates) {
+      String[] mobNum = e.text().split("|");
+      lastUpdateList.add(mobNum[2]);
+    }
+
+
+    naverSearchList.put("title", titleList);
+    naverSearchList.put("completeYn", completeList);
+    naverSearchList.put("count", countList);
+    naverSearchList.put("author", authorList);
+    naverSearchList.put("starRate", starRateList);
+    naverSearchList.put("lastUpdate", lastUpdateList);
+
+
+
+    return naverSearchList;
+  }
+
+
+
 }
 
 
