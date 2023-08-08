@@ -144,13 +144,19 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord;
     Document doc = Jsoup.connect(searchUrl).get();
 
+    Elements platformIds = doc.getElementsByClass("N=a:nov.img");
     Elements titles = doc.getElementsByClass("N=a:nov.title");
+    Elements thumbnails = doc.getElementsByClass("")
     Elements starRates = doc.getElementsByClass("score_num");
     Elements authors = doc.getElementsByClass("author");
     Elements lastUpdates = doc.getElementsByClass("info");
 
 
-
+    for (Element e : platformIds) {
+      String platformIdFind = e.attr("href");
+      int platformIdIndex = platformIdFind.indexOf("=");
+      platformIdList.add(platformIdFind.substring(platformIdIndex));
+    }
 
     for (Element e : titles) {
       int titleIndex = e.text().indexOf("(");
@@ -166,7 +172,6 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         countEndIndex = e.text().indexOf("권");
       }
       countList.add(e.text().substring(countStartIndex + 1, countEndIndex));
-
     }
 
 
@@ -184,6 +189,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     }
 
 
+    naverSearchList.put("platformId", platformIdList);
     naverSearchList.put("title", titleList);
     naverSearchList.put("completeYn", completeList);
     naverSearchList.put("count", countList);

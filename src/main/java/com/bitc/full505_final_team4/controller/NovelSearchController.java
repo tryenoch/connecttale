@@ -23,7 +23,7 @@ public class NovelSearchController {
   private final NovelDetailService novelDetailService;
 
 
-  // 검색 결과 데이터 가져오기
+  // 카카오 검색 결과 데이터 가져오기
   @RequestMapping(value = "/searchKakao", method = RequestMethod.GET)
   public Object searchKakaoResult(@RequestParam("searchWord") String searchWord) throws Exception {
 
@@ -34,6 +34,9 @@ public class NovelSearchController {
     return kakaoSearchIdList;
   }
 
+
+
+  // 네이버 검색 결과 데이터 가져오기
   @RequestMapping(value = "/searchNaver", method = RequestMethod.GET)
   public Object searchNaverResult(@RequestParam("searchWord") String searchWord) throws Exception {
 
@@ -42,6 +45,11 @@ public class NovelSearchController {
 
     return naverSearchList;
   }
+
+
+
+  // 리디북스 검색 결과 데이터 가져오기
+
 
 
 
