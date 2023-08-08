@@ -1,4 +1,9 @@
-
+/*
+* 작성자 : chanmi
+* 사용 예시)
+* MessageUtils.infoMessage("비동기 통신에 성공했습니다."); // alert 창이 뜸
+* MessageUtils.errorMessage("테스트", err); // console.log로 알려줌
+* */
 
 /* console에 에러 메세지 띄우기 */
 export function errorMessage(unitName, message) {
