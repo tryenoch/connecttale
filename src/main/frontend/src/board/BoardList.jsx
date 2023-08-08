@@ -166,14 +166,20 @@ function BoardList(props) {
         axios.get(`/${props.data.type}/${nowPage}`)
             .then(res => {
                 console.log(res);
-                setTotalCount(res.data.totalCount);
-                setEndPage(Math.ceil(res.data.totalCount / 5));
+
                 let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
                 let arr = [];
-                for (let i = offset; i < offset + 5; i++) {
+                let lastNum = offset + 5;
+                if (lastNum > Math.ceil(res.data.totalCount / 5)) {
+                    lastNum = Math.ceil(res.data.totalCount / 5) + 1;
+                }
+                for (let i = offset; i < lastNum; i++) {
                     arr.push(i);
                 }
                 setPages(arr);
+                setTotalCount(res.data.totalCount);
+                setEndPage(Math.ceil(res.data.totalCount / 5));
+
 
             })
             .catch(err => {
@@ -252,15 +258,26 @@ function BoardList(props) {
                         }
                         </tbody>
                     </table>
-                    <div className={'d-flex justify-content-center mx-auto my-3'}>
+                    <div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>
                         <a
-                            className={nowPage <= 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
-                            onClick={() => setNowPage(1)}
-                        >처음 페이지
+                            className={nowPage <= 1 ? 'text-black-50' : ''}
+                            onClick={() => {
+                                if (nowPage <= 1) {
+                                    return null
+                                }
+                                return setNowPage(1)
+                            }}
+                        ><i className="bi bi-chevron-double-left"></i>
                         </a>
                         <a
-                            className={nowPage <= 1 ? 'btn btn-primary disabled' : 'btn btn-primary'}
-                            onClick={() => setNowPage(nowPage - 1)}>이전 페이지
+                            className={nowPage <= 1 ? 'text-black-50' : ''}
+                            onClick={() => {
+                                if (nowPage <= 1) {
+                                    return null
+                                }
+                                return setNowPage(nowPage - 1)
+                            }}>
+                            <i className="bi bi-chevron-left"></i>
                         </a>
                         {
                             pages.map((value) => {
@@ -272,14 +289,24 @@ function BoardList(props) {
                             })
                         }
                         <a
-                            className={nowPage >= endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
-                            onClick={() => setNowPage(nowPage + 1)}
-                        >다음 페이지
+                            className={nowPage >= endPage ? 'text-black-50' : ''}
+                            onClick={() => {
+                                if (nowPage >= endPage) {
+                                    return null
+                                }
+                                return setNowPage(nowPage + 1)
+                            }}
+                        ><i className="bi bi-chevron-right"></i>
                         </a>
                         <a
-                            className={nowPage >= endPage ? 'btn btn-primary disabled' : 'btn btn-primary'}
-                            onClick={() => setNowPage(endPage)}
-                        >마지막 페이지
+                            className={nowPage >= endPage ? 'text-black-50' : ''}
+                            onClick={() => {
+                                if (nowPage >= endPage) {
+                                    return null
+                                }
+                                return setNowPage(endPage)
+                            }}
+                        ><i className="bi bi-chevron-double-right"></i>
                         </a>
 
                     </div>

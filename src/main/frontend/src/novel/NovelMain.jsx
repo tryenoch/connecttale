@@ -1,10 +1,12 @@
 import React from 'react';
-import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
-import NovelTest from "./NovelTest";
+import {Link} from "react-router-dom";
+import {Container} from "react-bootstrap";
+import NovelMainTest from "./novelMain/NovelMainTest";
 
 function NovelMain(props) {
 
     return (
+      <Container fluid={"md"}>
         <div>
           <h1>NovelMain</h1>
           <Link to={'/login'}>login</Link><br/>
@@ -13,8 +15,10 @@ function NovelMain(props) {
           <Link to={'/board'}>board</Link><br/>
           <Link to={'/novelDetail'}>novel detail</Link><br />
           <Link to={'/novel/novelTest'}>novel Test</Link>
-
         </div>
+        <NovelMainTest />
+
+      </Container>
     )
 }
 

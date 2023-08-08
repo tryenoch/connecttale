@@ -20,7 +20,8 @@
 /*마우스 커서 손모양 설정*/
 .nav-link.cursor,
 .select-box.cursor,
-td.cursor{
+td.cursor,
+.pages.cursor > a{
     cursor: pointer;
 }
 
@@ -77,4 +78,9 @@ td.cursor{
 table {
     border-collapse: separate;
     border-spacing: 0 10px;
+}
+
+/* 페이지네이션 관련 css*/
+.pages.cursor > a {
+    margin-right: 6px;
 }
