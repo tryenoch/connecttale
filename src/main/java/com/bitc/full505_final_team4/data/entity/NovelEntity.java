@@ -1,8 +1,12 @@
 package com.bitc.full505_final_team4.data.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "novel")
