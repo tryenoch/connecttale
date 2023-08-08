@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +27,12 @@ public class BoardEntity {
     @Column(nullable = false, length = 200)
     private String boardContents;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "board_cate", nullable = false)
     @ToString.Exclude
     private BoardCateEntity boardCate;
+
 
     @ManyToOne
     @JoinColumn(name = "create_id", nullable = false)
@@ -39,6 +42,7 @@ public class BoardEntity {
     @Column(nullable = false)
     private LocalDateTime createDt = LocalDateTime.now();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "req_cate", nullable = true)
     @ToString.Exclude

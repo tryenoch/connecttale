@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class BoardCateEntity {
     @Column(nullable = false, length = 45)
     private String boardName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "boardCate", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<BoardEntity> boardList= new ArrayList<>();

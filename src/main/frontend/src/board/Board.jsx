@@ -6,7 +6,7 @@ const boardList = [
     {
         id: 0,
         title: '문의사항',
-        type: 'res',
+        type: 'req',
     },
 
     {

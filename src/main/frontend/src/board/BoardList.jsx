@@ -2,170 +2,30 @@ import React, {useEffect, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
 import axios from "axios";
 
-const boardList = [
-    {
-        idx: 1,
-        title: '제목 1',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 2,
-        title: '제목 2',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 3,
-        title: '제목 3',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 4,
-        title: '제목 4',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 5,
-        title: '제목 5',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 6,
-        title: '제목 6',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 7,
-        title: '제목 7',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 8,
-        title: '제목 8',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 9,
-        title: '제목 9',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 10,
-        title: '제목 10',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 11,
-        title: '제목 11',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 12,
-        title: '제목 12',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 13,
-        title: '제목 13',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 14,
-        title: '제목 14',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 15,
-        title: '제목 15',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 16,
-        title: '제목 16',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 17,
-        title: '제목 17',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 18,
-        title: '제목 18',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 19,
-        title: '제목 19',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 20,
-        title: '제목 20',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 21,
-        title: '제목 21',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 22,
-        title: '제목 22',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 23,
-        title: '제목 23',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-]
-
 function BoardList(props) {
 
     //페이지가 변할 때 cate 값 0으로 초기화
     const [cate, setCate] = useState(0);
     const [keyword, setKeyword] = useState('');
-    const [totalCount, setTotalCount] = useState(0);
     const [nowPage, setNowPage] = useState(1);
     const [endPage, setEndPage] = useState(0);
-    const [pages, setPages] = useState([]);
+    const [pages, setPages] = useState([1]);
+    const [boardList, setBoardList] = useState([{}]);
 
     useEffect(() => {
         requestData();
     }, [nowPage]);
 
     useEffect(() => {
-        setPages([1, 2, 3, 4, 5]);
+        setPages([1]);
         setNowPage(1);
     }, [props]);
 
     const requestData = () => {
         axios.get(`/${props.data.type}/${nowPage}`)
             .then(res => {
-                console.log(res);
+
+                console.log(res.data);
 
                 let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
                 let arr = [];
@@ -177,10 +37,8 @@ function BoardList(props) {
                     arr.push(i);
                 }
                 setPages(arr);
-                setTotalCount(res.data.totalCount);
                 setEndPage(Math.ceil(res.data.totalCount / 5));
-
-
+                setBoardList(res.data.boardList);
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);
@@ -190,10 +48,6 @@ function BoardList(props) {
     const handleSubmit = (event) => {
         alert(`검색어 : ${keyword}, 종류 : ${cate}`);
         event.preventDefault();
-    }
-
-    const handlePage = (event) => {
-        setNowPage(event.target.value);
     }
 
     return (
@@ -248,8 +102,8 @@ function BoardList(props) {
                             boardList.map((board, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{index}</td>
-                                        <td className={'text-start cursor'}>{board.title}</td>
+                                        <td>{board.boardIdx}</td>
+                                        <td className={'text-start cursor'}>{board.boardTitle}</td>
                                         <td>{board.createId}</td>
                                         <td>{board.createDt}</td>
                                     </tr>
@@ -283,6 +137,7 @@ function BoardList(props) {
                             pages.map((value) => {
                                 return (
                                     <a
+                                        key={value}
                                         className={nowPage === value ? 'text-black' : 'text-black-50'}
                                         onClick={() => setNowPage(value)}
                                     >{value}</a>);
