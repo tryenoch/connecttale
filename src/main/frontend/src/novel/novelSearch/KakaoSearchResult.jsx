@@ -3,22 +3,22 @@ import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import axios from "axios";
 
 function KakaoSearchResult(props) {
-  const [searchWord, setSearchWord] = useState(props.keyword);
-  // const [kakaoSearchList, setKakaoSearchList] = useState([]);
+  // const [searchWord, setSearchWord] = useState(props.keyword);
   const [novelSearchList, setNovelSearchList] = useState([]);
   
   useEffect(() => {
-    setSearchWord(props.keyword);
+    // 현재 로직상 useEffect는 props.keyword가 변경될 때 마다 실행하게끔 되어있는데, 아래 setSearchWord(props.keyword)가 존재하면 searchWord 스테이트가 계속 변경되게되어 useEffect가 무한루프가 되어버림
+    // setSearchWord(props.keyword);
     
     axios.get('/searchKakao', {
       params : {
-        searchWord: searchWord
+        searchWord: props.keyword
       }
     })
       .then(res => {
         // 카카오 페이지 검색결과 가져오기
         if (res.data[0] == 'kakaoIdList') {
-          console.log(res);
+          // console.log(res);
           let kakaoSearchResult = [];
         
           // Promise.all을 사용하여 반복되는 axios 통신이 모두 완료된 후, 가져온 데이터들을 kakaoSearchResult에 저장하는 로직
@@ -42,7 +42,8 @@ function KakaoSearchResult(props) {
                 kakaoSearchResult.push(data);
               }
             
-              setNovelSearchList(prevState => [...prevState, ...kakaoSearchResult]);
+              // setNovelSearchList(prevState => [...prevState, ...kakaoSearchResult]);
+              setNovelSearchList(kakaoSearchResult);
             
             })
             .catch(err => {
@@ -59,7 +60,8 @@ function KakaoSearchResult(props) {
   return (
     <div>
       {
-        novelSearchList.map((item, index) => {
+        novelSearchList.length != 0
+        ? novelSearchList.map((item, index) => {
           return (
             <div className={'row my-4 border-top border-bottom py-2'} key={index}>
               <div className={'col-sm-2'}>
@@ -88,6 +90,9 @@ function KakaoSearchResult(props) {
             </div>
           )
         })
+        : <div className={'d-flex justify-content-center'}>
+            <p className={'my-5'}><span className={'fw-bold'}>'{props.keyword}'</span>로 조회된 검색 결과가 없습니다.</p>
+          </div>
       }
     </div>
   )
