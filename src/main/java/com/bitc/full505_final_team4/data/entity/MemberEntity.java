@@ -40,10 +40,10 @@ public class MemberEntity {
   private String birthday;
 
   @Column(length = 100)
-  private String Ofile;
+  private String oFile;
 
   @Column(length = 100)
-  private String Sfile;
+  private String sFile;
 
   @Column(nullable = false)
   @ColumnDefault("1")
