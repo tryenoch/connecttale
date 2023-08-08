@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class MemberEntity {
 
   @Id
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, length = 45)
   private String id;
 
   @Column(nullable = false, length = 100)
@@ -39,13 +39,11 @@ public class MemberEntity {
   @Column(nullable = false)
   private String birthday;
 
-  @CreatedDate
   @Column(length = 100)
-  private LocalDateTime Ofile;
+  private String Ofile;
 
-  @LastModifiedDate
   @Column(length = 100)
-  private LocalDateTime Sfile;
+  private String Sfile;
 
   @Column(nullable = false)
   @ColumnDefault("1")
