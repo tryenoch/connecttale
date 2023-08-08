@@ -1,22 +1,16 @@
 package com.bitc.full505_final_team4.data.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import javax.annotation.Nullable;
-import java.time.LocalDateTime;
+import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Table(name = "member")
 @Getter
 @Setter
 @ToString
+@DynamicInsert
 @NoArgsConstructor
 public class MemberEntity {
 
@@ -46,10 +40,9 @@ public class MemberEntity {
   private String sFile;
 
   @Column(nullable = false)
-  @ColumnDefault("1")
-  private int grade;
+  private int grade = 1;
 
   @Column(nullable = false)
-  @ColumnDefault("N")
-  private char deletedYn;
+  private String deletedYn = "N";
+
 }

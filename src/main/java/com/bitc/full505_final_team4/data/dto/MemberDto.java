@@ -10,5 +10,4 @@ public class MemberDto {
   private String nickname;
   private int gender;
   private String birthday;
-  private int grade;
 }

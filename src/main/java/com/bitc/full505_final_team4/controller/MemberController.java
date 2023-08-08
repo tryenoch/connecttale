@@ -1,14 +1,11 @@
 package com.bitc.full505_final_team4.controller;
 
-import com.bitc.full505_final_team4.data.dto.MemberDto;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import com.bitc.full505_final_team4.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Member;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin("http://localhost:3000")
@@ -29,8 +26,8 @@ public class MemberController {
 //    return memberService.login(id, pw);
 //  }
 
-  @RequestMapping(value = "/join/join2", method = RequestMethod.POST)
-  public Object join(@RequestParam String id, @RequestParam String pw, @RequestParam String name, @RequestParam String nickname, @RequestParam int gender, @RequestParam String birthday) throws Exception {
+  @PostMapping(value = "/join/join2")
+  public Object join(@RequestParam("id") String id, @RequestParam("pw") String pw, @RequestParam("name") String name, @RequestParam("nickname") String nickname, @RequestParam("gender") int gender, @RequestParam("birthday") String birthday) throws Exception {
     MemberEntity member = new MemberEntity();
 
     member.setId(id);
@@ -46,5 +43,10 @@ public class MemberController {
     result.put("result", "success");
 
     return result;
+  }
+
+  @RequestMapping("/join/join3")
+  public String joinSuccess() throws Exception {
+    return "/join/join3";
   }
 }
