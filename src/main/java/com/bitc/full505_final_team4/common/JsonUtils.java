@@ -18,7 +18,13 @@ public class JsonUtils {
   * String urlStr = "https://book-api.ridibooks.com/books/";
       urlStr += novelId; // parameter 로 받아온 값 추가
       urlStr += "/notices"; // 최종 완성된 url을 넣을 것
+
   * 결과 ) JSONObject jsonObject = JsonUtils.jsonUrlParser(urlStr);
+  *
+  * 결과 가공 방식 예) NovelMainController testJson 메소드 참고
+  * JSONArray noticeList = (JSONArray) resultJson.get("notices"); // 배열 변환 예
+    JSONObject notice = (JSONObject) noticeList.get(0); // 객체 변환 예
+    String noticeTitle = (String) notice.get("title"); // 문자열 변환 예
   * */
 
   public static JSONObject jsonUrlParser(String jsonUrl) throws Exception {
