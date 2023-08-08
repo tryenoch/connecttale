@@ -18,4 +18,14 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardEntity> getReqList() throws Exception {
         return boardRepository.findBoardEntityByBoardCate_Idx(1);
     }
+
+    @Override
+    public List<BoardEntity> getNotiList() throws Exception {
+        return boardRepository.findBoardEntityByBoardCate_Idx(2);
+    }
+
+    @Override
+    public List<BoardEntity> getEventList() throws Exception {
+        return boardRepository.findBoardEntityByBoardCate_Idx(3);
+    }
 }

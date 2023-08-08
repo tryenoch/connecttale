@@ -12,14 +12,12 @@ function BoardList(props) {
     const [pages, setPages] = useState([1]);
     const [boardList, setBoardList] = useState([{}]);
 
-    useEffect(() => {
-        requestData();
-    }, [nowPage]);
 
     useEffect(() => {
+        requestData();
         setPages([1]);
         setNowPage(1);
-    }, [props]);
+    }, [props.data, nowPage]);
 
     const requestData = () => {
         axios.get(`/${props.data.type}/${nowPage}`)

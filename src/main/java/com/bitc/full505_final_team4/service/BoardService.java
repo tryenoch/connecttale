@@ -6,4 +6,8 @@ import java.util.List;
 
 public interface BoardService {
     List<BoardEntity> getReqList() throws Exception;
+
+    List<BoardEntity> getNotiList() throws Exception;
+
+    List<BoardEntity> getEventList() throws Exception;
 }

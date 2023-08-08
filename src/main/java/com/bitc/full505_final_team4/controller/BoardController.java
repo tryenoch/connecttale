@@ -53,14 +53,25 @@ public class BoardController {
 
         Map<String, Object> result = new HashMap<>();
 
+        List<BoardDTO> notiList = new ArrayList<>();
+        List<BoardEntity> boardList = boardService.getNotiList();
+        int totalCount = boardList.size();
+        for (BoardEntity board : boardList) {
+            BoardDTO noti = new BoardDTO();
+            noti.setBoardIdx(board.getBoardIdx());
+            noti.setBoardTitle(board.getBoardTitle());
+            noti.setBoardContents(board.getBoardContents());
+            noti.setCreateId(board.getCreateId().getNickname());
+            noti.setCreateDt(board.getCreateDt());
 
-        List<String> boardList = new ArrayList<>();
-        int totalCount = 127; // boardList.size()
+            notiList.add(noti);
+        }
 
         result.put("success", "성공");
         result.put("totalCount", totalCount);
         result.put("nowPage", page);
         result.put("boardType", "notice");
+        result.put("boardList", notiList);
         return result;
     }
 
@@ -69,13 +80,25 @@ public class BoardController {
 
         Map<String, Object> result = new HashMap<>();
 
-        List<String> boardList = new ArrayList<>();
-        int totalCount = 127; // boardList.size()
+        List<BoardDTO> eventList = new ArrayList<>();
+        List<BoardEntity> boardList = boardService.getEventList();
+        int totalCount = boardList.size();
+        for (BoardEntity board : boardList) {
+            BoardDTO event = new BoardDTO();
+            event.setBoardIdx(board.getBoardIdx());
+            event.setBoardTitle(board.getBoardTitle());
+            event.setBoardContents(board.getBoardContents());
+            event.setCreateId(board.getCreateId().getNickname());
+            event.setCreateDt(board.getCreateDt());
+
+            eventList.add(event);
+        }
 
         result.put("success", "성공");
         result.put("totalCount", totalCount);
         result.put("nowPage", page);
         result.put("boardType", "event");
+        result.put("boardList", eventList);
         return result;
     }
 
