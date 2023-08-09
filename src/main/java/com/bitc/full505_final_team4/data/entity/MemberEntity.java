@@ -1,30 +1,25 @@
 package com.bitc.full505_final_team4.data.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.annotation.Nullable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 
 @Entity
 @Table(name = "member")
+@Builder
 @Getter
 @Setter
 @ToString
+@DynamicInsert
 @NoArgsConstructor
+@AllArgsConstructor
 public class MemberEntity {
 
   @Id
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, length = 45)
   private String id;
 
   @Column(nullable = false, length = 100)
@@ -42,13 +37,11 @@ public class MemberEntity {
   @Column(nullable = false)
   private String birthday;
 
-  @CreatedDate
   @Column(length = 100)
-  private LocalDateTime Ofile;
+  private String oFile;
 
-  @LastModifiedDate
   @Column(length = 100)
-  private LocalDateTime Sfile;
+  private String sFile;
 
   @Column(nullable = false)
   @ColumnDefault("1")
@@ -56,5 +49,6 @@ public class MemberEntity {
 
   @Column(nullable = false)
   @ColumnDefault("N")
-  private char deletedYn;
+  private String deletedYn;
+
 }
