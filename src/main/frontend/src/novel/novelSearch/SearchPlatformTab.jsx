@@ -23,7 +23,7 @@ function SearchPlatformTab(props) {
         <NaverSearchResult keyword={searchWord}/>
       </Tab>
       <Tab eventKey="ridi" title="리디북스 검색결과">
-        <RidiSearchResult keyword={searchWord} />
+        {/*<RidiSearchResult keyword={searchWord} />*/}
       </Tab>
     </Tabs>
   )

@@ -64,13 +64,13 @@ public class NovelPlatformEntity {
   private double novelStarRate;
 
   @Column(length = 50)
-  private String novelUpdateDate;
+  private String novelUpdateDate; // 연재 요일
 
   @Column(length = 45)
   private String novelRelease;
 
   @Column(length = 45)
-  private String novelRecentUpdate;
+  private String novelRecentUpdate; // 최근 업데이트일
 
   @Column(nullable = false, length = 100)
   public String cateList;
