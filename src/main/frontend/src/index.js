@@ -5,14 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Main from "./Main";
 import AppPage from "./AppPage";
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
       <BrowserRouter>
         {/*<App/>*/}
-        <AppPage />
+        <Routes>
+          <Route path="/*" element={<AppPage />}></Route>
+        </Routes>
       </BrowserRouter>
     </React.StrictMode>
 );
