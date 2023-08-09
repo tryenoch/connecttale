@@ -50,11 +50,21 @@ public class NovelMainController {
 
   /* 리디북스 순위 리스트 가져오기 */
   @GetMapping("/ridiRankList")
-  public List<NovelMainDto> getRidiRankList(@RequestParam("category") String category) throws Exception {
+  public Object getRidiRankList(@RequestParam("category") String category) throws Exception {
 
-    List<NovelMainDto> result = novelMainService.getRidiRankList(category, 0);
+    Map<String, Object> result = new HashMap<>();
 
-    return null;
+    /* 실시간 순위 1위부터 20위까지 리스트 반환 */
+    List<NovelMainDto> ridiNovelList = novelMainService.getRidiRankList(category, 1);
+
+    if(ridiNovelList != null){
+      result.put("result", "success");
+      result.put("ridiNovelList", ridiNovelList);
+    } else {
+      result.put("result", "Backend error");
+    }
+
+    return result;
   }
 
 }

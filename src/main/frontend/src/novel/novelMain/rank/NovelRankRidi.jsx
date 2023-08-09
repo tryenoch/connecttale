@@ -66,11 +66,14 @@ function NovelRankRidi() {
   function rankTest() {
     // MessageUtils.infoMessage("테스트 버튼을 클릭했습니다.");
 
+    const category = "1750";
+
     axios.get(`/novel/ridiRankList`, {
-      params : { category : "1750" }
+      params : { category : category }
     }).then(res => {
       MessageUtils.infoMessage("ridiRankList 통신에 성공했습니다.");
       console.log(res);
+      console.log(res.data.result);
     }).catch(err => {
       MessageUtils.errorMessage("에러 메세지", err);
     })
