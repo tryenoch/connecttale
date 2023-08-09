@@ -49,7 +49,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   // 셀레니움을 통해 검색 결과에 따른 카카오페이지 작품 id 리스트 가져오기
   @Override
   public List<String> getKakaoSearchIdList(String searchWord) throws Exception {
-    String url = "https://page.kakao.com/search/result?keyword=" + searchWord + "&categoryUid=11";
+    String searchUrl = "https://page.kakao.com/search/result?keyword=" + searchWord + "&categoryUid=11";
 
     List<String> kakaoSearchIdList = new ArrayList<>();
     kakaoSearchIdList.add("kakaoIdList");
@@ -72,7 +72,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     try {
       // webDriver 경로 설정
 
-      driver.get(url);
+      driver.get(searchUrl);
 
       // 페이지 끝까지 스크롤 내리는 로직
 //      while (true) {
@@ -96,18 +96,26 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //      }
 
       //      wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector(".flex-1.cursor-pointer")));
-//
+      
+      // css선택자를 활용하여 해당 태그찾기(같은 클래스값을 가진 태그가 반복되는 형태라 list<WebElement>타입으로 설정함
       List<WebElement> elements = driver.findElements(By.cssSelector(".flex-1.cursor-pointer"));
 
       if (elements.isEmpty()) {
-        System.out.println("아이디가 적힌 a태그를 못찾음");
+        System.out.println("작품 아이디가 적힌 a태그를 못찾음");
       } else {
         for (WebElement element : elements) {
+          // 태그 요소들 각각의 작품id값만 String으로 받아오기
           String kakaoSearchHref = element.getAttribute("href");
           int kakaoSearchIdIndex = kakaoSearchHref.lastIndexOf("/");
           String kakaoSearchId = kakaoSearchHref.substring(kakaoSearchIdIndex + 1);
-
           kakaoSearchIdList.add(kakaoSearchId);
+
+          // ------------- 얻은 id를 통해 디테일 페이지 접근(셀레니움) --------------
+
+          String kakaoDetailUrl = "https://page.kakao.com/content/" + kakaoSearchId;
+
+          driver.get(kakaoDetailUrl);
+
         }
       }
 
@@ -137,51 +145,52 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
       // 검색 결과로 나온 총작품수로 max pageNum 구하기
       Elements pageNumEle = findPageNum.select("div[class=lst_header]>h3>em");
-      int allCountStartIndex = pageNumEle.text().indexOf("(");
-      int allCountEndIndex = pageNumEle.text().indexOf(")");
-      int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
+      if (!pageNumEle.isEmpty()) {
+        int allCountStartIndex = pageNumEle.text().indexOf("(");
+        int allCountEndIndex = pageNumEle.text().indexOf(")");
+        int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
 
-      double maxPageDot = allCount / 25;
-      int maxPageNum = (int) Math.ceil(maxPageDot);
+        double maxPageDot = allCount / 25;
+        int maxPageNum = (int) Math.ceil(maxPageDot);
 
-      // 리스트 타입으로 저장할 변수 선언
-      List<String> platformIdList = new ArrayList<>();
-      List<String> titleList = new ArrayList<>();
-      List<String> thumbnailList = new ArrayList<>();
-      List<String> countList = new ArrayList<>();
-      List<String> completeList = new ArrayList<>();
-      List<String> starRateList = new ArrayList<>();
-      List<String> authorList = new ArrayList<>();
-      List<String> lastUpdateList = new ArrayList<>();
-      List<String> descriptionList = new ArrayList<>();
-      List<String> publiList = new ArrayList<>();
-      List<String> categoryList = new ArrayList<>();
-      List<String> priceList = new ArrayList<>();
-      List<String> ageGradeList = new ArrayList<>();
+        // 리스트 타입으로 저장할 변수 선언
+        List<String> platformIdList = new ArrayList<>();
+        List<String> titleList = new ArrayList<>();
+        List<String> thumbnailList = new ArrayList<>();
+        List<String> countList = new ArrayList<>();
+        List<String> completeList = new ArrayList<>();
+        List<String> starRateList = new ArrayList<>();
+        List<String> authorList = new ArrayList<>();
+        List<String> lastUpdateList = new ArrayList<>();
+        List<String> descriptionList = new ArrayList<>();
+        List<String> publiList = new ArrayList<>();
+        List<String> categoryList = new ArrayList<>();
+        List<String> priceList = new ArrayList<>();
+        List<String> ageGradeList = new ArrayList<>();
 
-      // 1페이지부터 maxPageNum 까지 반복문으로 사이트 크롤링하기
-      for (int i = 1; i <= maxPageNum; i++) {
-        // 페이지 별로 데이터 찾아올 url
-        String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
+        // 1페이지부터 maxPageNum 까지 반복문으로 사이트 크롤링하기
+        for (int i = 1; i <= maxPageNum; i++) {
+          // 페이지 별로 데이터 찾아올 url
+          String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
 
-        Document doc = Jsoup.connect(searchUrl).get();
+          Document doc = Jsoup.connect(searchUrl).get();
 
-        Elements platformIds = doc.getElementsByClass("N=a:nov.img");
-        Elements titles = doc.getElementsByClass("N=a:nov.title");
-        Elements thumbnails = doc.select("img[width=79]");
-        Elements starRates = doc.getElementsByClass("score_num");
-        Elements info = doc.select("body p[class=info]");
-        Elements conts = doc.select("div[class=cont]");
+          Elements platformIds = doc.getElementsByClass("N=a:nov.img");
+          Elements titles = doc.getElementsByClass("N=a:nov.title");
+          Elements thumbnails = doc.select("img[width=79]");
+          Elements starRates = doc.getElementsByClass("score_num");
+          Elements info = doc.select("body p[class=info]");
+          Elements conts = doc.select("div[class=cont]");
 
 
-        // 동일한 클레스값을 가진 반복되는 태그(엘리먼트)들의 데이터를 list타입에 저장하기
-        for (Element e : platformIds) {
-          String platformIdFind = e.attr("href");
-          int platformIdIndex = platformIdFind.indexOf("=");
-          platformIdList.add(platformIdFind.substring(platformIdIndex + 1));
+          // 동일한 클레스값을 가진 반복되는 태그(엘리먼트)들의 데이터를 list타입에 저장하기
+          for (Element e : platformIds) {
+            String platformIdFind = e.attr("href");
+            int platformIdIndex = platformIdFind.indexOf("=");
+            platformIdList.add(platformIdFind.substring(platformIdIndex + 1));
 
 //         네이버시리즈 디테일 페이지로가서 카테고리, 출판사, 가격, 연령 정보 가져오기
-          // ※ 성인 컨텐츠의 경우 데이터를 못가져옴(null 값으로 가져옴)
+            // ※ 성인 컨텐츠의 경우 데이터를 못가져옴(null 값으로 가져옴)
 //        String detailUrl = "https://series.naver.com/novel/detail.series?productNo=" + platformIdFind.substring(platformIdIndex + 1);
 //
 //        Document doc2 = Jsoup.connect(detailUrl).get();
@@ -189,7 +198,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //        String thumbnail = thumbnails.attr("src");
 //        thumbnailList.add(thumbnail);
 
-          // 디테일 페이지의 출판사 정보 가져오기
+            // 디테일 페이지의 출판사 정보 가져오기
 //        Elements publis = doc2.select("li[class=info_lst]>ul>li:nth-child(4)>a");
 //        publiList.add(publis.text());
 //
@@ -205,83 +214,84 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //        Elements prices = doc2.select("div[class=area_price] span[class=point_color]");
 //        priceList.add(prices.text());
 
-        }
-
-        for (Element e : titles) {
-          int titleIndex = e.text().indexOf("(");
-          int completeStartIndex = e.text().indexOf("/");
-          int completeEndIndex = e.text().indexOf(")");
-          int countStartIndex = e.text().indexOf("총");
-
-          // 제목 가져오기
-          titleList.add(e.text().substring(0, titleIndex - 1));
-//      completeList.add(e.text().substring(completeStartIndex + 1, completeEndIndex));
-          // 총화수 가져오기
-          countList.add(e.text().substring(countStartIndex + 2, completeStartIndex - 1));
-        }
-
-        // 썸네일 주소 가져오기
-        for (Element e : thumbnails) {
-          String thumbnailSrc = e.attr("src");
-          thumbnailList.add(thumbnailSrc);
-        }
-
-        // 별점 가져오기
-        for (Element e : starRates) {
-          starRateList.add(e.text());
-        }
-
-        for (Element e : info) {
-          String p = e.text();
-          String[] parts = p.split("\\s*\\|\\s*");  // ' | ' 앞뒤로 공백이 있을 수 있으므로 공백을 포함한 정규표현식 사용
-
-          // 작가 정보 가져오기
-          String authorPart = parts[1];
-          authorList.add(authorPart);
-
-          // 최신업데이트 날짜 가져오기
-          String datePart = parts[2];  // 날짜는 세 번째 요소에 위치
-          String datePartNoDot = datePart.substring(0, datePart.length() - 1);
-          lastUpdateList.add(datePartNoDot);
-
-          // 완결여부 가져오기
-          String completePart = parts[3];
-          int completeIndex = completePart.indexOf("/");
-          String completeYn = completePart.substring(completeIndex + 1);
-          completeList.add(completeYn);
-        }
-
-        for (Element e : conts) {
-          String description = "";
-          Element descriptionElement = e.getElementsByClass("dsc").first();
-          if (descriptionElement != null) {
-            description = descriptionElement.text();
           }
-          descriptionList.add(description);
-        }
-        // 작품소개글 가져오기
+
+          for (Element e : titles) {
+            int titleIndex = e.text().indexOf("(");
+            int completeStartIndex = e.text().indexOf("/");
+            int completeEndIndex = e.text().indexOf(")");
+            int countStartIndex = e.text().indexOf("총");
+
+            // 제목 가져오기
+            titleList.add(e.text().substring(0, titleIndex - 1));
+//      completeList.add(e.text().substring(completeStartIndex + 1, completeEndIndex));
+            // 총화수 가져오기
+            countList.add(e.text().substring(countStartIndex + 2, completeStartIndex - 1));
+          }
+
+          // 썸네일 주소 가져오기
+          for (Element e : thumbnails) {
+            String thumbnailSrc = e.attr("src");
+            thumbnailList.add(thumbnailSrc);
+          }
+
+          // 별점 가져오기
+          for (Element e : starRates) {
+            starRateList.add(e.text());
+          }
+
+          for (Element e : info) {
+            String p = e.text();
+            String[] parts = p.split("\\s*\\|\\s*");  // ' | ' 앞뒤로 공백이 있을 수 있으므로 공백을 포함한 정규표현식 사용
+
+            // 작가 정보 가져오기
+            String authorPart = parts[1];
+            authorList.add(authorPart);
+
+            // 최신업데이트 날짜 가져오기
+            String datePart = parts[2];  // 날짜는 세 번째 요소에 위치
+            String datePartNoDot = datePart.substring(0, datePart.length() - 1);
+            lastUpdateList.add(datePartNoDot);
+
+            // 완결여부 가져오기
+            String completePart = parts[3];
+            int completeIndex = completePart.indexOf("/");
+            String completeYn = completePart.substring(completeIndex + 1);
+            completeList.add(completeYn);
+          }
+
+          for (Element e : conts) {
+            String description = "";
+            Element descriptionElement = e.getElementsByClass("dsc").first();
+            if (descriptionElement != null) {
+              description = descriptionElement.text();
+            }
+            descriptionList.add(description);
+          }
+          // 작품소개글 가져오기
 //        for (Element e : descriptions) {
 //          String description = e.text();
 //          descriptionList.add(description);
 //        }
+        }
+
+
+        // Map타입 의 naverSearchList에 리스트 추가
+        naverSearchList.put("platformId", platformIdList);
+        naverSearchList.put("title", titleList);
+        naverSearchList.put("thumbnail", thumbnailList);
+        naverSearchList.put("completeYn", completeList);
+        naverSearchList.put("count", countList);
+        naverSearchList.put("author", authorList);
+        naverSearchList.put("starRate", starRateList);
+        naverSearchList.put("lastUpdate", lastUpdateList);
+        naverSearchList.put("description", descriptionList);
+        naverSearchList.put("publi", publiList);
+        naverSearchList.put("category", categoryList);
+        naverSearchList.put("price", priceList);
+        naverSearchList.put("ageGrade", ageGradeList);
+//        return naverSearchList;
       }
-
-
-      // Map타입 의 naverSearchList에 리스트 추가
-      naverSearchList.put("platformId", platformIdList);
-      naverSearchList.put("title", titleList);
-      naverSearchList.put("thumbnail", thumbnailList);
-      naverSearchList.put("completeYn", completeList);
-      naverSearchList.put("count", countList);
-      naverSearchList.put("author", authorList);
-      naverSearchList.put("starRate", starRateList);
-      naverSearchList.put("lastUpdate", lastUpdateList);
-      naverSearchList.put("description", descriptionList);
-      naverSearchList.put("publi", publiList);
-      naverSearchList.put("category", categoryList);
-      naverSearchList.put("price", priceList);
-      naverSearchList.put("ageGrade", ageGradeList);
-
     }
     catch (IOException e) {
       e.printStackTrace();

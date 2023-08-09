@@ -8,36 +8,37 @@ function NaverSearchResult(props) {
   const [novelSearchList, setNovelSearchList]= useState([]);
   
   useEffect(() => {
-    // setSearchWord(props.keyword);
-  
     axios.get('/searchNaver', {
       params : {
         searchWord: props.keyword
       }
     })
       .then(res => {
-        console.log(res);
+        // console.log(res);
         let naverSearchList = [];
         
-        for (let i = 0; i < res.data.title.length; i++) {
-          const item = res.data;
-          const data = {
-            platform: '2',
-            platformId: item.platformId[i],
-            title: item.title[i],
-            thumbnail: item.thumbnail[i],
-            author: item.author[i],
-            starRate: item.starRate[i],
-            completeYn: item.completeYn[i],
-            count: item.count[i],
-            lastUpdate: item.lastUpdate[i],
-            description: item.description[i],
-            publi: item.publi[i],
-            category: item.category[i],
-            price: item.price[i],
-            ageGrade: item.ageGrade[i]
+        if(Object.keys(res.data) != 0) {
+          for (let i = 0; i < res.data.title.length; i++) {
+            const item = res.data;
+            const data = {
+              platform: '2',
+              platformId: item.platformId[i],
+              title: item.title[i],
+              thumbnail: item.thumbnail[i],
+              author: item.author[i],
+              starRate: item.starRate[i],
+              completeYn: item.completeYn[i],
+              count: item.count[i],
+              lastUpdate: item.lastUpdate[i],
+              description: item.description[i],
+              publi: item.publi[i],
+              category: item.category[i],
+              price: item.price[i],
+              ageGrade: item.ageGrade[i]
+            }
+            naverSearchList.push(data);
           }
-          naverSearchList.push(data);
+          setNovelSearchList(naverSearchList);
         }
         setNovelSearchList(naverSearchList);
       })
@@ -50,19 +51,11 @@ function NaverSearchResult(props) {
   return (
     <div>
       {
-        novelSearchList.map((item, index) => {
+        novelSearchList.length != 0
+        ? novelSearchList.map((item, index) => {
           return (
             <div className={'row my-4 border-top border-bottom py-2'} key={index}>
               <div className={'col-sm-2'}>
-                {/*{*/}
-                {/*  item.ageGrade == 'All'*/}
-                {/*    ? <Link to={'#'}>*/}
-                {/*      <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>*/}
-                {/*    </Link>*/}
-                {/*    : <Link to={'#'}>*/}
-                {/*      <img src="/onlyAdult.png" alt="" className={'w-100 h-100'}/>*/}
-                {/*    </Link>*/}
-                {/*}*/}
                 <Link to={'#'} >
                   <img src={item.thumbnail} alt="" className={'w-100 h-100'} />
                 </Link>
@@ -74,8 +67,8 @@ function NaverSearchResult(props) {
                 <p className={'search-info'}>{item.publi}출판사</p>
                 {
                   item.price != null
-                    ? <p className={'search-price fw-bold'}>가격 : {item.price}</p>
-                    : <p className={'search-price text-muted'}>가격 정보</p>
+                    ? <p className={'search-info search-price fw-bold'}>가격 : {item.price}</p>
+                    : <p className={'search-info search-price text-muted'}>가격 정보</p>
                 }
                 <div className={'d-flex'}>
                   <p className={'search-info'}>
@@ -85,7 +78,13 @@ function NaverSearchResult(props) {
                     &nbsp;update <span className={'fw-bold'}>{item.lastUpdate}</span>&nbsp;|
                   </p>
                   <p>
-                    &nbsp; <span className={'fw-bold'}>{item.completeYn}</span>
+                    &nbsp;<span className={'fw-bold'}>{item.completeYn}
+                    {
+                      item.title.indexOf('[단행본]') == -1
+                      ? <span>&nbsp;(총{item.count}화)</span>
+                      : <span>&nbsp;(총{item.count}권)</span>
+                    }
+                  </span>
                   </p>
                 </div>
                 <p className={'search-info'}>{item.description.substring(0, 170)}</p>
@@ -94,6 +93,9 @@ function NaverSearchResult(props) {
             </div>
           )
         })
+        : <div className={'d-flex justify-content-center'}>
+          <p className={'my-5'}><span className={'fw-bold'}>'{props.keyword}'</span>로 조회된 검색 결과가 없습니다.</p>
+        </div>
       }
     </div>
   )
