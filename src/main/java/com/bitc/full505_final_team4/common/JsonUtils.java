@@ -11,7 +11,7 @@ import java.net.URL;
 public class JsonUtils {
 
   /* 작성자 : chanmi
-  * jsonUrlParser 목적 : 완성된 url을 입력하면 java class 내에서 사용 가능한 json 객체로 만들어준다.
+  * jsonUrlParser 목적 : 완성된 url을 입력하면 java class 내에서 사용 가능한 json 객체로 만들어준다
   * build.gradle 에 json-simple 라이브러리가 존재해야함.
   * Get 방식의 Url만 가능
   * url 작성 예)
