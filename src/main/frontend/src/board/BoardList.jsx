@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 function BoardList(props) {
 
@@ -112,6 +113,9 @@ function BoardList(props) {
                         }
                         </tbody>
                     </table>
+                    <div className={'d-flex justify-content-end'}>
+                        <Link to={'/write'} className={'btn btn-primary'}>글 쓰기</Link>
+                    </div>
                     <div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>
                         <a
                             className={nowPage <= 0 ? 'text-black-50' : ''}
