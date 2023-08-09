@@ -8,4 +8,6 @@ public interface MemberService {
   MemberEntity login(String id, String pw) throws Exception;
 
   void join(MemberEntity member) throws Exception;
+
+  boolean confirmId(String id) throws Exception;
 }

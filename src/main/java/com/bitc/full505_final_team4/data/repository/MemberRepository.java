@@ -10,4 +10,6 @@ public interface MemberRepository extends JpaRepository <MemberEntity, String> {
   MemberEntity findByIdAndPw(String id, String pw);
 
   MemberEntity save(MemberEntity member);
+
+  boolean existsById(String id);
 }

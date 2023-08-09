@@ -2,16 +2,19 @@ package com.bitc.full505_final_team4.data.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.checkerframework.checker.units.qual.A;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Table(name = "member")
+@Builder
 @Getter
 @Setter
 @ToString
 @DynamicInsert
 @NoArgsConstructor
+@AllArgsConstructor
 public class MemberEntity {
 
   @Id
@@ -40,9 +43,11 @@ public class MemberEntity {
   private String sFile;
 
   @Column(nullable = false)
-  private int grade = 1;
+  @ColumnDefault("1")
+  private int grade;
 
   @Column(nullable = false)
-  private String deletedYn = "N";
+  @ColumnDefault("N")
+  private String deletedYn;
 
 }

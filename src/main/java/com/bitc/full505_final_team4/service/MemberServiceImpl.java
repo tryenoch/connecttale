@@ -23,4 +23,9 @@ public class MemberServiceImpl implements MemberService {
   public void join(MemberEntity member) throws Exception {
     memberRepository.save(member);
   }
+
+  @Override
+  public boolean confirmId(String id) throws Exception {
+    return memberRepository.existsById(id);
+  }
 }

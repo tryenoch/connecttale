@@ -7,14 +7,28 @@ import {Link, Route, Routes, useNavigate} from "react-router-dom";
 import axios from "axios";
 
 function Join2(props) {
-    const [userId, setUserId] = useState("");
-    const [pw, setPw] = useState("");
-    const [name, setName] = useState("");
-    const [nick, setNick] = useState("");
-    const [gender, setGender] = useState(0);
     const [year, setYear] = useState("");
     const [month, setMonth] = useState("");
     const [day, setDay] = useState("");
+
+    const [confirm, setConfirm] = useState({
+        idConfirm: "",
+        pwConfirm: "",
+        confirmPwConfirm: "",
+        nameConfirm: "",
+        nickConfirm: "",
+        genderConfirm: "",
+        yearConfirm: "",
+        monthConfirm: "",
+        dayConfirm: ""
+    });
+
+    const [userId, setUserId] = useState("");
+    const [pw, setPw] = useState("");
+    const [confirmPw, setConfirmPw] = useState("");
+    const [name, setName] = useState("");
+    const [nick, setNick] = useState("");
+    const [gender, setGender] = useState(0);
 
     const navi = useNavigate();
 
@@ -23,6 +37,9 @@ function Join2(props) {
     }
     const changePw = (e) => {
         setPw(e.target.value);
+    }
+    const changeConfirmPw = (e) => {
+        setConfirmPw(e.target.value);
     }
     const changeName = (e) => {
         setName(e.target.value);
@@ -43,7 +60,28 @@ function Join2(props) {
         setDay(e.target.value);
     }
 
+    const confirmId = () => {
+        axios.get('/join/join2', {
+            params: {
+                id: userId
+            }
+        })
+            .then(res => {
+                const data = res.data;
+                if (userId === null || userId === "") {
+                    setConfirm({confirm, idConfirm: "아이디를 입력하세요"})
+                }
+                else {
+                    setConfirm({confirm, idConfirm: data.result});
+                }
+            })
+            .catch();
+    }
+
     const eventClickOK = () => {
+        if (userId === null || userId === "") {
+            setConfirm({confirm, idConfirm: "아이디를 입력하세요"})
+        }
         axios.post('/join/join2', null, {
             params: {
                 id: userId,
@@ -54,8 +92,8 @@ function Join2(props) {
                 birthday: year + month + day
             }
         })
-            .then(res => {
-                alert(`통신\n${res.data}`);
+            .then(() => {
+                alert(`통신성공`);
                 navi('/join/join3');
             })
             .catch(() => {
@@ -84,7 +122,8 @@ function Join2(props) {
                 </div>
                 <div className={'col-sm-1'}></div>
             </div>
-            <form onSubmit={eventClickOK} method={'POST'}>
+            {/*<form onSubmit={eventClickOK} method={'POST'}>*/}
+            <form method={'POST'}>
                 <div className={'row mt-3'}>
                     <div className={'col-sm-10 ms-4 ms-auto'}>
                         <div className={'row'}>
@@ -94,11 +133,15 @@ function Join2(props) {
                             <div className={'col-sm-9 d-flex'}>
                                 <input type="text" name={'id'} id={'id'} className={'input-s4 form-control rounded-1'}
                                        placeholder={'아이디를 입력하세요'} onChange={changeId}/>
-                                <button type={'button'} id={'confirm'} className={'btn btn-pupple ms-3'}>중복확인</button>
-                                <span id={'idCheckMessage'}></span>
+                                <button type={'button'} id={'confirm'} className={'btn btn-pupple ms-3'}
+                                        onClick={confirmId}>중복확인
+                                </button>
                             </div>
+                            <div className={'col-sm-3'}></div>
+                            <div className={'col-sm-9'}><span
+                                className={'ms-2 mt-2 text-pupple bold'}>{confirm.idConfirm}</span></div>
                         </div>
-                        <div className={'row mt-4'}>
+                        <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>비밀번호</h4>
                             </div>
@@ -114,7 +157,8 @@ function Join2(props) {
                             </div>
                             <div className={'col-sm-9 d-flex'}>
                                 <input type="password" name={'pw'} id={'cfPw'}
-                                       className={'input-s5 form-control rounded-1'} placeholder={'한번 더 비밀번호를 입력하세요'}/>
+                                       className={'input-s5 form-control rounded-1'} placeholder={'한번 더 비밀번호를 입력하세요'}
+                                       onChange={changeConfirmPw}/>
                             </div>
                         </div>
                         <div className={'row mt-4'}>
@@ -160,16 +204,18 @@ function Join2(props) {
                                 <h4 className={'fw-bold'}>성별</h4>
                             </div>
                             <div className={'col-sm-9 d-flex'}>
-                                <input type="radio" name={'gender'} id={'male'} value={1} onClick={changeGender}/>
+                                <input type="radio" name={'gender'} id={'male'} value={1} onChange={changeGender}/>
                                 <label htmlFor="male" className={'ms-1 mt-2 me-5'}>남성</label>
-                                <input type="radio" name={'gender'} id={'female'} value={2} onClick={changeGender}/>
+                                <input type="radio" name={'gender'} id={'female'} value={2} onChange={changeGender}/>
                                 <label htmlFor="female" className={'ms-1 mt-2'}>여성</label>
                             </div>
                         </div>
                         <div className={'row mt-5 justify-content-end'}>
                             <div className={'col-sm-8'}></div>
                             <div className={'col-sm-4'}>
-                                <button type={'submit'} className={'btn btn-pupple-inline ms-5'}>회원가입</button>
+                                <button type={'button'} onClick={eventClickOK}
+                                        className={'btn btn-pupple-inline ms-5'}>회원가입
+                                </button>
                             </div>
                         </div>
                     </div>
