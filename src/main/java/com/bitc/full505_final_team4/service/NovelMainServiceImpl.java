@@ -60,6 +60,10 @@ public class NovelMainServiceImpl implements NovelMainService{
         JSONObject categoryFirst = (JSONObject) categories.get(0);
         novel.setCateList(categoryFirst.get("name").toString());
 
+        // 소설 별점
+        JSONArray ratings = (JSONArray) book.get("ratings");
+        novel.setNovelStarRate(getStarRate(ratings)); // 하위에 구현한 함수 사용
+
         novelDtoList.add(novel);
       }
 
@@ -67,6 +71,44 @@ public class NovelMainServiceImpl implements NovelMainService{
     }
 
     return null;
+  }
+
+  /* Ridi Json 에서 들고온 ratings 별점으로 변환하기 */
+  @Override
+  public String getStarRate(JSONArray ratings) throws Exception {
+
+    /* 계산식
+    * ((1점 * 1점 count) + ... + (5점 * 5점 count)) / totalCount
+    * */
+
+    String starRate = "";
+
+    double multiRating = 0;
+    double totalCount = 0;
+
+    /* count * rating 총합 구하기 */
+
+    for (int i = 0; i < ratings.size(); i++) {
+
+      JSONObject rateObject = (JSONObject) ratings.get(i);
+      int rating = Integer.parseInt(rateObject.get("rating").toString()) ;
+      int count = Integer.parseInt(rateObject.get("count").toString()) ;
+
+      int multiRate = rating * count;
+
+      multiRating += multiRate;
+      totalCount += count;
+
+    }
+
+    double total = multiRating / totalCount;
+    // 왜 한자리수 올림이 안되는 건지...
+//    total = (double) Math.ceil((total * 100) / 100.0);
+
+    // 소수점 한자리까지 보여주는 별점 반환
+    starRate = String.format("%.1f", total);
+
+    return starRate;
   }
 }
 

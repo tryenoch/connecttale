@@ -21,7 +21,7 @@ public class NovelMainDto {
   private int novelCount; // 총 화수
   private String novelCompleteYn; // 완결 여부
   private String novelPrice;
-  private double novelStarRate;
+  private String novelStarRate; // 별점
   private String novelUpdateDate; // 연재일
   private String novelRelease; // 소설 출시일
   private String novelRecentUpdate; // 최근 업데이트일

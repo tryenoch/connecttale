@@ -6,7 +6,7 @@ function NovelMainRank() {
   return (
     <Routes>
       <Route index element={<NovelRankRidi />} />
-      <Route path={"/rankRidi"} element={<NovelRankRidi />}/>
+      {/*<Route path={"/rankRidi"} element={<NovelRankRidi />}/>*/}
     </Routes>
   )
 }

@@ -6,13 +6,13 @@ import axios from "axios";
 function NovelRankRidi() {
   /* 순위 리스트 초기화 */
   const [novelRankList, setNovelRankList] = useState([
-    {
+    /*{
       rank : 1,
       title : "작품 제목",
       thumbnail : "썸네일 이미지",
       author : "작가 이름",
       starRate : "별점"
-    }
+    }*/
   ]);
 
   /*setNovelRankList({
