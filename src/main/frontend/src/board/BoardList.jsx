@@ -7,20 +7,21 @@ function BoardList(props) {
     //페이지가 변할 때 cate 값 0으로 초기화
     const [cate, setCate] = useState(0);
     const [keyword, setKeyword] = useState('');
-    const [nowPage, setNowPage] = useState(1);
+    const [nowPage, setNowPage] = useState(0);
     const [endPage, setEndPage] = useState(0);
     const [pages, setPages] = useState([1]);
     const [boardList, setBoardList] = useState([{}]);
 
+    useEffect(()=>{
+        setNowPage(props.defaultPage);
+    },[])
 
     useEffect(() => {
         requestData();
-        setPages([1]);
-        setNowPage(1);
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/${props.data.type}/${nowPage}`)
+        axios.get(`/${props.data.type}?page=${nowPage}&size=10`)
             .then(res => {
 
                 console.log(res.data);
@@ -28,14 +29,14 @@ function BoardList(props) {
                 let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
                 let arr = [];
                 let lastNum = offset + 5;
-                if (lastNum > Math.ceil(res.data.totalCount / 5)) {
-                    lastNum = Math.ceil(res.data.totalCount / 5) + 1;
+                if (lastNum > Math.ceil(res.data.totalPages / 5)) {
+                    lastNum = Math.ceil(res.data.totalPages / 5) + 1;
                 }
-                for (let i = offset; i < lastNum; i++) {
+                for (let i = offset; i <= lastNum; i++) {
                     arr.push(i);
                 }
                 setPages(arr);
-                setEndPage(Math.ceil(res.data.totalCount / 5));
+                setEndPage(res.data.totalPages);
                 setBoardList(res.data.boardList);
             })
             .catch(err => {
@@ -112,19 +113,19 @@ function BoardList(props) {
                     </table>
                     <div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>
                         <a
-                            className={nowPage <= 1 ? 'text-black-50' : ''}
+                            className={nowPage <= 0 ? 'text-black-50' : ''}
                             onClick={() => {
-                                if (nowPage <= 1) {
+                                if (nowPage <= 0) {
                                     return null
                                 }
-                                return setNowPage(1)
+                                return setNowPage(0)
                             }}
                         ><i className="bi bi-chevron-double-left"></i>
                         </a>
                         <a
-                            className={nowPage <= 1 ? 'text-black-50' : ''}
+                            className={nowPage <= 0 ? 'text-black-50' : ''}
                             onClick={() => {
-                                if (nowPage <= 1) {
+                                if (nowPage <= 0) {
                                     return null
                                 }
                                 return setNowPage(nowPage - 1)
@@ -136,15 +137,15 @@ function BoardList(props) {
                                 return (
                                     <a
                                         key={value}
-                                        className={nowPage === value ? 'text-black' : 'text-black-50'}
-                                        onClick={() => setNowPage(value)}
+                                        className={nowPage === value - 1 ? 'text-black' : 'text-black-50'}
+                                        onClick={() => setNowPage(value - 1)}
                                     >{value}</a>);
                             })
                         }
                         <a
-                            className={nowPage >= endPage ? 'text-black-50' : ''}
+                            className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
                             onClick={() => {
-                                if (nowPage >= endPage) {
+                                if (nowPage >= endPage - 1) {
                                     return null
                                 }
                                 return setNowPage(nowPage + 1)
@@ -152,12 +153,12 @@ function BoardList(props) {
                         ><i className="bi bi-chevron-right"></i>
                         </a>
                         <a
-                            className={nowPage >= endPage ? 'text-black-50' : ''}
+                            className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
                             onClick={() => {
-                                if (nowPage >= endPage) {
+                                if (nowPage >= endPage - 1) {
                                     return null
                                 }
-                                return setNowPage(endPage)
+                                return setNowPage(endPage - 1)
                             }}
                         ><i className="bi bi-chevron-double-right"></i>
                         </a>

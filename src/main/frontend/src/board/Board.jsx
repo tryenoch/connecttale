@@ -52,7 +52,7 @@ function Board(props) {
                 </Col>
             </Row>
             <div>
-                <BoardList data={boardList[selectBoard]}/>
+                <BoardList data={boardList[selectBoard]} defaultPage={0}/>
             </div>
         </Container>
     )
