@@ -10,6 +10,9 @@
 .input-s4 {width: 400px}
 .input-s5 {width: 500px}
 
+.text-pupple {
+    color: #9766ff;
+}
 .btn-pupple-inline {
     --bs-btn-color: #fff;
     --bs-btn-bg: #9766ff;
