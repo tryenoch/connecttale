@@ -28,10 +28,10 @@ public class NovelSearchController {
   public Object searchKakaoResult(@RequestParam("searchWord") String searchWord) throws Exception {
 
     // 카카오 검색 결과에 대한 작품 id 리스트 가져오기
-    List<String> kakaoSearchIdList = new ArrayList<>();
-    kakaoSearchIdList = novelSearchService.getKakaoSearchIdList(searchWord);
+    Map<String, Object> kakaoSearchList = new HashMap<>();
+    kakaoSearchList = novelSearchService.getKakaoSearchIdList(searchWord);
 
-    return kakaoSearchIdList;
+    return kakaoSearchList;
   }
 
 

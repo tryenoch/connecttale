@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface NovelSearchService {
-  List<String> getKakaoSearchIdList(String searchWord) throws Exception;
+  Map<String, Object> getKakaoSearchIdList(String searchWord) throws Exception;
 
   Map<String, Object> getNaverSearchList(String searchWord) throws Exception;
 }

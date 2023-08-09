@@ -41,40 +41,52 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
   // 셀레니움을 통한 크롤링(카카오페이지)
   private WebDriver driver;
-  
+
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
 
 // --------------------- 카카오페이지 작품 id 가져오기 ------------------------------
   // 셀레니움을 통해 검색 결과에 따른 카카오페이지 작품 id 리스트 가져오기
   @Override
-  public List<String> getKakaoSearchIdList(String searchWord) throws Exception {
+  public Map<String, Object> getKakaoSearchIdList(String searchWord) throws Exception {
     // ------------- 카카오페이지 셀레니움을 통한 로그인 시도 --------------
+    Map<String, Object> kakaoSearchList = new HashMap<>();
 
-    String kakaoLoginUrl = "https://accounts.kakao.com/login/?continue=https%3A%2F%2Fkauth.kakao.com%2Foauth%2Fauthorize%3Fis_popup%3Dfalse%26ka%3Dsdk%252F2.1.0%2520os%252Fjavascript%2520sdk_type%252Fjavascript%2520lang%252Fko%2520device%252FWin32%2520origin%252Fhttps%25253A%25252F%25252Fpage.kakao.com%26auth_tran_id%3DFgka-xYkh8pn.BDkpLGp63nAvz7MpDLiXmCjD7BewrQMhhUnwdzGE.Cfn4AL%26response_type%3Dcode%26state%3Dhttps%25253A%25252F%25252Fpage.kakao.com%25252Fcontent%25252F51332154%26redirect_uri%3Dhttps%253A%252F%252Fpage.kakao.com%252Frelay%252Flogin%26through_account%3Dtrue%26client_id%3D49bbb48c5fdb0199e5da1b89de359484&talk_login=hidden#login";
-
+    String kakaoLoginUrl = "https://accounts.kakao.com/login/?continue=https%3A%2F%2Fkauth.kakao.com%2Foauth%2Fauthorize%3Fis_popup%3Dfalse%26ka%3Dsdk%252F2.1.0%2520os%252Fjavascript%2520sdk_type%252Fjavascript%2520lang%252Fko%2520device%252FWin32%2520origin%252Fhttps%25253A%25252F%25252Fpage.kakao.com%26auth_tran_id%3D4NVAWH9Y2fxSMEHpozuV3fE29BE-34edN65QVdy5wjDQd1tk2GYAa4Je-rJW%26response_type%3Dcode%26state%3Dhttps%25253A%25252F%25252Fpage.kakao.com%25252F%26redirect_uri%3Dhttps%253A%252F%252Fpage.kakao.com%252Frelay%252Flogin%26through_account%3Dtrue%26client_id%3D49bbb48c5fdb0199e5da1b89de359484&talk_login=hidden#login";
 
     String searchUrl = "https://page.kakao.com/search/result?keyword=" + searchWord + "&categoryUid=11";
 
     List<String> kakaoSearchIdList = new ArrayList<>();
+    List<String> kakaoSearchStarRateList = new ArrayList<>();
 
     System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
     // webDriver 옵션 설정
     ChromeOptions options = new ChromeOptions();
-    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
-//    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
-    options.addArguments("--enable-automation");
-    options.addArguments("--window-position=-100000,-100000");
-    options.addArguments("--window-size=0,0");
-    options.addArguments("--lang=ko");
-    options.addArguments("--disable-gpu");            //gpu 비활성화
-    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
+//    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
+////    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+//    options.addArguments("--enable-automation");
+//    options.addArguments("--window-position=-100000,-100000");
+//    options.addArguments("--window-size=0,0");
+//    options.addArguments("--lang=ko");
+//    options.addArguments("--disable-gpu");            //gpu 비활성화
+//    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
 
     driver = new ChromeDriver(options);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     try {
+      driver.get(kakaoLoginUrl);
+      Thread.sleep(1000);
+      driver.findElement(By.name("loginId")).sendKeys("jeti11@naver.com");
+      Thread.sleep(1000);
+      driver.findElement(By.name("password")).sendKeys("tkfkdgo1823!");
+
+      driver.findElement(By.cssSelector(".btn_g.highlight.submit")).click();
+      Thread.sleep(2000);
       // webDriver 경로 설정
+
+      Set<Cookie> cookies = driver.manage().getCookies();
 
       driver.get(searchUrl);
 
@@ -102,7 +114,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
       //      wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector(".flex-1.cursor-pointer")));
       
       // css선택자를 활용하여 해당 태그찾기(같은 클래스값을 가진 태그가 반복되는 형태라 list<WebElement>타입으로 설정함
-      List<WebElement> elements = driver.findElements(By.cssSelector(".flex-1.cursor-pointer"));
+      List<WebElement> elements = driver.findElements(By.xpath("//*[@id=\"__next\"]/div/div[2]/div/div[3]/div/div[2]/div/a"));
 
       if (elements.isEmpty()) {
         System.out.println("작품 아이디가 적힌 a태그를 못찾음");
@@ -114,7 +126,19 @@ public class NovelSearchServiceImpl implements NovelSearchService {
           int kakaoSearchIdIndex = kakaoSearchHref.lastIndexOf("/");
           String kakaoSearchId = kakaoSearchHref.substring(kakaoSearchIdIndex + 1);
           kakaoSearchIdList.add(kakaoSearchId);
+
+          driver.get("https://page.kakao.com/content/" + kakaoSearchId);
+          for (Cookie cookie : cookies) {
+            driver.manage().addCookie(cookie);
+          }
+
+          WebElement starRateEle = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]/span[2]"));
+          String starRate = starRateEle.getText();
+
+          kakaoSearchStarRateList.add(starRate);
         }
+        kakaoSearchList.put("kakaoSearchIdList", kakaoSearchIdList);
+        kakaoSearchList.put("kakaoSearchStarRateList", kakaoSearchStarRateList);
       }
 
     }
@@ -124,7 +148,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     finally {
       driver.quit();
     }
-    return kakaoSearchIdList;
+    return kakaoSearchList;
   }
 
 
