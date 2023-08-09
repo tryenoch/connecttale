@@ -4,9 +4,10 @@ import axios from "axios";
 
 function BoardList(props) {
 
-    //페이지가 변할 때 cate 값 0으로 초기화
+    //페이지가 변할 때 cate 값 0으로 초기화 - 검색 종류 cate
     const [cate, setCate] = useState(0);
     const [keyword, setKeyword] = useState('');
+    // 카테고리 변경 시 페이지 번호가 0으로 초기화 x
     const [nowPage, setNowPage] = useState(0);
     const [endPage, setEndPage] = useState(0);
     const [pages, setPages] = useState([1]);
