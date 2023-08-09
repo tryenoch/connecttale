@@ -41,7 +41,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
   // 셀레니움을 통한 크롤링(카카오페이지)
   private WebDriver driver;
-
+  
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
 
@@ -49,10 +49,14 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   // 셀레니움을 통해 검색 결과에 따른 카카오페이지 작품 id 리스트 가져오기
   @Override
   public List<String> getKakaoSearchIdList(String searchWord) throws Exception {
+    // ------------- 카카오페이지 셀레니움을 통한 로그인 시도 --------------
+
+    String kakaoLoginUrl = "https://accounts.kakao.com/login/?continue=https%3A%2F%2Fkauth.kakao.com%2Foauth%2Fauthorize%3Fis_popup%3Dfalse%26ka%3Dsdk%252F2.1.0%2520os%252Fjavascript%2520sdk_type%252Fjavascript%2520lang%252Fko%2520device%252FWin32%2520origin%252Fhttps%25253A%25252F%25252Fpage.kakao.com%26auth_tran_id%3DFgka-xYkh8pn.BDkpLGp63nAvz7MpDLiXmCjD7BewrQMhhUnwdzGE.Cfn4AL%26response_type%3Dcode%26state%3Dhttps%25253A%25252F%25252Fpage.kakao.com%25252Fcontent%25252F51332154%26redirect_uri%3Dhttps%253A%252F%252Fpage.kakao.com%252Frelay%252Flogin%26through_account%3Dtrue%26client_id%3D49bbb48c5fdb0199e5da1b89de359484&talk_login=hidden#login";
+
+
     String searchUrl = "https://page.kakao.com/search/result?keyword=" + searchWord + "&categoryUid=11";
 
     List<String> kakaoSearchIdList = new ArrayList<>();
-    kakaoSearchIdList.add("kakaoIdList");
 
     System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
@@ -102,32 +106,26 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
       if (elements.isEmpty()) {
         System.out.println("작품 아이디가 적힌 a태그를 못찾음");
-      } else {
+      }
+      else {
         for (WebElement element : elements) {
           // 태그 요소들 각각의 작품id값만 String으로 받아오기
           String kakaoSearchHref = element.getAttribute("href");
           int kakaoSearchIdIndex = kakaoSearchHref.lastIndexOf("/");
           String kakaoSearchId = kakaoSearchHref.substring(kakaoSearchIdIndex + 1);
           kakaoSearchIdList.add(kakaoSearchId);
-
-          // ------------- 얻은 id를 통해 디테일 페이지 접근(셀레니움) --------------
-
-          String kakaoDetailUrl = "https://page.kakao.com/content/" + kakaoSearchId;
-
-          driver.get(kakaoDetailUrl);
-
         }
       }
 
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       e.printStackTrace();
-    } finally {
+    }
+    finally {
       driver.quit();
     }
     return kakaoSearchIdList;
   }
-
-
 
 
   // ---------------------------- 네이버 검색결과 가져오기--------------------------------
