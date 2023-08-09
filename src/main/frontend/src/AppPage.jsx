@@ -18,14 +18,14 @@ function AppPage(props) {
   return (
     <div>
       <Header />
-      <Container fluid={'md'}>
+      <Container fluid={'md'} className={"mx-auto"}>
         <Routes>
-          <Route index path={"/"} element={<Main />}/>
+          <Route index path={"/*"} element={<Main />}/>
           <Route path={'/novel/*'} element={<Novel/>}/>
           <Route path={'/novelCate'} element={<NovelCate/>}/>
           <Route path={'/novelDetail'} element={<NovelDetail/>}/>
           <Route path={'/novelSearch'} element={<NovelSearch/>}/>
-          <Route path={'/board'} element={<Board/>}/>
+          <Route path={'/board/*'} element={<Board/>}/>
           <Route path={'/myPage'} element={<MyPage/>}/>
           <Route path={'/join/*'} element={<Join/>}/>
           <Route path={'/login'} element={<Login/>}/>
