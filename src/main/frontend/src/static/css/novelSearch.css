@@ -7,7 +7,7 @@
     margin-bottom: 0px;
 }
 
-.search-price {
+.search-price, .search-score {
     color: rgb(250, 114, 46);
 }
 
