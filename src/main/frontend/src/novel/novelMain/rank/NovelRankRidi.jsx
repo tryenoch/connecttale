@@ -1,13 +1,17 @@
 import React, {useState} from 'react';
 import {Col, Row} from "react-bootstrap";
 import * as MessageUtils from "../../../common/MessageUtils";
+import axios from "axios";
 
 function NovelRankRidi() {
   /* 순위 리스트 초기화 */
   const [novelRankList, setNovelRankList] = useState([
     {
       rank : 1,
-      title : "작품 제목 1"
+      title : "작품 제목",
+      thumbnail : "썸네일 이미지",
+      author : "작가 이름",
+      starRate : "별점"
     }
   ]);
 
@@ -15,10 +19,7 @@ function NovelRankRidi() {
 
   });*/
 
-  const rankTest = () => {
-    MessageUtils.infoMessage("테스트 버튼을 클릭했습니다.");
 
-  }
 
   return (
     <div>
@@ -32,27 +33,51 @@ function NovelRankRidi() {
         </Col>
       </Row>
       <Row>
-        <Col sm>
-          {
-            novelRankList.map(
-              (novel) => (
+        {
+          novelRankList.map(
+            (novel) => (
+              <Col sm={3}>
                 <div key={novel.rank}>
                   <p>작품 순위 : {novel.rank}</p>
                   <p>작품 제목 : {novel.title}</p>
                 </div>
-              )
+              </Col>
             )
-          }
-        </Col>
+          )
+        }
       </Row>
     </div>
 
   )
+
+  /* 기능 리스트 */
+  function addNovelTest(){
+    const updateNovelRankList = [
+      ...novelRankList,
+      {
+        rank : novelRankList.length + 1,
+        title : "작품 제목 " + (novelRankList.length + 1)
+      }
+    ];
+
+    setNovelRankList(updateNovelRankList);
+  }
+
+  function rankTest() {
+    // MessageUtils.infoMessage("테스트 버튼을 클릭했습니다.");
+
+    axios.get(`/novel/ridiRankList`, {
+      params : { category : "1750" }
+    }).then(res => {
+      MessageUtils.infoMessage("ridiRankList 통신에 성공했습니다.");
+      console.log(res);
+    }).catch(err => {
+      MessageUtils.errorMessage("에러 메세지", err);
+    })
+  }
+
 }
 
-function addNovelTest(){
-
-}
 
 
 
