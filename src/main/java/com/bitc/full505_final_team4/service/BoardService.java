@@ -12,4 +12,6 @@ public interface BoardService {
     Page<BoardEntity> getNotiList(Pageable pageable) throws Exception;
 
     Page<BoardEntity> getEventList(Pageable pageable) throws Exception;
+
+    void setBoard(BoardEntity board) throws Exception;
 }

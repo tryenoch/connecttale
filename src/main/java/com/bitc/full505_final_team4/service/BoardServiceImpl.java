@@ -30,4 +30,9 @@ public class BoardServiceImpl implements BoardService {
     public Page<BoardEntity> getEventList(Pageable pageable) throws Exception {
         return boardRepository.findByBoardCate_IdxOrderByBoardIdxDesc(3, pageable);
     }
+
+    @Override
+    public void setBoard(BoardEntity board) throws Exception {
+        boardRepository.save(board);
+    }
 }

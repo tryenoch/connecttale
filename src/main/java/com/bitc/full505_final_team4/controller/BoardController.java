@@ -1,15 +1,16 @@
 package com.bitc.full505_final_team4.controller;
 
 import com.bitc.full505_final_team4.data.dto.BoardDTO;
+import com.bitc.full505_final_team4.data.entity.BoardCateEntity;
 import com.bitc.full505_final_team4.data.entity.BoardEntity;
+import com.bitc.full505_final_team4.data.entity.MemberEntity;
+import com.bitc.full505_final_team4.data.entity.ReqCateEntity;
 import com.bitc.full505_final_team4.service.BoardService;
+import com.bitc.full505_final_team4.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,4 +107,36 @@ public class BoardController {
         return result;
     }
 
+    @RequestMapping(value = "/board/process", method = RequestMethod.POST)
+    public Object writeBoard(
+            @RequestParam("boardTitle") String boardTitle,
+            @RequestParam("boardContents") String boardContents,
+            @RequestParam("boardCate") int boardCate,
+            @RequestParam("createId") String createId,
+            @RequestParam("reqCate") int reqCate
+    ) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        BoardEntity board = new BoardEntity();
+        BoardCateEntity bCate = new BoardCateEntity();
+//        MemberEntity member = memberService.getUser(createId);
+
+//        board.setCreateId(member);
+        board.setBoardTitle(boardTitle);
+        board.setBoardContents(boardContents);
+        board.setBoardCate(bCate);
+
+        if (reqCate != 0) {
+            ReqCateEntity rCate = new ReqCateEntity();
+            rCate.setIdx(reqCate);
+            board.setReqCate(rCate);
+        } else {
+            board.setReqCate(null);
+        }
+
+        boardService.setBoard(board);
+
+
+        return result;
+    }
 }

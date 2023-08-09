@@ -71,7 +71,7 @@ td.cursor,
 .search-bar input,
 .select-box,
 .nav.tabs-bg{
-    background-color: rgba(123, 60, 250, 0.36);
+    /*background-color: rgba(123, 60, 250, 0.36);*/
 }
 
 /* table 줄 간격 css*/
