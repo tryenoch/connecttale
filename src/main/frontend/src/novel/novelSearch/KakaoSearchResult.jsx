@@ -28,7 +28,7 @@ function KakaoSearchResult(props) {
               for (let i = 0; i < res.length; i++) {
                 const item = res[i].data.pageProps
                 const data = {
-                  platform: '카카오',
+                  platform: '1',
                   platformId: item.seriesId,
                   title: item.metaInfo.ogTitle,
                   thumbnail: item.metaInfo.image,
@@ -41,10 +41,8 @@ function KakaoSearchResult(props) {
                 }
                 kakaoSearchResult.push(data);
               }
-            
               // setNovelSearchList(prevState => [...prevState, ...kakaoSearchResult]);
               setNovelSearchList(kakaoSearchResult);
-            
             })
             .catch(err => {
               console.log(err.message);
@@ -83,7 +81,7 @@ function KakaoSearchResult(props) {
                 {
                   item.price != null
                     ? <p className={'search-price fw-bold'}>가격 : {item.price}</p>
-                    : <p className={'text-muted'}>가격 정보 없음</p>
+                    : <p className={'search-price text-muted'}>가격 정보 없음</p>
                 }
                 <p className={'search-info'}>{item.description.substring(0, 170)}..</p>
               </div>
