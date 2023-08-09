@@ -1,186 +1,45 @@
 import React, {useEffect, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
 import axios from "axios";
-
-const boardList = [
-    {
-        idx: 1,
-        title: '제목 1',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 2,
-        title: '제목 2',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 3,
-        title: '제목 3',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 4,
-        title: '제목 4',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 5,
-        title: '제목 5',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 6,
-        title: '제목 6',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 7,
-        title: '제목 7',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 8,
-        title: '제목 8',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 9,
-        title: '제목 9',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 10,
-        title: '제목 10',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 11,
-        title: '제목 11',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 12,
-        title: '제목 12',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 13,
-        title: '제목 13',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 14,
-        title: '제목 14',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 15,
-        title: '제목 15',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 16,
-        title: '제목 16',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 17,
-        title: '제목 17',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 18,
-        title: '제목 18',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 19,
-        title: '제목 19',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 20,
-        title: '제목 20',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 21,
-        title: '제목 21',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 22,
-        title: '제목 22',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-    {
-        idx: 23,
-        title: '제목 23',
-        createId: 'tester1',
-        createDt: '2023.08.04',
-    },
-]
+import {Link} from "react-router-dom";
 
 function BoardList(props) {
 
-    //페이지가 변할 때 cate 값 0으로 초기화
+    //페이지가 변할 때 cate 값 0으로 초기화 - 검색 종류 cate
     const [cate, setCate] = useState(0);
     const [keyword, setKeyword] = useState('');
-    const [totalCount, setTotalCount] = useState(0);
-    const [nowPage, setNowPage] = useState(1);
+    // 카테고리 변경 시 페이지 번호가 0으로 초기화 x
+    const [nowPage, setNowPage] = useState(0);
     const [endPage, setEndPage] = useState(0);
-    const [pages, setPages] = useState([]);
+    const [pages, setPages] = useState([1]);
+    const [boardList, setBoardList] = useState([{}]);
+
+    useEffect(()=>{
+        setNowPage(props.defaultPage);
+    },[])
 
     useEffect(() => {
         requestData();
-    }, [nowPage]);
-
-    useEffect(() => {
-        setPages([1, 2, 3, 4, 5]);
-        setNowPage(1);
-    }, [props]);
+    }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/${props.data.type}/${nowPage}`)
+        axios.get(`/${props.data.type}?page=${nowPage}&size=10`)
             .then(res => {
-                console.log(res);
+
+                console.log(res.data);
 
                 let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
                 let arr = [];
                 let lastNum = offset + 5;
-                if (lastNum > Math.ceil(res.data.totalCount / 5)) {
-                    lastNum = Math.ceil(res.data.totalCount / 5) + 1;
+                if (lastNum > Math.ceil(res.data.totalPages / 5)) {
+                    lastNum = Math.ceil(res.data.totalPages / 5) + 1;
                 }
-                for (let i = offset; i < lastNum; i++) {
+                for (let i = offset; i <= lastNum; i++) {
                     arr.push(i);
                 }
                 setPages(arr);
-                setTotalCount(res.data.totalCount);
-                setEndPage(Math.ceil(res.data.totalCount / 5));
-
-
+                setEndPage(res.data.totalPages);
+                setBoardList(res.data.boardList);
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);
@@ -190,10 +49,6 @@ function BoardList(props) {
     const handleSubmit = (event) => {
         alert(`검색어 : ${keyword}, 종류 : ${cate}`);
         event.preventDefault();
-    }
-
-    const handlePage = (event) => {
-        setNowPage(event.target.value);
     }
 
     return (
@@ -248,8 +103,8 @@ function BoardList(props) {
                             boardList.map((board, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{index}</td>
-                                        <td className={'text-start cursor'}>{board.title}</td>
+                                        <td>{board.boardIdx}</td>
+                                        <td className={'text-start cursor'}>{board.boardTitle}</td>
                                         <td>{board.createId}</td>
                                         <td>{board.createDt}</td>
                                     </tr>
@@ -258,21 +113,24 @@ function BoardList(props) {
                         }
                         </tbody>
                     </table>
+                    <div className={'d-flex justify-content-end'}>
+                        <Link to={'/write'} className={'btn btn-primary'}>글 쓰기</Link>
+                    </div>
                     <div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>
                         <a
-                            className={nowPage <= 1 ? 'text-black-50' : ''}
+                            className={nowPage <= 0 ? 'text-black-50' : ''}
                             onClick={() => {
-                                if (nowPage <= 1) {
+                                if (nowPage <= 0) {
                                     return null
                                 }
-                                return setNowPage(1)
+                                return setNowPage(0)
                             }}
                         ><i className="bi bi-chevron-double-left"></i>
                         </a>
                         <a
-                            className={nowPage <= 1 ? 'text-black-50' : ''}
+                            className={nowPage <= 0 ? 'text-black-50' : ''}
                             onClick={() => {
-                                if (nowPage <= 1) {
+                                if (nowPage <= 0) {
                                     return null
                                 }
                                 return setNowPage(nowPage - 1)
@@ -283,15 +141,16 @@ function BoardList(props) {
                             pages.map((value) => {
                                 return (
                                     <a
-                                        className={nowPage === value ? 'text-black' : 'text-black-50'}
-                                        onClick={() => setNowPage(value)}
+                                        key={value}
+                                        className={nowPage === value - 1 ? 'text-black' : 'text-black-50'}
+                                        onClick={() => setNowPage(value - 1)}
                                     >{value}</a>);
                             })
                         }
                         <a
-                            className={nowPage >= endPage ? 'text-black-50' : ''}
+                            className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
                             onClick={() => {
-                                if (nowPage >= endPage) {
+                                if (nowPage >= endPage - 1) {
                                     return null
                                 }
                                 return setNowPage(nowPage + 1)
@@ -299,12 +158,12 @@ function BoardList(props) {
                         ><i className="bi bi-chevron-right"></i>
                         </a>
                         <a
-                            className={nowPage >= endPage ? 'text-black-50' : ''}
+                            className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
                             onClick={() => {
-                                if (nowPage >= endPage) {
+                                if (nowPage >= endPage - 1) {
                                     return null
                                 }
-                                return setNowPage(endPage)
+                                return setNowPage(endPage - 1)
                             }}
                         ><i className="bi bi-chevron-double-right"></i>
                         </a>

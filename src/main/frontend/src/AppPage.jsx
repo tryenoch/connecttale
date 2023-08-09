@@ -25,7 +25,7 @@ function AppPage(props) {
           <Route path={'/novelCate'} element={<NovelCate/>}/>
           <Route path={'/novelDetail'} element={<NovelDetail/>}/>
           <Route path={'/novelSearch'} element={<NovelSearch/>}/>
-          <Route path={'/board'} element={<Board/>}/>
+          <Route path={'/board/*'} element={<Board/>}/>
           <Route path={'/myPage'} element={<MyPage/>}/>
           <Route path={'/join/*'} element={<Join/>}/>
           <Route path={'/login'} element={<Login/>}/>
