@@ -4,6 +4,7 @@ import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
 import NovelTest from "./NovelTest";
 import NovelMain from "./NovelMain";
 import NovelMainTest from "./novelMain/NovelMainTest";
+import NovelMainRank from "./novelMain/rank/NovelMainRank";
 
 function novel(props) {
 
@@ -14,7 +15,8 @@ function novel(props) {
             <Route index element={<NovelMain />} />
             <Route path={"/novelMain"} element={<NovelMain />}/>
             <Route path={"/novelTest"} element={<NovelTest />}/>
-            <Route path={"/novelTest"} element={<NovelMainTest />}/>
+            <Route path={"/novelMainTest"} element={<NovelMainTest />}/>
+            <Route path={"/novelRank/*"} element={<NovelMainRank />} />
           </Routes>
         </div>
     )

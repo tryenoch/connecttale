@@ -1,10 +1,11 @@
 package com.bitc.full505_final_team4.data.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.checkerframework.checker.units.qual.A;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+
 
 @Entity
 @Table(name = "member")
