@@ -16,7 +16,7 @@ function BoardWrite() {
     const [reqCate, setReqCate] = useState(0);
 
     const handleSubmit = (event) => {
-        // preventDefault 안하면 게시글 등록 완료 시 다시 등록페이지로 이동됨
+        // submit으로 인한 화면이동을 막기 위해 preventDefault 추가
         event.preventDefault();
         //빈 데이터 안 보내도록 조건 추가
         if (title.trim().length <= 0) {
