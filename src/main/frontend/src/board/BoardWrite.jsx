@@ -15,7 +15,7 @@ function BoardWrite() {
     const [createId, setCreateId] = useState('test1');
     const [reqCate, setReqCate] = useState(0);
 
-    const handleSubmit = () => {
+    const handleSubmit = (event) => {
         axios.post(`/board/process`, null, {
             params: {
                 boardTitle: title,
@@ -26,11 +26,13 @@ function BoardWrite() {
             }
         })
             .then(res => {
-                navi(-1);
+                //빈 데이터 안 보내도록 조건 추가
+                navi("/board/main");
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. board/write : ${err}`);
             })
+        event.preventDefault();
     }
 
     return (
