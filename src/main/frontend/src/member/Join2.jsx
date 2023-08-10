@@ -9,7 +9,7 @@ import axios from "axios";
 function Join2(props) {
 
     const [confirm, setConfirm] = useState({
-        idConfirm: "", pwConfirm: "", confirmPwConfirm: "", nameConfirm: "", nickConfirm: "", genderConfirm: "", birthdayConfirm: ""
+        idConfirm: "", pwConfirm: "", confirmPwConfirm: "", nameConfirm: "", nickConfirm: "", genderConfirm: "", birthConfirm: ""
     });
     const [check, setCheck] = useState({
         idCheck: false, pwCheck: false, confirmPwCheck: false, nameCheck: false, nickCheck: false, genderCheck: false, birthCheck: false
@@ -21,7 +21,9 @@ function Join2(props) {
     const [name, setName] = useState("");
     const [nick, setNick] = useState("");
     const [gender, setGender] = useState(0);
-    const [birthday, setBirthday] = useState("");
+    const [year, setYear] = useState("");
+    const [mon, setMon] = useState("");
+    const [day, setDay] = useState("");
 
     const navi = useNavigate();
 
@@ -44,10 +46,15 @@ function Join2(props) {
         setGender(e.target.value);
     }
 
-    const changeBirthday = (e) => {
-        setBirthday(e.target.value);
+    const changeYear = (e) => {
+        setYear(e.target.value);
     }
-
+    const changeMon = (e) => {
+        setMon(e.target.value);
+    }
+    const changeDay = (e) => {
+        setDay(e.target.value);
+    }
     const confirmId = () => {
         axios.get('/join/join2', {
             params: {
@@ -92,7 +99,7 @@ function Join2(props) {
             setCheck({check, nickCheck: true});
         }
         if (nick === null || nick === "" || confirm.nickConfirm === "이미 사용중인 닉네임입니다.") {
-            setConfirm({confirm, nickConfirm: "비밀번호를 입력하세요"});
+            setConfirm({confirm, nickConfirm: "닉네임을 입력하세요"});
             return;
         } else if (confirm.nickConfirm === "사용가능한 닉네임입니다.") {
             setCheck({check, nickCheck: true});
@@ -104,7 +111,7 @@ function Join2(props) {
             setCheck({check, pwCheck: true});
         }
         if (pw !== confirmPw) {
-            setConfirm({confirm, pwConfirm: "비밀번호와 다릅니다."});
+            setConfirm({confirm, confirmPwConfirm: "비밀번호와 다릅니다."});
             return;
         } else {
             setCheck({check, confirmPwCheck: true});
@@ -121,7 +128,18 @@ function Join2(props) {
         } else {
             setCheck({check, nameCheck: true});
         }
-
+        if (year === null || year === "" || mon === null || mon === "" || day === null || day === "") {
+            setConfirm({confirm, birthConfirm: "생년월일을 입력하세요"});
+            return;
+        } else {
+            setCheck({check, birthCheck: true});
+        }
+        if (gender === null || gender === "" || gender === 0) {
+            setConfirm({confirm, genderConfirm: "성별을 선택하세요"});
+            return;
+        } else {
+            setCheck({check, genderCheck: true});
+        }
         axios.post('/join/join2', null, {
             params: {
                 id: userId,
@@ -129,7 +147,9 @@ function Join2(props) {
                 name: name,
                 nickname: nick,
                 gender: gender,
-                birthday: birthday
+                year: year,
+                mon: mon,
+                day: day
             }
         })
             .then(() => {
@@ -229,21 +249,30 @@ function Join2(props) {
                                        onChange={changeName}/>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.idConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.nameConfirm}</span></div>
                         </div>
                         <div className={'row mt-4'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>생년월일</h4>
                             </div>
                             <div className={'col-sm-9 d-flex'}>
-                                <input type="date" name={'birth'} id={'d'}
-                                       className={'input-s5 form-control rounded-1 ms-4'}
-                                       onChange={changeBirthday}/>
+                                <input type="number" name={'birth'} id={'yy'} min={1950} max={9999}
+                                       className={'input-s2 form-control rounded-1'}
+                                       onChange={changeYear}/>
+                                <span className={'mt-2 ms-2'}>년</span>
+                                <input type="number" name={'birth'} id={'mm'} min={1} max={12} minLength={2}
+                                       className={'input-s1 form-control rounded-1 ms-3'}
+                                       onChange={changeMon}/>
+                                <span className={'mt-2 ms-2'}>월</span>
+                                <input type="number" name={'birth'} id={'dd'} min={1} max={31} minLength={2}
+                                       className={'input-s1 form-control rounded-1 ms-3'}
+                                       onChange={changeDay}/>
+                                <span className={'mt-2 ms-2'}>일</span>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.birthdayConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.birthConfirm}</span></div>
                         </div>
-                        <div className={'row mt-4'}>
+                        <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>성별</h4>
                             </div>
@@ -253,6 +282,8 @@ function Join2(props) {
                                 <input type="radio" name={'gender'} id={'female'} value={2} onChange={changeGender}/>
                                 <label htmlFor="female" className={'ms-1 mt-2'}>여성</label>
                             </div>
+                            <div className={'col-sm-3'}></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.genderConfirm}</span></div>
                         </div>
                         <div className={'row mt-5 justify-content-end'}>
                             <div className={'col-sm-8'}></div>

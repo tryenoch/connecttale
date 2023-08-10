@@ -28,7 +28,10 @@ public class MemberController {
 //  }
 
   @RequestMapping(value = "/join/join2", method = RequestMethod.POST)
-  public Object join(@RequestParam("id") String id, @RequestParam("pw") String pw, @RequestParam("name") String name, @RequestParam("nickname") String nickname, @RequestParam("gender") int gender, @RequestParam("birthday") String birthday) throws Exception {
+  public Object join(@RequestParam("id") String id, @RequestParam("pw") String pw, @RequestParam("name") String name, @RequestParam("nickname") String nickname, @RequestParam("gender") int gender, @RequestParam("year") String year, @RequestParam("mon") String mon, @RequestParam("day") String day) throws Exception {
+
+    String mm = mon.length() < 2 ? '0' + mon : mon;
+    String dd = day.length() < 2 ? '0' + day : day;
 
     MemberEntity mem = MemberEntity.builder()
         .id(id)
@@ -36,7 +39,7 @@ public class MemberController {
         .name(name)
         .nickname(nickname)
         .gender(gender)
-        .birthday(birthday)
+        .birthday(year+mm+dd)
         .grade(1)
         .deletedYn("N")
         .build();
