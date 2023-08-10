@@ -84,7 +84,6 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //
 //      driver.findElement(By.cssSelector(".btn_g.highlight.submit")).click();
 //      Thread.sleep(2000);
-//      // webDriver 경로 설정
 //
 //      Set<Cookie> cookies = driver.manage().getCookies();
 //
@@ -241,15 +240,15 @@ public class NovelSearchServiceImpl implements NovelSearchService {
       // Jsoup 활용하여 페이지에 접속하기
       Document findPageNum = Jsoup.connect(findMaxPageNumUrl).get();
 
-      // 검색 결과로 나온 총작품수로 max pageNum 구하기
+      // 검색 결과로 나온 총작품수로 max pageNum 구하기 => 자료가 너무 많아 페이지 max pageNum 10개로 고정
       Elements pageNumEle = findPageNum.select("div[class=lst_header]>h3>em");
       if (!pageNumEle.isEmpty()) {
-        int allCountStartIndex = pageNumEle.text().indexOf("(");
-        int allCountEndIndex = pageNumEle.text().indexOf(")");
-        int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
-
-        double maxPageDot = allCount / 25;
-        int maxPageNum = (int) Math.ceil(maxPageDot);
+//        int allCountStartIndex = pageNumEle.text().indexOf("(");
+//        int allCountEndIndex = pageNumEle.text().indexOf(")");
+//        int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
+//
+//        double maxPageDot = allCount / 25;
+//        int maxPageNum = (int) Math.ceil(maxPageDot);
 
         // 리스트 타입으로 저장할 변수 선언
         List<String> platformIdList = new ArrayList<>();
@@ -267,7 +266,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         List<String> ageGradeList = new ArrayList<>();
 
         // 1페이지부터 maxPageNum 까지 반복문으로 사이트 크롤링하기
-        for (int i = 1; i <= maxPageNum; i++) {
+        for (int i = 1; i <= 10; i++) {
           // 페이지 별로 데이터 찾아올 url
           String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
 
@@ -463,6 +462,69 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //
 //    return naverSearchList;
 //  }
+
+
+  // -------------------------- 리디북스 검색결과 가져오기 ---------------------------
+//  @Override
+//  public Map<String, Object> getRidiSearchList(String searchWord) throws Exception {
+//    Map<String, Object> ridiSearchList = new HashMap<>();
+//    List<String> thumbnailList = new ArrayList<>();
+//
+//    // 로그인 url
+//    String ridiLoginUrl = "https://ridibooks.com/account/login?return_url=https%3A%2F%2Fridibooks.com%2Fwebtoon%2Frecommendation";
+//
+//    // 검색 url
+//    String ridiSearchUrl = "https://ridibooks.com/search?q=" + searchWord + "&adult_exclude=n";
+//
+//    System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
+//
+//        ChromeOptions options = new ChromeOptions();
+//////    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
+////////    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+//////    options.addArguments("--enable-automation");
+//////    options.addArguments("--window-position=-100000,-100000");
+//////    options.addArguments("--window-size=0,0");
+//////    options.addArguments("--lang=ko");
+//////    options.addArguments("--disable-gpu");            //gpu 비활성화
+//////    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
+//    driver = new ChromeDriver(options);
+//    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+//
+//    try {
+//      driver.get(ridiLoginUrl);
+//      Thread.sleep(1000);
+//      driver.findElement(By.xpath("//*[@id=\"__next\"]/div/section/div/form[1]/input[1]")).sendKeys("jeti11");
+//      Thread.sleep(1000);
+//      driver.findElement(By.xpath("//*[@id=\"__next\"]/div/section/div/form[1]/input[2]")).sendKeys("qntks505!");
+//      Thread.sleep(1000);
+//      driver.findElement(By.xpath("//*[@id=\"__next\"]/div/section/div/form[1]/button")).click();
+//
+//      Set<Cookie> cookies = driver.manage().getCookies();
+//
+//      driver.get(ridiSearchUrl);
+//      for (Cookie cookie : cookies) {
+//        driver.manage().addCookie(cookie);
+//      }
+//
+//      List<WebElement> thumbnails = driver.findElements(By.cssSelector(".fig-13iy9p2"));
+//
+//      for (WebElement e : thumbnails) {
+//        String thumbnail = e.getAttribute("src");
+//        thumbnailList.add(thumbnail);
+//      }
+//      ridiSearchList.put("thumbnailList", thumbnailList);
+//
+//    }
+//    catch (Exception e) {
+//      e.printStackTrace();
+//    }
+//    finally {
+//      driver.quit();
+//    }
+//
+//    return ridiSearchList;
+//  }
+
 }
 
 
