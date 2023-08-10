@@ -26,14 +26,33 @@
   padding: 5px 15px;
   font-size: 1.03rem;
 }
+.btn-purple.btn-sm {
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  margin-right: 5px;
+}
 
 .btn-purple.round {
   border-radius: 20px;
 }
 
-.btn-purple:hover {
+.btn-purple:hover, .btn-outline-purple:hover,
+.btn-outline-purple:active{
   background: #9766ff;
   color: #fff;
+}
+
+.btn-outline-purple {
+  background: #fff;
+  color: #8244ff;
+  border : 1px solid #8244ff;
+  padding: 5px 15px;
+  font-size: 1.03rem;
+  margin-right: 5px;
+}
+.btn-outline-purple.btn-sm {
+  font-size: 0.9rem;
+  padding: 5px 10px;
 }
 
 .nav-style {
