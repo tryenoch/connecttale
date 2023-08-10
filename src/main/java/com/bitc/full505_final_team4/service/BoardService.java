@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.service;
 
+import com.bitc.full505_final_team4.data.dto.BoardDTO;
 import com.bitc.full505_final_team4.data.entity.BoardEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,5 +14,5 @@ public interface BoardService {
 
     Page<BoardEntity> getEventList(Pageable pageable) throws Exception;
 
-    void setBoard(BoardEntity board) throws Exception;
+    int setBoard(BoardDTO board) throws Exception;
 }

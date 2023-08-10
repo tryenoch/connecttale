@@ -26,8 +26,7 @@ function BoardWrite() {
             }
         })
             .then(res => {
-                console.log(res.data);
-                // navi(-1);
+                navi(-1);
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. board/write : ${err}`);

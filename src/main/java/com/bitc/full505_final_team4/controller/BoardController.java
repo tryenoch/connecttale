@@ -45,7 +45,7 @@ public class BoardController {
             reqList.add(req);
         }
 
-        result.put("success", "성공");
+        result.put("result", "성공");
         result.put("totalPages", totalPages);
         result.put("nowPage", pageable.getPageNumber() + 1);
         result.put("boardType", "req");
@@ -72,7 +72,7 @@ public class BoardController {
             notiList.add(noti);
         }
 
-        result.put("success", "성공");
+        result.put("result", "성공");
         result.put("totalPages", totalPages);
         result.put("nowPage", pageable.getPageNumber() + 1);
         result.put("boardType", "notice");
@@ -99,7 +99,7 @@ public class BoardController {
             eventList.add(event);
         }
 
-        result.put("success", "성공");
+        result.put("result", "성공");
         result.put("totalPages", totalPages);
         result.put("nowPage", pageable.getPageNumber() + 1);
         result.put("boardType", "event");
@@ -108,34 +108,13 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/board/process", method = RequestMethod.POST)
-    public Object writeBoard(
-            @RequestParam("boardTitle") String boardTitle,
-            @RequestParam("boardContents") String boardContents,
-            @RequestParam("boardCate") int boardCate,
-            @RequestParam("createId") String createId,
-            @RequestParam("reqCate") int reqCate
-    ) throws Exception {
+    public Object writeBoard(BoardDTO board) throws Exception {
         Map<String, Object> result = new HashMap<>();
 
-        BoardEntity board = new BoardEntity();
-        BoardCateEntity bCate = new BoardCateEntity();
-//        MemberEntity member = memberService.getUser(createId);
+        int boardIdx = boardService.setBoard(board);
 
-//        board.setCreateId(member);
-        board.setBoardTitle(boardTitle);
-        board.setBoardContents(boardContents);
-        board.setBoardCate(bCate);
-
-        if (reqCate != 0) {
-            ReqCateEntity rCate = new ReqCateEntity();
-            rCate.setIdx(reqCate);
-            board.setReqCate(rCate);
-        } else {
-            board.setReqCate(null);
-        }
-
-        boardService.setBoard(board);
-
+        result.put("result", "성공");
+        result.put("boardIdx", boardIdx);
 
         return result;
     }
