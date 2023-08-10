@@ -2,10 +2,7 @@ package com.bitc.full505_final_team4.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -47,5 +44,15 @@ public class BoardEntity {
     @JoinColumn(name = "req_cate", nullable = true)
     @ToString.Exclude
     private ReqCateEntity reqCate;
+
+    // save를 위한 entity builder 추가
+    @Builder
+    public BoardEntity(String boardTitle, String boardContents, BoardCateEntity boardCate, MemberEntity createId, ReqCateEntity reqCate) {
+        this.boardTitle = boardTitle;
+        this.boardContents = boardContents;
+        this.boardCate = boardCate;
+        this.createId = createId;
+        this.reqCate = reqCate;
+    }
 
 }

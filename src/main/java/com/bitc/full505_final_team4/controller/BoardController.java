@@ -1,15 +1,16 @@
 package com.bitc.full505_final_team4.controller;
 
 import com.bitc.full505_final_team4.data.dto.BoardDTO;
+import com.bitc.full505_final_team4.data.entity.BoardCateEntity;
 import com.bitc.full505_final_team4.data.entity.BoardEntity;
+import com.bitc.full505_final_team4.data.entity.MemberEntity;
+import com.bitc.full505_final_team4.data.entity.ReqCateEntity;
 import com.bitc.full505_final_team4.service.BoardService;
+import com.bitc.full505_final_team4.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class BoardController {
             reqList.add(req);
         }
 
-        result.put("success", "성공");
+        result.put("result", "성공");
         result.put("totalPages", totalPages);
         result.put("nowPage", pageable.getPageNumber() + 1);
         result.put("boardType", "req");
@@ -71,7 +72,7 @@ public class BoardController {
             notiList.add(noti);
         }
 
-        result.put("success", "성공");
+        result.put("result", "성공");
         result.put("totalPages", totalPages);
         result.put("nowPage", pageable.getPageNumber() + 1);
         result.put("boardType", "notice");
@@ -98,7 +99,7 @@ public class BoardController {
             eventList.add(event);
         }
 
-        result.put("success", "성공");
+        result.put("result", "성공");
         result.put("totalPages", totalPages);
         result.put("nowPage", pageable.getPageNumber() + 1);
         result.put("boardType", "event");
@@ -106,4 +107,15 @@ public class BoardController {
         return result;
     }
 
+    @RequestMapping(value = "/board/process", method = RequestMethod.POST)
+    public Object writeBoard(BoardDTO board) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        int boardIdx = boardService.setBoard(board);
+
+        result.put("result", "성공");
+        result.put("boardIdx", boardIdx);
+
+        return result;
+    }
 }
