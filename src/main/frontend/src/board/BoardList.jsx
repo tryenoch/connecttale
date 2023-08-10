@@ -104,7 +104,9 @@ function BoardList(props) {
                                 return (
                                     <tr key={index}>
                                         <td>{board.boardIdx}</td>
-                                        <td className={'text-start cursor'}>{board.boardTitle}</td>
+                                        <td className={'text-start cursor'}>
+                                            <Link to={`/board/detail/${board.boardIdx}`} state={{data: props.data}}>{board.boardTitle}</Link>
+                                        </td>
                                         <td>{board.createId}</td>
                                         <td>{board.createDt}</td>
                                     </tr>
