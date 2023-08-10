@@ -17,7 +17,7 @@ function RidiSearchResult(props) {
         try {
           const response = await axios.get("https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword=" + props.keyword + "&start=" + s + "&what=base&where%5B%5D=book&site=ridi-store");
           const item = response.data.books;
-          console.log(item);
+          // console.log(item);
           
           for (let i = 0; i < item.length; i++) {
             const saveWebNovel = (param) => {
@@ -33,12 +33,11 @@ function RidiSearchResult(props) {
                 publi: item[i].publisher,
                 category: item[i].parent_category_name.replace(" " + param, ""),
                 count: item[i].book_count,
-                price: item[i].series_prices_info.map(price => {
-                  return price.max_price;
-                }),
+                price: item[i].price != null ? item[i].price : item[i].series_prices_info[0].max_price,
                 completeYn: item[i].is_series_complete ? '완결' : '연재중',
                 description: item[i].desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
-                ageGrade: item[i].age_limit == 19 ? "Y" : "N"
+                ageGrade: item[i].age_limit == 19 ? "Y" : "N",
+                novelOrEbook: item[i].web_title_title.includes('e북') ? "e북" : "웹소설"
               }
               ridiSearchList.push(data);
             }
@@ -67,54 +66,7 @@ function RidiSearchResult(props) {
       }
       setNovelSearchList(ridiSearchList);
     }
-  
-    // for (let s = 0; s <= 216; s += 24) {
-    //   axios.get("https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword=" + props.keyword + "&start=" + s + "&what=base&where%5B%5D=book&site=ridi-store")
-    //     .then(res => {
-    //
-    //       const item = res.data.books;
-    //
-    //       // console.log(item);
-    //       // console.log('--------------------------------')
-    //       for (let i = 0; i < item.length; i++) {
-    //         if (item[i].parent_category_name.includes('웹소설')) {
-              // const data = {
-              //   platform: "3",
-              //   platformId: item[i].b_id,
-              //   title: item[i].title,
-              //   thumbnail: "https://img.ridicdn.net/cover/"+ item[i].b_id +"/xxlarge",
-              //   author: item[i].authors_info.map(auth => {
-              //     return auth.name;
-              //   }),
-              //   starRate: item[i].buyer_rating_score,
-              //   publi: item[i].publisher,
-              //   category: item[i].parent_category_name.replace(" 웹소설", ""),
-              //   count: item[i].book_count,
-              //   price: item[i].series_prices_info.map(price => {
-              //     return price.max_price;
-              //   }),
-              //   completeYn: item[i].tags_info.map(complete => {
-              //     if (complete.tag_id == 1373) {
-              //       return "완결"
-              //     }
-              //     else if (complete.tag_id == 3774){
-              //       return "연재중"
-              //     }
-              //   }),
-              //   description: item[i].desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
-              // }
-    //           ridiSearchList.push(data);
-    //         }
-    //       }
-    //       setNovelSearchList(ridiSearchList);
-    //
-    //     })
-    //     .catch(err => {
-    //       console.log(err.message);
-    //     })
-    // }
     fetchData();
-    
   }, [props.keyword])
   
   return (
@@ -149,9 +101,9 @@ function RidiSearchResult(props) {
                     <p>
                       &nbsp;<span className={'fw-bold'}>{item.completeYn}
                       {
-                        item.title.indexOf('[단행본]') == -1
-                          ? <span>&nbsp;(총{item.count}화)</span>
-                          : <span>&nbsp;(총{item.count}권)</span>
+                        item.novelOrEbook == 'e북'
+                          ? <span>&nbsp;(총{item.count}권)</span>
+                          : <span>&nbsp;(총{item.count}화)</span>
                       }
                   </span>
                     </p>

@@ -14,7 +14,7 @@ function NaverSearchResult(props) {
       }
     })
       .then(res => {
-        // console.log(res);
+        console.log(res);
         let naverSearchList = [];
         
         if(Object.keys(res.data) != 0) {

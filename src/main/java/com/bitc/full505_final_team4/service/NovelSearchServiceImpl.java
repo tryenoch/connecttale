@@ -160,44 +160,42 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
     // webDriver 옵션 설정
     ChromeOptions options = new ChromeOptions();
-    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
-//    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
-    options.addArguments("--enable-automation");
-    options.addArguments("--window-position=-100000,-100000");
-    options.addArguments("--window-size=0,0");
-    options.addArguments("--lang=ko");
+//    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
+    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+//    options.addArguments("--enable-automation");
+//    options.addArguments("--window-position=-100000,-100000");
+//    options.addArguments("--window-size=0,0");
+//    options.addArguments("--lang=ko");
     options.addArguments("--disable-gpu");            //gpu 비활성화
     options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
 
     driver = new ChromeDriver(options);
-    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 
     try {
 
       driver.get(searchUrl);
 
       // 페이지 끝까지 스크롤 내리는 로직
-//      while (true) {
-////        long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
-//
-//        long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
-//
-//
-//        // Scroll down to bottom
-//        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.getElementById('__next').scrollHeight);");
-//
-//        // Wait for new content to load
-//        Thread.sleep(1000);
-//
-//        long newHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
-//
-//        // 새로운 콘텐츠가 로드되지 않을 때, 스크롤이 끝났다고 판단하여 반복문 종료
-//        if (newHeight == lastHeight) {
-//          break;
-//        }
-//      }
+      while (true) {
 
-      //      wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector(".flex-1.cursor-pointer")));
+        long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
+
+
+        // Scroll down to bottom
+        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.getElementById('__next').scrollHeight);");
+
+        // Wait for new content to load
+        Thread.sleep(250);
+
+        long newHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
+
+        // 새로운 콘텐츠가 로드되지 않을 때, 스크롤이 끝났다고 판단하여 반복문 종료
+        if (newHeight == lastHeight) {
+          break;
+        }
+      }
+
 
       // css선택자를 활용하여 해당 태그찾기(같은 클래스값을 가진 태그가 반복되는 형태라 list<WebElement>타입으로 설정함
       List<WebElement> elements = driver.findElements(By.cssSelector(".flex-1.cursor-pointer"));
@@ -232,7 +230,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   public Map<String, Object> getNaverSearchList(String searchWord) throws Exception {
     Map<String, Object> naverSearchList = new HashMap<>();
 
-    // 검색한 작품 결과의 총 수를 구하는 jsoup findMaxPageNumUrl 설정
+    // 검색한 작품 결과의 총 개수를 구하는 jsoup findMaxPageNumUrl 변수 선언
     String findMaxPageNumUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord;
 
     try {
@@ -243,11 +241,11 @@ public class NovelSearchServiceImpl implements NovelSearchService {
       // 검색 결과로 나온 총작품수로 max pageNum 구하기 => 자료가 너무 많아 페이지 max pageNum 10개로 고정
       Elements pageNumEle = findPageNum.select("div[class=lst_header]>h3>em");
       if (!pageNumEle.isEmpty()) {
-//        int allCountStartIndex = pageNumEle.text().indexOf("(");
-//        int allCountEndIndex = pageNumEle.text().indexOf(")");
-//        int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
-//
-//        double maxPageDot = allCount / 25;
+        int allCountStartIndex = pageNumEle.text().indexOf("(");
+        int allCountEndIndex = pageNumEle.text().indexOf(")");
+        int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
+
+//        double maxPageDot = (double) allCount / 25.0;
 //        int maxPageNum = (int) Math.ceil(maxPageDot);
 
         // 리스트 타입으로 저장할 변수 선언
@@ -265,10 +263,10 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         List<String> priceList = new ArrayList<>();
         List<String> ageGradeList = new ArrayList<>();
 
-        // 1페이지부터 maxPageNum 까지 반복문으로 사이트 크롤링하기
-        for (int i = 1; i <= 10; i++) {
+        // 검색 결과가 25개 이하인 경우(1페이지만 있는 경우)
+        if (allCount <= 25) {
           // 페이지 별로 데이터 찾아올 url
-          String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
+          String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=1";
 
           Document doc = Jsoup.connect(searchUrl).get();
 
@@ -287,7 +285,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
             platformIdList.add(platformIdFind.substring(platformIdIndex + 1));
 
 //         네이버시리즈 디테일 페이지로가서 카테고리, 출판사, 가격, 연령 정보 가져오기
-            // ※ 성인 컨텐츠의 경우 데이터를 못가져옴(null 값으로 가져옴)
+            // ※ 성인 컨텐츠의 경우 로그인 상태에서만 사이트로 접속할 수 있기 때문에 데이터를 못가져옴(null 값으로 가져옴)
 //        String detailUrl = "https://series.naver.com/novel/detail.series?productNo=" + platformIdFind.substring(platformIdIndex + 1);
 //
 //        Document doc2 = Jsoup.connect(detailUrl).get();
@@ -371,8 +369,114 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //          descriptionList.add(description);
 //        }
         }
+        // 검색 결과가 25개 초과인 경우(2페이지가 있는 경우)
+        else {
+          for (int i = 1; i <= 10; i++) {
+            // 페이지 별로 데이터 찾아올 url
+            String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
+
+            Document doc = Jsoup.connect(searchUrl).get();
+
+            Elements platformIds = doc.getElementsByClass("N=a:nov.img");
+            Elements titles = doc.getElementsByClass("N=a:nov.title");
+            Elements thumbnails = doc.select("img[width=79]");
+            Elements starRates = doc.getElementsByClass("score_num");
+            Elements info = doc.select("body p[class=info]");
+            Elements conts = doc.select("div[class=cont]");
 
 
+            // 동일한 클레스값을 가진 반복되는 태그(엘리먼트)들의 데이터를 list타입에 저장하기
+            for (Element e : platformIds) {
+              String platformIdFind = e.attr("href");
+              int platformIdIndex = platformIdFind.indexOf("=");
+              platformIdList.add(platformIdFind.substring(platformIdIndex + 1));
+
+//         네이버시리즈 디테일 페이지로가서 카테고리, 출판사, 가격, 연령 정보 가져오기
+              // ※ 성인 컨텐츠의 경우 로그인 상태에서만 사이트로 접속할 수 있기 때문에 데이터를 못가져옴(null 값으로 가져옴)
+//        String detailUrl = "https://series.naver.com/novel/detail.series?productNo=" + platformIdFind.substring(platformIdIndex + 1);
+//
+//        Document doc2 = Jsoup.connect(detailUrl).get();
+//        Elements thumbnails = doc2.select("img[width=173]");
+//        String thumbnail = thumbnails.attr("src");
+//        thumbnailList.add(thumbnail);
+
+              // 디테일 페이지의 출판사 정보 가져오기
+//        Elements publis = doc2.select("li[class=info_lst]>ul>li:nth-child(4)>a");
+//        publiList.add(publis.text());
+//
+//        // 디테일 페이지의 카테고리 정보 가져오기
+//        Elements categorys = doc2.select("li[class=info_lst]>ul>li:nth-child(2)>span>a");
+//        categoryList.add(categorys.text());
+//
+//        // 성인컨텐츠 유무 정보 가져오기
+//        Elements ageGrades = doc2.select("li[class=info_lst]>ul>li:nth-child(5)");
+//        ageGradeList.add(ageGrades.text());
+//
+//        // 가격 정보 가져오기
+//        Elements prices = doc2.select("div[class=area_price] span[class=point_color]");
+//        priceList.add(prices.text());
+
+            }
+
+            for (Element e : titles) {
+              int titleIndex = e.text().indexOf("(");
+              int completeStartIndex = e.text().indexOf("/");
+              int completeEndIndex = e.text().indexOf(")");
+              int countStartIndex = e.text().indexOf("총");
+
+              // 제목 가져오기
+              titleList.add(e.text().substring(0, titleIndex - 1));
+//      completeList.add(e.text().substring(completeStartIndex + 1, completeEndIndex));
+              // 총화수 가져오기
+              countList.add(e.text().substring(countStartIndex + 2, completeStartIndex - 1));
+            }
+
+            // 썸네일 주소 가져오기
+            for (Element e : thumbnails) {
+              String thumbnailSrc = e.attr("src");
+              thumbnailList.add(thumbnailSrc);
+            }
+
+            // 별점 가져오기
+            for (Element e : starRates) {
+              starRateList.add(e.text());
+            }
+
+            for (Element e : info) {
+              String p = e.text();
+              String[] parts = p.split("\\s*\\|\\s*");  // ' | ' 앞뒤로 공백이 있을 수 있으므로 공백을 포함한 정규표현식 사용
+
+              // 작가 정보 가져오기
+              String authorPart = parts[1];
+              authorList.add(authorPart);
+
+              // 최신업데이트 날짜 가져오기
+              String datePart = parts[2];  // 날짜는 세 번째 요소에 위치
+              String datePartNoDot = datePart.substring(0, datePart.length() - 1);
+              lastUpdateList.add(datePartNoDot);
+
+              // 완결여부 가져오기
+              String completePart = parts[3];
+              int completeIndex = completePart.indexOf("/");
+              String completeYn = completePart.substring(completeIndex + 1);
+              completeList.add(completeYn);
+            }
+
+            for (Element e : conts) {
+              String description = "";
+              Element descriptionElement = e.getElementsByClass("dsc").first();
+              if (descriptionElement != null) {
+                description = descriptionElement.text();
+              }
+              descriptionList.add(description);
+            }
+            // 작품소개글 가져오기
+//        for (Element e : descriptions) {
+//          String description = e.text();
+//          descriptionList.add(description);
+//        }
+          }
+        }
         // Map타입 의 naverSearchList에 리스트 추가
         naverSearchList.put("platformId", platformIdList);
         naverSearchList.put("title", titleList);
