@@ -11,9 +11,6 @@ function Join2(props) {
     const [confirm, setConfirm] = useState({
         idConfirm: "", pwConfirm: "", confirmPwConfirm: "", nameConfirm: "", nickConfirm: "", genderConfirm: "", birthConfirm: ""
     });
-    const [check, setCheck] = useState({
-        idCheck: false, pwCheck: false, confirmPwCheck: false, nameCheck: false, nickCheck: false, genderCheck: false, birthCheck: false
-    });
 
     const [userId, setUserId] = useState("");
     const [pw, setPw] = useState("");
@@ -95,50 +92,34 @@ function Join2(props) {
         if (userId === null || userId === "" || confirm.idConfirm === "이미 사용중인 ID 입니다." ) {
             setConfirm({confirm, idConfirm: "아이디를 다시 입력하세요"});
             return;
-        } else if (confirm.idConfirm === "사용가능한 ID 입니다.") {
-            setCheck({check, nickCheck: true});
         }
         if (nick === null || nick === "" || confirm.nickConfirm === "이미 사용중인 닉네임입니다.") {
             setConfirm({confirm, nickConfirm: "닉네임을 입력하세요"});
             return;
-        } else if (confirm.nickConfirm === "사용가능한 닉네임입니다.") {
-            setCheck({check, nickCheck: true});
         }
         if (pw === null || pw === "") {
             setConfirm({confirm, pwConfirm: "비밀번호를 입력하세요"});
             return;
-        } else {
-            setCheck({check, pwCheck: true});
         }
         if (pw !== confirmPw) {
             setConfirm({confirm, confirmPwConfirm: "비밀번호와 다릅니다."});
             return;
-        } else {
-            setCheck({check, confirmPwCheck: true});
         }
         if (name === null || name === "") {
             setConfirm({confirm, nameConfirm: "이름을 입력하세요"});
             return;
-        } else {
-            setCheck({check, nameCheck: true});
         }
         if (name === null || name === "") {
             setConfirm({confirm, nameConfirm: "이름을 입력하세요"});
             return;
-        } else {
-            setCheck({check, nameCheck: true});
         }
         if (year === null || year === "" || mon === null || mon === "" || day === null || day === "") {
             setConfirm({confirm, birthConfirm: "생년월일을 입력하세요"});
             return;
-        } else {
-            setCheck({check, birthCheck: true});
         }
         if (gender === null || gender === "" || gender === 0) {
             setConfirm({confirm, genderConfirm: "성별을 선택하세요"});
             return;
-        } else {
-            setCheck({check, genderCheck: true});
         }
         axios.post('/join/join2', null, {
             params: {

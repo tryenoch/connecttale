@@ -15,17 +15,22 @@ import java.util.Map;
 public class MemberController {
   private final MemberService memberService;
 
-//  @RequestMapping(value = "/login", method = RequestMethod.POST)
-//  public Object login(@RequestParam("id") String id, @RequestParam("pw") String pw) throws Exception {
-//
-////    MemberEntity member = memberService.login(id, pw);
-////
-////    Map<String, MemberEntity> result = new HashMap<>();
-////    result.put("member", member);
-////
-////    return result;
-//    return memberService.login(id, pw);
-//  }
+  @RequestMapping(value = "/login", method = RequestMethod.POST)
+  public Object login(@RequestParam("id") String id, @RequestParam("pw") String pw) throws Exception {
+
+    boolean confirmId = memberService.confirmId(id);
+    MemberEntity member = new MemberEntity();
+    Map<String, Object> result = new HashMap<>();
+    if (confirmId == true) {
+      member = memberService.login(id, pw);
+      result.put("res", member);
+    }
+    else {
+      result.put("res", "없는 아이디 입니다.");
+    }
+
+    return result;
+  }
 
   @RequestMapping(value = "/join/join2", method = RequestMethod.POST)
   public Object join(@RequestParam("id") String id, @RequestParam("pw") String pw, @RequestParam("name") String name, @RequestParam("nickname") String nickname, @RequestParam("gender") int gender, @RequestParam("year") String year, @RequestParam("mon") String mon, @RequestParam("day") String day) throws Exception {
@@ -84,8 +89,4 @@ public class MemberController {
     return result;
   }
 
-    @RequestMapping("/join/join3")
-  public String joinSuccess() throws Exception {
-    return "/join/join3";
-  }
 }
