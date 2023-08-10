@@ -42,6 +42,9 @@ public class NovelMainServiceImpl implements NovelMainService{
         // 소설 순위
         novel.setNovelIndexNum(novelList.indexOf(novelItem) + 1); // novelItem의 인덱스 번호
 
+        // 플랫폼 제공 아이디
+        novel.setPlatformId(book.get("book_id").toString());
+
         // 소설 제목 얻어오기
         JSONObject serial = (JSONObject) book.get("serial");
         novel.setNovelTitle(serial.get("title").toString());
@@ -63,6 +66,9 @@ public class NovelMainServiceImpl implements NovelMainService{
         // 소설 별점
         JSONArray ratings = (JSONArray) book.get("ratings");
         novel.setNovelStarRate(getStarRate(ratings)); // 하위에 구현한 함수 사용
+
+        // 성인 여부
+        novel.setAdultsOnly((Boolean) book.get("adults_only"));
 
         novelDtoList.add(novel);
       }
