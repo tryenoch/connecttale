@@ -25,7 +25,7 @@ function NovelMainRank() {
     <div>
       <Row>
         <Col sm>
-          <h3 className={"main-title"}>플랫폼별 실시간 랭킹</h3>
+          <h3 className={"main-title"}>플랫폼별 일간 순위</h3>
           <div className={'my-3'}>
             <div className="btn-group btn-group-sm" role="group" aria-label="ridi cate button">
               <button className={'btn btn-purple px-3 btn-sm me-0'} onClick={(e) => {loadRankListRidi(1750)}}>리디북스</button>
@@ -46,8 +46,8 @@ function NovelMainRank() {
           </div>
         </Col>
       </Row>
+      {/* 리스트 출력 */}
       <Row>
-        {/* 리스트 출력 */}
         {rankList}
       </Row>
     </div>

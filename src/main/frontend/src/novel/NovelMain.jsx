@@ -1,5 +1,6 @@
 import React from 'react';
 import NovelMainRank from "./novelMain/rank/NovelMainRank";
+import MainCarousel from "./novelMain/MainCarousel";
 
 function NovelMain(props) {
 
@@ -14,6 +15,7 @@ function NovelMain(props) {
           <Link to={'/novelDetail'}>novel detail</Link><br />
           <Link to={'/novel/novelMainTest'}>novel Test</Link>
         </div>*/}
+        <MainCarousel />
         <NovelMainRank />
       </div>
     )
