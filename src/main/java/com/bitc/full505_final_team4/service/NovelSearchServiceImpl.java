@@ -78,9 +78,9 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //    try {
 //      driver.get(kakaoLoginUrl);
 //      Thread.sleep(1000);
-//      driver.findElement(By.name("loginId")).sendKeys("jeti11@naver.com");
+//      driver.findElement(By.name("loginId")).sendKeys("");
 //      Thread.sleep(1000);
-//      driver.findElement(By.name("password")).sendKeys("tkfkdgo1823!");
+//      driver.findElement(By.name("password")).sendKeys("");
 //
 //      driver.findElement(By.cssSelector(".btn_g.highlight.submit")).click();
 //      Thread.sleep(2000);
@@ -160,14 +160,14 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
     // webDriver 옵션 설정
     ChromeOptions options = new ChromeOptions();
-//    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
-////    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
-//    options.addArguments("--enable-automation");
-//    options.addArguments("--window-position=-100000,-100000");
-//    options.addArguments("--window-size=0,0");
-//    options.addArguments("--lang=ko");
-//    options.addArguments("--disable-gpu");            //gpu 비활성화
-//    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
+    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
+//    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+    options.addArguments("--enable-automation");
+    options.addArguments("--window-position=-100000,-100000");
+    options.addArguments("--window-size=0,0");
+    options.addArguments("--lang=ko");
+    options.addArguments("--disable-gpu");            //gpu 비활성화
+    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
 
     driver = new ChromeDriver(options);
     driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -395,136 +395,6 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     }
     return naverSearchList;
   }
-
-
-  // 셀레니움으로 네이버시리즈 로그인 시도하여 데이터 가져오기 (로그인이 안됨)
-
-//  @Override
-//  public Map<String, Object> getNaverSearchList(String searchWord) throws Exception {
-//    Map<String, Object> naverSearchList = null;
-//    List<String> thumbnailList = null;
-//
-//    System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
-//    // 셀레니움 사용하여 네이버 로그인 후 데이터 가져오기 시도
-//    // Chrome WebDriver 인스턴스 생성
-//    WebDriver driver = new ChromeDriver();
-//
-//    // 타임아웃 설정
-//    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-//
-//
-//    try {
-//      // 네이버 시리즈 로그인 페이지로 이동
-//      driver.get("https://nid.naver.com/nidlogin.login");
-//
-//      Thread.sleep(3000);
-//
-//      // 아이디와 비밀번호 입력
-//      driver.findElement(By.name("id")).sendKeys("bitcteam4");
-//      driver.findElement(By.name("pw")).sendKeys("qntks505!");
-//
-//      // 로그인 버튼 클릭
-//      driver.findElement(By.className("btn_login")).click();
-//
-//      // 로그인 후 페이지가 로드될 때까지 대기
-//      Thread.sleep(1000);
-//
-//      // 네이버 시리즈 검색 페이지로 이동
-//      driver.get("https://series.naver.com/novel/detail.series?productNo=514942");
-//
-//      // 페이지가 로드될 때까지 대기
-//      Thread.sleep(1000);
-//
-//      // 검색 결과에서 썸네일을 크롤링하여 출력
-//
-////      List<WebElement> elements = driver
-////        .findElements(By.xpath("/html/body/div/div[2]/div[2]/div[2]/div[3]/ul/li[1]/a/img"));
-//      WebElement thumbnail = driver.findElement(By.xpath("//*[@id=\"container\"]/div[1]/a/img"));
-//      String thumbnailUrl = thumbnail.getAttribute("src");
-//
-//      Thread.sleep(1000);
-//
-//
-////      for (WebElement e : elements) {
-////        thumbnailList.add(e.getAttribute("src"));
-////        String author = e.findElement(By.cssSelector(".author")).getText();
-//////        System.out.println("Title: " + title + ", Author: " + author);
-////
-////      }
-//
-//      naverSearchList.put("thumbnail", thumbnailUrl);
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    } finally {
-//      // 작업이 끝난 후 WebDriver 종료
-//      driver.quit();
-//    }
-//
-//    return naverSearchList;
-//  }
-
-
-  // -------------------------- 리디북스 검색결과 가져오기 ---------------------------
-//  @Override
-//  public Map<String, Object> getRidiSearchList(String searchWord) throws Exception {
-//    Map<String, Object> ridiSearchList = new HashMap<>();
-//    List<String> thumbnailList = new ArrayList<>();
-//
-//    // 로그인 url
-//    String ridiLoginUrl = "https://ridibooks.com/account/login?return_url=https%3A%2F%2Fridibooks.com%2Fwebtoon%2Frecommendation";
-//
-//    // 검색 url
-//    String ridiSearchUrl = "https://ridibooks.com/search?q=" + searchWord + "&adult_exclude=n";
-//
-//    System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
-//
-//        ChromeOptions options = new ChromeOptions();
-//////    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
-////////    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
-//////    options.addArguments("--enable-automation");
-//////    options.addArguments("--window-position=-100000,-100000");
-//////    options.addArguments("--window-size=0,0");
-//////    options.addArguments("--lang=ko");
-//////    options.addArguments("--disable-gpu");            //gpu 비활성화
-//////    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
-//    driver = new ChromeDriver(options);
-//    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-//
-//    try {
-//      driver.get(ridiLoginUrl);
-//      Thread.sleep(1000);
-//      driver.findElement(By.xpath("//*[@id=\"__next\"]/div/section/div/form[1]/input[1]")).sendKeys("jeti11");
-//      Thread.sleep(1000);
-//      driver.findElement(By.xpath("//*[@id=\"__next\"]/div/section/div/form[1]/input[2]")).sendKeys("qntks505!");
-//      Thread.sleep(1000);
-//      driver.findElement(By.xpath("//*[@id=\"__next\"]/div/section/div/form[1]/button")).click();
-//
-//      Set<Cookie> cookies = driver.manage().getCookies();
-//
-//      driver.get(ridiSearchUrl);
-//      for (Cookie cookie : cookies) {
-//        driver.manage().addCookie(cookie);
-//      }
-//
-//      List<WebElement> thumbnails = driver.findElements(By.cssSelector(".fig-13iy9p2"));
-//
-//      for (WebElement e : thumbnails) {
-//        String thumbnail = e.getAttribute("src");
-//        thumbnailList.add(thumbnail);
-//      }
-//      ridiSearchList.put("thumbnailList", thumbnailList);
-//
-//    }
-//    catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//    finally {
-//      driver.quit();
-//    }
-//
-//    return ridiSearchList;
-//  }
-
 }
 
 
