@@ -11,6 +11,7 @@ function Board(props) {
             {/*fk*/}
             <Routes>
                 <Route index element={<BoardMain/>}/>
+                <Route path={"/main"} element={<BoardMain/>}/>
                 <Route path={"/write"} element={<BoardWrite/>}/>
             </Routes>
         </div>
