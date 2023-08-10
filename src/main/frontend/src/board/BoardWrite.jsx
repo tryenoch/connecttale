@@ -16,6 +16,19 @@ function BoardWrite() {
     const [reqCate, setReqCate] = useState(0);
 
     const handleSubmit = (event) => {
+        // preventDefault 안하면 게시글 등록 완료 시 다시 등록페이지로 이동됨
+        event.preventDefault();
+        //빈 데이터 안 보내도록 조건 추가
+        if (title.trim().length <= 0) {
+            alert('제목을 입력하세요.');
+            return;
+        }
+
+        if (contents.trim().length <= 0) {
+            alert('내용을 입력하세요.');
+            return;
+        }
+
         axios.post(`/board/process`, null, {
             params: {
                 boardTitle: title,
@@ -26,13 +39,11 @@ function BoardWrite() {
             }
         })
             .then(res => {
-                //빈 데이터 안 보내도록 조건 추가
                 navi("/board/main");
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. board/write : ${err}`);
             })
-        event.preventDefault();
     }
 
     return (
