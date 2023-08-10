@@ -1,0 +1,601 @@
+{
+  "props": {
+    "pageProps": {
+      "seriesId": 56325530,
+      "metaInfo": {
+        "title": "데뷔 못 하면 죽는 병 걸림 - 웹소설",
+        "ogTitle": "데뷔 못 하면 죽는 병 걸림",
+        "image": "//dn-img-page.kakao.com/download/resource?kid=Du5oG/hzVqEy9QjX/lN2aZRgLz8pegvqODVjfE1\u0026filename=th3",
+        "keywords": "데뷔 못 하면 죽는 병 걸림, 백덕수",
+        "description": "4년차 공시생,낯선 몸에 빙의해 3년 전으로 돌아왔다.그리고 그의 눈앞에 나타난 갑작스러운 상태창의 협박![돌발!][상태이상 : '데뷔가 아니면 죽음을' 발생!]돌연사 위협 때문에팔자에도 없던 아이돌에 도전하게 된주인공의 대환장 일지.※특이사항 : 빙의 전 아이돌 데이터 찍어다 팔았었음",
+        "url": "https://page.kakao.com/content/56325530",
+        "author": "백덕수"
+      },
+      "dehydratedState": {
+        "mutations": [],
+        "queries": [
+          {
+            "state": {
+              "data": {
+                "contentHomeAbout": {
+                  "id": "d215be7d-452b-489e-a00b-e514d2ed3b60",
+                  "themeKeywordList": [
+                    {
+                      "uid": 181,
+                      "title": "전문직",
+                      "scheme": "kakaopage://open/search/filter?filter_list=%EC%A0%84%EB%AC%B8%EC%A7%81"
+                    },
+                    {
+                      "uid": 195,
+                      "title": "빙의",
+                      "scheme": "kakaopage://open/search/filter?filter_list=%EB%B9%99%EC%9D%98"
+                    },
+                    {
+                      "uid": 200,
+                      "title": "회귀",
+                      "scheme": "kakaopage://open/search/filter?filter_list=%ED%9A%8C%EA%B7%80"
+                    },
+                    {
+                      "uid": 53,
+                      "title": "천재",
+                      "scheme": "kakaopage://open/search/filter?filter_list=%EC%B2%9C%EC%9E%AC"
+                    },
+                    {
+                      "uid": 212,
+                      "title": "노력",
+                      "scheme": "kakaopage://open/search/filter?filter_list=%EB%85%B8%EB%A0%A5"
+                    },
+                    {
+                      "uid": 213,
+                      "title": "성장",
+                      "scheme": "kakaopage://open/search/filter?filter_list=%EC%84%B1%EC%9E%A5"
+                    },
+                    {
+                      "uid": 257,
+                      "title": "가수",
+                      "scheme": "kakaopage://open/search/filter?filter_list=%EA%B0%80%EC%88%98"
+                    }
+                  ],
+                  "description": "4년차 공시생,\n낯선 몸에 빙의해 3년 전으로 돌아왔다.\n\n그리고 그의 눈앞에 나타난 갑작스러운 상태창의 협박!\n\n[돌발!]\n[상태이상 : '데뷔가 아니면 죽음을' 발생!]\n\n돌연사 위협 때문에\n팔자에도 없던 아이돌에 도전하게 된\n주인공의 대환장 일지.\n\n※특이사항 : 빙의 전 아이돌 데이터 찍어다 팔았었음",
+                  "sameSeriesList": [
+                    {
+                      "id": "PosterView-itemSeries-59782511-undefined-Category",
+                      "type": "PosterView",
+                      "showPlayerIcon": false,
+                      "scheme": "kakaopage://open/content?series_id=59782511",
+                      "title": "[기다무 웹툰] 데뷔 못 하면 죽는 병 걸림",
+                      "altText": "작품, 데뷔 못 하면 죽는 병 걸림, 기다무, 웹툰, 버튼",
+                      "thumbnail": "//dn-img-page.kakao.com/download/resource?kid=xKEjJ/hzVqHbQ2pj/keYVvpKRGvQA9ZPEdKFbL1\u0026filename=th3",
+                      "badgeList": [
+                        "BadgeWaitFreeStatic"
+                      ],
+                      "ageGradeBadge": null,
+                      "statusBadge": null,
+                      "subtitleList": [
+                        "웹툰"
+                      ],
+                      "rank": null,
+                      "rankVariation": null,
+                      "torosFileHashKey": null,
+                      "torosImgId": null,
+                      "ageGrade": "All",
+                      "selfCensorship": null,
+                      "eventLog": {
+                        "fromGraphql": null,
+                        "click": {
+                          "layer1": null,
+                          "layer2": null,
+                          "setnum": null,
+                          "ordnum": null,
+                          "copy": null,
+                          "imp_id": null,
+                          "imp_provider": null
+                        },
+                        "eventMeta": {
+                          "id": "59782511",
+                          "name": "데뷔 못 하면 죽는 병 걸림",
+                          "subcategory": "드라마",
+                          "category": "웹툰",
+                          "series": "데뷔 못 하면 죽는 병 걸림",
+                          "provider": "서비스",
+                          "series_id": "59782511",
+                          "type": "seriesId"
+                        },
+                        "viewimp_contents": null,
+                        "customProps": {
+                          "landing_path": "contents",
+                          "view_type": "series_poster_view",
+                          "toros_imp_id": null,
+                          "toros_file_hash_key": null,
+                          "toros_event_meta_id": null,
+                          "content_cnt": null,
+                          "event_series_id": null,
+                          "event_ticket_type": null,
+                          "play_url": null,
+                          "banner_uid": null
+                        }
+                      },
+                      "seriesId": 59782511
+                    },
+                    {
+                      "id": "PosterView-itemSeries-58112118-undefined-Category",
+                      "type": "PosterView",
+                      "showPlayerIcon": false,
+                      "scheme": "kakaopage://open/content?series_id=58112118",
+                      "title": "데못죽 매거진",
+                      "altText": "작품, 데못죽 매거진, 웹소설, 버튼",
+                      "thumbnail": "//dn-img-page.kakao.com/download/resource?kid=dClhy/hzb7rkd8UM/krgeRAqySKKtwTKOzNSll1\u0026filename=th3",
+                      "badgeList": [],
+                      "ageGradeBadge": null,
+                      "statusBadge": null,
+                      "subtitleList": [
+                        "웹소설"
+                      ],
+                      "rank": null,
+                      "rankVariation": null,
+                      "torosFileHashKey": null,
+                      "torosImgId": null,
+                      "ageGrade": "All",
+                      "selfCensorship": null,
+                      "eventLog": {
+                        "fromGraphql": null,
+                        "click": {
+                          "layer1": null,
+                          "layer2": null,
+                          "setnum": null,
+                          "ordnum": null,
+                          "copy": null,
+                          "imp_id": null,
+                          "imp_provider": null
+                        },
+                        "eventMeta": {
+                          "id": "58112118",
+                          "name": "데못죽 매거진",
+                          "subcategory": "현판",
+                          "category": "웹소설",
+                          "series": "데못죽 매거진",
+                          "provider": "서비스",
+                          "series_id": "58112118",
+                          "type": "seriesId"
+                        },
+                        "viewimp_contents": null,
+                        "customProps": {
+                          "landing_path": "contents",
+                          "view_type": "series_poster_view",
+                          "toros_imp_id": null,
+                          "toros_file_hash_key": null,
+                          "toros_event_meta_id": null,
+                          "content_cnt": null,
+                          "event_series_id": null,
+                          "event_ticket_type": null,
+                          "play_url": null,
+                          "banner_uid": null
+                        }
+                      },
+                      "seriesId": 58112118
+                    }
+                  ],
+                  "screenshotList": [],
+                  "authorList": [
+                    {
+                      "id": "ab171e68-85d5-4861-98ab-d7758d3fd826",
+                      "name": "백덕수",
+                      "role": "writer",
+                      "roleDisplayName": "글"
+                    }
+                  ],
+                  "detail": {
+                    "id": "c88dce88-5ee2-4368-9e67-8669b0324823",
+                    "publisherName": "kwbooks",
+                    "retailPrice": "100원/회차 당",
+                    "ageGrade": "All",
+                    "category": "소설 | 현대판타지"
+                  }
+                }
+              },
+              "dataUpdateCount": 1,
+              "dataUpdatedAt": 1691685198467,
+              "error": null,
+              "errorUpdateCount": 0,
+              "errorUpdatedAt": 0,
+              "fetchFailureCount": 0,
+              "fetchFailureReason": null,
+              "fetchMeta": null,
+              "isInvalidated": false,
+              "status": "success",
+              "fetchStatus": "idle"
+            },
+            "queryKey": [
+              "contentHomeAbout",
+              {
+                "seriesId": 56325530
+              }
+            ],
+            "queryHash": "[\"contentHomeAbout\",{\"seriesId\":56325530}]"
+          }
+        ]
+      },
+      "initialState": {
+        "json": {
+          "menu": {
+            "entities": {
+              "subtabMenuMap": {},
+              "subtabMap": {}
+            },
+            "relations": {
+              "subtabMenuMap": {},
+              "subtabMap": {}
+            },
+            "isMobileGnbExposed": false,
+            "isPcHeaderExposed": false
+          },
+          "notice": {
+            "noticeData": null,
+            "noticeId": null,
+            "noticePage": null
+          },
+          "help": {
+            "helpData": [],
+            "helpId": "",
+            "helpPage": 1,
+            "totalCount": 0
+          },
+          "pagewebLayout": {
+            "entities": {
+              "layouts": {},
+              "sections": {},
+              "groups": {},
+              "items": {}
+            },
+            "fetchStatus": {},
+            "errors": {},
+            "relations": {
+              "layouts": {},
+              "sections": {},
+              "groups": {},
+              "nestedGroups": {},
+              "items": {}
+            },
+            "extraInfos": {
+              "layouts": {},
+              "sections": {}
+            },
+            "bannerInfo": {
+              "selectedBanner": {},
+              "subCardType": {},
+              "hasIndicator": {}
+            },
+            "layoutIdAndScreenUidMap": {}
+          },
+          "contentHome": {
+            "noticeNewDot": {},
+            "isEnteredContentHome": {},
+            "canRead": {},
+            "fetching": {
+              "about": {},
+              "productList": {},
+              "notice": {},
+              "overview": {
+                "56325530": {
+                  "fetchStatus": "loading"
+                }
+              },
+              "recommend": {},
+              "keytalk": {}
+            }
+          },
+          "ticket": {
+            "inProcessProduct": null,
+            "receivedFreeTicket": {},
+            "usedTicketUid": {}
+          },
+          "user": {
+            "user": null,
+            "appConfig": {
+              "appSetting": {
+                "tastesHome": null,
+                "tastesGenre": null
+              }
+            },
+            "fetchStatus": {
+              "updateProfileImage": "idle",
+              "updateNickname": "idle",
+              "getUserData": "success"
+            },
+            "error": {
+              "message": null
+            }
+          },
+          "footer": {
+            "isExposed": false
+          },
+          "errors": {
+            "sampleError": {
+              "fetchStatus": "idle"
+            },
+            "errorList": []
+          },
+          "inven": {
+            "recentList": {
+              "invenData": {
+                "fetchStatus": "idle",
+                "page": 0
+              },
+              "editData": {
+                "fetchStatus": "idle",
+                "page": 0
+              },
+              "isSeriesCheckedMap": {},
+              "recommendContentData": {
+                "fetchStatus": "idle"
+              }
+            },
+            "likeList": {
+              "invenData": {
+                "fetchStatus": "idle",
+                "page": 0
+              },
+              "editData": {
+                "fetchStatus": "idle",
+                "page": 0
+              },
+              "isSeriesCheckedMap": {},
+              "recommendContentData": {
+                "fetchStatus": "idle"
+              }
+            },
+            "paidList": {
+              "invenData": {
+                "fetchStatus": "idle",
+                "page": 0
+              },
+              "editData": {
+                "fetchStatus": "idle",
+                "page": 0
+              },
+              "isSeriesCheckedMap": {},
+              "recommendContentData": {
+                "fetchStatus": "idle"
+              }
+            },
+            "searchList": {
+              "searchedData": {
+                "fetchStatus": "idle"
+              },
+              "page": 0
+            },
+            "invenMyInfo": {
+              "fetchStatus": "idle"
+            }
+          },
+          "search": {
+            "autoComplete": {
+              "fetchStatus": "idle"
+            },
+            "searchResult": {
+              "keyword": {
+                "fetchStatus": "idle",
+                "page": 0
+              },
+              "themeKeyword": {
+                "fetchStatus": "idle",
+                "page": 0
+              },
+              "keytalk": {
+                "fetchStatus": "idle",
+                "page": 0
+              }
+            },
+            "searchKeyword": "",
+            "openAutoComplete": false,
+            "openPcSearchModal": false,
+            "openSearchDialog": false
+          },
+          "myNews": {
+            "all": {
+              "fetchStatus": "idle",
+              "needRefresh": true
+            },
+            "my": {
+              "fetchStatus": "idle",
+              "needRefresh": true
+            },
+            "up": {
+              "fetchStatus": "idle",
+              "needRefresh": true
+            },
+            "updatedMyNewsIdList": []
+          },
+          "profileMenu": {
+            "updatedMenus": {
+              "0": false,
+              "7": false
+            }
+          },
+          "todayGift": {
+            "promotionList": [],
+            "categoryList": [],
+            "currentCategoryUid": "0",
+            "data": {},
+            "ticketUidMap": {},
+            "fetchStatus": "idle",
+            "isUpdated": false
+          },
+          "popup": {
+            "popup": {}
+          },
+          "header": {
+            "title": "",
+            "customTitle": null,
+            "customTiaraObject": null,
+            "mobile": {
+              "isExposed": false,
+              "currentMobileHeaderType": null
+            },
+            "availableAgreementNext": false
+          },
+          "viewerEnd": {
+            "viewerEnd": {},
+            "myRating": {},
+            "isExposed": false
+          },
+          "talkViewer": {
+            "settings": {
+              "mediaAutoPlay": false,
+              "viewingMode": "tap",
+              "preloadType": "data-converted",
+              "viewerMenuHeight": {
+                "top": 56,
+                "bottom": 81
+              }
+            },
+            "internalSettings": {
+              "autoSpeed": 1,
+              "muted": true,
+              "autoTap": "pause"
+            },
+            "settingMenu": {
+              "exposed": false
+            },
+            "loading": false,
+            "loaded": false,
+            "productInfoMap": {},
+            "sceneInfoMap": {},
+            "talkInfoMap": {},
+            "characterMap": {},
+            "sceneMap": {},
+            "talkGroupMap": {},
+            "talkMap": {},
+            "isPreview": false,
+            "videoPlayType": "web",
+            "isTutorialExposed": false,
+            "needMediaPlayedDirect": false,
+            "isDev": false,
+            "fontLoadStatus": "before_load",
+            "isHandlingSeekBar": false,
+            "isAutoTapTooltipExposed": false
+          },
+          "viewerInfo": {
+            "isFromPrevProduct": false,
+            "nonstopWatchingInSeries": {},
+            "textViewerPreview": {},
+            "shortVodViewerPreview": {},
+            "viewerContinued": 0,
+            "isViewerPreviewCommentOn": true
+          },
+          "singleInfo": {
+            "singlePreview": {},
+            "singleSimple": {}
+          },
+          "videoViewer": {
+            "drmInfo": {},
+            "videoState": {
+              "videoStatus": 0,
+              "isMute": true,
+              "volume": 0.5,
+              "isFullScreen": false,
+              "isLoading": false
+            },
+            "useDrm": false,
+            "fullscreenEnabled": true,
+            "showControlBox": true,
+            "isHovered": false
+          },
+          "viewerMenu": {
+            "isExposed": false
+          },
+          "imageViewer": {
+            "settings": {
+              "readType": "page",
+              "spaceColor": "White",
+              "isTwoPageLayout": true
+            },
+            "viewData": {}
+          },
+          "textViewer": {
+            "settings": {
+              "readType": "page",
+              "theme": "White",
+              "fontFamily": "Batang",
+              "fontSize": 4,
+              "lineGap": 2,
+              "contentMargin": 1,
+              "isTwoPageLayout": true
+            },
+            "viewData": {}
+          },
+          "config": {
+            "isIpxMediaMuted": true,
+            "isIpxMediaNetworkUsingAgreed": false
+          },
+          "landing": {
+            "seriesList": {},
+            "seriesPoster": {},
+            "singleList": {},
+            "relatedSeriesList": {}
+          },
+          "developer": {
+            "isDevBlockHidden": false
+          }
+        },
+        "meta": {
+          "values": {
+            "notice.noticeData": [
+              "undefined"
+            ],
+            "notice.noticeId": [
+              "undefined"
+            ],
+            "notice.noticePage": [
+              "undefined"
+            ],
+            "user.user": [
+              "undefined"
+            ],
+            "user.appConfig.appSetting.tastesHome": [
+              "undefined"
+            ],
+            "user.appConfig.appSetting.tastesGenre": [
+              "undefined"
+            ],
+            "user.error.message": [
+              "undefined"
+            ],
+            "header.customTitle": [
+              "undefined"
+            ],
+            "header.customTiaraObject": [
+              "undefined"
+            ],
+            "header.mobile.currentMobileHeaderType": [
+              "undefined"
+            ]
+          },
+          "referentialEqualities": {
+            "search.searchResult.keyword": [
+              "search.searchResult.themeKeyword",
+              "search.searchResult.keytalk"
+            ]
+          }
+        }
+      }
+    },
+    "__N_SSP": true
+  },
+  "page": "/content/[seriesId]",
+  "query": {
+    "seriesId": "56325530"
+  },
+  "buildId": "2.12.2",
+  "assetPrefix": "https://page.kakaocdn.net/pageweb/2.12.2",
+  "isFallback": false,
+  "gssp": true,
+  "customServer": true,
+  "appGip": true,
+  "locale": "ko",
+  "locales": [
+    "ko"
+  ],
+  "defaultLocale": "ko",
+  "scriptLoader": []
+}

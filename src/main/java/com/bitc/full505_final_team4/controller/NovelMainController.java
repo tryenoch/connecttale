@@ -67,4 +67,16 @@ public class NovelMainController {
     return result;
   }
 
+  @GetMapping("/kakaoRankList")
+  public Object getKakaoRankList() throws Exception {
+    Map<String, Object> result = new HashMap<>();
+
+    List<NovelMainDto> novelList = novelMainService.getKakaoList("94");
+
+    result.put("novel", novelList);
+    result.put("result", "success");
+
+    return result;
+  }
+
 }

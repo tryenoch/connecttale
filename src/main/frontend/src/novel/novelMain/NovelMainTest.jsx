@@ -12,15 +12,11 @@ function NovelMainTest() {
 
   const dataTest = () => {
     //alert('테스트 메세지입니다.');
-    axios.get(`/novel/testJson`, {params: { novelId: novelId }})
+    axios.get(`/novel/kakaoRankList`)
       .then(res => {
         MessageUtils.infoMessage("비동기 통신에 성공했습니다.");
         console.log(res.data.result);
-        console.log(res.data.notice);
-
-        const notice = res.data.notice;
-
-        setTitle(notice);
+        console.log(res.data.novel);
       })
       .catch(err => {
         MessageUtils.errorMessage("테스트", err);
@@ -36,7 +32,7 @@ function NovelMainTest() {
       <div>
         <button className={'btn btn-purple'} onClick={ dataTest } >테스트 버튼</button>
         <div>
-          연재일 : {title}
+          테스트 결과 : {title}
         </div>
       </div>
   )
