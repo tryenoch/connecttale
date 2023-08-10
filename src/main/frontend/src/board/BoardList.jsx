@@ -14,9 +14,9 @@ function BoardList(props) {
     const [pages, setPages] = useState([1]);
     const [boardList, setBoardList] = useState([{}]);
 
-    useEffect(()=>{
+    useEffect(() => {
         setNowPage(props.defaultPage);
-    },[])
+    }, [])
 
     useEffect(() => {
         requestData();
@@ -114,7 +114,12 @@ function BoardList(props) {
                         </tbody>
                     </table>
                     <div className={'d-flex justify-content-end'}>
-                        <Link to={'/write'} className={'btn btn-primary'}>글 쓰기</Link>
+                        {
+                            // 특정 조건에서만 랜더링 코드
+                            props.data.type === 'req' &&
+                            (<Link to={'/board/write'} className={'btn btn-primary'}>글 쓰기</Link>)
+                        }
+
                     </div>
                     <div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>
                         <a

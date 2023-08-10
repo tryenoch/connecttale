@@ -71,7 +71,7 @@ td.cursor,
 .search-bar input,
 .select-box,
 .nav.tabs-bg{
-    background-color: rgba(123, 60, 250, 0.36);
+    /*background-color: rgba(123, 60, 250, 0.36);*/
 }
 
 /* table 줄 간격 css*/
@@ -83,4 +83,10 @@ table {
 /* 페이지네이션 관련 css*/
 .pages.cursor > a {
     margin-right: 6px;
+}
+
+/* ckEditor css*/
+.ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+    min-height: 400px;
+    margin-bottom: 20px;
 }
