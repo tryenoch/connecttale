@@ -50,7 +50,7 @@ public class MemberController {
   }
 
   @RequestMapping(value = "/join/join2", method = RequestMethod.GET)
-  public Object join(@RequestParam("id") String id) throws Exception {
+  public Object confirmId(@RequestParam("id") String id) throws Exception {
 
     boolean confirm = memberService.confirmId(id);
     Map<String, String> result = new HashMap<>();
@@ -60,6 +60,22 @@ public class MemberController {
     }
     else {
       result.put("result", "사용가능한 ID 입니다.");
+    }
+
+    return result;
+  }
+
+  @RequestMapping(value = "/join/join2", method = RequestMethod.PATCH)
+  public Object confirmNick(@RequestParam("nickname") String nickname) throws Exception {
+
+    boolean confirm = memberService.confirmNick(nickname);
+    Map<String, String> result = new HashMap<>();
+
+    if (confirm == true) {
+      result.put("result", "이미 사용중인 닉네임입니다.");
+    }
+    else {
+      result.put("result", "사용가능한 닉네임입니다.");
     }
 
     return result;

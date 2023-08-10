@@ -10,4 +10,5 @@ public interface MemberService {
   void join(MemberEntity member) throws Exception;
 
   boolean confirmId(String id) throws Exception;
+  boolean confirmNick(String nickname) throws Exception;
 }

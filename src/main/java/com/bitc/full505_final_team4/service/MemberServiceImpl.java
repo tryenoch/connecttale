@@ -28,4 +28,9 @@ public class MemberServiceImpl implements MemberService {
   public boolean confirmId(String id) throws Exception {
     return memberRepository.existsById(id);
   }
+
+  @Override
+  public boolean confirmNick(String nickname) throws Exception {
+    return memberRepository.existsByNickname(nickname);
+  }
 }

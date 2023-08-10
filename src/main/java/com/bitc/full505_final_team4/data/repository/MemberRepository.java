@@ -12,4 +12,6 @@ public interface MemberRepository extends JpaRepository <MemberEntity, String> {
   MemberEntity save(MemberEntity member);
 
   boolean existsById(String id);
+
+  boolean existsByNickname(String nickname);
 }
