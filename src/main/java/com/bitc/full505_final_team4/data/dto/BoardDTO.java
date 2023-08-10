@@ -13,4 +13,5 @@ public class BoardDTO {
     private String createId;
     private LocalDateTime createDt;
     private String reqCate;
+    private int boardCate;
 }
