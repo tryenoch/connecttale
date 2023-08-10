@@ -17,12 +17,13 @@ function KakaoSearchResult(props) {
     })
       .then(res => {
         // 카카오 페이지 검색결과 가져오기
-        if (res.data[0] == 'kakaoIdList') {
+        
+        if (res.data.length != 0) {
           // console.log(res);
           let kakaoSearchResult = [];
-        
+          let data = {};
           // Promise.all을 사용하여 반복되는 axios 통신이 모두 완료된 후, 가져온 데이터들을 kakaoSearchResult에 저장하는 로직
-          Promise.all(res.data.slice(1).map(item => axios.get('https://page.kakao.com/_next/data/2.12.2/ko/content/' + item + '.json')))
+          Promise.all(res.data.map(item => axios.get('https://page.kakao.com/_next/data/2.12.2/ko/content/' + item + '.json')))
             .then(res => {
               for (let i = 0; i < res.length; i++) {
                 const item = res[i].data.pageProps

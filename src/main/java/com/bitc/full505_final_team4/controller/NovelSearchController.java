@@ -46,6 +46,12 @@ public class NovelSearchController {
     return naverSearchList;
   }
 
+//  @RequestMapping(value = "/searchRidi", method = RequestMethod.GET)
+//  public Object searchRidiResult(@RequestParam("searchWord") String searchWord) throws Exception {
+//    Map<String, Object> ridiSearchList = novelSearchService.getRidiSearchList(searchWord);
+//
+//    return ridiSearchList;
+//  }
 
 
   // 리디북스 검색 결과 데이터 가져오기

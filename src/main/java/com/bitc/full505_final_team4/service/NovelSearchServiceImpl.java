@@ -49,10 +49,112 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   // 셀레니움을 통해 검색 결과에 따른 카카오페이지 작품 id 리스트 가져오기
   @Override
   public List<String> getKakaoSearchIdList(String searchWord) throws Exception {
+    // ------------- 카카오페이지 셀레니움을 통한 로그인 시도 --------------
+//    Map<String, Object> kakaoSearchList = new HashMap<>();
+//
+//    String kakaoLoginUrl = "https://accounts.kakao.com/login/?continue=https%3A%2F%2Fkauth.kakao.com%2Foauth%2Fauthorize%3Fis_popup%3Dfalse%26ka%3Dsdk%252F2.1.0%2520os%252Fjavascript%2520sdk_type%252Fjavascript%2520lang%252Fko%2520device%252FWin32%2520origin%252Fhttps%25253A%25252F%25252Fpage.kakao.com%26auth_tran_id%3D4NVAWH9Y2fxSMEHpozuV3fE29BE-34edN65QVdy5wjDQd1tk2GYAa4Je-rJW%26response_type%3Dcode%26state%3Dhttps%25253A%25252F%25252Fpage.kakao.com%25252F%26redirect_uri%3Dhttps%253A%252F%252Fpage.kakao.com%252Frelay%252Flogin%26through_account%3Dtrue%26client_id%3D49bbb48c5fdb0199e5da1b89de359484&talk_login=hidden#login";
+//
+//    String searchUrl = "https://page.kakao.com/search/result?keyword=" + searchWord + "&categoryUid=11";
+//
+//    List<String> kakaoSearchIdList = new ArrayList<>();
+//    List<String> kakaoSearchStarRateList = new ArrayList<>();
+//
+//    System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
+//
+//    // webDriver 옵션 설정
+//    ChromeOptions options = new ChromeOptions();
+////    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
+//////    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+////    options.addArguments("--enable-automation");
+////    options.addArguments("--window-position=-100000,-100000");
+////    options.addArguments("--window-size=0,0");
+////    options.addArguments("--lang=ko");
+////    options.addArguments("--disable-gpu");            //gpu 비활성화
+////    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
+//
+//    driver = new ChromeDriver(options);
+//    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+//
+//    try {
+//      driver.get(kakaoLoginUrl);
+//      Thread.sleep(1000);
+//      driver.findElement(By.name("loginId")).sendKeys("");
+//      Thread.sleep(1000);
+//      driver.findElement(By.name("password")).sendKeys("");
+//
+//      driver.findElement(By.cssSelector(".btn_g.highlight.submit")).click();
+//      Thread.sleep(2000);
+//
+//      Set<Cookie> cookies = driver.manage().getCookies();
+//
+//      driver.get(searchUrl);
+//
+//      // 페이지 끝까지 스크롤 내리는 로직
+////      while (true) {
+//////        long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
+////
+////        long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
+////
+////
+////        // Scroll down to bottom
+////        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.getElementById('__next').scrollHeight);");
+////
+////        // Wait for new content to load
+////        Thread.sleep(1000);
+////
+////        long newHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
+////
+////        // 새로운 콘텐츠가 로드되지 않을 때, 스크롤이 끝났다고 판단하여 반복문 종료
+////        if (newHeight == lastHeight) {
+////          break;
+////        }
+////      }
+//
+//      //      wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector(".flex-1.cursor-pointer")));
+//
+//      // css선택자를 활용하여 해당 태그찾기(같은 클래스값을 가진 태그가 반복되는 형태라 list<WebElement>타입으로 설정함
+//      List<WebElement> elements = driver.findElements(By.cssSelector(".flex-1.cursor-pointer"));
+//
+//      if (elements.isEmpty()) {
+//        System.out.println("작품 아이디가 적힌 a태그를 못찾음");
+//      }
+//      else {
+//        for (WebElement element : elements) {
+//          // 태그 요소들 각각의 작품id값만 String으로 받아오기
+//          String kakaoSearchHref = element.getAttribute("href");
+//
+//          int kakaoSearchIdIndex = kakaoSearchHref.lastIndexOf("/");
+//          String kakaoSearchId = kakaoSearchHref.substring(kakaoSearchIdIndex + 1);
+//          kakaoSearchIdList.add(kakaoSearchId);
+//        }
+//
+//        driver.get("https://page.kakao.com/content/51332154");
+////          for (Cookie cookie : cookies) {
+////            driver.manage().addCookie(cookie);
+////          }
+//
+//        WebElement starRateEle = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]/span[2]"));
+//        String starRate = starRateEle.getText();
+//
+//        kakaoSearchStarRateList.add(starRate);
+//
+//        kakaoSearchList.put("kakaoSearchIdList", kakaoSearchIdList);
+//        kakaoSearchList.put("kakaoSearchStarRateList", kakaoSearchStarRateList);
+//      }
+//
+//    }
+//    catch (Exception e) {
+//      e.printStackTrace();
+//    }
+//    finally {
+//      driver.quit();
+//    }
+//    return kakaoSearchList;
+
+
     String searchUrl = "https://page.kakao.com/search/result?keyword=" + searchWord + "&categoryUid=11";
 
     List<String> kakaoSearchIdList = new ArrayList<>();
-    kakaoSearchIdList.add("kakaoIdList");
 
     System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
@@ -68,9 +170,9 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
 
     driver = new ChromeDriver(options);
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
     try {
-      // webDriver 경로 설정
 
       driver.get(searchUrl);
 
@@ -96,38 +198,33 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //      }
 
       //      wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector(".flex-1.cursor-pointer")));
-      
+
       // css선택자를 활용하여 해당 태그찾기(같은 클래스값을 가진 태그가 반복되는 형태라 list<WebElement>타입으로 설정함
       List<WebElement> elements = driver.findElements(By.cssSelector(".flex-1.cursor-pointer"));
 
       if (elements.isEmpty()) {
         System.out.println("작품 아이디가 적힌 a태그를 못찾음");
-      } else {
+      }
+      else {
         for (WebElement element : elements) {
           // 태그 요소들 각각의 작품id값만 String으로 받아오기
           String kakaoSearchHref = element.getAttribute("href");
+
           int kakaoSearchIdIndex = kakaoSearchHref.lastIndexOf("/");
           String kakaoSearchId = kakaoSearchHref.substring(kakaoSearchIdIndex + 1);
           kakaoSearchIdList.add(kakaoSearchId);
-
-          // ------------- 얻은 id를 통해 디테일 페이지 접근(셀레니움) --------------
-
-          String kakaoDetailUrl = "https://page.kakao.com/content/" + kakaoSearchId;
-
-          driver.get(kakaoDetailUrl);
-
         }
       }
 
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       e.printStackTrace();
-    } finally {
+    }
+    finally {
       driver.quit();
     }
     return kakaoSearchIdList;
   }
-
-
 
 
   // ---------------------------- 네이버 검색결과 가져오기--------------------------------
@@ -143,15 +240,15 @@ public class NovelSearchServiceImpl implements NovelSearchService {
       // Jsoup 활용하여 페이지에 접속하기
       Document findPageNum = Jsoup.connect(findMaxPageNumUrl).get();
 
-      // 검색 결과로 나온 총작품수로 max pageNum 구하기
+      // 검색 결과로 나온 총작품수로 max pageNum 구하기 => 자료가 너무 많아 페이지 max pageNum 10개로 고정
       Elements pageNumEle = findPageNum.select("div[class=lst_header]>h3>em");
       if (!pageNumEle.isEmpty()) {
-        int allCountStartIndex = pageNumEle.text().indexOf("(");
-        int allCountEndIndex = pageNumEle.text().indexOf(")");
-        int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
-
-        double maxPageDot = allCount / 25;
-        int maxPageNum = (int) Math.ceil(maxPageDot);
+//        int allCountStartIndex = pageNumEle.text().indexOf("(");
+//        int allCountEndIndex = pageNumEle.text().indexOf(")");
+//        int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
+//
+//        double maxPageDot = allCount / 25;
+//        int maxPageNum = (int) Math.ceil(maxPageDot);
 
         // 리스트 타입으로 저장할 변수 선언
         List<String> platformIdList = new ArrayList<>();
@@ -169,7 +266,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         List<String> ageGradeList = new ArrayList<>();
 
         // 1페이지부터 maxPageNum 까지 반복문으로 사이트 크롤링하기
-        for (int i = 1; i <= maxPageNum; i++) {
+        for (int i = 1; i <= 10; i++) {
           // 페이지 별로 데이터 찾아올 url
           String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
 
@@ -298,73 +395,6 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     }
     return naverSearchList;
   }
-
-
-  // 셀레니움으로 네이버시리즈 로그인 시도하여 데이터 가져오기 (로그인이 안됨)
-
-//  @Override
-//  public Map<String, Object> getNaverSearchList(String searchWord) throws Exception {
-//    Map<String, Object> naverSearchList = null;
-//    List<String> thumbnailList = null;
-//
-//    System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
-//    // 셀레니움 사용하여 네이버 로그인 후 데이터 가져오기 시도
-//    // Chrome WebDriver 인스턴스 생성
-//    WebDriver driver = new ChromeDriver();
-//
-//    // 타임아웃 설정
-//    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-//
-//
-//    try {
-//      // 네이버 시리즈 로그인 페이지로 이동
-//      driver.get("https://nid.naver.com/nidlogin.login");
-//
-//      Thread.sleep(3000);
-//
-//      // 아이디와 비밀번호 입력
-//      driver.findElement(By.name("id")).sendKeys("bitcteam4");
-//      driver.findElement(By.name("pw")).sendKeys("qntks505!");
-//
-//      // 로그인 버튼 클릭
-//      driver.findElement(By.className("btn_login")).click();
-//
-//      // 로그인 후 페이지가 로드될 때까지 대기
-//      Thread.sleep(1000);
-//
-//      // 네이버 시리즈 검색 페이지로 이동
-//      driver.get("https://series.naver.com/novel/detail.series?productNo=514942");
-//
-//      // 페이지가 로드될 때까지 대기
-//      Thread.sleep(1000);
-//
-//      // 검색 결과에서 썸네일을 크롤링하여 출력
-//
-////      List<WebElement> elements = driver
-////        .findElements(By.xpath("/html/body/div/div[2]/div[2]/div[2]/div[3]/ul/li[1]/a/img"));
-//      WebElement thumbnail = driver.findElement(By.xpath("//*[@id=\"container\"]/div[1]/a/img"));
-//      String thumbnailUrl = thumbnail.getAttribute("src");
-//
-//      Thread.sleep(1000);
-//
-//
-////      for (WebElement e : elements) {
-////        thumbnailList.add(e.getAttribute("src"));
-////        String author = e.findElement(By.cssSelector(".author")).getText();
-//////        System.out.println("Title: " + title + ", Author: " + author);
-////
-////      }
-//
-//      naverSearchList.put("thumbnail", thumbnailUrl);
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    } finally {
-//      // 작업이 끝난 후 WebDriver 종료
-//      driver.quit();
-//    }
-//
-//    return naverSearchList;
-//  }
 }
 
 
