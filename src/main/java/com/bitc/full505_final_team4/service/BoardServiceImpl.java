@@ -14,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -72,5 +70,11 @@ public class BoardServiceImpl implements BoardService {
         // 반환된 entity의 id값을 리턴 / 첨부파일이 있을 경우 id값을 참조하기 위해
         BoardEntity resultBorad = boardRepository.save(boardEntity);
         return resultBorad.getBoardIdx();
+    }
+
+    @Override
+    public BoardDTO getBoard(int idx) throws Exception {
+        BoardEntity boardEntity =  boardRepository.findByBoardIdx(idx);
+        return BoardDTO.toDTO(boardEntity);
     }
 }
