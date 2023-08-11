@@ -215,12 +215,12 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     WebDriver driver;
     Map<String, Object> naverSearchObj = new HashMap<>();
 
-//    System.setProperty("java.awt.headless", "false");
+    System.setProperty("java.awt.headless", "false");
     System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
     ChromeOptions options = new ChromeOptions();
 //    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
-    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+//    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
     options.addArguments("--start-minimized");
     options.addArguments("--enable-automation");
     options.addArguments("--window-position=1980,1050");
