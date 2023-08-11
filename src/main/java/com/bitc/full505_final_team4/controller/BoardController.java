@@ -34,14 +34,7 @@ public class BoardController {
         int totalPages = boardPages.getTotalPages();
 
         for (BoardEntity board : boardPages.getContent()) {
-            BoardDTO req = new BoardDTO();
-            req.setBoardIdx(board.getBoardIdx());
-            req.setBoardTitle(board.getBoardTitle());
-            req.setBoardContents(board.getBoardContents());
-            req.setCreateId(board.getCreateId().getNickname());
-            req.setCreateDt(board.getCreateDt());
-//            req.setReqCate(board.getReqCate().getReqName());
-
+            BoardDTO req = BoardDTO.toDTO(board);
             reqList.add(req);
         }
 
@@ -62,13 +55,7 @@ public class BoardController {
         Page<BoardEntity> boardPages = boardService.getNotiList(pageable);
         int totalPages = boardPages.getTotalPages();
         for (BoardEntity board : boardPages) {
-            BoardDTO noti = new BoardDTO();
-            noti.setBoardIdx(board.getBoardIdx());
-            noti.setBoardTitle(board.getBoardTitle());
-            noti.setBoardContents(board.getBoardContents());
-            noti.setCreateId(board.getCreateId().getNickname());
-            noti.setCreateDt(board.getCreateDt());
-
+            BoardDTO noti = BoardDTO.toDTO(board);
             notiList.add(noti);
         }
 
@@ -89,13 +76,7 @@ public class BoardController {
         Page<BoardEntity> boardPages = boardService.getEventList(pageable);
         int totalPages = boardPages.getTotalPages();
         for (BoardEntity board : boardPages) {
-            BoardDTO event = new BoardDTO();
-            event.setBoardIdx(board.getBoardIdx());
-            event.setBoardTitle(board.getBoardTitle());
-            event.setBoardContents(board.getBoardContents());
-            event.setCreateId(board.getCreateId().getNickname());
-            event.setCreateDt(board.getCreateDt());
-
+            BoardDTO event = BoardDTO.toDTO(board);
             eventList.add(event);
         }
 
@@ -116,6 +97,16 @@ public class BoardController {
         result.put("result", "성공");
         result.put("boardIdx", boardIdx);
 
+        return result;
+    }
+
+    @RequestMapping(value = "/board/{idx}", method = RequestMethod.GET)
+    public Object getBoard(@PathVariable int idx) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        BoardDTO board = boardService.getBoard(idx);
+
+        result.put("result", "성공");
+        result.put("board", board);
         return result;
     }
 }

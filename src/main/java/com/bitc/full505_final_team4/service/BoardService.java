@@ -15,4 +15,6 @@ public interface BoardService {
     Page<BoardEntity> getEventList(Pageable pageable) throws Exception;
 
     int setBoard(BoardDTO board) throws Exception;
+
+    BoardDTO getBoard(int idx) throws Exception;
 }
