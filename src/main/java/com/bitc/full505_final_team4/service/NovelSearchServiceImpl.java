@@ -145,13 +145,13 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     // webDriver 옵션 설정
     ChromeOptions options = new ChromeOptions();
 //    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
-//    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
 //    options.addArguments("--enable-automation");
 //    options.addArguments("--window-position=-100000,-100000");
 //    options.addArguments("--window-size=0,0");
 //    options.addArguments("--lang=ko");
-//    options.addArguments("--disable-gpu");            //gpu 비활성화
-//    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
+    options.addArguments("--disable-gpu");            //gpu 비활성화
+    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
 
     driver = new ChromeDriver(options);
     driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
@@ -170,7 +170,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.getElementById('__next').scrollHeight);");
 
         // Wait for new content to load
-        Thread.sleep(250);
+        Thread.sleep(150);
 
         long newHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.getElementById('__next').scrollHeight");
 
@@ -357,7 +357,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         List<WebElement> conts = driver.findElements(By.cssSelector("div.cont"));
         for (WebElement contEl : conts) {
           String h3 = contEl.findElement(By.cssSelector("h3")).getText();
-          String ageGrade = h3.contains("19금") ? "adult" : "all";
+          String ageGrade = h3.contains("19금") ? "Y" : "N";
 
           ageGradeList.add(ageGrade);
         }
@@ -457,7 +457,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
           List<WebElement> conts = driver.findElements(By.cssSelector("div.cont"));
           for (WebElement contEl : conts) {
             String h3 = contEl.findElement(By.cssSelector("h3")).getText();
-            String ageGrade = h3.contains("19금") ? "adult" : "all";
+            String ageGrade = h3.contains("19금") ? "Y" : "N";
 
             ageGradeList.add(ageGrade);
           }

@@ -36,7 +36,7 @@ function RidiSearchResult(props) {
                 price: item[i].price != null ? item[i].price : item[i].series_prices_info[0].max_price,
                 completeYn: item[i].is_series_complete ? '완결' : '연재중',
                 description: item[i].desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
-                ageGrade: item[i].age_limit == 19 ? "adult" : "all",
+                ageGrade: item[i].age_limit == 19 ? "Y" : "N",
                 novelOrEbook: item[i].web_title_title.includes('e북') ? "e북" : "웹소설"
               }
               ridiSearchList.push(data);
@@ -82,7 +82,7 @@ function RidiSearchResult(props) {
                   </Link>
                 </div>
                 <div className={'col-sm-10'}>
-                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='adult' ? '[성인]' : null}</span>
+                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
                   </Link><br/>
                   <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
                   <p className={'search-info'}>출판사 : {item.publi}</p>

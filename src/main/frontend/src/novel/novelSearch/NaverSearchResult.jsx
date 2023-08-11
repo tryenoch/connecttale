@@ -15,7 +15,7 @@ function NaverSearchResult(props) {
     })
       .then(res => {
         const item = res.data;
-        console.log(res);
+        // console.log(res);
         let naverSearchList = [];
         
         if(Object.keys(res.data) != 0) {
@@ -58,7 +58,7 @@ function NaverSearchResult(props) {
                 </Link>
               </div>
               <div className={'col-sm-10'}>
-                <Link to={'#'} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade == "adult" ? "[성인]" : null}</span>
+                <Link to={'#'} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
                 </Link><br/>
                 <p className={'search-info'}>작가 : {item.author}</p>
 

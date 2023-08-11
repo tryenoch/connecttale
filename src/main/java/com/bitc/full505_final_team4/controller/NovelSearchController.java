@@ -5,11 +5,18 @@ import com.bitc.full505_final_team4.data.dto.NovelSearchDTO;
 import com.bitc.full505_final_team4.service.NovelDetailService;
 import com.bitc.full505_final_team4.service.NovelSearchService;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.lang.model.util.ElementScanner6;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,12 +59,5 @@ public class NovelSearchController {
 //
 //    return ridiSearchList;
 //  }
-
-
-  // 리디북스 검색 결과 데이터 가져오기
-
-
-
-
 
 }
