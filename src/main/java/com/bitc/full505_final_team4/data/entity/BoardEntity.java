@@ -45,6 +45,10 @@ public class BoardEntity {
     @ToString.Exclude
     private ReqCateEntity reqCate;
 
+    // 조회수 추가를 위한 hitCnt column 추가
+    @Column(name = "hit_cnt", nullable = false)
+    private int hitCnt = 0;
+
     // save를 위한 entity builder 추가
     @Builder
     public BoardEntity(String boardTitle, String boardContents, BoardCateEntity boardCate, MemberEntity createId, ReqCateEntity reqCate) {
