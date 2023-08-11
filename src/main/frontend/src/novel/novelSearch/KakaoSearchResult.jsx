@@ -28,7 +28,7 @@ function KakaoSearchResult(props) {
               for (let i = 0; i < res.length; i++) {
                 const item = res[i].data.pageProps
                 const data = {
-                  platform: '1',
+                  platform: 1,
                   platformId: item.seriesId,
                   title: item.metaInfo.ogTitle,
                   thumbnail: item.metaInfo.image,

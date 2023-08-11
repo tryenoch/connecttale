@@ -5,6 +5,7 @@ import com.bitc.full505_final_team4.data.repository.NovelPlatformRepository;
 import com.bitc.full505_final_team4.data.repository.NovelRepository;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
@@ -144,13 +145,13 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     // webDriver 옵션 설정
     ChromeOptions options = new ChromeOptions();
 //    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
-    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+//    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
 //    options.addArguments("--enable-automation");
 //    options.addArguments("--window-position=-100000,-100000");
 //    options.addArguments("--window-size=0,0");
 //    options.addArguments("--lang=ko");
-    options.addArguments("--disable-gpu");            //gpu 비활성화
-    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
+//    options.addArguments("--disable-gpu");            //gpu 비활성화
+//    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
 
     driver = new ChromeDriver(options);
     driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
@@ -214,7 +215,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     WebDriver driver;
     Map<String, Object> naverSearchObj = new HashMap<>();
 
-    System.setProperty("java.awt.headless", "false");
+//    System.setProperty("java.awt.headless", "false");
     System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
     ChromeOptions options = new ChromeOptions();
@@ -223,7 +224,8 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     options.addArguments("--start-minimized");
     options.addArguments("--enable-automation");
     options.addArguments("--window-position=1980,1050");
-    options.addArguments("--window-size=0,0");
+    Dimension windowSize = new Dimension(800, 600); // 원하는 크기로 설정
+    options.addArguments("--window-size=" + windowSize.width + "," + windowSize.height);
     options.addArguments("--lang=ko");
     options.addArguments("--disable-gpu");            //gpu 비활성화
     options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음

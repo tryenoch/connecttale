@@ -22,7 +22,7 @@ function NaverSearchResult(props) {
           for (let i = 0; i < item.title.length; i++) {
             // const item = res.data;
             const data = {
-              platform: '2',
+              platform: 2,
               platformId: item.platformId[i],
               title: item.title[i],
               thumbnail: item.thumbnail[i],

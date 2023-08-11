@@ -22,7 +22,7 @@ function RidiSearchResult(props) {
           for (let i = 0; i < item.length; i++) {
             const saveWebNovel = (param) => {
               const data = {
-                platform: "3",
+                platform: 3,
                 platformId: item[i].b_id,
                 title: item[i].title,
                 thumbnail: "https://img.ridicdn.net/cover/"+ item[i].b_id +"/xxlarge",
@@ -77,12 +77,12 @@ function RidiSearchResult(props) {
             return (
               <div className={'row my-4 border-top border-bottom py-2'} key={index}>
                 <div className={'col-sm-2'}>
-                  <Link to={'#'} >
+                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}`} >
                     <img src={item.thumbnail} alt="" className={'w-100 h-100'} />
                   </Link>
                 </div>
                 <div className={'col-sm-10'}>
-                  <Link to={'#'} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='adult' ? '[성인]' : null}</span>
+                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='adult' ? '[성인]' : null}</span>
                   </Link><br/>
                   <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
                   <p className={'search-info'}>출판사 : {item.publi}</p>
