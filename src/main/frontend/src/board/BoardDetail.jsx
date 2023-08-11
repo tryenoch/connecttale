@@ -5,6 +5,8 @@ import axios from "axios";
 import {boardList} from "./BoardMain";
 
 function BoardDetail(props) {
+    // html 파싱을 위한 라이브러리
+    const parse = require('html-react-parser');
 
     const navi = useNavigate();
     const profile = useParams();
@@ -41,7 +43,7 @@ function BoardDetail(props) {
                             <h1 className={'fw-bold'}>{boardList[profile.cate].title}</h1>
                         </div>
                     </Row>
-                    <div className={'border-top border-bottom border-1'}>
+                    <div className={'border-bottom border-1'}>
                         <h3 className={'my-2'}>{title}</h3>
                     </div>
                     {/*    조회수 작성일 작성자 / 조회수 칼럼 추가 */}
@@ -51,8 +53,7 @@ function BoardDetail(props) {
                         <span>조회수</span>
                     </div>
                     <div className={'border-top border-bottom border-1 p-3'}>
-                        {/*    html 파싱 데이터 출력*/}
-                        {contents}
+                        {parse(contents)}
                     </div>
                     <div className={'d-flex justify-content-center my-3'}>
                         <button type={'button'} className={'btn btn-primary px-4'} onClick={handleGotoMain}>목록</button>
