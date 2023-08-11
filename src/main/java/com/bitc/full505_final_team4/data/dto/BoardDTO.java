@@ -13,7 +13,6 @@ public class BoardDTO {
     private String boardTitle;
     private String boardContents;
     private String createId;
-    //string으로 변경 시 발생하는 에러 생각
     private LocalDateTime createDt;
     private String reqCate;
     private int boardCate;
