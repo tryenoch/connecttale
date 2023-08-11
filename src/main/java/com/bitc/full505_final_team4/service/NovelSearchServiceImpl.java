@@ -1,33 +1,15 @@
 package com.bitc.full505_final_team4.service;
 
-import com.bitc.full505_final_team4.data.dto.NovelSearchDTO;
-import com.bitc.full505_final_team4.data.entity.NovelCateEntity;
-import com.bitc.full505_final_team4.data.entity.NovelEntity;
-import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.data.repository.NovelCateRepository;
 import com.bitc.full505_final_team4.data.repository.NovelPlatformRepository;
 import com.bitc.full505_final_team4.data.repository.NovelRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.time.Duration;
+import javax.swing.text.Element;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -230,9 +212,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   // ---------------------------- 네이버 검색결과 가져오기--------------------------------
   @Override
   public Map<String, Object> getNaverSearchList(String searchWord) throws Exception {
-    Map<String, Object> naverSearchList = new HashMap<>();
-
-    List<String> thumbnailList = new ArrayList<>();
+    Map<String, Object> naverSearchObj = new HashMap<>();
 
     System.setProperty("java.awt.headless", "false");
     System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
@@ -252,6 +232,8 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
     String naverLoginUrl = "https://nid.naver.com/nidlogin.login?mode=form&url=https://www.naver.com/";
 
+    String naverSearchUrl = "https://series.naver.com/search/search.series?t=novel&fs=default&q=" + searchWord + "&page=1";
+
     String naverId = "bitcteam4";
     String naverPw = "qntks505!";
 
@@ -262,8 +244,10 @@ public class NovelSearchServiceImpl implements NovelSearchService {
       // -------------------------------- selenium (로그인) -------------------------------------
 
     try {
+      // 네이버 로그인 페이지 접속하기
       driver.get(naverLoginUrl);
 
+      // 아이디 입력
       WebElement idInput = driver.findElement(By.name("id"));
       clipboard.setContents(id, null);
       idInput.click();
@@ -271,6 +255,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
       Thread.sleep(500);
 
+      // 비밀번호 입력
       WebElement pwInput = driver.findElement(By.name("pw"));
       clipboard.setContents(pw, null);
       pwInput.click();
@@ -278,25 +263,178 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
       Thread.sleep(500);
 
+      // 로그인 버튼 클릭
       WebElement btnLogin = driver.findElement(By.cssSelector(".btn_login"));
       btnLogin.click();
 
 
-      driver.get("https://series.naver.com/search/search.series?t=novel&q=" + searchWord);
+      // 검색 작품 개수 찾을 사이트 접속하기
+      driver.get(naverSearchUrl);
 
-      List<WebElement> aLink = driver.findElements(By.className("N=a:nov.img"));
+      // 검색 작품 개수 찾기
+      WebElement findAllCount = driver.findElement(By.xpath("//*[@id=\"content\"]/div[2]/div[2]/h3/em"));
+      int si = findAllCount.getText().indexOf("(");
+      int ei = findAllCount.getText().indexOf(")");
+      int searchCount = Integer.parseInt(findAllCount.getText().substring(si + 1, ei));
 
-      if (!aLink.isEmpty()) {
-        for (WebElement e : aLink) {
-          thumbnailList.add(e.findElement(By.cssSelector("img")).getAttribute("src"));
+      // 검색 작품 개수가 25개 이하일때
+      if (searchCount <= 25) {
+        List<String> platformIdList = new ArrayList<>();
+        List<String> titleList = new ArrayList<>();
+        List<String> thumbnailList = new ArrayList<>();
+        List<Double> starRateList = new ArrayList<>();
+        List<String> authorList = new ArrayList<>();
+        List<Integer> countList = new ArrayList<>();
+        List<String> completeYnList = new ArrayList<>();
+        List<String> descriptionList = new ArrayList<>();
+
+        // 작품 id가 적힌 a태그들 찾기
+        List<WebElement> aLinks = driver.findElements(By.className("N=a:nov.img"));
+
+        for (WebElement platformIdEl : aLinks) {
+          // a태그 href 속성값 중 platformId값 추출하기
+          int platformIdIndex = platformIdEl.getAttribute("href").indexOf("=");
+          String platformId = platformIdEl.getAttribute("href").substring(platformIdIndex + 1);
+          platformIdList.add(platformId);
+
+          // 썸네일 주소 가져오기
+          String thumbnail = platformIdEl.findElement(By.cssSelector("img")).getAttribute("src");
+          thumbnailList.add(thumbnail);
         }
+
+
+        List<WebElement> titles = driver.findElements(By.className("N=a:nov.title"));
+        for (WebElement titleEl : titles) {
+          // 제목 가져오기
+          int titleIndex = titleEl.getText().indexOf("(");
+          String title = titleEl.getText().substring(0, titleIndex - 1);
+          titleList.add(title);
+
+          // count 가져오기
+          int countStartIndex = titleEl.getText().indexOf("총");
+          int countEndIndex = titleEl.getText().indexOf("/");
+          int count = Integer.parseInt(titleEl.getText().substring(countStartIndex + 2, countEndIndex - 1));
+          countList.add(count);
+
+          // 완결 유무 가져오기
+          int completeYnIndex = titleEl.getText().indexOf("/");
+          String completeYn = titleEl.getText().substring(completeYnIndex + 1);
+          completeYnList.add(completeYn);
+        }
+
+        // 작가 정보 가져오기
+        List<WebElement> authors = driver.findElements(By.className("author"));
+        for (WebElement authorEl : authors) {
+          String author = authorEl.getText();
+          authorList.add(author);
+        }
+
+        // 별점 정보 가져오기
+        List<WebElement> starRates = driver.findElements(By.className("score_num"));
+        for (WebElement starRateEl : starRates) {
+          double starRate = Double.parseDouble(starRateEl.getText());
+          starRateList.add(starRate);
+        }
+
+        List<WebElement> descriptions = driver.findElements(By.className("dsc"));
+        for (WebElement descriptionEl : descriptions) {
+          String description = descriptionEl.getText();
+          descriptionList.add(description);
+        }
+
+
+        // 객체에 속성명으로 해당 리스트(배열) 형태로 저장
+        naverSearchObj.put("platformId", platformIdList);
+        naverSearchObj.put("title", titleList);
+        naverSearchObj.put("thumbnail", thumbnailList);
+        naverSearchObj.put("starRate", starRateList);
+        naverSearchObj.put("author", authorList);
+        naverSearchObj.put("count", countList);
+        naverSearchObj.put("completeYn", completeYnList);
+        naverSearchObj.put("count", countList);
       }
+
+      // 결과가 25개 초과인 경우(2페이지 이상 있는 경우)
       else {
-        System.out.println("aLink 선택자를 못찾음");
+        List<String> platformIdList = new ArrayList<>();  // o
+        List<String> titleList = new ArrayList<>(); // o
+        List<String> thumbnailList = new ArrayList<>(); // o
+        List<Double> starRateList = new ArrayList<>(); // o
+        List<String> authorList = new ArrayList<>(); // o
+        List<Integer> countList = new ArrayList<>(); // o
+        List<String> completeYnList = new ArrayList<>(); //
+        List<String> descriptionList = new ArrayList<>();
+
+        for (int i = 1; i <= 10; i++) {
+          // 1~10페이지의 페이지에 접속하기
+          String searchDetailUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
+
+          driver.get(searchDetailUrl);
+
+          // 작품 id가 적힌 a태그들 찾기
+          List<WebElement> aLinks = driver.findElements(By.className("N=a:nov.img"));
+
+          for (WebElement platformIdEl : aLinks) {
+            // a태그 href 속성값 중 platformId값 추출하기
+            int platformIdIndex = platformIdEl.getAttribute("href").indexOf("=");
+            String platformId = platformIdEl.getAttribute("href").substring(platformIdIndex + 1);
+            platformIdList.add(platformId);
+
+            // 썸네일 주소 가져오기
+            String thumbnail = platformIdEl.findElement(By.cssSelector("img")).getAttribute("src");
+            thumbnailList.add(thumbnail);
+          }
+
+
+          List<WebElement> titles = driver.findElements(By.className("N=a:nov.title"));
+          for (WebElement titleEl : titles) {
+            // 제목 가져오기
+            int titleIndex = titleEl.getText().indexOf("(");
+            String title = titleEl.getText().substring(0, titleIndex - 1);
+            titleList.add(title);
+
+            // count 가져오기
+            int countStartIndex = titleEl.getText().indexOf("총");
+            int countEndIndex = titleEl.getText().indexOf("/");
+            int count = Integer.parseInt(titleEl.getText().substring(countStartIndex + 2, countEndIndex - 1));
+            countList.add(count);
+
+            // 완결 유무 가져오기
+            int completeYnIndex = titleEl.getText().indexOf("/");
+            String completeYn = titleEl.getText().substring(completeYnIndex + 1);
+            completeYnList.add(completeYn);
+          }
+
+          // 작가 정보 가져오기
+          List<WebElement> authors = driver.findElements(By.className("author"));
+          for (WebElement authorEl : authors) {
+            String author = authorEl.getText();
+            authorList.add(author);
+          }
+
+          // 별점 정보 가져오기
+          List<WebElement> starRates = driver.findElements(By.className("score_num"));
+          for (WebElement starRateEl : starRates) {
+            double starRate = Double.parseDouble(starRateEl.getText());
+            starRateList.add(starRate);
+          }
+
+          List<WebElement> descriptions = driver.findElements(By.className("dsc"));
+          for (WebElement descriptionEl : descriptions) {
+            String description = descriptionEl.getText();
+            descriptionList.add(description);
+          }
+        }
+        // 객체에 속성명으로 해당 리스트(배열) 형태로 저장
+        naverSearchObj.put("platformId", platformIdList);
+        naverSearchObj.put("title", titleList);
+        naverSearchObj.put("thumbnail", thumbnailList);
+        naverSearchObj.put("starRate", starRateList);
+        naverSearchObj.put("author", authorList);
+        naverSearchObj.put("count", countList);
+        naverSearchObj.put("completeYn", completeYnList);
+        naverSearchObj.put("description", descriptionList);
       }
-
-      naverSearchList.put("thumbnailList", thumbnailList);
-
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -304,7 +442,6 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     finally {
       driver.quit();
     }
-
 
       // -------------- jsoup(비로그인) -----------------
 
@@ -574,7 +711,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //    catch (IOException e) {
 //      e.printStackTrace();
 //    }
-    return naverSearchList;
+    return naverSearchObj;
   }
 }
 
