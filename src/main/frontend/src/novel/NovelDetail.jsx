@@ -6,11 +6,9 @@ function NovelDetail(props) {
   const [titleList, setTitleList] = useState([]);
   
   useEffect(() => {
-    axios.get('/jsoup')
+    axios.get('/novelDetail')
       .then(res => {
-        console.log(res.data);
-        const titles = res.data;
-        setTitleList(titles);
+        console.log(res);
       })
       .catch(err => {
         alert('서버와 통신 실패');
@@ -21,13 +19,7 @@ function NovelDetail(props) {
   return (
     <div className={'container my-4'}>
       <h1>Novel Detail</h1>
-      {
-        titleList.map((title, index) => {
-          return (
-            <li key={index}>{title}</li>
-          )
-        })
-      }
+
     </div>
   )
 }

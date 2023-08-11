@@ -25,8 +25,6 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   private final NovelCateRepository novelCateRepository;
 
   // 셀레니움을 통한 크롤링(카카오페이지)
-  private WebDriver driver;
-
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
 
@@ -34,6 +32,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   // 셀레니움을 통해 검색 결과에 따른 카카오페이지 작품 id 리스트 가져오기
   @Override
   public List<String> getKakaoSearchIdList(String searchWord) throws Exception {
+    WebDriver driver;
     // ------------- 카카오페이지 셀레니움을 통한 로그인 시도 --------------
 //    Map<String, Object> kakaoSearchList = new HashMap<>();
 //
@@ -212,23 +211,25 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   // ---------------------------- 네이버 검색결과 가져오기--------------------------------
   @Override
   public Map<String, Object> getNaverSearchList(String searchWord) throws Exception {
+    WebDriver driver;
     Map<String, Object> naverSearchObj = new HashMap<>();
 
     System.setProperty("java.awt.headless", "false");
     System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
-//    ChromeOptions options = new ChromeOptions();
+    ChromeOptions options = new ChromeOptions();
 //    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
-//    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
-//    options.addArguments("--enable-automation");
-//    options.addArguments("--window-position=-100000,-100000");
-//    options.addArguments("--window-size=0,0");
-//    options.addArguments("--lang=ko");
-//    options.addArguments("--disable-gpu");            //gpu 비활성화
-//    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
+    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+    options.addArguments("--start-minimized");
+    options.addArguments("--enable-automation");
+    options.addArguments("--window-position=1980,1050");
+    options.addArguments("--window-size=0,0");
+    options.addArguments("--lang=ko");
+    options.addArguments("--disable-gpu");            //gpu 비활성화
+    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
 
     driver = new ChromeDriver();
-    driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+    driver.manage().timeouts().implicitlyWait(300, TimeUnit.MILLISECONDS);
 
     String naverLoginUrl = "https://nid.naver.com/nidlogin.login?mode=form&url=https://www.naver.com/";
 
@@ -253,7 +254,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
       idInput.click();
       idInput.sendKeys(Keys.CONTROL + "v");
 
-      Thread.sleep(500);
+      Thread.sleep(300);
 
       // 비밀번호 입력
       WebElement pwInput = driver.findElement(By.name("pw"));
@@ -261,7 +262,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
       pwInput.click();
       pwInput.sendKeys(Keys.CONTROL + "v");
 
-      Thread.sleep(500);
+      Thread.sleep(300);
 
       // 로그인 버튼 클릭
       WebElement btnLogin = driver.findElement(By.cssSelector(".btn_login"));
@@ -287,6 +288,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         List<Integer> countList = new ArrayList<>();
         List<String> completeYnList = new ArrayList<>();
         List<String> descriptionList = new ArrayList<>();
+        List<String> ageGradeList = new ArrayList<>();
 
         // 작품 id가 적힌 a태그들 찾기
         List<WebElement> aLinks = driver.findElements(By.className("N=a:nov.img"));
@@ -316,17 +318,23 @@ public class NovelSearchServiceImpl implements NovelSearchService {
           int count = Integer.parseInt(titleEl.getText().substring(countStartIndex + 2, countEndIndex - 1));
           countList.add(count);
 
-          // 완결 유무 가져오기
-          int completeYnIndex = titleEl.getText().indexOf("/");
-          String completeYn = titleEl.getText().substring(completeYnIndex + 1);
-          completeYnList.add(completeYn);
         }
 
         // 작가 정보 가져오기
-        List<WebElement> authors = driver.findElements(By.className("author"));
-        for (WebElement authorEl : authors) {
-          String author = authorEl.getText();
+        List<WebElement> infos = driver.findElement(By.cssSelector(".lst_list")).findElements(By.className("info"));
+        for (WebElement e : infos) {
+          String p = e.getText();
+          String[] parts = p.split("\\s*\\|\\s*");
+
+          String author = parts[1];
           authorList.add(author);
+
+          // 완결 유무 가져오기
+          String f = parts[3];
+          int completeYnStartIndex = f.indexOf("/");
+
+          String completeYn = f.substring(completeYnStartIndex + 1);
+          completeYnList.add(completeYn);
         }
 
         // 별점 정보 가져오기
@@ -336,12 +344,21 @@ public class NovelSearchServiceImpl implements NovelSearchService {
           starRateList.add(starRate);
         }
 
+        // 작품 소개글 가져오기
         List<WebElement> descriptions = driver.findElements(By.className("dsc"));
         for (WebElement descriptionEl : descriptions) {
           String description = descriptionEl.getText();
           descriptionList.add(description);
         }
 
+        // 성인 작품 여부 가져오기
+        List<WebElement> conts = driver.findElements(By.cssSelector("div.cont"));
+        for (WebElement contEl : conts) {
+          String h3 = contEl.findElement(By.cssSelector("h3")).getText();
+          String ageGrade = h3.contains("19금") ? "adult" : "all";
+
+          ageGradeList.add(ageGrade);
+        }
 
         // 객체에 속성명으로 해당 리스트(배열) 형태로 저장
         naverSearchObj.put("platformId", platformIdList);
@@ -351,7 +368,8 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         naverSearchObj.put("author", authorList);
         naverSearchObj.put("count", countList);
         naverSearchObj.put("completeYn", completeYnList);
-        naverSearchObj.put("count", countList);
+        naverSearchObj.put("dsc", descriptionList);
+        naverSearchObj.put("ageGrade", ageGradeList);
       }
 
       // 결과가 25개 초과인 경우(2페이지 이상 있는 경우)
@@ -364,8 +382,9 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         List<Integer> countList = new ArrayList<>(); // o
         List<String> completeYnList = new ArrayList<>(); //
         List<String> descriptionList = new ArrayList<>();
+        List<String> ageGradeList = new ArrayList<>();
 
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= 2; i++) {
           // 1~10페이지의 페이지에 접속하기
           String searchDetailUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
 
@@ -385,8 +404,8 @@ public class NovelSearchServiceImpl implements NovelSearchService {
             thumbnailList.add(thumbnail);
           }
 
-
           List<WebElement> titles = driver.findElements(By.className("N=a:nov.title"));
+
           for (WebElement titleEl : titles) {
             // 제목 가져오기
             int titleIndex = titleEl.getText().indexOf("(");
@@ -399,17 +418,23 @@ public class NovelSearchServiceImpl implements NovelSearchService {
             int count = Integer.parseInt(titleEl.getText().substring(countStartIndex + 2, countEndIndex - 1));
             countList.add(count);
 
-            // 완결 유무 가져오기
-            int completeYnIndex = titleEl.getText().indexOf("/");
-            String completeYn = titleEl.getText().substring(completeYnIndex + 1);
-            completeYnList.add(completeYn);
           }
 
           // 작가 정보 가져오기
-          List<WebElement> authors = driver.findElements(By.className("author"));
-          for (WebElement authorEl : authors) {
-            String author = authorEl.getText();
+          List<WebElement> infos = driver.findElement(By.cssSelector(".lst_list")).findElements(By.className("info"));
+          for (WebElement e : infos) {
+            String p = e.getText();
+            String[] parts = p.split("\\s*\\|\\s*");
+
+            String author = parts[1];
             authorList.add(author);
+
+            // 완결 유무 가져오기
+            String f = parts[3];
+            int completeYnStartIndex = f.indexOf("/");
+
+            String completeYn = f.substring(completeYnStartIndex + 1);
+            completeYnList.add(completeYn);
           }
 
           // 별점 정보 가져오기
@@ -419,11 +444,23 @@ public class NovelSearchServiceImpl implements NovelSearchService {
             starRateList.add(starRate);
           }
 
+          // 작품소개글 가져오기
           List<WebElement> descriptions = driver.findElements(By.className("dsc"));
           for (WebElement descriptionEl : descriptions) {
             String description = descriptionEl.getText();
             descriptionList.add(description);
           }
+
+          // 성인 작품 여부 가져오기
+          List<WebElement> conts = driver.findElements(By.cssSelector("div.cont"));
+          for (WebElement contEl : conts) {
+            String h3 = contEl.findElement(By.cssSelector("h3")).getText();
+            String ageGrade = h3.contains("19금") ? "adult" : "all";
+
+            ageGradeList.add(ageGrade);
+          }
+
+
         }
         // 객체에 속성명으로 해당 리스트(배열) 형태로 저장
         naverSearchObj.put("platformId", platformIdList);
@@ -433,7 +470,8 @@ public class NovelSearchServiceImpl implements NovelSearchService {
         naverSearchObj.put("author", authorList);
         naverSearchObj.put("count", countList);
         naverSearchObj.put("completeYn", completeYnList);
-        naverSearchObj.put("description", descriptionList);
+        naverSearchObj.put("dsc", descriptionList);
+        naverSearchObj.put("ageGrade", ageGradeList);
       }
     }
     catch (Exception e) {

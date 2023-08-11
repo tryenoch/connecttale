@@ -17,7 +17,7 @@ function SearchPlatformTab(props) {
   return (
     <Tabs defaultActiveKey="kakao" id="fill-tab-example" className="mb-3" fill>
       <Tab eventKey="kakao" title="카카오페이지 검색결과">
-        {/*<KakaoSearchResult keyword={searchWord} />*/}
+        <KakaoSearchResult keyword={searchWord} />
       </Tab>
       <Tab eventKey="naver" title="네이버시리즈 검색결과">
         <NaverSearchResult keyword={searchWord}/>

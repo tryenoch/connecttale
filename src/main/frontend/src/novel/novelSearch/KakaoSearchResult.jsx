@@ -72,10 +72,10 @@ function KakaoSearchResult(props) {
                 }
               </div>
               <div className={'col-sm-10'}>
-                <Link to={'#'} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title}
+                <Link to={'#'} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade == "All" ? "[성인]" : null}</span>
                 </Link><br/>
-                <p className={'search-info'}>{item.author} [{item.category}]</p>
-                <p className={'search-info'}>{item.publi}</p>
+                <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
+                <p className={'search-info'}>출판사 : {item.publi}</p>
                 {
                   item.price != null
                     ? <p className={'search-price fw-bold'}>가격 : {item.price}</p>
