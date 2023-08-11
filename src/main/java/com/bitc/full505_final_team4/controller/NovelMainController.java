@@ -1,6 +1,8 @@
 package com.bitc.full505_final_team4.controller;
 
 import com.bitc.full505_final_team4.common.JsonUtils;
+import com.bitc.full505_final_team4.data.dto.NovelMainDto;
+import com.bitc.full505_final_team4.service.NovelMainService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -16,6 +18,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/novel")
 public class NovelMainController {
+
+  private final NovelMainService novelMainService;
 
   /* Json 데이터 변환 및 가져오기 테스트 */
   @GetMapping("/testJson")
@@ -40,6 +44,37 @@ public class NovelMainController {
     } else {
       result.put("result", "fail");
     }
+
+    return result;
+  }
+
+  /* 리디북스 순위 리스트 가져오기 */
+  @GetMapping("/ridiRankList")
+  public Object getRidiRankList(@RequestParam("category") String category) throws Exception {
+
+    Map<String, Object> result = new HashMap<>();
+
+    /* 실시간 순위 1위부터 20위까지 리스트 반환 */
+    List<NovelMainDto> ridiNovelList = novelMainService.getRidiRankList(category, 1);
+
+    if(ridiNovelList != null){
+      result.put("result", "success");
+      result.put("ridiNovelList", ridiNovelList);
+    } else {
+      result.put("result", "Backend error");
+    }
+
+    return result;
+  }
+
+  @GetMapping("/kakaoRankList")
+  public Object getKakaoRankList() throws Exception {
+    Map<String, Object> result = new HashMap<>();
+
+    List<NovelMainDto> novelList = novelMainService.getKakaoList("94");
+
+    result.put("novel", novelList);
+    result.put("result", "success");
 
     return result;
   }
