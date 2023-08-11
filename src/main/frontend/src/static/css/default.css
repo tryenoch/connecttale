@@ -13,3 +13,28 @@ Link, a {
   text-decoration: none;
   color: #000;
 }
+
+/* swiper */
+.swiper {
+  width: 100%;
+  height: 55vh;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.swiper-slide {
+  text-align: center;
+  background-color: #9b71ff;
+  color: #fff;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img{
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
