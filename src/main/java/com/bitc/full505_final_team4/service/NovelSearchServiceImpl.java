@@ -29,7 +29,10 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.time.Duration;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.awt.*;
+import java.awt.datatransfer.*;
 
 /*@EnableJpaRepositories(basePackages = {"com.bitc.full505_final_team4.data.entity"})*/
 @Service
@@ -151,7 +154,6 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 //    }
 //    return kakaoSearchList;
 
-
     String searchUrl = "https://page.kakao.com/search/result?keyword=" + searchWord + "&categoryUid=11";
 
     List<String> kakaoSearchIdList = new ArrayList<>();
@@ -170,7 +172,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
     options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
 
     driver = new ChromeDriver(options);
-    driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+    driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 
     try {
 
@@ -230,273 +232,348 @@ public class NovelSearchServiceImpl implements NovelSearchService {
   public Map<String, Object> getNaverSearchList(String searchWord) throws Exception {
     Map<String, Object> naverSearchList = new HashMap<>();
 
-    // 검색한 작품 결과의 총 개수를 구하는 jsoup findMaxPageNumUrl 변수 선언
-    String findMaxPageNumUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord;
+    List<String> thumbnailList = new ArrayList<>();
+
+    System.setProperty("java.awt.headless", "false");
+    System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
+
+//    ChromeOptions options = new ChromeOptions();
+//    options.addArguments("--disable-popup-blocking"); // 팝업 안띄움
+//    options.addArguments("--headless"); // 브라우저 창 숨기고 실행
+//    options.addArguments("--enable-automation");
+//    options.addArguments("--window-position=-100000,-100000");
+//    options.addArguments("--window-size=0,0");
+//    options.addArguments("--lang=ko");
+//    options.addArguments("--disable-gpu");            //gpu 비활성화
+//    options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
+
+    driver = new ChromeDriver();
+    driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+
+    String naverLoginUrl = "https://nid.naver.com/nidlogin.login?mode=form&url=https://www.naver.com/";
+
+    String naverId = "bitcteam4";
+    String naverPw = "qntks505!";
+
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    StringSelection id = new StringSelection(naverId);
+    StringSelection pw = new StringSelection(naverPw);
+
+      // -------------------------------- selenium (로그인) -------------------------------------
 
     try {
+      driver.get(naverLoginUrl);
 
-      // Jsoup 활용하여 페이지에 접속하기
-      Document findPageNum = Jsoup.connect(findMaxPageNumUrl).get();
+      WebElement idInput = driver.findElement(By.name("id"));
+      clipboard.setContents(id, null);
+      idInput.click();
+      idInput.sendKeys(Keys.CONTROL + "v");
 
-      // 검색 결과로 나온 총작품수로 max pageNum 구하기 => 자료가 너무 많아 페이지 max pageNum 10개로 고정
-      Elements pageNumEle = findPageNum.select("div[class=lst_header]>h3>em");
-      if (!pageNumEle.isEmpty()) {
-        int allCountStartIndex = pageNumEle.text().indexOf("(");
-        int allCountEndIndex = pageNumEle.text().indexOf(")");
-        int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
+      Thread.sleep(500);
 
-//        double maxPageDot = (double) allCount / 25.0;
-//        int maxPageNum = (int) Math.ceil(maxPageDot);
+      WebElement pwInput = driver.findElement(By.name("pw"));
+      clipboard.setContents(pw, null);
+      pwInput.click();
+      pwInput.sendKeys(Keys.CONTROL + "v");
 
-        // 리스트 타입으로 저장할 변수 선언
-        List<String> platformIdList = new ArrayList<>();
-        List<String> titleList = new ArrayList<>();
-        List<String> thumbnailList = new ArrayList<>();
-        List<String> countList = new ArrayList<>();
-        List<String> completeList = new ArrayList<>();
-        List<String> starRateList = new ArrayList<>();
-        List<String> authorList = new ArrayList<>();
-        List<String> lastUpdateList = new ArrayList<>();
-        List<String> descriptionList = new ArrayList<>();
-        List<String> publiList = new ArrayList<>();
-        List<String> categoryList = new ArrayList<>();
-        List<String> priceList = new ArrayList<>();
-        List<String> ageGradeList = new ArrayList<>();
+      Thread.sleep(500);
 
-        // 검색 결과가 25개 이하인 경우(1페이지만 있는 경우)
-        if (allCount <= 25) {
-          // 페이지 별로 데이터 찾아올 url
-          String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=1";
-
-          Document doc = Jsoup.connect(searchUrl).get();
-
-          Elements platformIds = doc.getElementsByClass("N=a:nov.img");
-          Elements titles = doc.getElementsByClass("N=a:nov.title");
-          Elements thumbnails = doc.select("img[width=79]");
-          Elements starRates = doc.getElementsByClass("score_num");
-          Elements info = doc.select("body p[class=info]");
-          Elements conts = doc.select("div[class=cont]");
+      WebElement btnLogin = driver.findElement(By.cssSelector(".btn_login"));
+      btnLogin.click();
 
 
-          // 동일한 클레스값을 가진 반복되는 태그(엘리먼트)들의 데이터를 list타입에 저장하기
-          for (Element e : platformIds) {
-            String platformIdFind = e.attr("href");
-            int platformIdIndex = platformIdFind.indexOf("=");
-            platformIdList.add(platformIdFind.substring(platformIdIndex + 1));
+      driver.get("https://series.naver.com/search/search.series?t=novel&q=" + searchWord);
 
-//         네이버시리즈 디테일 페이지로가서 카테고리, 출판사, 가격, 연령 정보 가져오기
-            // ※ 성인 컨텐츠의 경우 로그인 상태에서만 사이트로 접속할 수 있기 때문에 데이터를 못가져옴(null 값으로 가져옴)
-//        String detailUrl = "https://series.naver.com/novel/detail.series?productNo=" + platformIdFind.substring(platformIdIndex + 1);
-//
-//        Document doc2 = Jsoup.connect(detailUrl).get();
-//        Elements thumbnails = doc2.select("img[width=173]");
-//        String thumbnail = thumbnails.attr("src");
-//        thumbnailList.add(thumbnail);
+      List<WebElement> aLink = driver.findElements(By.className("N=a:nov.img"));
 
-            // 디테일 페이지의 출판사 정보 가져오기
-//        Elements publis = doc2.select("li[class=info_lst]>ul>li:nth-child(4)>a");
-//        publiList.add(publis.text());
-//
-//        // 디테일 페이지의 카테고리 정보 가져오기
-//        Elements categorys = doc2.select("li[class=info_lst]>ul>li:nth-child(2)>span>a");
-//        categoryList.add(categorys.text());
-//
-//        // 성인컨텐츠 유무 정보 가져오기
-//        Elements ageGrades = doc2.select("li[class=info_lst]>ul>li:nth-child(5)");
-//        ageGradeList.add(ageGrades.text());
-//
-//        // 가격 정보 가져오기
-//        Elements prices = doc2.select("div[class=area_price] span[class=point_color]");
-//        priceList.add(prices.text());
-
-          }
-
-          for (Element e : titles) {
-            int titleIndex = e.text().indexOf("(");
-            int completeStartIndex = e.text().indexOf("/");
-            int completeEndIndex = e.text().indexOf(")");
-            int countStartIndex = e.text().indexOf("총");
-
-            // 제목 가져오기
-            titleList.add(e.text().substring(0, titleIndex - 1));
-//      completeList.add(e.text().substring(completeStartIndex + 1, completeEndIndex));
-            // 총화수 가져오기
-            countList.add(e.text().substring(countStartIndex + 2, completeStartIndex - 1));
-          }
-
-          // 썸네일 주소 가져오기
-          for (Element e : thumbnails) {
-            String thumbnailSrc = e.attr("src");
-            thumbnailList.add(thumbnailSrc);
-          }
-
-          // 별점 가져오기
-          for (Element e : starRates) {
-            starRateList.add(e.text());
-          }
-
-          for (Element e : info) {
-            String p = e.text();
-            String[] parts = p.split("\\s*\\|\\s*");  // ' | ' 앞뒤로 공백이 있을 수 있으므로 공백을 포함한 정규표현식 사용
-
-            // 작가 정보 가져오기
-            String authorPart = parts[1];
-            authorList.add(authorPart);
-
-            // 최신업데이트 날짜 가져오기
-            String datePart = parts[2];  // 날짜는 세 번째 요소에 위치
-            String datePartNoDot = datePart.substring(0, datePart.length() - 1);
-            lastUpdateList.add(datePartNoDot);
-
-            // 완결여부 가져오기
-            String completePart = parts[3];
-            int completeIndex = completePart.indexOf("/");
-            String completeYn = completePart.substring(completeIndex + 1);
-            completeList.add(completeYn);
-          }
-
-          for (Element e : conts) {
-            String description = "";
-            Element descriptionElement = e.getElementsByClass("dsc").first();
-            if (descriptionElement != null) {
-              description = descriptionElement.text();
-            }
-            descriptionList.add(description);
-          }
-          // 작품소개글 가져오기
-//        for (Element e : descriptions) {
-//          String description = e.text();
-//          descriptionList.add(description);
-//        }
+      if (!aLink.isEmpty()) {
+        for (WebElement e : aLink) {
+          thumbnailList.add(e.findElement(By.cssSelector("img")).getAttribute("src"));
         }
-        // 검색 결과가 25개 초과인 경우(2페이지가 있는 경우)
-        else {
-          for (int i = 1; i <= 10; i++) {
-            // 페이지 별로 데이터 찾아올 url
-            String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
-
-            Document doc = Jsoup.connect(searchUrl).get();
-
-            Elements platformIds = doc.getElementsByClass("N=a:nov.img");
-            Elements titles = doc.getElementsByClass("N=a:nov.title");
-            Elements thumbnails = doc.select("img[width=79]");
-            Elements starRates = doc.getElementsByClass("score_num");
-            Elements info = doc.select("body p[class=info]");
-            Elements conts = doc.select("div[class=cont]");
-
-
-            // 동일한 클레스값을 가진 반복되는 태그(엘리먼트)들의 데이터를 list타입에 저장하기
-            for (Element e : platformIds) {
-              String platformIdFind = e.attr("href");
-              int platformIdIndex = platformIdFind.indexOf("=");
-              platformIdList.add(platformIdFind.substring(platformIdIndex + 1));
-
-//         네이버시리즈 디테일 페이지로가서 카테고리, 출판사, 가격, 연령 정보 가져오기
-              // ※ 성인 컨텐츠의 경우 로그인 상태에서만 사이트로 접속할 수 있기 때문에 데이터를 못가져옴(null 값으로 가져옴)
-//        String detailUrl = "https://series.naver.com/novel/detail.series?productNo=" + platformIdFind.substring(platformIdIndex + 1);
-//
-//        Document doc2 = Jsoup.connect(detailUrl).get();
-//        Elements thumbnails = doc2.select("img[width=173]");
-//        String thumbnail = thumbnails.attr("src");
-//        thumbnailList.add(thumbnail);
-
-              // 디테일 페이지의 출판사 정보 가져오기
-//        Elements publis = doc2.select("li[class=info_lst]>ul>li:nth-child(4)>a");
-//        publiList.add(publis.text());
-//
-//        // 디테일 페이지의 카테고리 정보 가져오기
-//        Elements categorys = doc2.select("li[class=info_lst]>ul>li:nth-child(2)>span>a");
-//        categoryList.add(categorys.text());
-//
-//        // 성인컨텐츠 유무 정보 가져오기
-//        Elements ageGrades = doc2.select("li[class=info_lst]>ul>li:nth-child(5)");
-//        ageGradeList.add(ageGrades.text());
-//
-//        // 가격 정보 가져오기
-//        Elements prices = doc2.select("div[class=area_price] span[class=point_color]");
-//        priceList.add(prices.text());
-
-            }
-
-            for (Element e : titles) {
-              int titleIndex = e.text().indexOf("(");
-              int completeStartIndex = e.text().indexOf("/");
-              int completeEndIndex = e.text().indexOf(")");
-              int countStartIndex = e.text().indexOf("총");
-
-              // 제목 가져오기
-              titleList.add(e.text().substring(0, titleIndex - 1));
-//      completeList.add(e.text().substring(completeStartIndex + 1, completeEndIndex));
-              // 총화수 가져오기
-              countList.add(e.text().substring(countStartIndex + 2, completeStartIndex - 1));
-            }
-
-            // 썸네일 주소 가져오기
-            for (Element e : thumbnails) {
-              String thumbnailSrc = e.attr("src");
-              thumbnailList.add(thumbnailSrc);
-            }
-
-            // 별점 가져오기
-            for (Element e : starRates) {
-              starRateList.add(e.text());
-            }
-
-            for (Element e : info) {
-              String p = e.text();
-              String[] parts = p.split("\\s*\\|\\s*");  // ' | ' 앞뒤로 공백이 있을 수 있으므로 공백을 포함한 정규표현식 사용
-
-              // 작가 정보 가져오기
-              String authorPart = parts[1];
-              authorList.add(authorPart);
-
-              // 최신업데이트 날짜 가져오기
-              String datePart = parts[2];  // 날짜는 세 번째 요소에 위치
-              String datePartNoDot = datePart.substring(0, datePart.length() - 1);
-              lastUpdateList.add(datePartNoDot);
-
-              // 완결여부 가져오기
-              String completePart = parts[3];
-              int completeIndex = completePart.indexOf("/");
-              String completeYn = completePart.substring(completeIndex + 1);
-              completeList.add(completeYn);
-            }
-
-            for (Element e : conts) {
-              String description = "";
-              Element descriptionElement = e.getElementsByClass("dsc").first();
-              if (descriptionElement != null) {
-                description = descriptionElement.text();
-              }
-              descriptionList.add(description);
-            }
-            // 작품소개글 가져오기
-//        for (Element e : descriptions) {
-//          String description = e.text();
-//          descriptionList.add(description);
-//        }
-          }
-        }
-        // Map타입 의 naverSearchList에 리스트 추가
-        naverSearchList.put("platformId", platformIdList);
-        naverSearchList.put("title", titleList);
-        naverSearchList.put("thumbnail", thumbnailList);
-        naverSearchList.put("completeYn", completeList);
-        naverSearchList.put("count", countList);
-        naverSearchList.put("author", authorList);
-        naverSearchList.put("starRate", starRateList);
-        naverSearchList.put("lastUpdate", lastUpdateList);
-        naverSearchList.put("description", descriptionList);
-        naverSearchList.put("publi", publiList);
-        naverSearchList.put("category", categoryList);
-        naverSearchList.put("price", priceList);
-        naverSearchList.put("ageGrade", ageGradeList);
-//        return naverSearchList;
       }
+      else {
+        System.out.println("aLink 선택자를 못찾음");
+      }
+
+      naverSearchList.put("thumbnailList", thumbnailList);
+
     }
-    catch (IOException e) {
+    catch (Exception e) {
       e.printStackTrace();
     }
+    finally {
+      driver.quit();
+    }
+
+
+      // -------------- jsoup(비로그인) -----------------
+
+      // Jsoup 활용하여 페이지에 접속하기
+    // 검색한 작품 결과의 총 개수를 구하는 jsoup findMaxPageNumUrl 변수 선언
+//    String findMaxPageNumUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord;
+
+    //    try {
+//      Document findPageNum = Jsoup.connect(findMaxPageNumUrl).get();
+
+      // 검색 결과로 나온 총작품수로 max pageNum 구하기 => 자료가 너무 많아 페이지 max pageNum 10개로 고정
+//      Elements pageNumEle = findPageNum.select("div[class=lst_header]>h3>em");
+//      if (!pageNumEle.isEmpty()) {
+//        int allCountStartIndex = pageNumEle.text().indexOf("(");
+//        int allCountEndIndex = pageNumEle.text().indexOf(")");
+//        int allCount = Integer.parseInt(pageNumEle.text().substring(allCountStartIndex + 1, allCountEndIndex));
+//
+////        double maxPageDot = (double) allCount / 25.0;
+////        int maxPageNum = (int) Math.ceil(maxPageDot);
+//
+//        // 리스트 타입으로 저장할 변수 선언
+//        List<String> platformIdList = new ArrayList<>();
+//        List<String> titleList = new ArrayList<>();
+//        List<String> thumbnailList = new ArrayList<>();
+//        List<String> countList = new ArrayList<>();
+//        List<String> completeList = new ArrayList<>();
+//        List<String> starRateList = new ArrayList<>();
+//        List<String> authorList = new ArrayList<>();
+//        List<String> lastUpdateList = new ArrayList<>();
+//        List<String> descriptionList = new ArrayList<>();
+//        List<String> publiList = new ArrayList<>();
+//        List<String> categoryList = new ArrayList<>();
+//        List<String> priceList = new ArrayList<>();
+//        List<String> ageGradeList = new ArrayList<>();
+//
+//        // 검색 결과가 25개 이하인 경우(1페이지만 있는 경우)
+//        if (allCount <= 25) {
+//          // 페이지 별로 데이터 찾아올 url
+//          String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=1";
+//
+//          Document doc = Jsoup.connect(searchUrl).get();
+//
+//          Elements platformIds = doc.getElementsByClass("N=a:nov.img");
+//          Elements titles = doc.getElementsByClass("N=a:nov.title");
+//          Elements thumbnails = doc.select("img[width=79]");
+//          Elements starRates = doc.getElementsByClass("score_num");
+//          Elements info = doc.select("body p[class=info]");
+//          Elements conts = doc.select("div[class=cont]");
+//
+//
+//          // 동일한 클레스값을 가진 반복되는 태그(엘리먼트)들의 데이터를 list타입에 저장하기
+//          for (Element e : platformIds) {
+//            String platformIdFind = e.attr("href");
+//            int platformIdIndex = platformIdFind.indexOf("=");
+//            platformIdList.add(platformIdFind.substring(platformIdIndex + 1));
+//
+////         네이버시리즈 디테일 페이지로가서 카테고리, 출판사, 가격, 연령 정보 가져오기
+//            // ※ 성인 컨텐츠의 경우 로그인 상태에서만 사이트로 접속할 수 있기 때문에 데이터를 못가져옴(null 값으로 가져옴)
+////        String detailUrl = "https://series.naver.com/novel/detail.series?productNo=" + platformIdFind.substring(platformIdIndex + 1);
+////
+////        Document doc2 = Jsoup.connect(detailUrl).get();
+////        Elements thumbnails = doc2.select("img[width=173]");
+////        String thumbnail = thumbnails.attr("src");
+////        thumbnailList.add(thumbnail);
+//
+//            // 디테일 페이지의 출판사 정보 가져오기
+////        Elements publis = doc2.select("li[class=info_lst]>ul>li:nth-child(4)>a");
+////        publiList.add(publis.text());
+////
+////        // 디테일 페이지의 카테고리 정보 가져오기
+////        Elements categorys = doc2.select("li[class=info_lst]>ul>li:nth-child(2)>span>a");
+////        categoryList.add(categorys.text());
+////
+////        // 성인컨텐츠 유무 정보 가져오기
+////        Elements ageGrades = doc2.select("li[class=info_lst]>ul>li:nth-child(5)");
+////        ageGradeList.add(ageGrades.text());
+////
+////        // 가격 정보 가져오기
+////        Elements prices = doc2.select("div[class=area_price] span[class=point_color]");
+////        priceList.add(prices.text());
+//
+//          }
+//
+//          for (Element e : titles) {
+//            int titleIndex = e.text().indexOf("(");
+//            int completeStartIndex = e.text().indexOf("/");
+//            int completeEndIndex = e.text().indexOf(")");
+//            int countStartIndex = e.text().indexOf("총");
+//
+//            // 제목 가져오기
+//            titleList.add(e.text().substring(0, titleIndex - 1));
+////      completeList.add(e.text().substring(completeStartIndex + 1, completeEndIndex));
+//            // 총화수 가져오기
+//            countList.add(e.text().substring(countStartIndex + 2, completeStartIndex - 1));
+//          }
+//
+//          // 썸네일 주소 가져오기
+//          for (Element e : thumbnails) {
+//            String thumbnailSrc = e.attr("src");
+//            thumbnailList.add(thumbnailSrc);
+//          }
+//
+//          // 별점 가져오기
+//          for (Element e : starRates) {
+//            starRateList.add(e.text());
+//          }
+//
+//          for (Element e : info) {
+//            String p = e.text();
+//            String[] parts = p.split("\\s*\\|\\s*");  // ' | ' 앞뒤로 공백이 있을 수 있으므로 공백을 포함한 정규표현식 사용
+//
+//            // 작가 정보 가져오기
+//            String authorPart = parts[1];
+//            authorList.add(authorPart);
+//
+//            // 최신업데이트 날짜 가져오기
+//            String datePart = parts[2];  // 날짜는 세 번째 요소에 위치
+//            String datePartNoDot = datePart.substring(0, datePart.length() - 1);
+//            lastUpdateList.add(datePartNoDot);
+//
+//            // 완결여부 가져오기
+//            String completePart = parts[3];
+//            int completeIndex = completePart.indexOf("/");
+//            String completeYn = completePart.substring(completeIndex + 1);
+//            completeList.add(completeYn);
+//          }
+//
+//          for (Element e : conts) {
+//            String description = "";
+//            Element descriptionElement = e.getElementsByClass("dsc").first();
+//            if (descriptionElement != null) {
+//              description = descriptionElement.text();
+//            }
+//            descriptionList.add(description);
+//          }
+//          // 작품소개글 가져오기
+////        for (Element e : descriptions) {
+////          String description = e.text();
+////          descriptionList.add(description);
+////        }
+//        }
+//        // 검색 결과가 25개 초과인 경우(2페이지가 있는 경우)
+//        else {
+//          for (int i = 1; i <= 10; i++) {
+//            // 페이지 별로 데이터 찾아올 url
+//            String searchUrl = "https://series.naver.com/search/search.series?t=novel&q=" + searchWord + "&page=" + i;
+//
+//            Document doc = Jsoup.connect(searchUrl).get();
+//
+//            Elements platformIds = doc.getElementsByClass("N=a:nov.img");
+//            Elements titles = doc.getElementsByClass("N=a:nov.title");
+//            Elements thumbnails = doc.select("img[width=79]");
+//            Elements starRates = doc.getElementsByClass("score_num");
+//            Elements info = doc.select("body p[class=info]");
+//            Elements conts = doc.select("div[class=cont]");
+//
+//
+//            // 동일한 클레스값을 가진 반복되는 태그(엘리먼트)들의 데이터를 list타입에 저장하기
+//            for (Element e : platformIds) {
+//              String platformIdFind = e.attr("href");
+//              int platformIdIndex = platformIdFind.indexOf("=");
+//              platformIdList.add(platformIdFind.substring(platformIdIndex + 1));
+//
+////         네이버시리즈 디테일 페이지로가서 카테고리, 출판사, 가격, 연령 정보 가져오기
+//              // ※ 성인 컨텐츠의 경우 로그인 상태에서만 사이트로 접속할 수 있기 때문에 데이터를 못가져옴(null 값으로 가져옴)
+////        String detailUrl = "https://series.naver.com/novel/detail.series?productNo=" + platformIdFind.substring(platformIdIndex + 1);
+////
+////        Document doc2 = Jsoup.connect(detailUrl).get();
+////        Elements thumbnails = doc2.select("img[width=173]");
+////        String thumbnail = thumbnails.attr("src");
+////        thumbnailList.add(thumbnail);
+//
+//              // 디테일 페이지의 출판사 정보 가져오기
+////        Elements publis = doc2.select("li[class=info_lst]>ul>li:nth-child(4)>a");
+////        publiList.add(publis.text());
+////
+////        // 디테일 페이지의 카테고리 정보 가져오기
+////        Elements categorys = doc2.select("li[class=info_lst]>ul>li:nth-child(2)>span>a");
+////        categoryList.add(categorys.text());
+////
+////        // 성인컨텐츠 유무 정보 가져오기
+////        Elements ageGrades = doc2.select("li[class=info_lst]>ul>li:nth-child(5)");
+////        ageGradeList.add(ageGrades.text());
+////
+////        // 가격 정보 가져오기
+////        Elements prices = doc2.select("div[class=area_price] span[class=point_color]");
+////        priceList.add(prices.text());
+//
+//            }
+//
+//            for (Element e : titles) {
+//              int titleIndex = e.text().indexOf("(");
+//              int completeStartIndex = e.text().indexOf("/");
+//              int completeEndIndex = e.text().indexOf(")");
+//              int countStartIndex = e.text().indexOf("총");
+//
+//              // 제목 가져오기
+//              titleList.add(e.text().substring(0, titleIndex - 1));
+////      completeList.add(e.text().substring(completeStartIndex + 1, completeEndIndex));
+//              // 총화수 가져오기
+//              countList.add(e.text().substring(countStartIndex + 2, completeStartIndex - 1));
+//            }
+//
+//            // 썸네일 주소 가져오기
+//            for (Element e : thumbnails) {
+//              String thumbnailSrc = e.attr("src");
+//              thumbnailList.add(thumbnailSrc);
+//            }
+//
+//            // 별점 가져오기
+//            for (Element e : starRates) {
+//              starRateList.add(e.text());
+//            }
+//
+//            for (Element e : info) {
+//              String p = e.text();
+//              String[] parts = p.split("\\s*\\|\\s*");  // ' | ' 앞뒤로 공백이 있을 수 있으므로 공백을 포함한 정규표현식 사용
+//
+//              // 작가 정보 가져오기
+//              String authorPart = parts[1];
+//              authorList.add(authorPart);
+//
+//              // 최신업데이트 날짜 가져오기
+//              String datePart = parts[2];  // 날짜는 세 번째 요소에 위치
+//              String datePartNoDot = datePart.substring(0, datePart.length() - 1);
+//              lastUpdateList.add(datePartNoDot);
+//
+//              // 완결여부 가져오기
+//              String completePart = parts[3];
+//              int completeIndex = completePart.indexOf("/");
+//              String completeYn = completePart.substring(completeIndex + 1);
+//              completeList.add(completeYn);
+//            }
+//
+//            for (Element e : conts) {
+//              String description = "";
+//              Element descriptionElement = e.getElementsByClass("dsc").first();
+//              if (descriptionElement != null) {
+//                description = descriptionElement.text();
+//              }
+//              descriptionList.add(description);
+//            }
+//            // 작품소개글 가져오기
+////        for (Element e : descriptions) {
+////          String description = e.text();
+////          descriptionList.add(description);
+////        }
+//          }
+//        }
+//        // Map타입 의 naverSearchList에 리스트 추가
+//        naverSearchList.put("platformId", platformIdList);
+//        naverSearchList.put("title", titleList);
+//        naverSearchList.put("thumbnail", thumbnailList);
+//        naverSearchList.put("completeYn", completeList);
+//        naverSearchList.put("count", countList);
+//        naverSearchList.put("author", authorList);
+//        naverSearchList.put("starRate", starRateList);
+//        naverSearchList.put("lastUpdate", lastUpdateList);
+//        naverSearchList.put("description", descriptionList);
+//        naverSearchList.put("publi", publiList);
+//        naverSearchList.put("category", categoryList);
+//        naverSearchList.put("price", priceList);
+//        naverSearchList.put("ageGrade", ageGradeList);
+////        return naverSearchList;
+//      }
+//    }
+//    catch (IOException e) {
+//      e.printStackTrace();
+//    }
     return naverSearchList;
   }
 }

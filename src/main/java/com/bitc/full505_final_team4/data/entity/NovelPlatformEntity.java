@@ -69,9 +69,6 @@ public class NovelPlatformEntity {
   @Column(length = 45)
   private String novelRelease;
 
-  @Column(length = 45)
-  private String novelRecentUpdate; // 최근 업데이트일
-
   @Column(nullable = false, length = 100)
   public String cateList;
 
