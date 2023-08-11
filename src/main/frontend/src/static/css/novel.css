@@ -1,0 +1,90 @@
+/* novel Rank */
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.main-title {
+  letter-spacing: -0.05em;
+  font-size: 1.5rem;
+  font-weight: 750;
+  color: #544f5b;
+}
+
+/* 랭킹 플랫폼 메뉴 버튼 */
+.dropdown-menu, .dropdown-menu li {
+  min-width: 1rem !important;
+}
+.dropdown-item {
+  min-width: 1rem !important;
+}
+
+.rank-item {
+  margin-top : 0.7em;
+}
+
+.rank-item-img {
+  position: relative;
+  height: 17.2rem;
+}
+
+.rank-num {
+  position: absolute;
+  z-index: 1;
+  left: 0.4em;
+  top : 0.3em;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px #6b6b6b;
+}
+
+.adult-img {
+  position: absolute;
+  z-index: 100;
+  top : 0.3em;
+  right: 0.4em;
+  font-size: 1.7em;
+}
+
+.rank-item-img img {
+  border-radius: 6px;
+  background-color: #ddd; /* 이미지 없을 경우 */
+  height: 100%;
+}
+
+.rank-info {
+  margin-top : 0.6em;
+}
+
+.rank-info p { margin-top: 0.15em; }
+
+.rank-info .item-title {
+  font-weight: 800;
+  font-size: 1.06em;
+  letter-spacing: -0.08em;
+}
+
+.rank-info .item-detail {}
+
+.item-detail span + span {
+  margin-left: 0.5em;
+}
+
+/*
+.item-detail .item-cate::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 50%;
+  background-color: #666;
+}*/
+
+.rank-info .item-star {
+  color: #dc3232;
+  font-weight: 500;
+}
+
+.rank-info .item-star::before {
+
+}
