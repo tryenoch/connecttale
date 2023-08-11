@@ -4,23 +4,23 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 
-function login(props) {
+function Login(props) {
+    const [id, setId] = useState('');
+    const [pw, setPw] = useState("");
 
-    // const [id, setId] = useState("");
-    // const [pw, setPw] = useState("");
-    //
-    // const navi = useNavigate();
+    const navi = useNavigate();
 
     const login = () => {
         axios.get(`http://localhost:8080/login`, {
             params: {
-                // id: id,
-                // pw: pw,
+                id: id,
+                pw: pw
             }
         })
             .then(res => {
                 const member = res.data;
-                alert(member.nickname);
+                alert(member.result.name);
+                alert(member.confirm);
             })
             .catch(err => {
                 alert(err);
@@ -28,25 +28,24 @@ function login(props) {
     }
 
     const goBack = () => {
-        alert('test');
-        // navi(-1);
+        navi(-1);
     };
 
     return (
         <div className={'container'}>
             <h1>login</h1>
             <div className={'my-5'}><br/><br/></div>
-            <div className={'row my-5 justify-content-center'}>
-                <form method={'GET'}>
+            <form method={'GET'}>
+                <div className={'row my-5 justify-content-center'}>
                     <div className={'col-sm-6'}>
-                        <div className={'row'}>
+                        <div className={'row justify-content-center'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>아이디</h4>
                             </div>
                             <div className={'col-sm-9 d-flex'}>
                                 <input type="text" name={'id'} id={'id'} className={'input-s3 form-control rounded-1'}
-                                       placeholder={'아이디를 입력하세요'}/>
-                                {/*     onChange={e => setUserId(e.target.value)}*/}
+                                       placeholder={'아이디를 입력하세요'} onChange={e => setId(e.target.value)}/>
+
                             </div>
                         </div>
                         <div className={'row my-4'}>
@@ -54,13 +53,15 @@ function login(props) {
                                 <h4 className={'fw-bold'}>비밀번호</h4>
                             </div>
                             <div className={'col-sm-9 d-flex'}>
-                                <input type="password" name={'pw'} id={'pw'} className={'input-s3 form-control rounded-1'}
-                                       placeholder={'비밀번호를 입력하세요'}/>
+                                <input type="password" name={'pw'} id={'pw'}
+                                       className={'input-s3 form-control rounded-1'}
+                                       placeholder={'비밀번호를 입력하세요'} onChange={e => setPw(e.target.value)}/>
                             </div>
                         </div>
                         <div className={'row justify-content-center ms-5 mt-5'}>
                             <div className={'col-sm-3'}>
-                                <button onClick={goBack} className={'btn btn-secondary input-s1'}>돌아가기</button>
+                                <button type={'button'} onClick={goBack} className={'btn btn-secondary input-s1'}>돌아가기
+                                </button>
                             </div>
                             <div className={'col-sm-3 ms-2'}>
                                 <button type={'button'} className={'btn btn-pupple-inline input-s1'}
@@ -69,10 +70,10 @@ function login(props) {
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     )
 }
 
-export default login;
+export default Login;

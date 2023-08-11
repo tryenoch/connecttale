@@ -23,10 +23,10 @@ public class MemberController {
     Map<String, Object> result = new HashMap<>();
     if (confirmId == true) {
       member = memberService.login(id, pw);
-      result.put("res", member);
+      result.put("result", member);
     }
     else {
-      result.put("res", "없는 아이디 입니다.");
+      result.put("confirm", "없는 아이디 입니다.");
     }
 
     return result;
