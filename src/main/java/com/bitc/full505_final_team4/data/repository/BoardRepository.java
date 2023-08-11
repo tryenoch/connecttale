@@ -13,4 +13,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
     List<BoardEntity> findBoardEntityByBoardCate_Idx(int idx);
 
     Page<BoardEntity> findByBoardCate_IdxOrderByBoardIdxDesc(int idx, Pageable pageable);
+
+    BoardEntity findByBoardIdx(int idx);
 }
