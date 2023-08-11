@@ -103,9 +103,9 @@ public class NovelMainServiceImpl implements NovelMainService{
       try {
         // 브라우저 이동 시 생기는 로드시간을 기다린다.
         // HTTP 응답속도보다 자바의 컴파일 속도가 더 빠르기 때문에 임의적으로 1초를 대기한다
-        Thread.sleep(1000);
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-      } catch (InterruptedException e){
+//        Thread.sleep(1000);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+      } catch (Exception e){
         e.printStackTrace();
       }
 
@@ -125,6 +125,9 @@ public class NovelMainServiceImpl implements NovelMainService{
 
           novel.setPlatform("kakao"); // 플랫폼 이름 입력
 
+          //순위 불러오기
+          novel.setNovelIndexNum(list.indexOf(element) + 1); // novelItem의 인덱스 번호
+
           // a 태그에서 id 값 잘라오기
           String id = element.findElement(By.tagName("a")).getAttribute("href");
           int idIdx = id.lastIndexOf("/")+1;
@@ -136,9 +139,15 @@ public class NovelMainServiceImpl implements NovelMainService{
           String title = element.findElement(By.cssSelector(".line-clamp-2")).getText();
           novel.setNovelTitle(title);
 
+//          String locator = "//img[@alt=\"썸네일\"][" + list.indexOf(element) + "]";
           //썸네일
-          String thumbnail = element.findElement(By.xpath("//img[@alt='썸네일']")).getAttribute("src");
-          novel.setNovelThumbnail(thumbnail);
+          String thumbnail = element.findElement(By.cssSelector(".object-cover.visible")).getAttribute("src");
+
+          if (ObjectUtils.isEmpty(thumbnail)){
+            novel.setAdultsOnly(true);
+          } else {
+            novel.setNovelThumbnail(thumbnail);
+          }
 
           novelDtoList.add(novel);
         }

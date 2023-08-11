@@ -6,6 +6,7 @@ import com.bitc.full505_final_team4.service.NovelMainService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -68,13 +69,16 @@ public class NovelMainController {
   }
 
   @GetMapping("/kakaoRankList")
-  public Object getKakaoRankList() throws Exception {
+  public Object getKakaoRankList(@RequestParam("urlId") String urlId) throws Exception {
     Map<String, Object> result = new HashMap<>();
 
-    List<NovelMainDto> novelList = novelMainService.getKakaoList("94");
-
-    result.put("novel", novelList);
-    result.put("result", "success");
+    List<NovelMainDto> kakaoNovelList = novelMainService.getKakaoList(urlId);
+    if (!ObjectUtils.isEmpty(kakaoNovelList)){
+      result.put("kakaoNovelList", kakaoNovelList);
+      result.put("result", "success");
+    } else {
+      result.put("result", "Backend error");
+    }
 
     return result;
   }
