@@ -10,6 +10,9 @@ public interface NovelMainService {
   /* 리디북스 카테고리 별 순위 리스트 불러오기 */
   List<NovelMainDto> getRidiRankList(String category, int startNum) throws Exception;
 
+  /* 네이버 순위 리스트 불러오기 */
+  List<NovelMainDto> getNaverRankList(String startNum, String endNum, int totalPageNum) throws Exception;
+
   /*  카카오 순위 리스트 불러오기 */
   List<NovelMainDto> getKakaoList(String urlId) throws Exception;
 

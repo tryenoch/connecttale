@@ -68,6 +68,23 @@ public class NovelMainController {
     return result;
   }
 
+  /* 네이버 순위 리스트 가져오기 */
+  @GetMapping("/naverRankList")
+  public Object getNaverRankList(@RequestParam("startNum") String startNum, @RequestParam("endNum") String endNum) throws Exception{
+    Map<String, Object> result = new HashMap<>();
+
+    List<NovelMainDto> naverNovelList = novelMainService.getNaverRankList(startNum, endNum, 1);
+
+    if(!ObjectUtils.isEmpty(naverNovelList)){
+      result.put("naverNovelList", naverNovelList);
+      result.put("result", "success");
+    } else {
+      result.put("result", "Backend error");
+    }
+
+    return result;
+  }
+
   @GetMapping("/kakaoRankList")
   public Object getKakaoRankList(@RequestParam("urlId") String urlId) throws Exception {
     Map<String, Object> result = new HashMap<>();

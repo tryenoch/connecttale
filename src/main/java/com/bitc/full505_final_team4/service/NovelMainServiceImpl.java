@@ -3,9 +3,14 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.common.JsonUtils;
 import com.bitc.full505_final_team4.common.WebDriverUtil;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -84,6 +89,72 @@ public class NovelMainServiceImpl implements NovelMainService{
     }
 
     return null;
+  }
+
+  /* 네이버 리스트 불러오기 */
+  @Override
+  public List<NovelMainDto> getNaverRankList(String startNum, String endNum, int totalPageNum) throws Exception {
+    List<NovelMainDto> novelList = new ArrayList<>();
+
+    String url = "https://series.naver.com/novel/top100List.series?rankingTypeCode=DAILY&categoryCode=ALL&page=";
+
+    int start = Integer.parseInt(startNum);
+    int end = Integer.parseInt(endNum);
+
+    for (int i = 1; i <= totalPageNum ; i++) {
+      // 문자열 url을 주소화하여 페이지를 가져옴
+      Document doc = Jsoup.connect(url + i).get();
+
+      try{
+
+        Elements listDoc = doc.getElementsByClass("comic_top_lst").select("li");
+        List<Element> list = listDoc.subList(start, end);
+
+
+        for (Element rankItem : list){
+          NovelMainDto novel = new NovelMainDto();
+
+          // 순위
+          int rankNum = list.indexOf(rankItem);
+          novel.setNovelIndexNum(rankNum + 1);
+
+          // 플랫폼 아이디
+          String link = rankItem.select(".pic").attr("href");
+          String platformId = link.substring(link.lastIndexOf("=") + 1);
+
+          novel.setPlatformId(platformId);
+
+          // 썸네일
+          String thumbnailEl = rankItem.select("img").attr("src");
+          String thumbnail = thumbnailEl.substring(0, thumbnailEl.lastIndexOf("?"));
+          novel.setNovelThumbnail(thumbnail);
+
+          // 제목
+          String title = rankItem.select("h3").select("a").text();
+          if (title.contains("[")){
+            int idx = title.lastIndexOf("[");
+            title = title.substring(0, idx -1);
+          }
+
+          novel.setNovelTitle(title);
+
+          // 작가
+          String author = rankItem.select(".author").text();
+          novel.setNovelAuthor(author);
+
+          // 별점
+          String starRate = rankItem.select(".score_num").text();
+          novel.setNovelStarRate(starRate);
+
+          novelList.add(novel);
+
+        }
+
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+    }
+    return novelList;
   }
 
   @Override

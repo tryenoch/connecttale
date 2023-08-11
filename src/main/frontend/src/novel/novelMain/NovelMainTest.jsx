@@ -12,11 +12,16 @@ function NovelMainTest() {
 
   const dataTest = () => {
     //alert('테스트 메세지입니다.');
-    axios.get(`/novel/kakaoRankList`)
+    axios.get(`/novel/naverRankList`, {
+      params : {
+        startNum : 0,
+        endNum : 12
+      }
+    })
       .then(res => {
         MessageUtils.infoMessage("비동기 통신에 성공했습니다.");
         console.log(res.data.result);
-        console.log(res.data.novel);
+        console.log(res.data.naverNovelList);
       })
       .catch(err => {
         MessageUtils.errorMessage("테스트", err);
