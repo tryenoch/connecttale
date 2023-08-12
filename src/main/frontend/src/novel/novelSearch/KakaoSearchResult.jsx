@@ -30,14 +30,15 @@ function KakaoSearchResult(props) {
                 const data = {
                   platform: 1,
                   platformId: item.seriesId,
-                  title: item.metaInfo.ogTitle,
+                  title: item.metaInfo.ogTitle.includes('[') ? item.metaInfo.ogTitle.substring(0, item.metaInfo.ogTitle.indexOf(' [')) : item.metaInfo.ogTitle,
                   thumbnail: item.metaInfo.image,
                   author: item.metaInfo.author,
                   description: item.metaInfo.description,
                   publi: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.publisherName,
                   category: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.category,
                   price: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.retailPrice,
-                  ageGrade: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.ageGrade == "Nineteen" ? "Y" : "N"
+                  ageGrade: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.ageGrade == "Nineteen" ? "Y" : "N",
+                  novelOrEbook: item.metaInfo.ogTitle.includes('[단행본]') ? '단행본' : '웹소설'
                 }
                 kakaoSearchResult.push(data);
               }
@@ -63,16 +64,16 @@ function KakaoSearchResult(props) {
               <div className={'col-sm-2'}>
                 {
                   item.ageGrade == 'N'
-                  ? <Link to={'#'}>
+                  ? <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&novelOrEbook=${item.novelOrEbook}`}>
                       <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
                     </Link>
-                  : <Link to={'#'}>
+                  : <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&novelOrEbook=${item.novelOrEbook}`}>
                       <img src="/onlyAdult.png" alt="" className={'w-100 h-100'}/>
                     </Link>
                 }
               </div>
               <div className={'col-sm-10'}>
-                <Link to={'#'} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
+                <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&novelOrEbook=${item.novelOrEbook}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
                 </Link><br/>
                 <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
                 <p className={'search-info'}>출판사 : {item.publi}</p>

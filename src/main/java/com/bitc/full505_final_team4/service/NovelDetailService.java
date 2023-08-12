@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface NovelDetailService {
+  List<NovelPlatformEntity> getNovelDetail(String platformId);
+
   void insertRidiToNovel(NovelEntity novelEntity);
 
   void insertRidiToPlatform(NovelPlatformEntity novelPlatformEntity);
 
 
 
-  List<NovelPlatformEntity> getNovelDetail(String platformId);
+
 }

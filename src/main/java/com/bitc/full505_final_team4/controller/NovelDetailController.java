@@ -20,17 +20,32 @@ public class NovelDetailController {
   // db 불러오기
   @RequestMapping(value = "/novelDetail", method = RequestMethod.GET)
   public Object getNovelDetail(@RequestParam("platformId") String platformId) throws Exception {
+    Map<String, NovelPlatformEntity> novelDetail = new HashMap<>();
 
-//    List<Map<String, NovelPlatformEntity>>
     // platformId(매개변수) 를 통해 novelIdx 찾고, novelIdx에 해당하는 노벨정보 다가져오기
-    List<NovelPlatformEntity> novelDetail = novelDetailService.getNovelDetail(platformId);
+    List<NovelPlatformEntity> allNovelDetail = novelDetailService.getNovelDetail(platformId);
+
+    // 플랫폼 별로 나눠서 전달하기
+    if (allNovelDetail != null) {
+      for (NovelPlatformEntity p : allNovelDetail) {
+        if (p.getPlatform() == 1) {
+          novelDetail.put("kakao", p);
+        }
+        else if (p.getPlatform() == 2) {
+          novelDetail.put("naver", p);
+        }
+        else if (p.getPlatform() == 3) {
+          novelDetail.put("ridi", p);
+        }
+      }
+    }
 
     return novelDetail;
   }
 
-  // db 저장
-  @RequestMapping(value = "/novelDetail", method = RequestMethod.POST)
-  public void insertNovelDetail(NovelPlatformEntity novelPlatformEntity) throws Exception {
+  // 리디북스 디테일 페이지 정보 db 저장
+  @RequestMapping(value = "/ridiNovelDetail", method = RequestMethod.POST)
+  public void insertRidiDetail(NovelPlatformEntity novelPlatformEntity) throws Exception {
     // 리디북스 디테일 페이지 정보를 NovelEntity에 저장
     NovelEntity novelEntity = new NovelEntity();
     novelEntity.setNovelTitle(novelPlatformEntity.getNovelTitle());
@@ -44,20 +59,16 @@ public class NovelDetailController {
     novelPlatformEntity.setNovelEntity(novelEntity); // 복합키인 novel 엔티티 추가
     novelDetailService.insertRidiToPlatform(novelPlatformEntity);
 
+  }
+
+  @RequestMapping(value = "/kaNaNovelDetail", method = RequestMethod.POST)
+  public void insertKaNaDetail(@RequestParam("platformId") String platformId, @RequestParam("novelTitle") String title, @RequestParam("novelOrEbook") String novelOrEbook ) throws Exception {
+    //
 
 
-    // 네이버 크롤링 정보 가져오기
-    String title = novelPlatformEntity.getNovelTitle();
-
-
-
-
-
-//    novelDetailService.insertRidi(novelPlatformEntity);
-
-//    System.out.println(novelPlatformEntity);
-//    System.out.println(ridiNovelDTO.getNovelTitle());
 
 
   }
+
+
 }

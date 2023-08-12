@@ -72,7 +72,7 @@ public class NovelPlatformEntity {
   @Column(nullable = false, length = 100)
   public String cateList;
 
-  @Column(length = 50)
+  @Column(length = 50, nullable = false)
   public String novelOrEbook;
 
   @Column(nullable = false, length = 50)

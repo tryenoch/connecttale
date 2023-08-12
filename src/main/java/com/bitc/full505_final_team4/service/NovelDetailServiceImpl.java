@@ -25,11 +25,14 @@ public class NovelDetailServiceImpl implements NovelDetailService{
   // 찾은 novelIdx로 platform 테이블에서 데이터 가져오기
   @Override
   public List<NovelPlatformEntity> getNovelDetail(String platformId) {
-    Optional<NovelPlatformEntity> novel = novelPlatformRepository.findByPlatformId(platformId);
-    NovelEntity novelEntity = novel.get().getNovelEntity();
-    int novelIdx = novel.get().getNovelEntity().getNovelIdx();
+    List<NovelPlatformEntity> novelDetail = null;
 
-    List<NovelPlatformEntity> novelDetail = novelPlatformRepository.findAllByNovelEntity(novelEntity);
+    Optional<NovelPlatformEntity> novel = novelPlatformRepository.findByPlatformId(platformId);
+
+    if (novel.isPresent()) {
+      NovelEntity novelEntity = novel.get().getNovelEntity();
+      novelDetail = novelPlatformRepository.findAllByNovelEntity(novelEntity);
+    }
 
     return novelDetail;
   }
