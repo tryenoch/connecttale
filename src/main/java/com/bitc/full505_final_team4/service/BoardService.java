@@ -17,4 +17,6 @@ public interface BoardService {
     int setBoard(BoardDTO board) throws Exception;
 
     BoardDTO getBoard(int idx) throws Exception;
+
+    void deleteBoard(int idx) throws Exception;
 }
