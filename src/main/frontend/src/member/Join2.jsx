@@ -174,12 +174,12 @@ function Join2(props) {
                             <div className={'col-sm-9 d-flex'}>
                                 <input type="text" name={'id'} id={'id'} className={'input-s4 form-control rounded-1'}
                                        placeholder={'아이디를 입력하세요'} onChange={changeId}/>
-                                <button type={'button'} id={'confirmId'} className={'btn btn-pupple ms-3'}
+                                <button type={'button'} id={'confirmId'} className={'btn btn-outline-purple ms-3'}
                                         onClick={confirmId}>중복확인
                                 </button>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.idConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.idConfirm}</span></div>
                         </div>
                         <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
@@ -189,12 +189,12 @@ function Join2(props) {
                                 <input type="text" name={'nick'} id={'nick'}
                                        className={'input-s4 form-control rounded-1'} placeholder={'닉네임을 입력하세요'}
                                        onChange={changeNick}/>
-                                <button type={'button'} id={'confirmNick'} className={'btn btn-pupple ms-3'}
+                                <button type={'button'} id={'confirmNick'} className={'btn btn-outline-purple ms-3'}
                                         onClick={confirmNick}>중복확인
                                 </button>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.nickConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.nickConfirm}</span></div>
                         </div>
                         <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
@@ -206,7 +206,7 @@ function Join2(props) {
                                        onChange={changePw}/>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.pwConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.pwConfirm}</span></div>
                         </div>
                         <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
@@ -218,7 +218,7 @@ function Join2(props) {
                                        onChange={changeConfirmPw}/>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.confirmPwConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-outline-purple bold'}>{confirm.confirmPwConfirm}</span></div>
                         </div>
                         <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
@@ -230,7 +230,7 @@ function Join2(props) {
                                        onChange={changeName}/>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.nameConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-outline-purple bold'}>{confirm.nameConfirm}</span></div>
                         </div>
                         <div className={'row mt-4'}>
                             <div className={'col-sm-3'}>
@@ -251,7 +251,7 @@ function Join2(props) {
                                 <span className={'mt-2 ms-2'}>일</span>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.birthConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.birthConfirm}</span></div>
                         </div>
                         <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
@@ -264,13 +264,13 @@ function Join2(props) {
                                 <label htmlFor="female" className={'ms-1 mt-2'}>여성</label>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-pupple bold'}>{confirm.genderConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.genderConfirm}</span></div>
                         </div>
                         <div className={'row mt-5 justify-content-end'}>
                             <div className={'col-sm-8'}></div>
                             <div className={'col-sm-4'}>
                                 <button type={'button'} onClick={eventClickOK}
-                                        className={'btn btn-pupple-inline ms-5'}>회원가입
+                                        className={'btn btn-purple ms-5'}>회원가입
                                 </button>
                             </div>
                         </div>

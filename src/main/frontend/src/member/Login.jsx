@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import '../static/css/style.css'
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 
 
@@ -10,7 +10,9 @@ function Login(props) {
 
     const navi = useNavigate();
 
-    const login = () => {
+    const login = (e) => {
+        e.preventDefault();
+
         axios.get(`http://localhost:8080/login`, {
             params: {
                 id: id,
@@ -20,7 +22,6 @@ function Login(props) {
             .then(res => {
                 const member = res.data;
                 alert(member.result.name);
-                alert(member.confirm);
             })
             .catch(err => {
                 alert(err);
@@ -58,13 +59,18 @@ function Login(props) {
                                        placeholder={'비밀번호를 입력하세요'} onChange={e => setPw(e.target.value)}/>
                             </div>
                         </div>
-                        <div className={'row justify-content-center ms-5 mt-5'}>
+                        <div className={'row ms-5 mt-5'}>
                             <div className={'col-sm-3'}>
                                 <button type={'button'} onClick={goBack} className={'btn btn-secondary input-s1'}>돌아가기
                                 </button>
                             </div>
-                            <div className={'col-sm-3 ms-2'}>
-                                <button type={'button'} className={'btn btn-pupple-inline input-s1'}
+                            <div className={'col-sm-3 ms-1'}>
+                                <Link to={'/join'}>
+                                    <button type={'button'} className={'btn btn-outline-purple input-s1'}>회원가입</button>
+                                </Link>
+                            </div>
+                            <div className={'col-sm-3 ms-1'}>
+                                <button type={'button'} className={'btn btn-purple input-s1'}
                                         onClick={login}>로그인
                                 </button>
                             </div>

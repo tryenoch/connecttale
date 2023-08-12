@@ -10,10 +10,10 @@
 .input-s4 {width: 400px}
 .input-s5 {width: 500px}
 
-.text-pupple {
+.text-purple {
     color: #9766ff;
 }
-.btn-pupple-inline {
+.btn-purple {
     --bs-btn-color: #fff;
     --bs-btn-bg: #9766ff;
     --bs-btn-border-color: #9766ff;
@@ -29,8 +29,7 @@
     --bs-btn-disabled-bg: #9766ff;
     --bs-btn-disabled-border-color: #9766ff;
 }
-.btn-pupple {
-    vertical-align: middle;
+.btn-outline-purple {
     --bs-btn-color: #9766ff;
     --bs-btn-border-color: #9766ff;
     --bs-btn-hover-color: #fff;
@@ -47,7 +46,7 @@
     --bs-gradient: none;
 }
 
-.btn-light-pupple {
+.btn-light-purple {
     vertical-align: middle;
     --bs-btn-color: #b998ff;
     --bs-btn-border-color: #9766ff;
@@ -63,4 +62,10 @@
     --bs-btn-disabled-bg: transparent;
     --bs-btn-disabled-border-color: #9766ff;
     --bs-gradient: none;
+}
+.bg-purple-light {
+    background-color: rgba(185, 152, 255, 0.2);
+}
+.box-board {
+    --bs-rows: 3; --bs-columns: 3;
 }

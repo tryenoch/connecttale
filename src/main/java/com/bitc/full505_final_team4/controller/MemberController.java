@@ -15,18 +15,13 @@ import java.util.Map;
 public class MemberController {
   private final MemberService memberService;
 
-  @RequestMapping(value = "/login", method = RequestMethod.POST)
+  @RequestMapping(value = "/login", method = RequestMethod.GET)
   public Object login(@RequestParam("id") String id, @RequestParam("pw") String pw) throws Exception {
 
-    boolean confirmId = memberService.confirmId(id);
-    MemberEntity member = new MemberEntity();
-    Map<String, Object> result = new HashMap<>();
-    if (confirmId == true) {
-      member = memberService.login(id, pw);
+    MemberEntity member = memberService.login(id, pw);
+    Map<String, MemberEntity> result = new HashMap<>();
+    if (member.getId() == "" || member.getId() == null) {
       result.put("result", member);
-    }
-    else {
-      result.put("confirm", "없는 아이디 입니다.");
     }
 
     return result;
