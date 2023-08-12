@@ -12,16 +12,15 @@ function NovelMainTest() {
 
   const dataTest = () => {
     //alert('테스트 메세지입니다.');
-    axios.get(`/novel/naverRankList`, {
+    axios.get(`/novel/testJpa`, {
       params : {
-        startNum : 0,
-        endNum : 12
+        date : getToday()
       }
     })
       .then(res => {
         MessageUtils.infoMessage("비동기 통신에 성공했습니다.");
         console.log(res.data.result);
-        console.log(res.data.naverNovelList);
+        console.log(res.data.rankList);
       })
       .catch(err => {
         MessageUtils.errorMessage("테스트", err);
@@ -32,6 +31,18 @@ function NovelMainTest() {
     MessageUtils.errorMessage("테스트", "에러 메세지 테스트");
   }*/
 
+  // 오늘 날짜 구하는 메소드
+  const getToday = () => {
+    const dateInfo = new Date();
+
+    const year = dateInfo.getFullYear();
+    const month = ('0' + (dateInfo.getMonth() + 1)).slice(-2);
+    const day = ('0' + dateInfo.getDate()).slice(-2);
+
+    const today = year + '-' + month  + '-' + day;
+
+    return today;
+  }
 
   return (
       <div>

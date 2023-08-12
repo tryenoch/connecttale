@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -21,6 +22,31 @@ import java.util.*;
 public class NovelMainController {
 
   private final NovelMainService novelMainService;
+
+  // jpa 테스트용
+  @GetMapping("/testJpa")
+  public Object testJpa(@RequestParam("date") String date) throws Exception{
+    Map<String ,Object> result = new HashMap<>();
+
+    LocalDate javaDate = LocalDate.now();
+    String convertDate = javaDate.toString();
+    String res = "";
+
+    if (date.equals(convertDate)){
+      res = "날짜가 같습니다.";
+    } else {
+      res = "날짜가 틀리네요";
+      novelMainService.storeRidiCategoryRankList(1750, 1);
+      novelMainService.storeRidiCategoryRankList(1650, 1);
+      novelMainService.storeRidiCategoryRankList(6050, 1);
+      novelMainService.storeRidiCategoryRankList(4150, 1);
+    }
+
+    result.put("result", res);
+
+    return result;
+  }
+
 
   /* Json 데이터 변환 및 가져오기 테스트 */
   @GetMapping("/testJson")
