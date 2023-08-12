@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,13 +20,18 @@ public class NovelDetailServiceImpl implements NovelDetailService{
   private final NovelRepository novelRepository;
 
   // 클릭한 작품 제목의 novelIdx 찾기
+
+
+  // 찾은 novelIdx로 platform 테이블에서 데이터 가져오기
   @Override
-  public int getNovelIdx(String platformId) {
-    int novelidx = 0;
+  public List<NovelPlatformEntity> getNovelDetail(String platformId) {
     Optional<NovelPlatformEntity> novel = novelPlatformRepository.findByPlatformId(platformId);
+    NovelEntity novelEntity = novel.get().getNovelEntity();
+    int novelIdx = novel.get().getNovelEntity().getNovelIdx();
 
+    List<NovelPlatformEntity> novelDetail = novelPlatformRepository.findAllByNovelEntity(novelEntity);
 
-    return novelidx;
+    return novelDetail;
   }
 
 
@@ -38,6 +44,7 @@ public class NovelDetailServiceImpl implements NovelDetailService{
   public void insertRidiToPlatform(NovelPlatformEntity novelPlatformEntity) {
     novelPlatformRepository.save(novelPlatformEntity);
   }
+
 
 
 

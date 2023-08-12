@@ -3,8 +3,8 @@ import axios from "axios";
 
 function NovelDetailInfo(props) {
   // const [platformId, setPlatformId] = useState(props.platformId);
-  const [novelInfo, setNovelInfo] = useState({});
-  
+  const [novelInfo, setNovelInfo] = useState([]);
+
   useEffect( () => {
     const fetchData = async () => {
       try {
@@ -15,9 +15,10 @@ function NovelDetailInfo(props) {
         })
         // console.log(res);
         // DB에 저장되어있는지 유무 확인
-        if (res.data != '') {
+        if (res.data != null) {
           // DB에 저장되어 있다면 novelInfo값 변경
-          setNovelInfo(res);
+          console.log(res.data);
+          // setNovelInfo(res.data);
         }
         else {
           // DB에 저장되어 있지 않다면 DB에 저장
@@ -57,7 +58,7 @@ function NovelDetailInfo(props) {
           };
           // 리디북스 디테일 정보 디비에 저장
           
-          axios.post('/novelDetail', null, {
+          const ridiRes4 = await axios.post('/novelDetail', null, {
             params: {
               platform: ridiObj.platform,
               platformId: ridiObj.platformId,
@@ -85,8 +86,7 @@ function NovelDetailInfo(props) {
           
           
           // fetchData를 다시 실행되게 해서 db에 저장된 데이터를 불러오게끔
-  
-          
+          fetchData();
           
         }
       }
@@ -99,26 +99,9 @@ function NovelDetailInfo(props) {
   }, [])
   
   return (
-    <div className={'row'}>
-      <h1>리디</h1>
-      {/*<div className={'col-sm-4'}>썸네일</div>*/}
-      {/*<div className={'col-sm-8'}>정보</div>*/}
-      <p>{novelInfo.platform} </p>
-      <p>{novelInfo.platformId}</p>
-      <p>{novelInfo.novelTitle}</p>
-      <p>{novelInfo.novelThumbnail}</p>
-      <p>{novelInfo.novelAuthor}</p>
-      <p>{novelInfo.novelStarRate}</p>
-      <p>{novelInfo.novelPubli}</p>
-      <p>{novelInfo.cateList}</p>
-      <p>{novelInfo.novelCount}</p>
-      <p>{novelInfo.novelPrice}</p>
-      <p>{novelInfo.novelCompleteYn}</p>
-      <p>{novelInfo.novelIntro}</p>
-      <p>{novelInfo.novelAdult}</p>
-      <p>{novelInfo.novelUpdateDate}</p>
-      <p>{novelInfo.novelRelease}</p>
-      <p>{novelInfo.novelOrEbook}</p>
+    <div>
+
+    
     </div>
   )
 }
