@@ -1,33 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {getElement} from "bootstrap/js/src/util";
+import {useParams, useSearchParams} from "react-router-dom";
+import NovelDetailInfo from "./novelDetail/NovelDetailInfo";
+import NovelDetailReview from "./novelDetail/NovelDetailReview";
 
 function NovelDetail(props) {
-  const [titleList, setTitleList] = useState([]);
+  const [platformId, setPlatformId] = useSearchParams();
+  const [name, setName] = useSearchParams();
   
-  useEffect(() => {
-    axios.get('/jsoup')
-      .then(res => {
-        console.log(res.data);
-        const titles = res.data;
-        setTitleList(titles);
-      })
-      .catch(err => {
-        alert('서버와 통신 실패');
-        console.log(err.message);
-      })
-  }, [])
+  const [seriesId, setSeriesId] = useState(platformId.get("platformId"));
+  const [title, setTitle] = useState(name.get("title"));
   
   return (
     <div className={'container my-4'}>
-      <h1>Novel Detail</h1>
-      {
-        titleList.map((title, index) => {
-          return (
-            <li key={index}>{title}</li>
-          )
-        })
-      }
+      <NovelDetailInfo seriesId={seriesId} title={title}/>
+      <NovelDetailReview />
+
     </div>
   )
 }
