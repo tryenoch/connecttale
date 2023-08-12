@@ -33,7 +33,7 @@ public class NovelPlatformEntity {
   @Column(nullable = false, length = 100)
   private String novelTitle;
 
-  @Column(nullable = false, length = 200)
+  @Column(nullable = false, length = 500)
   private String novelThumbnail;
 
   @Column(nullable = false, length = 500)
@@ -71,6 +71,13 @@ public class NovelPlatformEntity {
 
   @Column(nullable = false, length = 100)
   public String cateList;
+
+  @Column(length = 50)
+  public String novelOrEbook;
+
+  @Column(nullable = false, length = 50)
+  @ColumnDefault("N")
+  private char novelAdult;
 
 
 

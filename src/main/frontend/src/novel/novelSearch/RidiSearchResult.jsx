@@ -33,7 +33,7 @@ function RidiSearchResult(props) {
                 publi: item[i].publisher,
                 category: item[i].parent_category_name.replace(" " + param, ""),
                 count: item[i].book_count,
-                price: item[i].price != null ? item[i].price : item[i].series_prices_info[0].max_price,
+                price: item[i].price != 0 ? item[i].price : item[i].series_prices_info[0].max_price,
                 completeYn: item[i].is_series_complete ? '완결' : '연재중',
                 description: item[i].desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
                 ageGrade: item[i].age_limit == 19 ? "Y" : "N",

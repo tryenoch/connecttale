@@ -14,7 +14,6 @@ function NovelDetail(props) {
   
   return (
     <div className={'container my-4'}>
-      <h1>Novel Detail</h1>
       <NovelDetailInfo seriesId={seriesId} title={title}/>
       <NovelDetailReview />
 
