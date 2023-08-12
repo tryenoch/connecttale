@@ -11,18 +11,22 @@ function BoardDetail(props) {
 
     const navi = useNavigate();
     const profile = useParams();
+    const [boardIdx, setBoardIdx] = useState(0);
     const [title, setTitle] = useState('');
     const [contents, setContents] = useState('');
     const [createId, setCreateId] = useState('');
     const [createDt, setCreateDt] = useState('');
     const [reqCate, setReqCate] = useState('');
     const [hitCnt, setHitCnt] = useState(0);
+    const [reply, setReply] = useState('');
+    const [replyList, setReplyList] = useState([]);
 
     useEffect(() => {
         axios.get(`/board/${profile.idx}`)
             .then(res => {
                 const board = res.data.board;
                 console.log(board);
+                setBoardIdx(board.boardIdx);
                 setTitle(board.boardTitle);
                 setContents(board.boardContents);
                 setCreateId(board.createId);
@@ -45,6 +49,20 @@ function BoardDetail(props) {
             .catch(err => {
                 alert(`통신에 실패했습니다. board/delete : ${err}`);
             })
+    }
+
+    const handleReply = () => {
+        axios.post(``, null, {
+            params: {
+                reply: reply,
+                boardIdx: boardIdx,
+                //     세션값
+            }
+        })
+            .then(res => {
+            })
+            .catch(err => {
+            });
     }
     return (
         <Container className={'my-4'}>
@@ -78,9 +96,22 @@ function BoardDetail(props) {
                     <div className={'d-flex justify-content-center my-3 delete-left'}>
                         <button type={'button'} className={'btn btn-primary px-4'} onClick={handleGotoMain}>목록</button>
                         {
+                            // 본인 or 관리자로 로그인했을 경우 렌더링하게 구현
                             true &&
                             (<button type={'button'} className={'btn btn-danger'} onClick={handleDelete}>삭제</button>)
                         }
+                    </div>
+                    {/*    댓글 구현부*/}
+                    <div>
+                        <form onSubmit={handleReply}>
+                            <p>닉네임</p>
+                            <input
+                                type="text"
+                                value={reply}
+                                onChange={(event) =>
+                                    setReply(event.target.value)}/>
+                            <button type={'submit'}>전송</button>
+                        </form>
                     </div>
 
 
