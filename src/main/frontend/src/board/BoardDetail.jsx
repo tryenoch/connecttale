@@ -3,6 +3,7 @@ import {Col, Container, Row} from "react-bootstrap";
 import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {boardList} from "./BoardMain";
+import button from "bootstrap/js/src/button";
 
 function BoardDetail(props) {
     // html 파싱을 위한 라이브러리
@@ -15,6 +16,7 @@ function BoardDetail(props) {
     const [createId, setCreateId] = useState('');
     const [createDt, setCreateDt] = useState('');
     const [reqCate, setReqCate] = useState('');
+    const [hitCnt, setHitCnt] = useState(0);
 
     useEffect(() => {
         axios.get(`/board/${profile.idx}`)
@@ -26,12 +28,23 @@ function BoardDetail(props) {
                 setCreateId(board.createId);
                 setCreateDt(board.createDt);
                 setReqCate(board.reqCate);
+                setHitCnt(board.hitCnt);
             })
             .catch(err => {
             });
     }, []);
     const handleGotoMain = () => {
         navi("/board/main");
+    }
+
+    const handleDelete = () => {
+        axios.delete(`/board/${profile.idx}`, null)
+            .then(res => {
+                navi("/board/main");
+            })
+            .catch(err => {
+                alert(`통신에 실패했습니다. board/delete : ${err}`);
+            })
     }
     return (
         <Container className={'my-4'}>
@@ -43,20 +56,31 @@ function BoardDetail(props) {
                             <h1 className={'fw-bold'}>{boardList[profile.cate].title}</h1>
                         </div>
                     </Row>
-                    <div className={'border-bottom border-1'}>
-                        <h3 className={'my-2'}>{title}</h3>
-                    </div>
-                    {/*    조회수 작성일 작성자 / 조회수 칼럼 추가 */}
+                    <Row className={'border-bottom border-1 my-2'}>
+                        {
+                            (reqCate.trim().length > 0) &&
+                            (<Col xs={2}>
+                                <h3 className={'text-center'}>{reqCate}</h3>
+                            </Col>)
+                        }
+                        <Col>
+                            <h3>{title}</h3>
+                        </Col>
+                    </Row>
                     <div className={'d-flex justify-content-between p-2'}>
                         <span>작성자: {createId}</span>
                         <span>작성일: {createDt}</span>
-                        <span>조회수</span>
+                        <span>조회수: {hitCnt}</span>
                     </div>
                     <div className={'border-top border-bottom border-1 p-3'}>
                         {parse(contents)}
                     </div>
-                    <div className={'d-flex justify-content-center my-3'}>
+                    <div className={'d-flex justify-content-center my-3 delete-left'}>
                         <button type={'button'} className={'btn btn-primary px-4'} onClick={handleGotoMain}>목록</button>
+                        {
+                            true &&
+                            (<button type={'button'} className={'btn btn-danger'} onClick={handleDelete}>삭제</button>)
+                        }
                     </div>
 
 

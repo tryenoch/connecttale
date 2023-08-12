@@ -109,4 +109,13 @@ public class BoardController {
         result.put("board", board);
         return result;
     }
+
+    @RequestMapping(value = "/board/{idx}", method = RequestMethod.DELETE)
+    public Object removeBoard(@PathVariable int idx) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boardService.deleteBoard(idx);
+
+        result.put("result", "성공");
+        return result;
+    }
 }

@@ -65,9 +65,11 @@ function BoardWrite() {
                                     onChange={(e) => setReqCate(e.target.value)}
                                 >
                                     <option value={0}>=== 선택 ===</option>
-                                    <option value={1}>작성자</option>
-                                    <option value={2}>버그</option>
-                                    <option value={3}>저장</option>
+                                    <option value={1}>서비스</option>
+                                    <option value={2}>이용 장애</option>
+                                    <option value={3}>콘텐츠</option>
+                                    <option value={4}>이벤트</option>
+                                    <option value={5}>개선 제안</option>
                                 </Form.Select>
                             </Col>
                             <Col>

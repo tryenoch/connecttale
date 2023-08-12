@@ -74,7 +74,12 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardDTO getBoard(int idx) throws Exception {
-        BoardEntity boardEntity =  boardRepository.findByBoardIdx(idx);
+        BoardEntity boardEntity = boardRepository.findByBoardIdx(idx);
         return BoardDTO.toDTO(boardEntity);
+    }
+
+    @Override
+    public void deleteBoard(int idx) throws Exception {
+        boardRepository.deleteById(idx);
     }
 }
