@@ -28,7 +28,7 @@ function KakaoSearchResult(props) {
               for (let i = 0; i < res.length; i++) {
                 const item = res[i].data.pageProps
                 const data = {
-                  platform: '1',
+                  platform: 1,
                   platformId: item.seriesId,
                   title: item.metaInfo.ogTitle,
                   thumbnail: item.metaInfo.image,
@@ -37,7 +37,7 @@ function KakaoSearchResult(props) {
                   publi: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.publisherName,
                   category: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.category,
                   price: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.retailPrice,
-                  ageGrade: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.ageGrade
+                  ageGrade: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.ageGrade == "Nineteen" ? "Y" : "N"
                 }
                 kakaoSearchResult.push(data);
               }
@@ -62,7 +62,7 @@ function KakaoSearchResult(props) {
             <div className={'row my-4 border-top border-bottom py-2'} key={index}>
               <div className={'col-sm-2'}>
                 {
-                  item.ageGrade == 'All'
+                  item.ageGrade == 'N'
                   ? <Link to={'#'}>
                       <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
                     </Link>
@@ -72,16 +72,16 @@ function KakaoSearchResult(props) {
                 }
               </div>
               <div className={'col-sm-10'}>
-                <Link to={'#'} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title}
+                <Link to={'#'} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
                 </Link><br/>
-                <p className={'search-info'}>{item.author} [{item.category}]</p>
-                <p className={'search-info'}>{item.publi}</p>
+                <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
+                <p className={'search-info'}>출판사 : {item.publi}</p>
                 {
                   item.price != null
                     ? <p className={'search-price fw-bold'}>가격 : {item.price}</p>
                     : <p className={'search-price text-muted'}>가격 정보 없음</p>
                 }
-                <p className={'search-info'}>{item.description.substring(0, 170)}..</p>
+                <p className={'search-info'}>{item.description.substring(0, 170)}</p>
               </div>
             </div>
           )

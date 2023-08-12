@@ -23,9 +23,8 @@ public class NovelEntity {
   @Column(nullable = false, length = 100)
   private String novelTitle;
 
-  @Column(nullable = false, length = 200)
-  @ColumnDefault("N")
-  private String novelPoster;
+  @Column(nullable = false, length = 500)
+  private String novelThumbnail;
 
   @Column(nullable = false)
   @ColumnDefault("N")
