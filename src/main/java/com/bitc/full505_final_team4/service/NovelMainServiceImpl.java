@@ -16,13 +16,11 @@ import org.springframework.util.ObjectUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class NovelMainServiceImpl implements NovelMainService{
-
-  // 크롤링 할 WebDriverUtil 객체 생성
-  WebDriver driver = WebDriverUtil.getChromeDriver();
 
   /* 리디북스 카테고리 별 순위 리스트 불러오기
   * 시작번호로부터 20개 출력
@@ -91,29 +89,71 @@ public class NovelMainServiceImpl implements NovelMainService{
   @Override
   public List<NovelMainDto> getKakaoList(String urlId) throws Exception {
 
+    // 크롤링 할 WebDriverUtil 객체 생성
+    WebDriver driver = WebDriverUtil.getChromeDriver();
+
     List<NovelMainDto> novelDtoList = new ArrayList<>();
 
     // 카카오 웹소설 실시간 랭킹 주소
-    String url = "https://page.kakao.com/menu/10011/screen/" + "94";
+    String url = "https://page.kakao.com/menu/10011/screen/" + urlId;
 
     if (!ObjectUtils.isEmpty(driver)){
       driver.get(url);
 
       try {
         // 브라우저 이동 시 생기는 로드시간을 기다린다.
-        // HTTP 응답속도보다 자바의 컴파일 속도가 더 빠르기 때문에 임의적으로 1초를 대기한다.
-        Thread.sleep(1000);
-      } catch (InterruptedException e){
+        // HTTP 응답속도보다 자바의 컴파일 속도가 더 빠르기 때문에 임의적으로 1초를 대기한다
+//        Thread.sleep(1000);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+      } catch (Exception e){
         e.printStackTrace();
       }
 
     }
 
     try {
-      //랭킹 리스트 들고오기
-      WebElement element = driver.findElement(By.cssSelector(".foldable:grid-inner-border-cols6"));
-      List<WebElement> list = element.findElements(By.tagName("div")).subList(0, 20); // 20개 리스트 들고오기
+      //카카오 웹소설 랭킹 리스트 들고오기
+//      WebElement element = driver.findElement(By.cssSelector(".foldable:grid-inner-border-cols6"));
+      List<WebElement> list = driver.findElements(By.xpath("//div[@style='border-color:transparent;border-width:4px']")).subList(0, 12);
+      // list = list.subList(0, 20);// 20개 리스트 들고오기
 
+      if(!ObjectUtils.isEmpty(list)){ // list 가 null 값이 아니라면
+        for(WebElement element : list){
+          /* dto 에 필수적으로 넣어야 하는 요소
+          * 플랫폼 아이디, 제목, 썸네일 주소, 플랫폼 이름 */
+          NovelMainDto novel = new NovelMainDto();
+
+          novel.setPlatform("kakao"); // 플랫폼 이름 입력
+
+          //순위 불러오기
+          novel.setNovelIndexNum(list.indexOf(element) + 1); // novelItem의 인덱스 번호
+
+          // a 태그에서 id 값 잘라오기
+          String id = element.findElement(By.tagName("a")).getAttribute("href");
+          int idIdx = id.lastIndexOf("/")+1;
+          id = id.substring(idIdx);
+
+          novel.setPlatformId(id);
+
+          // 제목
+          String title = element.findElement(By.cssSelector(".line-clamp-2")).getText();
+          novel.setNovelTitle(title);
+
+//          String locator = "//img[@alt=\"썸네일\"][" + list.indexOf(element) + "]";
+          //썸네일
+          String thumbnail = element.findElement(By.cssSelector(".object-cover.visible")).getAttribute("src");
+
+          if (ObjectUtils.isEmpty(thumbnail)){
+            novel.setAdultsOnly(true);
+          } else {
+            novel.setNovelThumbnail(thumbnail);
+          }
+
+          novelDtoList.add(novel);
+        }
+      }
+
+      /*
       // element 리스트 내 아이디를 담을 배열
       List<String> idList = new ArrayList<>();
 
@@ -132,7 +172,7 @@ public class NovelMainServiceImpl implements NovelMainService{
       for(String novelId : idList){
         NovelMainDto novel = getKakaoNovel(novelId);
         novelDtoList.add(novel);
-      }
+      }*/
     }
     catch (Exception e){
       e.printStackTrace();
@@ -148,6 +188,9 @@ public class NovelMainServiceImpl implements NovelMainService{
   @Override
   public NovelMainDto getKakaoNovel(String novelId) throws Exception {
 
+    // 크롤링 할 WebDriverUtil 객체 생성
+    WebDriver driver = WebDriverUtil.getChromeDriver();
+
     NovelMainDto novel = new NovelMainDto();
 
 
@@ -155,7 +198,7 @@ public class NovelMainServiceImpl implements NovelMainService{
 
     driver.get(url);
 
-    /*if (!ObjectUtils.isEmpty(driver)){
+    if (!ObjectUtils.isEmpty(driver)){
       driver.get(url);
 
       try {
@@ -166,7 +209,7 @@ public class NovelMainServiceImpl implements NovelMainService{
         e.printStackTrace();
       }
 
-    }*/
+    }
 
     try {
 
@@ -199,14 +242,14 @@ public class NovelMainServiceImpl implements NovelMainService{
       e.printStackTrace();
     }
     finally {
-      // driver.quit();
+      driver.quit();
     }
 
     return novel;
   }
 
 
-  /* Ridi Json 에서 들고온 ratings 별점으로 변환하기 */
+  /* Ridi Json 에서 들고온 ratings 별점으로 변환하기 (10점 만점 기준) */
   @Override
   public String getStarRate(JSONArray ratings) throws Exception {
 
@@ -234,7 +277,7 @@ public class NovelMainServiceImpl implements NovelMainService{
 
     }
 
-    double total = multiRating / totalCount;
+    double total = (multiRating / totalCount) * 2;
     // 왜 한자리수 올림이 안되는 건지...
 //    total = (double) Math.ceil((total * 100) / 100.0);
 
