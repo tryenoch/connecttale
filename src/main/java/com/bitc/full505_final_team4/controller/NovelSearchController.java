@@ -1,7 +1,6 @@
 package com.bitc.full505_final_team4.controller;
 
 
-import com.bitc.full505_final_team4.data.dto.NovelSearchDTO;
 import com.bitc.full505_final_team4.service.NovelDetailService;
 import com.bitc.full505_final_team4.service.NovelSearchService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,12 +50,5 @@ public class NovelSearchController {
 //
 //    return ridiSearchList;
 //  }
-
-
-  // 리디북스 검색 결과 데이터 가져오기
-
-
-
-
 
 }

@@ -17,12 +17,12 @@ function RidiSearchResult(props) {
         try {
           const response = await axios.get("https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword=" + props.keyword + "&start=" + s + "&what=base&where%5B%5D=book&site=ridi-store");
           const item = response.data.books;
-          console.log(item);
+          // console.log(item);
           
           for (let i = 0; i < item.length; i++) {
             const saveWebNovel = (param) => {
               const data = {
-                platform: "3",
+                platform: 3,
                 platformId: item[i].b_id,
                 title: item[i].title,
                 thumbnail: "https://img.ridicdn.net/cover/"+ item[i].b_id +"/xxlarge",
@@ -33,12 +33,11 @@ function RidiSearchResult(props) {
                 publi: item[i].publisher,
                 category: item[i].parent_category_name.replace(" " + param, ""),
                 count: item[i].book_count,
-                price: item[i].series_prices_info.map(price => {
-                  return price.max_price;
-                }),
+                price: item[i].price != 0 ? item[i].price : item[i].series_prices_info[0].max_price,
                 completeYn: item[i].is_series_complete ? '완결' : '연재중',
                 description: item[i].desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
-                ageGrade: item[i].age_limit == 19 ? "Y" : "N"
+                ageGrade: item[i].age_limit == 19 ? "Y" : "N",
+                novelOrEbook: item[i].web_title_title.includes('e북') ? "e북" : "웹소설"
               }
               ridiSearchList.push(data);
             }
@@ -67,54 +66,7 @@ function RidiSearchResult(props) {
       }
       setNovelSearchList(ridiSearchList);
     }
-  
-    // for (let s = 0; s <= 216; s += 24) {
-    //   axios.get("https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword=" + props.keyword + "&start=" + s + "&what=base&where%5B%5D=book&site=ridi-store")
-    //     .then(res => {
-    //
-    //       const item = res.data.books;
-    //
-    //       // console.log(item);
-    //       // console.log('--------------------------------')
-    //       for (let i = 0; i < item.length; i++) {
-    //         if (item[i].parent_category_name.includes('웹소설')) {
-              // const data = {
-              //   platform: "3",
-              //   platformId: item[i].b_id,
-              //   title: item[i].title,
-              //   thumbnail: "https://img.ridicdn.net/cover/"+ item[i].b_id +"/xxlarge",
-              //   author: item[i].authors_info.map(auth => {
-              //     return auth.name;
-              //   }),
-              //   starRate: item[i].buyer_rating_score,
-              //   publi: item[i].publisher,
-              //   category: item[i].parent_category_name.replace(" 웹소설", ""),
-              //   count: item[i].book_count,
-              //   price: item[i].series_prices_info.map(price => {
-              //     return price.max_price;
-              //   }),
-              //   completeYn: item[i].tags_info.map(complete => {
-              //     if (complete.tag_id == 1373) {
-              //       return "완결"
-              //     }
-              //     else if (complete.tag_id == 3774){
-              //       return "연재중"
-              //     }
-              //   }),
-              //   description: item[i].desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
-              // }
-    //           ridiSearchList.push(data);
-    //         }
-    //       }
-    //       setNovelSearchList(ridiSearchList);
-    //
-    //     })
-    //     .catch(err => {
-    //       console.log(err.message);
-    //     })
-    // }
     fetchData();
-    
   }, [props.keyword])
   
   return (
@@ -125,15 +77,15 @@ function RidiSearchResult(props) {
             return (
               <div className={'row my-4 border-top border-bottom py-2'} key={index}>
                 <div className={'col-sm-2'}>
-                  <Link to={'#'} >
+                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}`} >
                     <img src={item.thumbnail} alt="" className={'w-100 h-100'} />
                   </Link>
                 </div>
                 <div className={'col-sm-10'}>
-                  <Link to={'#'} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
+                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
                   </Link><br/>
-                  <p className={'search-info'}>{item.author} [{item.category}]</p>
-                  <p className={'search-info'}>{item.publi}출판사</p>
+                  <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
+                  <p className={'search-info'}>출판사 : {item.publi}</p>
                   {
                     item.price != null
                       ? <p className={'search-info search-price fw-bold'}>가격 : {item.price}원</p>
@@ -144,14 +96,11 @@ function RidiSearchResult(props) {
                       평점 <span className={'fw-bold search-score'}>{item.starRate}</span>&nbsp;|
                     </p>
                     <p>
-                      &nbsp;update <span className={'fw-bold'}>{item.lastUpdate}</span>&nbsp;|
-                    </p>
-                    <p>
                       &nbsp;<span className={'fw-bold'}>{item.completeYn}
                       {
-                        item.title.indexOf('[단행본]') == -1
-                          ? <span>&nbsp;(총{item.count}화)</span>
-                          : <span>&nbsp;(총{item.count}권)</span>
+                        item.novelOrEbook == 'e북'
+                          ? <span>&nbsp;(총{item.count}권)</span>
+                          : <span>&nbsp;(총{item.count}화)</span>
                       }
                   </span>
                     </p>
