@@ -1,6 +1,7 @@
 package com.bitc.full505_final_team4.controller;
 
 import com.bitc.full505_final_team4.data.dto.BoardDTO;
+import com.bitc.full505_final_team4.data.dto.BoardReplyDTO;
 import com.bitc.full505_final_team4.data.entity.BoardCateEntity;
 import com.bitc.full505_final_team4.data.entity.BoardEntity;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
@@ -104,9 +105,11 @@ public class BoardController {
     public Object getBoard(@PathVariable int idx) throws Exception {
         Map<String, Object> result = new HashMap<>();
         BoardDTO board = boardService.getBoard(idx);
+        List<BoardReplyDTO> replyList = boardService.getBoardReplyList(idx);
 
         result.put("result", "성공");
         result.put("board", board);
+        result.put("replyList", replyList);
         return result;
     }
 
@@ -114,6 +117,24 @@ public class BoardController {
     public Object removeBoard(@PathVariable int idx) throws Exception {
         Map<String, Object> result = new HashMap<>();
         boardService.deleteBoard(idx);
+
+        result.put("result", "성공");
+        return result;
+    }
+
+    @RequestMapping(value = "/board/reply", method = RequestMethod.POST)
+    public Object setBoardReply(BoardReplyDTO boardReply) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boardService.setBoardReply(boardReply);
+
+        result.put("result", "성공");
+        return result;
+    }
+
+    @RequestMapping(value = "/board/reply/{idx}", method = RequestMethod.DELETE)
+    public Object removeReply(@PathVariable int idx) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boardService.deleteBoardReply(idx);
 
         result.put("result", "성공");
         return result;
