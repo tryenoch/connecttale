@@ -30,4 +30,12 @@ public class NovelEntity {
   @ColumnDefault("N")
   private char novelAdult;
 
+  @Builder
+  public NovelEntity(int novelIdx, String novelTitle, String novelThumbnail, char novelAdult){
+    this.novelIdx = novelIdx;
+    this.novelTitle = novelTitle;
+    this.novelThumbnail = novelThumbnail;
+    this.novelAdult = novelAdult;
+  }
+
 }

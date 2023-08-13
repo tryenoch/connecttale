@@ -36,7 +36,7 @@ function RankItem(props) {
                     <path fill="#fff" transform="translate(6 8)" d="M0 0h12v8H0z"></path>
                   </clipPath>
                 </defs>
-              </svg> : <img alt=""/>
+              </svg> : null
           }
           <img src={thumbnail} alt=""/>
         </div>
@@ -44,9 +44,13 @@ function RankItem(props) {
       <div className={"rank-info w-100"}>
         <p className={"item-title"}>{title}</p>
         <p className={"item-detail"}>
-          <span className={"item-author me-2"}>{author}</span>
-          |
-          <span className={"item-cate"}>{cate}</span>
+          <span className={"item-author"}>{author}</span>
+          {
+            cate == null? null :
+              <span>|
+              <span className="item-cate ms-2">{cate}</span>
+              </span>
+          }
         </p>
         <p className={"item-star"}>
           <svg width="1em" height="1em" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="구매자 평균 별점" className="fig-httsil">
