@@ -75,7 +75,7 @@ public class NovelPlatformEntity {
   @Column(nullable = false, length = 50)
   public String novelOrEbook;
 
-  @Column(nullable = false, length = 50)
+  @Column(nullable = false, length = 1)
   @ColumnDefault("N")
   private String novelAdult;
 

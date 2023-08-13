@@ -1,4 +1,4 @@
-package com.bitc.full505_final_team4.service.main;
+package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
@@ -25,9 +25,18 @@ public interface NovelRidiService {
   // json object 에 있는 platform table 관련 데이터 entity 형태로 들고오기
   NovelPlatformEntity getCatePlatformEntityFromJson(NovelEntity novelEntity, JSONObject novelData) throws Exception;
 
+  // 작품 아이디에 해당하는 연재일 들고오기
+  String getNovelUpdateDate(String platformId) throws Exception;
+
+  // 작품 아이디에 해당하는 작품 설명 들고오기
+  String getNovelIntro(String platformId) throws Exception;
+
   /* 리디 별점 계산기 */
   String getStarRate(JSONArray ratings) throws Exception;
 
   // 리디 카테고리 pk 생성 관련
   int ridiCategoryRankNum(int category) throws Exception;
+
+  // 리디 카테고리 번호에 따라 장르명 변환
+  String ridiCategoryNameConverter(int category) throws Exception;
 }
