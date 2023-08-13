@@ -70,7 +70,10 @@ public class NovelPlatformEntity {
   @Column(nullable = false, length = 100)
   public String cateList;
 
-  @Column(length = 50)
+  @Column(length = 45)
+  public String novelRecentUpdate;
+
+  @Column(nullable = false, length = 50)
   public String novelOrEbook;
 
   @Column(nullable = false, length = 50)
@@ -78,10 +81,11 @@ public class NovelPlatformEntity {
   private char novelAdult;
 
   @Builder
-  public NovelPlatformEntity(int platform, String platformId, NovelEntity novelEntity, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, char novelAdult) {
+  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelEntity, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, char novelAdult) {
     this.platform = platform;
-    this.platformId = platformId;
     this.novelEntity = novelEntity;
+    this.platformId = platformId;
+    this.novelTitle = novelTitle;
     this.novelThumbnail = novelThumbnail;
     this.novelIntro = novelIntro;
     this.novelIntroImg = novelIntroImg;
