@@ -2,10 +2,7 @@ package com.bitc.full505_final_team4.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -37,4 +34,11 @@ public class BoardReplyEntity {
     @JoinColumn(name = "board_idx", nullable = false)
     @ToString.Exclude
     private BoardEntity boardIdx;
+
+    @Builder
+    public BoardReplyEntity(BoardEntity boardEntity, String reply, MemberEntity createId) {
+        this.boardIdx = boardEntity;
+        this.createId = createId;
+        this.boardReplyContents = reply;
+    }
 }

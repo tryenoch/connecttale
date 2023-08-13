@@ -1,14 +1,9 @@
 package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.data.dto.BoardDTO;
-import com.bitc.full505_final_team4.data.entity.BoardCateEntity;
-import com.bitc.full505_final_team4.data.entity.BoardEntity;
-import com.bitc.full505_final_team4.data.entity.MemberEntity;
-import com.bitc.full505_final_team4.data.entity.ReqCateEntity;
-import com.bitc.full505_final_team4.data.repository.BoardCateRepository;
-import com.bitc.full505_final_team4.data.repository.BoardRepository;
-import com.bitc.full505_final_team4.data.repository.MemberRepository;
-import com.bitc.full505_final_team4.data.repository.ReqCateRepository;
+import com.bitc.full505_final_team4.data.dto.BoardReplyDTO;
+import com.bitc.full505_final_team4.data.entity.*;
+import com.bitc.full505_final_team4.data.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +17,7 @@ public class BoardServiceImpl implements BoardService {
     private final MemberRepository memberRepository;
     private final BoardCateRepository boardCateRepository;
     private final ReqCateRepository reqCateRepository;
+    private final BoardReplyRepository boardReplyRepository;
 
     @Override
     public Page<BoardEntity> getReqList(Pageable pageable) throws Exception {
@@ -81,5 +77,23 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void deleteBoard(int idx) throws Exception {
         boardRepository.deleteById(idx);
+    }
+
+    @Override
+    public void setBoardReply(BoardReplyDTO boardReply) throws Exception {
+
+        // member entity 호출 코드
+        MemberEntity member = memberRepository.getReferenceById(boardReply.getCreateId());
+
+        // board entity 호출 코드
+        BoardEntity board = boardRepository.getReferenceById(boardReply.getBoardIdx());
+
+        BoardReplyEntity replyEntity = BoardReplyEntity.builder()
+                .boardEntity(board)
+                .reply(boardReply.getReply())
+                .createId(member)
+                .build();
+
+        boardReplyRepository.save(replyEntity);
     }
 }

@@ -52,17 +52,19 @@ function BoardDetail(props) {
     }
 
     const handleReply = () => {
-        axios.post(``, null, {
+        axios.post(`/board/reply`, null, {
             params: {
                 reply: reply,
                 boardIdx: boardIdx,
-                createId: 'test1',
                 //     세션값
+                createId: 'test1',
             }
         })
             .then(res => {
+                console.log(res.data.result)
             })
             .catch(err => {
+                alert(`통신에 실패했습니다. board/reply post : ${err}`);
             });
     }
     return (
