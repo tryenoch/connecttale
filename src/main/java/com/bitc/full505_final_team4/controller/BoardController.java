@@ -105,9 +105,11 @@ public class BoardController {
     public Object getBoard(@PathVariable int idx) throws Exception {
         Map<String, Object> result = new HashMap<>();
         BoardDTO board = boardService.getBoard(idx);
+        List<BoardReplyDTO> replyList = boardService.getBoardReplyList(idx);
 
         result.put("result", "성공");
         result.put("board", board);
+        result.put("replyList", replyList);
         return result;
     }
 
@@ -124,6 +126,15 @@ public class BoardController {
     public Object setBoardReply(BoardReplyDTO boardReply) throws Exception {
         Map<String, Object> result = new HashMap<>();
         boardService.setBoardReply(boardReply);
+
+        result.put("result", "성공");
+        return result;
+    }
+
+    @RequestMapping(value = "/board/reply/{idx}", method = RequestMethod.DELETE)
+    public Object removeReply(@PathVariable int idx) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boardService.deleteBoardReply(idx);
 
         result.put("result", "성공");
         return result;

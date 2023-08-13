@@ -9,6 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -95,5 +98,23 @@ public class BoardServiceImpl implements BoardService {
                 .build();
 
         boardReplyRepository.save(replyEntity);
+    }
+
+    @Override
+    public List<BoardReplyDTO> getBoardReplyList(int idx) throws Exception {
+        List<BoardReplyDTO> replyList = new ArrayList<>();
+
+        BoardEntity board = boardRepository.getReferenceById(idx);
+
+        List<BoardReplyEntity> replyEntityList = boardReplyRepository.findByBoardIdx(board);
+        for (BoardReplyEntity reply : replyEntityList) {
+            replyList.add(BoardReplyDTO.toDTO(reply));
+        }
+        return replyList;
+    }
+
+    @Override
+    public void deleteBoardReply(int idx) throws Exception {
+        boardReplyRepository.deleteById(idx);
     }
 }

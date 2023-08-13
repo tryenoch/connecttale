@@ -26,6 +26,7 @@ function BoardDetail(props) {
             .then(res => {
                 const board = res.data.board;
                 console.log(board);
+                console.log(res.data.replyList);
                 setBoardIdx(board.boardIdx);
                 setTitle(board.boardTitle);
                 setContents(board.boardContents);
@@ -33,6 +34,7 @@ function BoardDetail(props) {
                 setCreateDt(board.createDt);
                 setReqCate(board.reqCate);
                 setHitCnt(board.hitCnt);
+                setReplyList(res.data.replyList);
             })
             .catch(err => {
             });
@@ -54,9 +56,11 @@ function BoardDetail(props) {
     const handleReply = () => {
         axios.post(`/board/reply`, null, {
             params: {
+                // DTO와 params의 멤버가 동일 해야함
+                idx: 0,
                 reply: reply,
-                boardIdx: boardIdx,
                 //     세션값
+                boardIdx: boardIdx,
                 createId: 'test1',
             }
         })
@@ -66,6 +70,17 @@ function BoardDetail(props) {
             .catch(err => {
                 alert(`통신에 실패했습니다. board/reply post : ${err}`);
             });
+    }
+
+    const handelReplyDelete = (event, idx) => {
+        axios.delete(`/board/reply/${idx}`, null)
+            .then(res => {
+                console.log(res.data.result);
+                event.reload();
+            })
+            .catch(err => {
+                alert(`통신에 실패했습니다. board/reply delete : ${err}`);
+            })
     }
     return (
         <Container className={'my-4'}>
@@ -118,10 +133,24 @@ function BoardDetail(props) {
                                 <button type={'submit'}>전송</button>
                             </form>
                             {/* 댓글 배열을 이용하여 댓글 구현*/}
-                            <div>
-                                <h4>닉네임</h4>
-                                <p>댓글 내용</p>
-                            </div>
+                            {
+                                replyList.map((value, index) => {
+                                    return (<div key={index}>
+                                        <Row>
+                                            <Col>
+                                                <h4>{value.createId}</h4>
+                                            </Col>
+                                            <Col className={'d-flex justify-content-end'}>
+                                                <button type={"button"} className={'btn btn-danger'} onClick={(event) => handelReplyDelete(event, value.idx)}>삭제
+                                                </button>
+                                            </Col>
+                                        </Row>
+                                        <p>{value.createDt}</p>
+                                        <p>{value.reply}</p>
+                                    </div>)
+                                })
+                            }
+
                         </div>)
                     }
                 </Col>

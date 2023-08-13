@@ -22,4 +22,8 @@ public interface BoardService {
     void deleteBoard(int idx) throws Exception;
 
     void setBoardReply(BoardReplyDTO boardReply) throws Exception;
+
+    List<BoardReplyDTO> getBoardReplyList(int idx) throws Exception;
+
+    void deleteBoardReply(int idx) throws Exception;
 }
