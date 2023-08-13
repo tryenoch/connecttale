@@ -31,8 +31,7 @@ public class NovelEntity {
   private char novelAdult;
 
   @Builder
-  public NovelEntity(int novelIdx, String novelTitle, String novelThumbnail, char novelAdult){
-    this.novelIdx = novelIdx;
+  public NovelEntity(String novelTitle, String novelThumbnail, char novelAdult){
     this.novelTitle = novelTitle;
     this.novelThumbnail = novelThumbnail;
     this.novelAdult = novelAdult;
