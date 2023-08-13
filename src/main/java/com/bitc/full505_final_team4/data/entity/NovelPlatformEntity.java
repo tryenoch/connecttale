@@ -1,10 +1,7 @@
 package com.bitc.full505_final_team4.data.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 
@@ -14,7 +11,8 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
+// 아무런 값도 갖지 않는 의미 없는 생성자를 막아준다.
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NovelPlatformEntity {
 
   /* 복합키 구성 클래스 @IdClass(NovelPlatFormIdx.class) */
@@ -79,7 +77,26 @@ public class NovelPlatformEntity {
   @ColumnDefault("N")
   private char novelAdult;
 
-
+  @Builder
+  public NovelPlatformEntity(int platform, String platformId, NovelEntity novelEntity, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, char novelAdult) {
+    this.platform = platform;
+    this.platformId = platformId;
+    this.novelEntity = novelEntity;
+    this.novelThumbnail = novelThumbnail;
+    this.novelIntro = novelIntro;
+    this.novelIntroImg = novelIntroImg;
+    this.novelAuthor = novelAuthor;
+    this.novelCount = novelCount;
+    this.novelCompleteYn = novelCompleteYn;
+    this.novelPrice = novelPrice;
+    this.novelStarRate = novelStarRate;
+    this.novelUpdateDate = novelUpdateDate;
+    this.novelRelease = novelRelease;
+    this.cateList = cateList;
+    this.novelOrEbook = novelOrEbook;
+    this.novelAdult = novelAdult;
+    this.novelPubli = novelPubli;
+  }
 
 
 }

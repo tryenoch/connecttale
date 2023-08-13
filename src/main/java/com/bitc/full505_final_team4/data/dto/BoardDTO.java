@@ -1,8 +1,10 @@
 package com.bitc.full505_final_team4.data.dto;
 
 import com.bitc.full505_final_team4.data.entity.BoardEntity;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
