@@ -26,7 +26,7 @@ public class NovelEntity {
   @Column(nullable = false, length = 500)
   private String novelThumbnail;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 1)
   @ColumnDefault("N")
   private String novelAdult;
 

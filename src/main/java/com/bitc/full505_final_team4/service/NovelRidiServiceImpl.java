@@ -1,4 +1,4 @@
-package com.bitc.full505_final_team4.service.main;
+package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.common.JsonUtils;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
@@ -6,22 +6,21 @@ import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.data.entity.NovelRankEntity;
 import com.bitc.full505_final_team4.data.repository.*;
+import com.bitc.full505_final_team4.service.NovelRidiService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 // 리디북스 관련 메소드 모음 service
-@RequiredArgsConstructor
 @Service
-public class NovelRidiServiceImpl implements NovelRidiService{
+@RequiredArgsConstructor
+public class NovelRidiServiceImpl implements NovelRidiService {
 
   private final NovelRankRepository novelRankRepository;
   private final NovelMainRepository novelMainRepository;
@@ -115,6 +114,7 @@ public class NovelRidiServiceImpl implements NovelRidiService{
    * 시작번호로부터 20개 출력
    * 총 100위까지 출력되도록 함 */
   @Override
+  @Transactional
   public List<NovelMainDto> getRidiRankList(String category, int startNum) throws Exception {
 
     List<NovelMainDto> novelDtoList = new ArrayList<>();
@@ -179,6 +179,7 @@ public class NovelRidiServiceImpl implements NovelRidiService{
 
 
   // 리디북스 최신작 리스트 불러온 후 테이블에 없는 작품 저장하기 (카테고리 번호 별)
+  @Transactional
   @Override
   public boolean starRidiRecentNovel(int category) throws Exception {
 
@@ -218,12 +219,12 @@ public class NovelRidiServiceImpl implements NovelRidiService{
           try {
 
             // novel table 에 일치하는 제목이 있는지 확인, 없을 경우 exeption 반환
-            NovelEntity entity = novelMainRepository.findByNovelTitle(title).orElseThrow(NoSuchElementException::new);
+            NovelEntity entity = novelMainRepository.findByNovelTitle(title);
+            int novelIdx = entity.getNovelIdx();
 
             // novel table 에 해당 제목이 있다면 platform db에 일치하는 데이터가 있는지 확인(플랫폼 번호, pk idx, 웹소설 여부)
-            platformMainRepository
-              .findByPlatformAndNovelEntityAndNovelEAndNovelOrEbook(3, entity, "novel")
-              .orElseThrow(Exception::new); // 데이터가 없으면 예외로 넘어감
+//            platformMainRepository
+//              .findByNovelTitleAndPlatformAndNovelOrEbook(title,3,  "novel"); // 데이터가 없으면 예외로 넘어감
 
             i++; // 데이터가 이미 있으므로 다음 번호로 넘어간다, 업데이트 된 경우에 대해서 나중에 추가 로직 필요
 
@@ -234,13 +235,20 @@ public class NovelRidiServiceImpl implements NovelRidiService{
             NovelEntity novel = getCateNovelEntityFromJson(novelList.get(i));
             NovelPlatformEntity novelPlatformEntity = getCatePlatformEntityFromJson(novel, novelList.get(i));
 
-            // 데이터를 넣은 novel entity 객체
+            // novel entity 객체 리스트에 더하기
             novelEntityList.add(novel);
+            // platform entity 객체 리스트에 더하기
+            novelPlatformEntityList.add(novelPlatformEntity);
 
           } catch (Exception e){
-            // novel table 에는 있지만 platform 테이블에는 없는 경우
-          }
 
+            NovelEntity novel = novelMainRepository.findByNovelTitle(title);
+            // novel table 에는 있지만 platform 테이블에는 없는 경우
+            NovelPlatformEntity novelPlatformEntity = getCatePlatformEntityFromJson(novel, novelList.get(i));
+            // platform entity 객체 리스트에 더하기
+            novelPlatformEntityList.add(novelPlatformEntity);
+
+          }
 
         }
 
@@ -266,8 +274,9 @@ public class NovelRidiServiceImpl implements NovelRidiService{
 
   /**************** 단위로 자른 기능 모음 ****************/
 
-  // json object 에 있는 novel table 관련 데이터 entity 형태로 들고오기
+  // json object 에 있는 novel table 관련 데이터 entity 형태로 들고오기 (arrayList 반복문용)
   @Override
+  @Transactional
   public NovelEntity getCateNovelEntityFromJson(JSONObject novel) throws Exception {
 
     // 데이터를 담을 entity 객체 생성
@@ -301,12 +310,119 @@ public class NovelRidiServiceImpl implements NovelRidiService{
 
   }
 
-  // json object 에 있는 platform table 관련 데이터 entity 형태로 들고오기
+  // json object 에 있는 platform table 관련 데이터 entity 형태로 들고오기 (최신 작품, arrayList 반복문용)
+  /*
+  * 플랫폼 번호, 외래키 idx, 플랫폼 전용 아이디, 제목, 작가이름, 썸네일 주소, 별점, 성인작품 여부, 연재일, 소설 설명(intro), 출시일, 총 화수, 출판사, 가격, 완결 여부, 장르, novel or ebook */
   @Override
+  @Transactional
   public NovelPlatformEntity getCatePlatformEntityFromJson(NovelEntity novelEntity, JSONObject novelData) throws Exception {
     NovelPlatformEntity novelPlatformEntity = new NovelPlatformEntity();
 
+    HashMap<String, Object > book = (HashMap<String, Object>) novelData.get("book");
+
+    novelPlatformEntity.setPlatform(3); // 리디북스 플랫폼 번호
+    novelPlatformEntity.setNovelOrEbook("novel"); // 웹소설 여부
+
+    // 플랫폼 제공 아이디
+    String platformId = book.get("book_id").toString();
+    novelPlatformEntity.setPlatformId(platformId);
+
+    // 소설 설명 (novelIntro)
+    novelPlatformEntity.setNovelIntro(getNovelIntro(platformId));
+
+    // 소설 연재일
+    novelPlatformEntity.setNovelUpdateDate(getNovelUpdateDate(platformId));
+
+    JSONObject serial = (JSONObject) book.get("serial");
+    novelPlatformEntity.setNovelTitle(serial.get("title").toString()); // 제목
+    novelPlatformEntity.setNovelCount((Integer) serial.get("total")); // 총 화수
+
+    String complete = "";
+    if((boolean) serial.get("completion")){
+      complete = "Y";
+    } else { complete = "N"; }
+
+    novelPlatformEntity.setNovelCompleteYn(complete); // 완결 여부
+
+
+    // 작가 이름 얻어오기
+    ArrayList authorsList = (ArrayList) book.get("authors");
+    HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+    novelPlatformEntity.setNovelAuthor(authors.get("name").toString());
+
+    // 소설 썸네일
+    JSONObject cover = (JSONObject) book.get("cover");
+    novelPlatformEntity.setNovelThumbnail(cover.get("large").toString());
+
+    // 소설 별점
+    JSONArray ratings = (JSONArray) book.get("ratings");
+    novelPlatformEntity.setNovelStarRate(Double.parseDouble(getStarRate(ratings))); // 하위에 구현한 함수 사용
+
+    // 성인 여부
+    boolean adultsOnly = (Boolean) book.get("adults_only");
+
+    String novelAdult = "";
+
+    if(adultsOnly){
+      novelAdult = "Y";
+    }else {
+      novelAdult = "N";
+    }
+
+    novelPlatformEntity.setNovelAdult(novelAdult);
+
+    // 출판사
+    JSONObject publi = (JSONObject) book.get("publisher");
+    String publiName = publi.get("name").toString();
+
+    novelPlatformEntity.setNovelPubli(publiName);
+
+    // 가격
+    JSONObject purchase = (JSONObject) book.get("purchase");
+    int price = (Integer) purchase.get("maxPrice");
+
+    novelPlatformEntity.setNovelPrice(price);
+
+    // 장르
+    JSONArray categories = (JSONArray) book.get("categories");
+    JSONObject cate = (JSONObject) categories.get(0);
+
+    String cateName = cate.get("name").toString();
+
+    novelPlatformEntity.setCateList(cateName);
+
+    novelPlatformEntity.setNovelEntity(novelEntity); // 외래키 idx 값
     return novelPlatformEntity;
+  }
+
+  // 작품 아이디에 해당하는 연재일 들고오기
+  // 다른 출판사와 연계 되어 있을 경우 미완결이어도 데이터가 없을 수 있음, 없을 경우 빈 값 반환
+  public String getNovelUpdateDate(String platformId) throws Exception{
+
+    String url = "https://book-api.ridibooks.com/books/" + platformId + "/notices";
+
+    JSONArray dateObj = (JSONArray) JsonUtils.jsonUrlParser(url).get("notices");
+
+    JSONObject notices = (JSONObject) dateObj.get(0);
+
+    String updateDate = notices.get("title").toString();
+
+    if (ObjectUtils.isEmpty(updateDate)){
+      updateDate = ""; // 값을 못 찾으면 빈 값을 반환한다.
+    }
+
+    return updateDate;
+  }
+
+  // 작품 아이디에 해당하는 작품 설명 들고오기
+  public String getNovelIntro(String platformId) throws Exception {
+
+    String url = "https://book-api.ridibooks.com/books/" + platformId + "/descriptions";
+
+    JSONObject descObj = (JSONObject) JsonUtils.jsonUrlParser(url).get("descriptions");
+    String intro = descObj.get("intro").toString();
+
+    return intro;
   }
 
   /* Ridi Json 에서 들고온 ratings 별점으로 변환하기 (10점 만점 기준) */
@@ -373,5 +489,30 @@ public class NovelRidiServiceImpl implements NovelRidiService{
     return cateRankNum;
   }
 
+  @Override
+  public String ridiCategoryNameConverter(int category) throws Exception{
+
+    String cateName = "";
+
+    switch (category){
+      case 1750 :
+        cateName = "판타지";
+        break;
+
+      case 1650 :
+        cateName = "로맨스";
+        break;
+
+      case 6050 :
+        cateName = "로판";
+        break;
+
+      case 4150 :
+        cateName = "BL";
+        break;
+    }
+
+    return cateName;
+  }
 
 }

@@ -8,8 +8,8 @@ import java.util.Optional;
 // service main 패키지와 연동되는 repository
 public interface NovelMainRepository extends JpaRepository<NovelEntity, Integer> {
   // 소설 제목으로 select 하기
-  Optional<NovelEntity> findByNovelTitle(String title);
+//  Optional<NovelEntity> findByNovelTitle(String title);
 
-
+  NovelEntity findByNovelTitle(String title);
 
 }
