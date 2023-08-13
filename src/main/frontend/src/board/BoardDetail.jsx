@@ -56,6 +56,7 @@ function BoardDetail(props) {
             params: {
                 reply: reply,
                 boardIdx: boardIdx,
+                createId: 'test1',
                 //     세션값
             }
         })
@@ -102,19 +103,25 @@ function BoardDetail(props) {
                         }
                     </div>
                     {/*    댓글 구현부*/}
-                    <div>
-                        <form onSubmit={handleReply}>
-                            <p>닉네임</p>
-                            <input
-                                type="text"
-                                value={reply}
-                                onChange={(event) =>
-                                    setReply(event.target.value)}/>
-                            <button type={'submit'}>전송</button>
-                        </form>
-                    </div>
-
-
+                    {
+                        (profile.cate == 0) &&
+                        (<div>
+                            <form onSubmit={handleReply}>
+                                <p>닉네임</p>
+                                <input
+                                    type="text"
+                                    value={reply}
+                                    onChange={(event) =>
+                                        setReply(event.target.value)}/>
+                                <button type={'submit'}>전송</button>
+                            </form>
+                            {/* 댓글 배열을 이용하여 댓글 구현*/}
+                            <div>
+                                <h4>닉네임</h4>
+                                <p>댓글 내용</p>
+                            </div>
+                        </div>)
+                    }
                 </Col>
             </Row>
         </Container>
