@@ -26,10 +26,10 @@ public class NovelPlatformDto {
   private String novelRelease;
   private String cateList;
   private String novelOrEbook;
-  private char novelAdult;
+  private String novelAdult;
 
   @Builder
-  public NovelPlatformDto(int platform, NovelKeyDto novelKeyDto, String platformId, String novelTitle, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, char novelAdult) {
+  public NovelPlatformDto(int platform, NovelKeyDto novelKeyDto, String platformId, String novelTitle, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, String novelAdult) {
     this.platform = platform;
     this.novelKeyDto = novelKeyDto;
     this.platformId = platformId;

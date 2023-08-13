@@ -28,10 +28,10 @@ public class NovelEntity {
 
   @Column(nullable = false)
   @ColumnDefault("N")
-  private char novelAdult;
+  private String novelAdult;
 
   @Builder
-  public NovelEntity(String novelTitle, String novelThumbnail, char novelAdult){
+  public NovelEntity(String novelTitle, String novelThumbnail, String  novelAdult){
     this.novelTitle = novelTitle;
     this.novelThumbnail = novelThumbnail;
     this.novelAdult = novelAdult;

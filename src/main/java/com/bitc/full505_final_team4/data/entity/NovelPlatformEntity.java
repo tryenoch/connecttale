@@ -11,8 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @ToString
-// 아무런 값도 갖지 않는 의미 없는 생성자를 막아준다.
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class NovelPlatformEntity {
 
   /* 복합키 구성 클래스 @IdClass(NovelPlatFormIdx.class) */
@@ -78,10 +77,10 @@ public class NovelPlatformEntity {
 
   @Column(nullable = false, length = 50)
   @ColumnDefault("N")
-  private char novelAdult;
+  private String novelAdult;
 
   @Builder
-  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelEntity, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, char novelAdult) {
+  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelEntity, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, String novelAdult) {
     this.platform = platform;
     this.novelEntity = novelEntity;
     this.platformId = platformId;
