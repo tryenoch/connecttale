@@ -23,7 +23,7 @@ public class NovelEntity {
   @Column(nullable = false, length = 100)
   private String novelTitle;
 
-  @Column(nullable = false, length = 500)
+  @Column(nullable = false, length = 500, unique = true)
   private String novelThumbnail;
 
   @Column(nullable = false)

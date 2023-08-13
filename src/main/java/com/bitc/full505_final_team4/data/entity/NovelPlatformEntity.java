@@ -70,6 +70,7 @@ public class NovelPlatformEntity {
   private String novelRelease;
 
   @Column(nullable = false, length = 100)
+  @ColumnDefault("없음")
   public String cateList;
 
   @Column(length = 50, nullable = false)
