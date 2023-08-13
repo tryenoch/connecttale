@@ -460,6 +460,8 @@ public class NovelMainServiceImpl implements NovelMainService{
     return starRate;
   }
 
+  // 리디 카테고리별 pk 중복 방지를 위한 카테고리별 pk 생성 메소드
+  // 리디북스 카테고리 1750 : 판타지(0) / 1650 : 로맨스(50) / 6050 : 로판(100) / 4150: BL(150)
   @Override
   public int ridiCategoryRankNum(int category) throws Exception {
     int cateRankNum = 0;

@@ -24,7 +24,7 @@ public class NovelMainController {
   private final NovelMainService novelMainService;
 
   // jpa 테스트용
-  @GetMapping("/testJpa")
+  @GetMapping("/testJpa1")
   public Object testJpa(@RequestParam("date") String date) throws Exception{
     Map<String ,Object> result = new HashMap<>();
 
@@ -43,6 +43,15 @@ public class NovelMainController {
     }
 
     result.put("result", res);
+
+    return result;
+  }
+
+  @GetMapping("/testJpa2")
+  public Object testJpa() throws Exception{
+    Map<String, Object> result = new HashMap<>();
+
+
 
     return result;
   }
