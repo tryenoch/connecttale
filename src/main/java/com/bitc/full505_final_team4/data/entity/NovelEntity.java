@@ -26,8 +26,8 @@ public class NovelEntity {
   @Column(nullable = false, length = 500)
   private String novelThumbnail;
 
-  @Column(nullable = false, length = 1)
-  @ColumnDefault("N")
+  @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
+//  @ColumnDefault("N")
   private String novelAdult;
 
   @Builder

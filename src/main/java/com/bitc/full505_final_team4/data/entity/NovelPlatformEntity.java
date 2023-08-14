@@ -50,8 +50,8 @@ public class NovelPlatformEntity {
   @Column(nullable = false)
   private int novelCount;
 
-  @Column(nullable = false, length = 45)
-  @ColumnDefault("N")
+  @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
+//  @ColumnDefault("N")
   private String novelCompleteYn;
 
   @Column(nullable = false)
@@ -75,8 +75,8 @@ public class NovelPlatformEntity {
   @Column(nullable = false, length = 50)
   public String novelOrEbook;
 
-  @Column(nullable = false, length = 1)
-  @ColumnDefault("N")
+  @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
+//  @ColumnDefault("N")
   private String novelAdult;
 
   @Builder
