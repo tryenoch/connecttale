@@ -70,7 +70,7 @@ function BoardWrite() {
                         formData.append("file", file);
 
                         axios
-                            .post("http://localhost:8080/api/v0/file/upload", formData)
+                            .post("/file/upload", formData)
                             .then((res) => {
                                 resolve({
                                     default: res.data.data.uri,
@@ -88,7 +88,7 @@ function BoardWrite() {
             return customUploadAdapter(loader);
         };
     }
-    
+
     
 
     return (

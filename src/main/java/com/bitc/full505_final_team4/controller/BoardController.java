@@ -163,4 +163,13 @@ public class BoardController {
         result.put("boardList", boardList);
         return result;
     }
+    //파일 업로드 구현부
+    @RequestMapping(value = "/file/upload", method = RequestMethod.POST)
+    public Object fileUpload(String file) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        System.out.printf(file);
+        result.put("result", "성공");
+        return result;
+    }
 }
