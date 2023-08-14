@@ -3,13 +3,14 @@ import axios from "axios";
 import novelDetail from "../novel/NovelDetail";
 import {useNavigate} from "react-router-dom";
 
-export const fetchData = async (e, platformId, title, ebookCheck) => {
+export const fetchData = async (platformId, title, ebookCheck) => {
+  
   let novelDetail = {};
   
   try {
     const res = await axios.get("/novelDetail", {
       params: {
-        platformId: platformId
+        title: title
       }
     })
     // console.log(res);
@@ -31,8 +32,8 @@ export const fetchData = async (e, platformId, title, ebookCheck) => {
       
       if (ridiRes.data.books) {
         for (let i = 0; i < ridiRes.data.books.length; i++) {
-          if (title == ridiRes.data.books[i].title) {
-            if (ebookCheck == '단행본') {
+          if (title === ridiRes.data.books[i].title) {
+            if (ebookCheck === '단행본') {
               if (ridiRes.data.books[i].web_title.includes('[e북]')) {
                 const item = ridiRes.data.books[i];
                 
@@ -58,12 +59,12 @@ export const fetchData = async (e, platformId, title, ebookCheck) => {
                   }).toString(),
                   novelPubli: item.publisher,
                   novelCount: item.book_count,
-                  novelPrice : item.price != 0 ? item.price : item.series_prices_info[0].max_price,
+                  novelPrice : item.price !== 0 ? item.price : item.series_prices_info[0].max_price,
                   novelStarRate: item.buyer_rating_score,
                   novelCompleteYn: item.is_series_complete ? "Y" : "N",
-                  novelAdult: item.age_limit == 19 ? "Y" : "N",
+                  novelAdult: item.age_limit === 19 ? "Y" : "N",
                   novelRelease: item2.publish.ridibooks_register.substring(0, 10),
-                  novelUpdateDate: item3.length == 0 ? null : item3[0].title,
+                  novelUpdateDate: item3.length === 0 ? null : item3[0].title,
                   cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
                   ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
                 };
@@ -96,8 +97,8 @@ export const fetchData = async (e, platformId, title, ebookCheck) => {
                 })
               }
             }
-            else if (ebookCheck == '웹소설') {
-              if (ridiRes.data.books[i].web_title == '') {
+            else if (ebookCheck === '웹소설') {
+              if (ridiRes.data.books[i].web_title === '') {
                 const item = ridiRes.data.books[i];
                 console.log(item);
                 
@@ -123,12 +124,12 @@ export const fetchData = async (e, platformId, title, ebookCheck) => {
                   }).toString(),
                   novelPubli: item.publisher,
                   novelCount: item.book_count,
-                  novelPrice : item.price != 0 ? item.price : item.series_prices_info[0].max_price,
+                  novelPrice : item.price !== 0 ? item.price : item.series_prices_info[0].max_price,
                   novelStarRate: item.buyer_rating_score,
                   novelCompleteYn: item.is_series_complete ? "Y" : "N",
-                  novelAdult: item.age_limit == 19 ? "Y" : "N",
+                  novelAdult: item.age_limit === 19 ? "Y" : "N",
                   novelRelease: item2.publish.ridibooks_register.substring(0, 10),
-                  novelUpdateDate: item3.length == 0 ? null : item3[0].title,
+                  novelUpdateDate: item3.length === 0 ? null : item3[0].title,
                   cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
                   ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
                 };
@@ -176,7 +177,7 @@ export const fetchData = async (e, platformId, title, ebookCheck) => {
       
       // fetchData를 다시 실행되게 해서 db에 저장된 데이터를 불러오게끔
       // fetchData();
-      
+      // db 저장 했으면 서버에서 리다이렉트로 novelDetail 페이지로 바로 이동
     }
   }
   catch (err) {
@@ -184,3 +185,4 @@ export const fetchData = async (e, platformId, title, ebookCheck) => {
   }
   return novelDetail;
 }
+

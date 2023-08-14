@@ -3,7 +3,7 @@ import Header from "./layout/Header";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Novel from "./novel/Novel";
 import NovelCate from "./novel/NovelCate";
-import NovelDetail from "./novel/NovelDetail";
+// import NovelDetail from "./novel/NovelDetail";
 import NovelSearch from "./novel/NovelSearch";
 import Board from "./board/Board";
 import MyPage from "./member/MyPage";
@@ -13,6 +13,7 @@ import Footer from "./layout/Footer";
 import Main from "./Main";
 import {Container} from "react-bootstrap";
 import Join from "./member/Join";
+import NovelDetail2 from "./novel/NovelDetail2";
 
 function AppPage(props) {
   return (
@@ -23,7 +24,7 @@ function AppPage(props) {
           <Route index path={"/*"} element={<Main />}/>
           <Route path={'/novel/*'} element={<Novel/>}/>
           <Route path={'/novelCate'} element={<NovelCate/>}/>
-          <Route path={'/novelDetail'} element={<NovelDetail/>}/>
+          <Route path={'/novelDetail/:title'} element={<NovelDetail2/>}/>
           <Route path={'/novelSearch'} element={<NovelSearch/>}/>
           <Route path={'/board/*'} element={<Board/>}/>
           <Route path={'/myPage'} element={<MyPage/>}/>

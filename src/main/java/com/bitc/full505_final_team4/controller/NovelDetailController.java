@@ -22,43 +22,47 @@ public class NovelDetailController {
 
   // ---------------------db에 있는 디테일페이지 데이터 불러오기-------------------------
   @RequestMapping(value = "/novelDetail", method = RequestMethod.GET)
-  public Object getNovelDetail(@RequestParam("platformId") String platformId) throws Exception {
+  public Object getNovelDetail(@RequestParam("title") String title) throws Exception {
     Map<String, NovelPlatformDto> novelDetail = new HashMap<>();
 
-    // platformId(매개변수) 를 통해 novelIdx 찾고, novelIdx에 해당하는 노벨정보 다가져오기
-    List<NovelPlatformEntity> allNovelDetail = novelDetailService.getNovelDetail(platformId);
+    // title을 통해 db에 해당 이름으로 저장된 소서 정보 다가져오기
+    List<NovelPlatformEntity> allNovelDetail = novelDetailService.getNovelDetail(title);
 
 
-    // 플랫폼 별로 나눠서 전달하기
-    for (NovelPlatformEntity p : allNovelDetail) {
-      if (p.getPlatform() == 1) {
-        // builder 사용하여 entity를 dto로 바꿔줌(프론트에 전달하기 위함)
-        NovelPlatformDto kakaoPlatformDto = NovelPlatformDto.toDto(p);
-        novelDetail.put("kakao", kakaoPlatformDto);
+    if (!allNovelDetail.isEmpty()) {
+      for (NovelPlatformEntity p : allNovelDetail) {
+        if (p.getPlatform() == 1) {
+          // builder 사용하여 entity를 dto로 바꿔줌(프론트에 전달하기 위함)
+          NovelPlatformDto kakaoPlatformDto = NovelPlatformDto.toDto(p);
+          novelDetail.put("kakao", kakaoPlatformDto);
+        }
+        else if (p.getPlatform() == 2) {
+          // builder 사용하여 entity를 dto로 바꿔줌(프론트에 전달하기 위함)
+          NovelPlatformDto naverPlatformDto = NovelPlatformDto.toDto(p);
+          novelDetail.put("naver", naverPlatformDto);
+        }
+        else if (p.getPlatform() == 3) {
+          // builder 사용하여 entity를 dto로 바꿔줌(프론트에 전달하기 위함)
+          NovelPlatformDto ridiPlatformDto = NovelPlatformDto.toDto(p);
+          novelDetail.put("ridi", ridiPlatformDto);
+        }
       }
-      else if (p.getPlatform() == 2) {
-        // builder 사용하여 entity를 dto로 바꿔줌(프론트에 전달하기 위함)
-        NovelPlatformDto naverPlatformDto = NovelPlatformDto.toDto(p);
-        novelDetail.put("naver", naverPlatformDto);
-      }
-      else if (p.getPlatform() == 3) {
-        // builder 사용하여 entity를 dto로 바꿔줌(프론트에 전달하기 위함)
-        NovelPlatformDto ridiPlatformDto = NovelPlatformDto.toDto(p);
-        novelDetail.put("ridi", ridiPlatformDto);
-      }
+      return novelDetail;
     }
+    else {
+      return null;
+    }
+    // 플랫폼 별로 나눠서 전달하기
 
 
-
-    return novelDetail;
   }
   // -------------------------------- db에 데이터 저장 ------------------------------------
 
   // 리디북스 디테일 페이지 정보 db 저장
 
   @RequestMapping(value = "/novelDetail", method = RequestMethod.POST)
-  public void insertRidiDetail(@RequestParam("id") String id, @RequestParam("title") String title, @RequestParam("ne") String ne, NovelPlatformEntity ridiPlatformEntity) throws Exception {
-
+  public String insertRidiDetail(@RequestParam("id") String id, @RequestParam("title") String title, @RequestParam("ne") String ne, NovelPlatformEntity ridiPlatformEntity) throws Exception {
+//
 //    System.out.println(title);
 //    System.out.println(id);
 //    System.out.println(ne);
@@ -195,5 +199,6 @@ public class NovelDetailController {
         novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
       }
     }
+    return "redirect:/localhost:3000/novelDetail/" + title;
   }
 }

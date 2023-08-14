@@ -4,7 +4,7 @@ import {Link, useParams, useSearchParams} from "react-router-dom";
 import axios from "axios";
 import KakaoSearchResult from "./novelSearch/KakaoSearchResult";
 import NaverSearchResult from "./novelSearch/NaverSearchResult";
-import RidiSearchResult from "./novelSearch/RidiSearchResult";
+import RidiSearchResult2 from "./novelSearch/RidiSearchResult2";
 import SearchPlatformTab from "./novelSearch/SearchPlatformTab";
 
 function NovelSearch(props) {

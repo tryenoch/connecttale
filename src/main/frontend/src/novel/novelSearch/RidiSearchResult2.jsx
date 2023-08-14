@@ -4,7 +4,7 @@ import {Link, useNavigate} from "react-router-dom";
 
 import {fetchData} from "../../common/NovelDetailFetch2";
 
-function RidiSearchResult(props) {
+function RidiSearchResult2(props) {
   const [novelSearchList, setNovelSearchList] = useState([]);
   const navi = useNavigate();
   
@@ -72,17 +72,27 @@ function RidiSearchResult(props) {
 
   }, [props.keyword])
   
+  const handleLinkClick = async (item) => {
+    try {
+      const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck);
+      navi(`/novelDetail/${item.title}`, { state: { novelDetail: novelDetail } });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  
   return (
     <div>
       {
         novelSearchList.length != 0
           ? novelSearchList.map((item, index) => {
             return (
-              <Link onClick={e => {
-                fetchData(item.platformId, item.title, item.ebookCheck);
-                let fetchDataResult = fetchData(e, item.platformId, item.title, item.ebookCheck);
-                navi('/novelDetail', {state: {novelDetail: fetchDataResult}});
-              }} key={index}>
+              <Link
+                onClick={e => {
+                  e.preventDefault(); // 링크 클릭 시 기본동작 방지
+                  handleLinkClick(item); // 서버에서 데이터 유무 확인후 저장 및 가져오기
+              }} to={`/novelDetail/${item.title}`} key={index}>
+                
                 <div className={'row my-4 border-top border-bottom py-2'}>
                   <div className={'col-sm-2'}>
                     <img src={item.thumbnail} alt="" className={'w-100 h-100'} />
@@ -127,4 +137,4 @@ function RidiSearchResult(props) {
   )
 }
 
-export default RidiSearchResult;
+export default RidiSearchResult2;

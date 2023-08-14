@@ -40,7 +40,6 @@ function NaverSearchResult(props) {
           }
           setNovelSearchList(naverSearchList);
         }
-        setNovelSearchList(naverSearchList);
       })
       .catch(err => {
         console.log(err.message);

@@ -31,23 +31,19 @@ public class NovelDetailServiceImpl implements NovelDetailService {
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
 
 
-  // 찾은 novelIdx로 platform 테이블에서 데이터 가져오기
   @Override
-  public List<NovelPlatformEntity> getNovelDetail(String platformId) {
-    List<NovelPlatformEntity> novelDetail = new ArrayList<>();
+  public List<NovelPlatformEntity> getNovelDetail(String title) {
+    // 매개변수인 title로 platform 테이블에서 가져오기
+    List<NovelPlatformEntity> novelDetail = novelPlatformRepository.findAllByNovelTitle(title);
 
 
-    // platformId를 통해 novelIdx 찾기
-    Optional<NovelPlatformEntity> novel = novelPlatformRepository.findByPlatformId(platformId);
-    if (!novel.isEmpty()) {
-      // NovelEntity 타입(= novel_idx 칼럼과 같은 개념임)
-      NovelEntity novelIdx = novel.get().getNovelIdx();
-
-      List<NovelPlatformEntity> novelDetailAll = novelPlatformRepository.findAllByNovelIdx_NovelIdx(novelIdx.getNovelIdx());
-      for (NovelPlatformEntity p : novelDetailAll) {
-        novelDetail.add(p);
-      }
-    }
+//    Optional List<NovelPlatformEntity> allNovel = novelPlatformRepository.findAllByNovelTitle(title);
+//    if (!allNovel.isEmpty()) {
+//      // NovelEntity 타입(= novel_idx 칼럼과 같은 개념임)
+//
+//      List<NovelPlatformEntity> novelDetailAll = novelPlatformRepository.findAllByNovelIdx_NovelIdx(novelIdx.getNovelIdx());
+//      for (NovelPlatformEntity p : novelDetailAll) {
+//        novelDetail.add(p);
 
     return novelDetail;
   }
