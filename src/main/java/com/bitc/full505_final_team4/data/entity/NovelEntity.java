@@ -28,7 +28,6 @@ public class NovelEntity {
   private String novelThumbnail;
 
   @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
-//  @ColumnDefault("N")
   private String novelAdult;
 
   @JsonIgnore

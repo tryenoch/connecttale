@@ -40,14 +40,14 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     // platformId를 통해 novelIdx 찾기
     Optional<NovelPlatformEntity> novel = novelPlatformRepository.findByPlatformId(platformId);
     if (!novel.isEmpty()) {
-      NovelEntity novelEntity = novel.get().getNovelEntity();
-      List<NovelPlatformEntity> novelDetailAll = novelPlatformRepository.findAllByNovelEntity(novelEntity);
+      // NovelEntity 타입(= novel_idx 칼럼과 같은 개념임)
+      NovelEntity novelIdx = novel.get().getNovelIdx();
+
+      List<NovelPlatformEntity> novelDetailAll = novelPlatformRepository.findAllByNovelIdx_NovelIdx(novelIdx.getNovelIdx());
       for (NovelPlatformEntity p : novelDetailAll) {
         novelDetail.add(p);
       }
     }
-
-
 
     return novelDetail;
   }
@@ -55,7 +55,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
   // 네이버 디테일 페이지 정보 크롤링
   @Override
-  public NovelPlatformEntity getNaverCrolling(String platformId, String title, String novelOrEbook) {
+  public NovelPlatformEntity getNaverCrolling(String platformId, String title, String ebookCheck) {
     NovelPlatformEntity naverCrollingData = new NovelPlatformEntity();
 
     WebDriver driver;
@@ -120,7 +120,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
       List<WebElement> titleEls = driver.findElements(By.className("N=a:nov.title"));
       if (!titleEls.isEmpty()) {
-        if (novelOrEbook.equals("단행본")) {
+        if (ebookCheck.equals("단행본")) {
           for (WebElement titleEl : titleEls) {
             if (titleEl.getText().contains(title) && titleEl.getText().contains("[단행본]")) {
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
@@ -161,9 +161,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // novelCompleteYn 가져오기
               if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[1]/span")).getText().equals("완결")) {
-                naverCrollingData.setNovelCompleteYn('Y');
+                naverCrollingData.setNovelCompleteYn("Y");
               } else {
-                naverCrollingData.setNovelCompleteYn('N');
+                naverCrollingData.setNovelCompleteYn("N");
               }
 
               // novelPrice 가져오기
@@ -195,14 +195,14 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                 naverCrollingData.setCateList("7");
               }
 
-              // novelOrEbook 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
-              naverCrollingData.setNovelOrEbook(novelOrEbook);
+              // ebookCheck 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
+              naverCrollingData.setEbookCheck(ebookCheck);
 
               // novelAdult 가져오기
               if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[5]")).getText().equals("청소년 이용불가")) {
-                naverCrollingData.setNovelAdult('Y');
+                naverCrollingData.setNovelAdult("Y");
               } else {
-                naverCrollingData.setNovelAdult('N');
+                naverCrollingData.setNovelAdult("N");
               }
 
 
@@ -211,7 +211,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               break;
             }
           }
-        } else if (novelOrEbook.equals("웹소설")) {
+        } else if (ebookCheck.equals("웹소설")) {
           for (WebElement titleEl : titleEls) {
             if (titleEl.getText().contains(title) && !titleEl.getText().contains("[단행본]")) {
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
@@ -253,9 +253,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // novelCompleteYn 가져오기
               if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[1]/span")).getText().equals("완결")) {
-                naverCrollingData.setNovelCompleteYn('Y');
+                naverCrollingData.setNovelCompleteYn("Y");
               } else {
-                naverCrollingData.setNovelCompleteYn('N');
+                naverCrollingData.setNovelCompleteYn("N");
               }
 
               // novelPrice 가져오기
@@ -287,13 +287,13 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                 naverCrollingData.setCateList("7");
               }
 
-              // novelOrEbook 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
-              naverCrollingData.setNovelOrEbook(novelOrEbook);
+              // ebookCheck 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
+              naverCrollingData.setEbookCheck(ebookCheck);
 
               if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[5]")).getText().equals("청소년 이용불가")) {
-                naverCrollingData.setNovelAdult('Y');
+                naverCrollingData.setNovelAdult("Y");
               } else {
-                naverCrollingData.setNovelAdult('N');
+                naverCrollingData.setNovelAdult("N");
               }
 
               break;
@@ -424,10 +424,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
                 // novelCompleteYn 가져오기
                 if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
-                  kakaoCrollingData.setNovelCompleteYn('Y');
+                  kakaoCrollingData.setNovelCompleteYn("Y");
                 }
                 else {
-                  kakaoCrollingData.setNovelCompleteYn('N');
+                  kakaoCrollingData.setNovelCompleteYn("N");
                 }
 
                 // novelUpdateDate 가져오기
@@ -454,10 +454,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
                 // novelAdult 가져오기
                 if (driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(2).findElement(By.tagName("div")).getText().equals("19세이용가")) {
-                  kakaoCrollingData.setNovelAdult('Y');
+                  kakaoCrollingData.setNovelAdult("Y");
                 }
                 else {
-                  kakaoCrollingData.setNovelAdult('N');
+                  kakaoCrollingData.setNovelAdult("N");
                 }
 
                 // novelPrice 가져오기
@@ -469,8 +469,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                   kakaoCrollingData.setNovelPrice(Integer.parseInt(driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(3).findElement(By.tagName("div")).getText().substring(0, novelPriceIndex)));
                 }
 
-                // novelOrEbook 가져오기
-                kakaoCrollingData.setNovelOrEbook(ne);
+                // ebookCheck 가져오기
+                kakaoCrollingData.setEbookCheck(ne);
 
               }
             }
@@ -504,10 +504,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
                 // novelCompleteYn 가져오기
                 if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
-                  kakaoCrollingData.setNovelCompleteYn('Y');
+                  kakaoCrollingData.setNovelCompleteYn("Y");
                 }
                 else {
-                  kakaoCrollingData.setNovelCompleteYn('N');
+                  kakaoCrollingData.setNovelCompleteYn("N");
                 }
 
                 // novelUpdateDate 가져오기
@@ -536,10 +536,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
                 // novelAdult 가져오기
                 if (driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(2).findElement(By.tagName("div")).getText().equals("19세이용가")) {
-                  kakaoCrollingData.setNovelAdult('Y');
+                  kakaoCrollingData.setNovelAdult("Y");
                 }
                 else {
-                  kakaoCrollingData.setNovelAdult('N');
+                  kakaoCrollingData.setNovelAdult("N");
                 }
 
                 // novelPrice 가져오기
@@ -552,8 +552,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                 }
 
 
-                // novelOrEbook 가져오기
-                kakaoCrollingData.setNovelOrEbook(ne);
+                // ebookCheck 가져오기
+                kakaoCrollingData.setEbookCheck(ne);
               }
             }
           }
@@ -590,10 +590,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
                 // novelCompleteYn 가져오기
                 if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
-                  kakaoCrollingData.setNovelCompleteYn('Y');
+                  kakaoCrollingData.setNovelCompleteYn("Y");
                 }
                 else {
-                  kakaoCrollingData.setNovelCompleteYn('N');
+                  kakaoCrollingData.setNovelCompleteYn("N");
                 }
 
                 // novelUpdateDate 가져오기
@@ -620,10 +620,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
                 // novelAdult 가져오기
                 if (driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(2).findElement(By.tagName("div")).getText().equals("19세이용가")) {
-                  kakaoCrollingData.setNovelAdult('Y');
+                  kakaoCrollingData.setNovelAdult("Y");
                 }
                 else {
-                  kakaoCrollingData.setNovelAdult('N');
+                  kakaoCrollingData.setNovelAdult("N");
                 }
 
                 // novelPrice 가져오기
@@ -635,8 +635,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                   kakaoCrollingData.setNovelPrice(Integer.parseInt(driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(3).findElement(By.tagName("div")).getText().substring(0, novelPriceIndex)));
                 }
 
-                // novelOrEbook 가져오기
-                kakaoCrollingData.setNovelOrEbook(ne);
+                // ebookCheck 가져오기
+                kakaoCrollingData.setEbookCheck(ne);
 
               }
             }
@@ -670,10 +670,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
                 // novelCompleteYn 가져오기
                 if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
-                  kakaoCrollingData.setNovelCompleteYn('Y');
+                  kakaoCrollingData.setNovelCompleteYn("Y");
                 }
                 else {
-                  kakaoCrollingData.setNovelCompleteYn('N');
+                  kakaoCrollingData.setNovelCompleteYn("N");
                 }
 
                 // novelUpdateDate 가져오기
@@ -700,10 +700,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
                 // novelAdult 가져오기
                 if (driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(2).findElement(By.tagName("div")).getText().equals("19세이용가")) {
-                  kakaoCrollingData.setNovelAdult('Y');
+                  kakaoCrollingData.setNovelAdult("Y");
                 }
                 else {
-                  kakaoCrollingData.setNovelAdult('N');
+                  kakaoCrollingData.setNovelAdult("N");
                 }
 
                 // novelPrice 가져오기
@@ -717,8 +717,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
 
 
-                // novelOrEbook 가져오기
-                kakaoCrollingData.setNovelOrEbook(ne);
+                // ebookCheck 가져오기
+                kakaoCrollingData.setEbookCheck(ne);
               }
             }
           }

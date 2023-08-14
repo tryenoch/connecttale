@@ -329,13 +329,13 @@ public class NovelRidiServiceImpl implements NovelRidiService {
   * 플랫폼 번호, 외래키 idx, 플랫폼 전용 아이디, 제목, 작가이름, 썸네일 주소, 별점, 성인작품 여부, 연재일, 소설 설명(intro), 출시일, 총 화수, 출판사, 가격, 완결 여부, 장르, novel or ebook */
   @Override
   @Transactional
-  public NovelPlatformEntity getCatePlatformEntityFromJson(NovelEntity novelIdx, JSONObject novelData) throws Exception {
+  public NovelPlatformEntity getCatePlatformEntityFromJson(NovelEntity novelEntity, JSONObject novelData) throws Exception {
     NovelPlatformEntity novelPlatformEntity = new NovelPlatformEntity();
 
     HashMap<String, Object > book = (HashMap<String, Object>) novelData.get("book");
 
     novelPlatformEntity.setPlatform(3); // 리디북스 플랫폼 번호
-    novelPlatformEntity.setEbookCheck("웹소설"); // 웹소설 여부
+    novelPlatformEntity.setEbookCheck("novel"); // 웹소설 여부
 
 
     String platformId = "";
@@ -431,7 +431,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     novelPlatformEntity.setCateList(cateName);
 
-    novelPlatformEntity.setNovelIdx(novelIdx); // 외래키 idx 값
+    novelPlatformEntity.setNovelIdx(novelEntity); // 외래키 idx 값
     return novelPlatformEntity;
   }
 

@@ -26,4 +26,8 @@ public interface BoardService {
     List<BoardReplyDTO> getBoardReplyList(int idx) throws Exception;
 
     void deleteBoardReply(int idx) throws Exception;
+
+    List<BoardEntity> searchTitleBoard(String keyword) throws Exception;
+
+    List<BoardEntity> searchWriterBoard(String keyword) throws Exception;
 }

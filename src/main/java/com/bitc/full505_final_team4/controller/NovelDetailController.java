@@ -59,16 +59,12 @@ public class NovelDetailController {
     NovelEntity novelEntity = new NovelEntity();
 
 
-<<<<<<< HEAD
+
     // 네이버 디테일페이지 정보 가져와서 platform entity에 저장
     NovelPlatformEntity naverPlatformEntity = novelDetailService.getNaverCrolling(id, title, ne);
     // 카카오 디테일페이지 정보 가져와서 platform entity에 저장
     NovelPlatformEntity kakaoPlatformEntity = novelDetailService.getKakaoCrolling(id, title, ne);
-=======
-    // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
-    novelPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
-    novelDetailService.insertRidiToPlatform(novelPlatformEntity);
->>>>>>> origin/chanmi
+
 
     System.out.println(kakaoPlatformEntity); // 1
     System.out.println(naverPlatformEntity); // 2
@@ -86,12 +82,12 @@ public class NovelDetailController {
         novelDetailService.insertNaverToNovel(novelEntity);
 
         // 네이버 디테일 페이지 정보를 novel entity에 저장
-        naverPlatformEntity.setNovelEntity(novelEntity);
+        naverPlatformEntity.setNovelIdx(novelEntity);
 
         // 네이버 디테일 페이지 정보를 NovelPlatformEntity에 저장
         novelDetailService.insertNaverToPlatform(naverPlatformEntity);
 
-        kakaoPlatformEntity.setNovelEntity(novelEntity);
+        kakaoPlatformEntity.setNovelIdx(novelEntity);
         // 카카오 디테일 페이지 정보를 NovelPlatformEntity에 저장
         novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
 
@@ -106,7 +102,7 @@ public class NovelDetailController {
           novelDetailService.insertNaverToNovel(novelEntity);
 
           // 네이버 디테일 페이지 정보를 novel entity에 저장
-          naverPlatformEntity.setNovelEntity(novelEntity);
+          naverPlatformEntity.setNovelIdx(novelEntity);
 
           // 네이버 디테일 페이지 정보를 NovelPlatformEntity에 저장
           novelDetailService.insertNaverToPlatform(naverPlatformEntity);
@@ -120,7 +116,7 @@ public class NovelDetailController {
           novelDetailService.insertKakaoToNovel(novelEntity);
 
           // 카카오 디테일 페이지 정보를 novel entity에 저장
-          kakaoPlatformEntity.setNovelEntity(novelEntity);
+          kakaoPlatformEntity.setNovelIdx(novelEntity);
 
           // 카카오 디테일 페이지 정보를 NovelPlatformEntity에 저장
           novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
@@ -138,7 +134,7 @@ public class NovelDetailController {
         novelDetailService.insertRidiToNovel(novelEntity);
 
         // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
-        ridiPlatformEntity.setNovelEntity(novelEntity); // 복합키인 novel 엔티티 추가
+        ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
         novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
       }
       // 리디, 네이버 만 있는 경우
@@ -150,10 +146,10 @@ public class NovelDetailController {
         novelDetailService.insertRidiToNovel(novelEntity);
 
         // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
-        ridiPlatformEntity.setNovelEntity(novelEntity); // 복합키인 novel 엔티티 추가
+        ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
         novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
 
-        naverPlatformEntity.setNovelEntity(novelEntity);
+        naverPlatformEntity.setNovelIdx(novelEntity);
         novelDetailService.insertNaverToPlatform(naverPlatformEntity);
 
       }
@@ -166,10 +162,10 @@ public class NovelDetailController {
         novelDetailService.insertRidiToNovel(novelEntity);
 
         // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
-        ridiPlatformEntity.setNovelEntity(novelEntity); // 복합키인 novel 엔티티 추가
+        ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
         novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
 
-        kakaoPlatformEntity.setNovelEntity(novelEntity);
+        kakaoPlatformEntity.setNovelIdx(novelEntity);
         novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
       }
       // 리디, 네이버, 카카오 모두 있는 경우
@@ -181,13 +177,13 @@ public class NovelDetailController {
 
         novelDetailService.insertRidiToNovel(novelEntity);
 
-        ridiPlatformEntity.setNovelEntity(novelEntity); // 복합키인 novel 엔티티 추가
+        ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
         novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
 
-        naverPlatformEntity.setNovelEntity(novelEntity);
+        naverPlatformEntity.setNovelIdx(novelEntity);
         novelDetailService.insertNaverToPlatform(naverPlatformEntity);
 
-        kakaoPlatformEntity.setNovelEntity(novelEntity);
+        kakaoPlatformEntity.setNovelIdx(novelEntity);
         novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
       }
     }
