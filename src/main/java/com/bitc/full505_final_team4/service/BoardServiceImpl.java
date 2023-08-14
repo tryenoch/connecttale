@@ -117,4 +117,14 @@ public class BoardServiceImpl implements BoardService {
     public void deleteBoardReply(int idx) throws Exception {
         boardReplyRepository.deleteById(idx);
     }
+
+    @Override
+    public List<BoardEntity> searchTitleBoard(String keyword) throws Exception {
+        return boardRepository.findByBoardCate_IdxAndBoardTitleContainsOrderByBoardIdxDesc(1, keyword);
+    }
+
+    @Override
+    public List<BoardEntity> searchWriterBoard(String keyword) throws Exception {
+        return boardRepository.findByBoardCate_IdxAndCreateId_IdContainsOrderByBoardIdxDesc(1, keyword);
+    }
 }
