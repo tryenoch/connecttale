@@ -13,7 +13,7 @@ function Board(props) {
             <Routes>
                 <Route index element={<BoardMain/>}/>
                 <Route path={"/main"} element={<BoardMain/>}/>
-                <Route path={"/write"} element={<BoardWrite/>}/>
+                <Route path={"/write/:id"} element={<BoardWrite/>}/>
                 <Route path={"/detail/:cate/:idx"} element={<BoardDetail/>}/>
             </Routes>
         </div>
