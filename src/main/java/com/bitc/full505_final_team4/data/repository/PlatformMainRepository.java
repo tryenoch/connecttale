@@ -17,5 +17,5 @@ public interface PlatformMainRepository extends JpaRepository<NovelPlatformEntit
     "AND p.novelOrEbook = :novelOrEbook")
   NovelPlatformEntity queryFindByNovel(@Param("platform") int platform, @Param("novelIdx") int novelIdx, @Param("novelOrEbook") String novelOrEbook);*/
 
-//  NovelPlatformEntity findByNovelTitleAndPlatformAndNovelOrEbook(String title, int platform, String novelOrEbook);
+  NovelPlatformEntity findByNovelTitleAndPlatformAndNovelIdx_NovelIdx(String title, int platform, int novelIdx);
 }

@@ -6,13 +6,13 @@ import java.io.Serializable;
 
 /* novel platform table 복합키 클래스 */
 
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class NovelPlatFormIdx implements Serializable {
-    @EqualsAndHashCode.Include
+//    @EqualsAndHashCode.Include
     private int platform;
 
-    @EqualsAndHashCode.Include
-    private int novelEntity;
+//    @EqualsAndHashCode.Include
+    private int novelIdx;
 }

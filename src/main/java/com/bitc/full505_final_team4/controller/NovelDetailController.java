@@ -38,7 +38,7 @@ public class NovelDetailController {
 
 
     // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
-    novelPlatformEntity.setNovelEntity(novelEntity); // 복합키인 novel 엔티티 추가
+    novelPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
     novelDetailService.insertRidiToPlatform(novelPlatformEntity);
 
 

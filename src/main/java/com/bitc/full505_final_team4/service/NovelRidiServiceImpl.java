@@ -391,7 +391,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     novelPlatformEntity.setCateList(cateName);
 
-    novelPlatformEntity.setNovelEntity(novelEntity); // 외래키 idx 값
+    novelPlatformEntity.setNovelIdx(novelEntity); // 외래키 idx 값
     return novelPlatformEntity;
   }
 

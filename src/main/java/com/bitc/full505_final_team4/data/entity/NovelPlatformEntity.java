@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -23,9 +24,11 @@ public class NovelPlatformEntity {
   private String platformId;
 
   @Id
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "novel_idx")
-  private NovelEntity novelEntity;
+  @ToString.Exclude
+  private NovelEntity novelIdx;
 
   @Column(nullable = false, length = 100)
   private String novelTitle;
@@ -80,9 +83,9 @@ public class NovelPlatformEntity {
   private String novelAdult;
 
   @Builder
-  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelEntity, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, String novelAdult) {
+  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelIdx, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, String novelAdult) {
     this.platform = platform;
-    this.novelEntity = novelEntity;
+    this.novelIdx = novelIdx;
     this.platformId = platformId;
     this.novelTitle = novelTitle;
     this.novelThumbnail = novelThumbnail;
