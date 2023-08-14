@@ -26,8 +26,15 @@ public class NovelEntity {
   @Column(nullable = false, length = 500, unique = true)
   private String novelThumbnail;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 1)
   @ColumnDefault("N")
-  private char novelAdult;
+  private String novelAdult;
+
+  @Builder
+  public NovelEntity(String novelTitle, String novelThumbnail, String  novelAdult){
+    this.novelTitle = novelTitle;
+    this.novelThumbnail = novelThumbnail;
+    this.novelAdult = novelAdult;
+  }
 
 }

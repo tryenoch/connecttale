@@ -1,10 +1,7 @@
 package com.bitc.full505_final_team4.data.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 
@@ -76,11 +73,32 @@ public class NovelPlatformEntity {
   @Column(length = 50, nullable = false)
   public String novelOrEbook;
 
-  @Column(nullable = false, length = 50)
+
+  @Column(nullable = false, length = 1)
   @ColumnDefault("N")
-  private char novelAdult;
+  private String novelAdult;
 
-
+  @Builder
+  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelEntity, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, String novelAdult) {
+    this.platform = platform;
+    this.novelEntity = novelEntity;
+    this.platformId = platformId;
+    this.novelTitle = novelTitle;
+    this.novelThumbnail = novelThumbnail;
+    this.novelIntro = novelIntro;
+    this.novelIntroImg = novelIntroImg;
+    this.novelAuthor = novelAuthor;
+    this.novelCount = novelCount;
+    this.novelCompleteYn = novelCompleteYn;
+    this.novelPrice = novelPrice;
+    this.novelStarRate = novelStarRate;
+    this.novelUpdateDate = novelUpdateDate;
+    this.novelRelease = novelRelease;
+    this.cateList = cateList;
+    this.novelOrEbook = novelOrEbook;
+    this.novelAdult = novelAdult;
+    this.novelPubli = novelPubli;
+  }
 
 
 }

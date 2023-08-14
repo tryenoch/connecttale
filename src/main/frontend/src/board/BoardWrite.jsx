@@ -31,6 +31,10 @@ function BoardWrite() {
 
         axios.post(`/board/process`, null, {
             params: {
+                boardIdx: 0,
+                hitCnt: 0,
+                // int 타입이 null을 받지 못해서
+                // DTO와 params의 멤버가 동일 해야함
                 boardTitle: title,
                 boardContents: contents,
                 boardCate: boardCate,
