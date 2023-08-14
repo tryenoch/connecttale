@@ -20,6 +20,8 @@ function BoardList(props) {
 
     useEffect(() => {
         requestData();
+        setCate(0);
+        setKeyword('');
     }, [props.data, nowPage]);
 
     const requestData = () => {
@@ -47,7 +49,13 @@ function BoardList(props) {
     }
 
     const handleSubmit = (event) => {
-        alert(`검색어 : ${keyword}, 종류 : ${cate}`);
+        axios.get(`/board/${cate}/${keyword}`)
+            .then(res => {
+                setBoardList(res.data.boardList);
+            })
+            .catch(err => {
+                alert(`통신에 실패했습니다. err : ${err}`);
+            })
         // 검색 기능 API 구현
         event.preventDefault();
     }
