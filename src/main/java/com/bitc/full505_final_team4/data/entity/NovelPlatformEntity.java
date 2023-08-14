@@ -50,9 +50,9 @@ public class NovelPlatformEntity {
   @Column(nullable = false)
   private int novelCount;
 
-  @Column(nullable = false, length = 45)
+  @Column(nullable = false, length = 1)
   @ColumnDefault("N")
-  private String novelCompleteYn;
+  private char novelCompleteYn;
 
   @Column(nullable = false)
   private int novelPrice;
@@ -67,7 +67,6 @@ public class NovelPlatformEntity {
   private String novelRelease;
 
   @Column(nullable = false, length = 100)
-  @ColumnDefault("없음")
   public String cateList;
 
   @Column(length = 50, nullable = false)
@@ -76,10 +75,10 @@ public class NovelPlatformEntity {
 
   @Column(nullable = false, length = 1)
   @ColumnDefault("N")
-  private String novelAdult;
+  private char novelAdult;
 
   @Builder
-  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelEntity, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, String novelAdult) {
+  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelEntity, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, char novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, char novelAdult) {
     this.platform = platform;
     this.novelEntity = novelEntity;
     this.platformId = platformId;

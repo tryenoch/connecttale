@@ -28,19 +28,19 @@ public class NovelDetailController {
     List<NovelPlatformEntity> allNovelDetail = novelDetailService.getNovelDetail(platformId);
 
     // 플랫폼 별로 나눠서 전달하기
-    if (allNovelDetail != null) {
-      for (NovelPlatformEntity p : allNovelDetail) {
-        if (p.getPlatform() == 1) {
-          novelDetail.put("kakao", p);
-        }
-        else if (p.getPlatform() == 2) {
-          novelDetail.put("naver", p);
-        }
-        else if (p.getPlatform() == 3) {
-          novelDetail.put("ridi", p);
-        }
+    for (NovelPlatformEntity p : allNovelDetail) {
+      if (p.getPlatform() == 1) {
+        novelDetail.put("kakao", p);
+      }
+      else if (p.getPlatform() == 2) {
+        novelDetail.put("naver", p);
+      }
+      else if (p.getPlatform() == 3) {
+        novelDetail.put("ridi", p);
       }
     }
+
+
 
     return novelDetail;
   }
@@ -66,6 +66,7 @@ public class NovelDetailController {
 
     System.out.println(kakaoPlatformEntity); // 1
     System.out.println(naverPlatformEntity); // 2
+    System.out.println(ridiPlatformEntity); // 3
 
     // 리디북스에 해당 작품이 없을 때
     if (ridiPlatformEntity.getPlatform() == 0) {

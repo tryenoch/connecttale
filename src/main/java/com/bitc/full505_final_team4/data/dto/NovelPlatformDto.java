@@ -19,17 +19,17 @@ public class NovelPlatformDto {
   private String novelAuthor;
   private String novelPubli;
   private int novelCount;
-  private String novelCompleteYn;
+  private char novelCompleteYn;
   private int novelPrice;
   private double novelStarRate;
   private String novelUpdateDate;
   private String novelRelease;
   private String cateList;
   private String novelOrEbook;
-  private String novelAdult;
+  private char novelAdult;
 
   @Builder
-  public NovelPlatformDto(int platform, NovelKeyDto novelKeyDto, String platformId, String novelTitle, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, String novelAdult) {
+  public NovelPlatformDto(int platform, NovelKeyDto novelKeyDto, String platformId, String novelTitle, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, char novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, char novelAdult) {
     this.platform = platform;
     this.novelKeyDto = novelKeyDto;
     this.platformId = platformId;

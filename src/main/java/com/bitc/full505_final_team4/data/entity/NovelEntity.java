@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "novel")
 @Getter
@@ -28,10 +25,10 @@ public class NovelEntity {
 
   @Column(nullable = false, length = 1)
   @ColumnDefault("N")
-  private String novelAdult;
+  private char novelAdult;
 
   @Builder
-  public NovelEntity(String novelTitle, String novelThumbnail, String  novelAdult){
+  public NovelEntity(String novelTitle, String novelThumbnail, char novelAdult){
     this.novelTitle = novelTitle;
     this.novelThumbnail = novelThumbnail;
     this.novelAdult = novelAdult;

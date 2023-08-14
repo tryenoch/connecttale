@@ -37,7 +37,7 @@ function RidiSearchResult(props) {
                 completeYn: item[i].is_series_complete ? '완결' : '연재중',
                 description: item[i].desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
                 ageGrade: item[i].age_limit == 19 ? "Y" : "N",
-                novelOrEbook: item[i].web_title_title.includes('e북') ? "단행본" : "웹소설"
+                ebookCheck: item[i].web_title_title.includes('e북') ? "단행본" : "웹소설"
               }
               ridiSearchList.push(data);
             }
@@ -77,12 +77,12 @@ function RidiSearchResult(props) {
             return (
               <div className={'row my-4 border-top border-bottom py-2'} key={index}>
                 <div className={'col-sm-2'}>
-                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&novelOrEbook=${item.novelOrEbook}`} >
+                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&ebookCheck=${item.ebookCheck}`} >
                     <img src={item.thumbnail} alt="" className={'w-100 h-100'} />
                   </Link>
                 </div>
                 <div className={'col-sm-10'}>
-                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&novelOrEbook=${item.novelOrEbook}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
+                  <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&ebookCheck=${item.ebookCheck}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
                   </Link><br/>
                   <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
                   <p className={'search-info'}>출판사 : {item.publi}</p>
@@ -98,7 +98,7 @@ function RidiSearchResult(props) {
                     <p>
                       &nbsp;<span className={'fw-bold'}>{item.completeYn}
                       {
-                        item.novelOrEbook == 'e북'
+                        item.ebookCheck == 'e북'
                           ? <span>&nbsp;(총{item.count}권)</span>
                           : <span>&nbsp;(총{item.count}화)</span>
                       }

@@ -13,10 +13,10 @@ function NovelDetail(props) {
   
   const [platformId, setPlatformId] = useState(seriesId.get("platformId"));
   const [title, setTitle] = useState(name.get("title"));
-  const [novelOrEbook, setNovelOrEbook] = useState(ebookChk.get("novelOrEbook"))
+  const [ebookCheck, setEbookCheck] = useState(ebookChk.get("novelOrEbook"))
   return (
     <div className={'container my-4'}>
-      <NovelDetailInfo platformId={platformId} title={title} novelOrEbook={novelOrEbook}/>
+      <NovelDetailInfo platformId={platformId} title={title} ebookCheck={ebookCheck}/>
       <NovelDetailReview />
 
     </div>

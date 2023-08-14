@@ -32,7 +32,7 @@ function NaverSearchResult(props) {
               count: item.count[i],
               description: item.dsc[i],
               ageGrade: item.ageGrade[i],
-              novelOrEbook: item.title[i].includes('[단행본]') ? '단행본' : '웹소설'
+              ebookCheck: item.title[i].includes('[단행본]') ? '단행본' : '웹소설'
             }
             naverSearchList.push(data);
           }
@@ -54,12 +54,12 @@ function NaverSearchResult(props) {
           return (
             <div className={'row my-4 border-top border-bottom py-2'} key={index}>
               <div className={'col-sm-2'}>
-                <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&novelOrEbook=${item.novelOrEbook}`} >
+                <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&ebookCheck=${item.ebookCheck}`} >
                   <img src={item.thumbnail} alt="" className={'w-100 h-100'} />
                 </Link>
               </div>
               <div className={'col-sm-10'}>
-                <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&novelOrEbook=${item.novelOrEbook}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
+                <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&ebookCheck=${item.ebookCheck}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
                 </Link><br/>
                 <p className={'search-info'}>작가 : {item.author}</p>
 

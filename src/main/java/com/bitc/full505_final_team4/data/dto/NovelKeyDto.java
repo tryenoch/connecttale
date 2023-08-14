@@ -12,10 +12,10 @@ public class NovelKeyDto {
   private int novelIdx;
   private String novelTitle;
   private String novelThumbnail;
-  private String novelAdult;
+  private char novelAdult;
 
   @Builder
-  public NovelKeyDto(int novelIdx, String novelTitle, String novelThumbnail, String novelAdult){
+  public NovelKeyDto(int novelIdx, String novelTitle, String novelThumbnail, char novelAdult){
     this.novelIdx = novelIdx;
     this.novelTitle = novelTitle;
     this.novelThumbnail = novelThumbnail;
