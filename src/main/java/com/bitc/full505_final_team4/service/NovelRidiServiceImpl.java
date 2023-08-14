@@ -335,7 +335,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     HashMap<String, Object > book = (HashMap<String, Object>) novelData.get("book");
 
     novelPlatformEntity.setPlatform(3); // 리디북스 플랫폼 번호
-    novelPlatformEntity.setNovelOrEbook("novel"); // 웹소설 여부
+    novelPlatformEntity.setEbookCheck("novel"); // 웹소설 여부
 
 
     String platformId = "";
