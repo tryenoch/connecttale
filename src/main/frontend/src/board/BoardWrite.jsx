@@ -59,6 +59,37 @@ function BoardWrite() {
     const handleMoveToMenu = () => {
         navi("/board/main");
     }
+    
+    // file upload 코드
+    const customUploadAdapter = (loader) => {
+        return {
+            upload() {
+                return new Promise((resolve, reject) => {
+                    const formData = new FormData();
+                    loader.file.then((file) => {
+                        formData.append("file", file);
+
+                        axios
+                            .post("http://localhost:8080/api/v0/file/upload", formData)
+                            .then((res) => {
+                                resolve({
+                                    default: res.data.data.uri,
+                                });
+                            })
+                            .catch((err) => reject(err));
+                    });
+                });
+            },
+        };
+    };
+    
+    const uploadPlugin = (editor) => {
+        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+            return customUploadAdapter(loader);
+        };
+    }
+    
+    
 
     return (
         <Container className={'my-4'}>
@@ -105,6 +136,7 @@ function BoardWrite() {
                             editor={ClassicEditor}
                             config={{
                                 placeholder: "내용을 입력하세요.",
+                                extraPlugins: [uploadPlugin],
                             }}
                             onChange={(event, editor) => {
                                 const data = editor.getData();
@@ -112,7 +144,8 @@ function BoardWrite() {
                             }}
                         />
                         <div className={'d-flex justify-content-end'}>
-                            <button type={'button'} className={'btn btn-secondary'} onClick={handleMoveToMenu}>목록</button>
+                            <button type={'button'} className={'btn btn-secondary'} onClick={handleMoveToMenu}>목록
+                            </button>
                             <button type={'submit'} className={'btn btn-primary'}>작성</button>
                         </div>
                     </form>
