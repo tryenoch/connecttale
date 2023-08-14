@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import {fetchData} from "../../common/NovelDetailFetch2";
 
 function KakaoSearchResult(props) {
   // const [searchWord, setSearchWord] = useState(props.keyword);
   const [novelSearchList, setNovelSearchList] = useState([]);
-  
+  const navi = useNavigate();
+
   useEffect(() => {
     // 현재 로직상 useEffect는 props.keyword가 변경될 때 마다 실행하게끔 되어있는데, 아래 setSearchWord(props.keyword)가 존재하면 searchWord 스테이트가 계속 변경되게되어 useEffect가 무한루프가 되어버림
     // setSearchWord(props.keyword);
@@ -60,31 +62,34 @@ function KakaoSearchResult(props) {
         novelSearchList.length != 0
         ? novelSearchList.map((item, index) => {
           return (
-            <div className={'row my-4 border-top border-bottom py-2'} key={index}>
-              <div className={'col-sm-2'}>
-                {
-                  item.ageGrade == 'N'
-                  ? <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&ebookCheck=${item.ebookCheck}`}>
-                      <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
-                    </Link>
-                  : <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&ebookCheck=${item.ebookCheck}`}>
-                      <img src="/onlyAdult.png" alt="" className={'w-100 h-100'}/>
-                    </Link>
-                }
+            <Link onClick={ e => {
+              fetchData(item.platformId, item.title, item.ebookCheck);
+              let fetchDataResult = fetchData(e, item.platformId, item.title, item.ebookCheck);
+              navi('/novelDetail', {state: {novelDetail: fetchDataResult}});
+            }} key={index}>
+              <div className={'row my-4 border-top border-bottom py-2'} >
+                <div className={'col-sm-2'}>
+                  {
+                    item.ageGrade == 'N'
+                      ? <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
+                      : <img src="/onlyAdult.png" alt="" className={'w-100 h-100'}/>
+                  }
+                </div>
+                <div className={'col-sm-10'}>
+                  <p className={'text-decoration-none text-black fs-5 fw-bold'}>
+                    {item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
+                  </p><br/>
+                  <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
+                  <p className={'search-info'}>출판사 : {item.publi}</p>
+                  {
+                    item.price != null
+                      ? <p className={'search-price fw-bold'}>가격 : {item.price}</p>
+                      : <p className={'search-price text-muted'}>가격 정보 없음</p>
+                  }
+                  <p className={'search-info'}>{item.description.substring(0, 170)}</p>
+                </div>
               </div>
-              <div className={'col-sm-10'}>
-                <Link to={`/novelDetail?platformId=${item.platformId}&title=${item.title}&ebookCheck=${item.ebookCheck}`} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
-                </Link><br/>
-                <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
-                <p className={'search-info'}>출판사 : {item.publi}</p>
-                {
-                  item.price != null
-                    ? <p className={'search-price fw-bold'}>가격 : {item.price}</p>
-                    : <p className={'search-price text-muted'}>가격 정보 없음</p>
-                }
-                <p className={'search-info'}>{item.description.substring(0, 170)}</p>
-              </div>
-            </div>
+            </Link>
           )
         })
         : <div className={'d-flex justify-content-center'}>

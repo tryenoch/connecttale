@@ -1,6 +1,7 @@
 package com.bitc.full505_final_team4.controller;
 
 import com.bitc.full505_final_team4.data.dto.NovelDTO;
+import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.service.NovelDetailService;
@@ -22,21 +23,28 @@ public class NovelDetailController {
   // ---------------------db에 있는 디테일페이지 데이터 불러오기-------------------------
   @RequestMapping(value = "/novelDetail", method = RequestMethod.GET)
   public Object getNovelDetail(@RequestParam("platformId") String platformId) throws Exception {
-    Map<String, NovelPlatformEntity> novelDetail = new HashMap<>();
+    Map<String, NovelPlatformDto> novelDetail = new HashMap<>();
 
     // platformId(매개변수) 를 통해 novelIdx 찾고, novelIdx에 해당하는 노벨정보 다가져오기
     List<NovelPlatformEntity> allNovelDetail = novelDetailService.getNovelDetail(platformId);
 
+
     // 플랫폼 별로 나눠서 전달하기
     for (NovelPlatformEntity p : allNovelDetail) {
       if (p.getPlatform() == 1) {
-        novelDetail.put("kakao", p);
+        // builder 사용하여 entity를 dto로 바꿔줌(프론트에 전달하기 위함)
+        NovelPlatformDto kakaoPlatformDto = NovelPlatformDto.toDto(p);
+        novelDetail.put("kakao", kakaoPlatformDto);
       }
       else if (p.getPlatform() == 2) {
-        novelDetail.put("naver", p);
+        // builder 사용하여 entity를 dto로 바꿔줌(프론트에 전달하기 위함)
+        NovelPlatformDto naverPlatformDto = NovelPlatformDto.toDto(p);
+        novelDetail.put("naver", naverPlatformDto);
       }
       else if (p.getPlatform() == 3) {
-        novelDetail.put("ridi", p);
+        // builder 사용하여 entity를 dto로 바꿔줌(프론트에 전달하기 위함)
+        NovelPlatformDto ridiPlatformDto = NovelPlatformDto.toDto(p);
+        novelDetail.put("ridi", ridiPlatformDto);
       }
     }
 
