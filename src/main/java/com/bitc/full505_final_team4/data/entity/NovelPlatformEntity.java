@@ -75,15 +75,15 @@ public class NovelPlatformEntity {
   @Column(length = 45)
   public String novelRecentUpdate;
 
-  @Column(nullable = false, length = 50)
-  public String novelOrEbook;
+  @Column(nullable = false, length = 10)
+  public String ebookCheck;
 
   @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
 //  @ColumnDefault("N")
   private String novelAdult;
 
   @Builder
-  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelIdx, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, String novelAdult) {
+  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelIdx, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String ebookCheck, String novelAdult) {
     this.platform = platform;
     this.novelIdx = novelIdx;
     this.platformId = platformId;
@@ -99,7 +99,7 @@ public class NovelPlatformEntity {
     this.novelUpdateDate = novelUpdateDate;
     this.novelRelease = novelRelease;
     this.cateList = cateList;
-    this.novelOrEbook = novelOrEbook;
+    this.ebookCheck = ebookCheck;
     this.novelAdult = novelAdult;
     this.novelPubli = novelPubli;
   }
