@@ -123,8 +123,8 @@ function BoardList(props) {
                     <div className={'d-flex justify-content-end'}>
                         {
                             // 특정 조건에서만 랜더링 코드
-                            props.data.type === 'req' &&
-                            (<Link to={'/board/write'} className={'btn btn-primary'}>글 쓰기</Link>)
+                            // props.data.type === 'req' &&
+                            (<Link to={`/board/write/${props.data.id}`} className={'btn btn-primary'}>글 쓰기</Link>)
                         }
 
                     </div>
