@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 // service main 패키지와 연동되는 repository
 public interface PlatformMainRepository extends JpaRepository<NovelPlatformEntity, NovelPlatFormIdx> {
 
@@ -17,5 +19,5 @@ public interface PlatformMainRepository extends JpaRepository<NovelPlatformEntit
     "AND p.novelOrEbook = :novelOrEbook")
   NovelPlatformEntity queryFindByNovel(@Param("platform") int platform, @Param("novelIdx") int novelIdx, @Param("novelOrEbook") String novelOrEbook);*/
 
-//  NovelPlatformEntity findByNovelTitleAndPlatformAndNovelOrEbook(String title, int platform, String novelOrEbook);
+  Optional<NovelPlatformEntity> findByPlatformAndNovelIdx_NovelIdx(int platform, int novelIdx);
 }
