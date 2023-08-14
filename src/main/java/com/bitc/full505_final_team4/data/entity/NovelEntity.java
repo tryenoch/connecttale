@@ -1,6 +1,7 @@
 package com.bitc.full505_final_team4.data.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -27,8 +28,12 @@ public class NovelEntity {
   private String novelThumbnail;
 
   @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
-//  @ColumnDefault("N")
   private String novelAdult;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "novelIdx", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  private List<NovelPlatformEntity> novelPlatformList = new ArrayList<>();
 
   @Builder
   public NovelEntity(String novelTitle, String novelThumbnail, String  novelAdult){

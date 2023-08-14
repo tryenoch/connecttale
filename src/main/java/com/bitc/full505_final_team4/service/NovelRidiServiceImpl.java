@@ -181,7 +181,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
   // 리디북스 최신작 리스트 불러온 후 테이블에 없는 작품 저장하기 (카테고리 번호 별)
   @Transactional
   @Override
-  public boolean starRidiRecentNovel(int category) throws Exception {
+  public boolean storeRidiRecentNovel(int category) throws Exception {
 
     boolean result = false;
 
@@ -214,36 +214,43 @@ public class NovelRidiServiceImpl implements NovelRidiService {
           JSONObject cover = (JSONObject) book.get("cover");
           String thumbnail = cover.get("large").toString();
 
-          boolean adultsOnly = (Boolean) book.get("adults_only");
+          boolean adultsOnly = (Boolean) book.get("adultsOnly");
 
           try {
 
             // novel table 에 일치하는 제목이 있는지 확인, 없을 경우 exeption 반환
-            NovelEntity entity = novelMainRepository.findByNovelTitle(title);
-            int novelIdx = entity.getNovelIdx();
+            Optional<NovelEntity> entityNovel = novelMainRepository.findByNovelTitle(title);
 
-            // novel table 에 해당 제목이 있다면 platform db에 일치하는 데이터가 있는지 확인(플랫폼 번호, pk idx, 웹소설 여부)
-//            platformMainRepository
-//              .findByNovelTitleAndPlatformAndNovelOrEbook(title,3,  "novel"); // 데이터가 없으면 예외로 넘어감
+            if(entityNovel.isEmpty()){
+              throw new NoSuchElementException();
 
-            i++; // 데이터가 이미 있으므로 다음 번호로 넘어간다, 업데이트 된 경우에 대해서 나중에 추가 로직 필요
+            } else {
+              int novelIdx = entityNovel.get().getNovelIdx();
+              Optional<NovelPlatformEntity> entityPlatform = platformMainRepository.findByPlatformAndNovelIdx_NovelIdx(3, novelIdx);
 
+              if (entityPlatform.isEmpty()){
+                throw new Exception();
+              }
+
+              i++; // 데이터가 이미 있으므로 다음 번호로 넘어간다, 업데이트 된 경우에 대해서 나중에 추가 로직 필요
+            }
           }
-          catch (NoSuchElementException e){
-            // 못 찾았을 경우 먼저 novel db에 데이터를 등록해야함
-            /* 필요한 정보 : 소설 제목, 썸네일 주소, 성인 여부 */
-            NovelEntity novel = getCateNovelEntityFromJson(novelList.get(i));
-            NovelPlatformEntity novelPlatformEntity = getCatePlatformEntityFromJson(novel, novelList.get(i));
+          catch (NoSuchElementException e1){
 
-            // novel entity 객체 리스트에 더하기
-            novelEntityList.add(novel);
-            // platform entity 객체 리스트에 더하기
-            novelPlatformEntityList.add(novelPlatformEntity);
+              // 못 찾았을 경우 먼저 novel db에 데이터를 등록해야함
+              /* 필요한 정보 : 소설 제목, 썸네일 주소, 성인 여부 */
+              NovelEntity novel = getCateNovelEntityFromJson(novelList.get(i));
+              NovelPlatformEntity novelPlatformEntity = getCatePlatformEntityFromJson(novel, novelList.get(i));
 
-          } catch (Exception e){
+              // novel entity 객체 리스트에 더하기
+              novelEntityList.add(novel);
+              // platform entity 객체 리스트에 더하기
+              novelPlatformEntityList.add(novelPlatformEntity);
 
-            NovelEntity novel = novelMainRepository.findByNovelTitle(title);
+          }catch (Exception e2){
+
             // novel table 에는 있지만 platform 테이블에는 없는 경우
+            NovelEntity novel = novelMainRepository.findByNovelTitle(title).get();
             NovelPlatformEntity novelPlatformEntity = getCatePlatformEntityFromJson(novel, novelList.get(i));
             // platform entity 객체 리스트에 더하기
             novelPlatformEntityList.add(novelPlatformEntity);
@@ -292,7 +299,14 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     JSONObject cover = (JSONObject) book.get("cover");
     String thumbnail = cover.get("large").toString();
 
-    boolean adultsOnly = (Boolean) book.get("adults_only");
+    boolean adultsOnly = false;
+
+    // adults Only 가 다르게 쓰일 때가 있다.
+    if (book.get("adultsOnly") != null ) {
+      adultsOnly = (Boolean) book.get("adultsOnly");
+    } else if(book.get("adults_only") != null ){
+      adultsOnly = (Boolean) book.get("adults_only");
+    }
 
     String novelAdult = "";
 
@@ -321,10 +335,19 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     HashMap<String, Object > book = (HashMap<String, Object>) novelData.get("book");
 
     novelPlatformEntity.setPlatform(3); // 리디북스 플랫폼 번호
-    novelPlatformEntity.setNovelOrEbook("novel"); // 웹소설 여부
+    novelPlatformEntity.setEbookCheck("novel"); // 웹소설 여부
+
+
+    String platformId = "";
+
+    // adults Only 가 다르게 쓰일 때가 있다.
+    if (!ObjectUtils.isEmpty(book.get("book_id"))) {
+      platformId = book.get("book_id").toString();
+    } else if(!ObjectUtils.isEmpty(book.get("bookId"))){
+      platformId = book.get("bookId").toString();
+    }
 
     // 플랫폼 제공 아이디
-    String platformId = book.get("book_id").toString();
     novelPlatformEntity.setPlatformId(platformId);
 
     // 소설 설명 (novelIntro)
@@ -335,7 +358,9 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     JSONObject serial = (JSONObject) book.get("serial");
     novelPlatformEntity.setNovelTitle(serial.get("title").toString()); // 제목
-    novelPlatformEntity.setNovelCount((Integer) serial.get("total")); // 총 화수
+
+    int totalCount = Integer.parseInt(serial.get("total").toString()); // total 이 Long 값으로 반환됨
+    novelPlatformEntity.setNovelCount(totalCount); // 총 화수
 
     String complete = "";
     if((boolean) serial.get("completion")){
@@ -344,6 +369,16 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     novelPlatformEntity.setNovelCompleteYn(complete); // 완결 여부
 
+    // 가격
+    JSONObject purchase = (JSONObject) serial.get("purchase");
+    int price = 0;
+
+    if(!ObjectUtils.isEmpty(purchase.get("maxPrice"))){
+      price = Integer.parseInt(purchase.get("maxPrice").toString());
+
+    }else if(!ObjectUtils.isEmpty(purchase.get("max_price"))){
+      price = (Integer) purchase.get("max_price");
+    }
 
     // 작가 이름 얻어오기
     ArrayList authorsList = (ArrayList) book.get("authors");
@@ -359,7 +394,14 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     novelPlatformEntity.setNovelStarRate(Double.parseDouble(getStarRate(ratings))); // 하위에 구현한 함수 사용
 
     // 성인 여부
-    boolean adultsOnly = (Boolean) book.get("adults_only");
+    boolean adultsOnly = false;
+
+    // adults Only 가 다르게 쓰일 때가 있다.
+    if (book.get("adultsOnly") != null ) {
+      adultsOnly = (Boolean) book.get("adultsOnly");
+    } else if(book.get("adults_only") != null ){
+      adultsOnly = (Boolean) book.get("adults_only");
+    }
 
     String novelAdult = "";
 
@@ -377,9 +419,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     novelPlatformEntity.setNovelPubli(publiName);
 
-    // 가격
-    JSONObject purchase = (JSONObject) book.get("purchase");
-    int price = (Integer) purchase.get("maxPrice");
+
 
     novelPlatformEntity.setNovelPrice(price);
 
@@ -391,7 +431,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     novelPlatformEntity.setCateList(cateName);
 
-    novelPlatformEntity.setNovelEntity(novelEntity); // 외래키 idx 값
+    novelPlatformEntity.setNovelIdx(novelEntity); // 외래키 idx 값
     return novelPlatformEntity;
   }
 
@@ -403,12 +443,13 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     JSONArray dateObj = (JSONArray) JsonUtils.jsonUrlParser(url).get("notices");
 
-    JSONObject notices = (JSONObject) dateObj.get(0);
+    JSONObject notices;
 
-    String updateDate = notices.get("title").toString();
+    String updateDate = "";
 
-    if (ObjectUtils.isEmpty(updateDate)){
-      updateDate = ""; // 값을 못 찾으면 빈 값을 반환한다.
+    if (!ObjectUtils.isEmpty(dateObj)){
+      notices = (JSONObject) dateObj.get(0);
+      updateDate = notices.get("title").toString(); // 값을 있으면 넣는다.
     }
 
     return updateDate;
