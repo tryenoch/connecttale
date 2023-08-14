@@ -3,6 +3,7 @@ package com.bitc.full505_final_team4.controller;
 import com.bitc.full505_final_team4.common.JsonUtils;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.service.NovelMainService;
+import com.bitc.full505_final_team4.service.NovelRidiService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,6 +23,7 @@ import java.util.*;
 public class NovelMainController {
 
   private final NovelMainService novelMainService;
+  private final NovelRidiService novelRidiService;
 
   // jpa 테스트용
   @GetMapping("/testJpa1")
@@ -51,7 +53,12 @@ public class NovelMainController {
   public Object testJpa() throws Exception{
     Map<String, Object> result = new HashMap<>();
 
-
+    boolean b1 = novelRidiService.storeRidiRecentNovel(1750);
+    if (b1){
+      result.put("result", "success");
+    } else {
+      result.put("result", "fail");
+    }
 
     return result;
   }

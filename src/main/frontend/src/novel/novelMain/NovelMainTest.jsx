@@ -27,6 +27,19 @@ function NovelMainTest() {
       })
   }
 
+  const dataTest2 = () => {
+    //alert('테스트 메세지입니다.');
+    axios.get(`/novel/testJpa2`)
+      .then(res => {
+        MessageUtils.infoMessage("비동기 통신에 성공했습니다.");
+        console.log(res.data.result);
+      })
+      .catch(err => {
+        MessageUtils.errorMessage("테스트", err);
+      })
+  }
+
+
   /*const dataTest = () => {
     MessageUtils.errorMessage("테스트", "에러 메세지 테스트");
   }*/
@@ -46,7 +59,7 @@ function NovelMainTest() {
 
   return (
       <div>
-        <button className={'btn btn-purple'} onClick={ dataTest } >테스트 버튼</button>
+        <button className={'btn btn-purple'} onClick={ dataTest2 } >테스트 버튼</button>
         <div>
           테스트 결과 : {title}
         </div>
