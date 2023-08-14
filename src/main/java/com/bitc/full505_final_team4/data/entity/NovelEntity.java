@@ -1,9 +1,13 @@
 package com.bitc.full505_final_team4.data.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "novel")
@@ -20,15 +24,20 @@ public class NovelEntity {
   @Column(nullable = false, length = 100)
   private String novelTitle;
 
-  @Column(nullable = false, length = 500, unique = true)
+  @Column(nullable = false, length = 500)
   private String novelThumbnail;
 
-  @Column(nullable = false, length = 1)
-  @ColumnDefault("N")
-  private char novelAdult;
+  @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
+//  @ColumnDefault("N")
+  private String novelAdult;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "novelIdx", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  private List<NovelPlatformEntity> novelPlatformList = new ArrayList<>();
 
   @Builder
-  public NovelEntity(String novelTitle, String novelThumbnail, char novelAdult){
+  public NovelEntity(String novelTitle, String novelThumbnail, String  novelAdult){
     this.novelTitle = novelTitle;
     this.novelThumbnail = novelThumbnail;
     this.novelAdult = novelAdult;

@@ -59,10 +59,16 @@ public class NovelDetailController {
     NovelEntity novelEntity = new NovelEntity();
 
 
+<<<<<<< HEAD
     // 네이버 디테일페이지 정보 가져와서 platform entity에 저장
     NovelPlatformEntity naverPlatformEntity = novelDetailService.getNaverCrolling(id, title, ne);
     // 카카오 디테일페이지 정보 가져와서 platform entity에 저장
     NovelPlatformEntity kakaoPlatformEntity = novelDetailService.getKakaoCrolling(id, title, ne);
+=======
+    // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
+    novelPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
+    novelDetailService.insertRidiToPlatform(novelPlatformEntity);
+>>>>>>> origin/chanmi
 
     System.out.println(kakaoPlatformEntity); // 1
     System.out.println(naverPlatformEntity); // 2

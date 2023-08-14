@@ -19,17 +19,17 @@ public class NovelPlatformDto {
   private String novelAuthor;
   private String novelPubli;
   private int novelCount;
-  private char novelCompleteYn;
+  private String novelCompleteYn;
   private int novelPrice;
   private double novelStarRate;
   private String novelUpdateDate;
   private String novelRelease;
   private String cateList;
-  private String novelOrEbook;
-  private char novelAdult;
+  private String ebookCheck;
+  private String novelAdult;
 
   @Builder
-  public NovelPlatformDto(int platform, NovelKeyDto novelKeyDto, String platformId, String novelTitle, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, char novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String novelOrEbook, char novelAdult) {
+  public NovelPlatformDto(int platform, NovelKeyDto novelKeyDto, String platformId, String novelTitle, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String ebookCheck, String novelAdult) {
     this.platform = platform;
     this.novelKeyDto = novelKeyDto;
     this.platformId = platformId;
@@ -46,7 +46,7 @@ public class NovelPlatformDto {
     this.novelUpdateDate = novelUpdateDate;
     this.novelRelease = novelRelease;
     this.cateList = cateList;
-    this.novelOrEbook = novelOrEbook;
+    this.ebookCheck = ebookCheck;
     this.novelAdult = novelAdult;
   }
 
@@ -57,7 +57,7 @@ public class NovelPlatformDto {
     return NovelPlatformEntity.builder()
       .platform(platform)
       .platformId(platformId)
-      .novelEntity(novelKeyDto.toEntity(novelKeyDto))
+      .novelIdx(novelKeyDto.toEntity(novelKeyDto))
       .novelTitle(novelTitle)
       .novelThumbnail(novelThumbnail)
       .novelIntro(novelIntro)
@@ -70,7 +70,7 @@ public class NovelPlatformDto {
       .novelUpdateDate(novelUpdateDate)
       .novelRelease(novelRelease)
       .cateList(cateList)
-      .novelOrEbook(novelOrEbook)
+      .ebookCheck(ebookCheck)
       .novelAdult(novelAdult)
       .build();
   }
@@ -81,7 +81,7 @@ public class NovelPlatformDto {
     return NovelPlatformDto.builder()
       .platform(entity.getPlatform())
       .platformId(entity.getPlatformId())
-      .novelKeyDto(NovelKeyDto.toDto(entity.getNovelEntity()))
+      .novelKeyDto(NovelKeyDto.toDto(entity.getNovelIdx()))
       .novelTitle(entity.getNovelTitle())
       .novelThumbnail(entity.getNovelThumbnail())
       .novelIntro(entity.getNovelIntro())
@@ -94,7 +94,7 @@ public class NovelPlatformDto {
       .novelUpdateDate(entity.getNovelUpdateDate())
       .novelRelease(entity.getNovelRelease())
       .cateList(entity.getCateList())
-      .novelOrEbook(entity.getNovelOrEbook())
+      .ebookCheck(entity.getEbookCheck())
       .novelAdult(entity.getNovelAdult())
       .build();
   }
