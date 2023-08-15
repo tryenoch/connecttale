@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import KakaoSearchResult from "./KakaoSearchResult";
-import NaverSearchResult from "./NaverSearchResult";
+
 import RidiSearchResult2 from "./RidiSearchResult2";
 import KakaoSearchResult2 from "./KakaoSearchResult2";
 import NaverSearchResult2 from "./NaverSearchResult2";

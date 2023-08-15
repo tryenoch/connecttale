@@ -7,62 +7,54 @@ import novelDetail from "../NovelDetail";
 function NaverSearchResult2(props) {
   const [novelSearchList, setNovelSearchList] = useState([]);
   const navi = useNavigate();
-
   
   
   useEffect(() => {
-    // 현재 로직상 useEffect는 props.keyword가 변경될 때 마다 실행하게끔 되어있는데, 아래 setSearchWord(props.keyword)가 존재하면 searchWord 스테이트가 계속 변경되게되어 useEffect가 무한루프가 되어버림
-    // setSearchWord(props.keyword);
-    
-    axios.get('/searchKakao', {
+    axios.get('/searchNaver', {
       params : {
         searchWord: props.keyword
       }
     })
       .then(res => {
-        // 카카오 페이지 검색결과 가져오기
+        const item = res.data;
         // console.log(res);
-        if (res.data.length != 0) {
-          // console.log(res);
-          let kakaoSearchResult = [];
-          
-          // Promise.all을 사용하여 반복되는 axios 통신이 모두 완료된 후, 가져온 데이터들을 kakaoSearchResult에 저장하는 로직
-          Promise.all(res.data.map(item => axios.get('https://page.kakao.com/_next/data/2.12.2/ko/content/' + item + '.json')))
-            .then(res => {
-              // console.log(res);
-              for (let i = 0; i < res.length; i++) {
-                const item = res[i].data.pageProps
-                const data = {
-                  platform: 1,
-                  platformId: item.seriesId,
-                  title: item.metaInfo.ogTitle.includes('[') ? item.metaInfo.ogTitle.substring(0, item.metaInfo.ogTitle.indexOf('[')) : item.metaInfo.ogTitle,
-                  thumbnail: item.metaInfo.image,
-                  author: item.metaInfo.author,
-                  description: item.metaInfo.description,
-                  publi: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.publisherName,
-                  category: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.category,
-                  price: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.retailPrice,
-                  ageGrade: item.dehydratedState.queries[0].state.data.contentHomeAbout.detail.ageGrade == "Nineteen" ? "Y" : "N",
-                  ebookCheck: item.metaInfo.ogTitle.includes('[단행본]') ? '단행본' : '웹소설'
-                }
-                kakaoSearchResult.push(data);
-              }
-              setNovelSearchList(kakaoSearchResult);
-            })
-            .catch(err => {
-              console.log(err.message);
-            });
+        let naverSearchList = [];
+        
+        if(Object.keys(res.data) != 0) {
+          for (let i = 0; i < item.title.length; i++) {
+            // const item = res.data;
+            const data = {
+              platform: 2,
+              platformId: item.platformId[i],
+              title: item.title[i].includes('[') ? item.title[i].substring(0, item.title[i].indexOf('[')) : item.title[i],
+              thumbnail: item.thumbnail[i],
+              author: item.author[i],
+              starRate: item.starRate[i],
+              completeYn: item.completeYn[i],
+              count: item.count[i],
+              description: item.dsc[i],
+              ageGrade: item.ageGrade[i],
+              ebookCheck: item.title[i].includes('[단행본]') ? '단행본' : '웹소설'
+            }
+            naverSearchList.push(data);
+          }
+          setNovelSearchList(naverSearchList);
         }
       })
       .catch(err => {
         console.log(err.message);
       })
+    
   }, [props.keyword])
   
   const handleLinkClick = async (item) => {
     try {
       const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck);
-      navi(`/novelDetail/${item.title}`, { state: { novelDetail: novelDetail } });
+      navi(`/novelDetail/${item.title}`, {
+        state: {
+          novelDetail: novelDetail,
+        }
+      });
     } catch (error) {
       console.log(error.message);
     }

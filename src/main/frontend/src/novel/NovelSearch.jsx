@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useParams, useSearchParams} from "react-router-dom";
 
-import axios from "axios";
-import KakaoSearchResult from "./novelSearch/KakaoSearchResult";
-import NaverSearchResult from "./novelSearch/NaverSearchResult";
 import RidiSearchResult2 from "./novelSearch/RidiSearchResult2";
 import SearchPlatformTab from "./novelSearch/SearchPlatformTab";
 
@@ -14,7 +11,7 @@ function NovelSearch(props) {
   
   useEffect(() => {
     setSearchWord(keyword.get('keyword'));
-  }, [keyword.get('keyword')])
+  }, [keyword.get("keyword")])
   
   return (
     <div className={'container my-4'}>

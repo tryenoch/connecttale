@@ -6,7 +6,7 @@ import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import java.util.List;
 
 public interface NovelDetailService {
-  List<NovelPlatformEntity> getNovelDetail(String title);
+  List<NovelPlatformEntity> getNovelDetail(String title, String ebookCheck);
 
   void insertRidiToNovel(NovelEntity novelEntity);
 

@@ -39,7 +39,7 @@ function RidiSearchResult2(props) {
                 completeYn: item[i].is_series_complete ? '완결' : '연재중',
                 description: item[i].desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
                 ageGrade: item[i].age_limit == 19 ? "Y" : "N",
-                ebookCheck: item[i].web_title_title.includes('e북') ? "단행본" : "웹소설"
+                ebookCheck: item[i].web_title.includes('e북') ? "단행본" : "웹소설"
               }
               ridiSearchList.push(data);
             }
@@ -75,7 +75,11 @@ function RidiSearchResult2(props) {
   const handleLinkClick = async (item) => {
     try {
       const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck);
-      navi(`/novelDetail/${item.title}`, { state: { novelDetail: novelDetail } });
+      navi(`/novelDetail/${item.title}`, {
+        state: {
+          novelDetail: novelDetail,
+        }
+      });
     } catch (error) {
       console.log(error.message);
     }

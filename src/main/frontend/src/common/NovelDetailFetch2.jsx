@@ -1,6 +1,6 @@
 import React from "react";
+
 import axios from "axios";
-import novelDetail from "../novel/NovelDetail";
 import {useNavigate} from "react-router-dom";
 
 export const fetchData = async (platformId, title, ebookCheck) => {
@@ -10,7 +10,8 @@ export const fetchData = async (platformId, title, ebookCheck) => {
   try {
     const res = await axios.get("/novelDetail", {
       params: {
-        title: title
+        title: title,
+        ebookCheck: ebookCheck
       }
     })
     // console.log(res);
@@ -48,12 +49,16 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                 const item3 = ridiRes3.data.notices;
                 console.log(item3);
                 
+                const ridiRes4 = await axios.get('https://book-api.ridibooks.com/books/'+ item.b_id + '/descriptions')
+                
+                const item4 = ridiRes4.data.descriptions;
+                
                 const ridiObj = {
                   platform: 3,
                   platformId: item.b_id,
                   novelTitle: item.title,
                   novelThumbnail: "https://img.ridicdn.net/cover/"+ item.b_id +"/xxlarge",
-                  novelIntro: item.desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
+                  novelIntro: item4.intro.replace(/<[^>]*>/g, ""),
                   novelAuthor: item.authors_info.map(auth => {
                     return auth.name;
                   }).toString(),
@@ -71,7 +76,7 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                 
                 
                 // 리디북스 디테일 정보 디비에 저장
-                const ridiRes4 = await axios.post('/novelDetail', null, {
+                const ridiRes5 = await axios.post('/novelDetail', null, {
                   params: {
                     id: platformId,
                     title: title,
@@ -96,6 +101,7 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                   }
                 })
               }
+              break;
             }
             else if (ebookCheck === '웹소설') {
               if (ridiRes.data.books[i].web_title === '') {
@@ -161,6 +167,7 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                   }
                 })
               }
+              break;
             }
           }
           else {
@@ -171,13 +178,22 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                 ne: ebookCheck,
               }
             })
+            break;
           }
         }
       }
       
       // fetchData를 다시 실행되게 해서 db에 저장된 데이터를 불러오게끔
-      // fetchData();
-      // db 저장 했으면 서버에서 리다이렉트로 novelDetail 페이지로 바로 이동
+      
+      // db 저장 했으면 fetchData() 함수를 재실행하여 반환할 데이터 담기
+      // navi(`/novelDetail/${title}`, {
+      //   state: {
+      //     novelDetail: novelDetail,
+      //     // platformId: platformId,
+      //     // title: title,
+      //     // ebookCheck: ebookCheck
+      //   }
+      // });
     }
   }
   catch (err) {
@@ -185,4 +201,3 @@ export const fetchData = async (platformId, title, ebookCheck) => {
   }
   return novelDetail;
 }
-

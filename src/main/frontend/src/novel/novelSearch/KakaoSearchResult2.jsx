@@ -61,7 +61,11 @@ function KakaoSearchResult2(props) {
   const handleLinkClick = async (item) => {
     try {
       const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck);
-      navi(`/novelDetail/${item.title}`, { state: { novelDetail: novelDetail } });
+      navi(`/novelDetail/${item.title}`, {
+        state: {
+          novelDetail: novelDetail,
+        }
+      });
     } catch (error) {
       console.log(error.message);
     }
