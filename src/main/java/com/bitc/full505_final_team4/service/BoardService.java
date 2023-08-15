@@ -17,4 +17,8 @@ public interface BoardService {
     int setBoard(BoardDTO board) throws Exception;
 
     BoardDTO getBoard(int idx) throws Exception;
+
+    // myQna 구현
+    Page<BoardEntity> getQnaList(Pageable pageable, String id) throws Exception;
+
 }

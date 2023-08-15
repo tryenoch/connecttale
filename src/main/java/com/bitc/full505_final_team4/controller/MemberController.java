@@ -1,12 +1,19 @@
 package com.bitc.full505_final_team4.controller;
 
+import com.bitc.full505_final_team4.data.dto.BoardDTO;
 import com.bitc.full505_final_team4.data.dto.MemberDto;
+import com.bitc.full505_final_team4.data.entity.BoardEntity;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
+import com.bitc.full505_final_team4.service.BoardService;
 import com.bitc.full505_final_team4.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin("http://localhost:3000")
@@ -14,8 +21,9 @@ import java.util.Map;
 @RestController
 public class MemberController {
   private final MemberService memberService;
+  private final BoardService boardService;
 
-  @RequestMapping(value = "/login", method = RequestMethod.GET)
+  @RequestMapping(value = "/login", method = RequestMethod.POST)
   public Object login(@RequestParam("id") String id, @RequestParam("pw") String pw) throws Exception {
 
     MemberEntity member = memberService.login(id, pw);
@@ -81,6 +89,29 @@ public class MemberController {
       result.put("result", "사용가능한 닉네임입니다.");
     }
 
+    return result;
+  }
+
+  @RequestMapping(value = "/myPage/myQna", method = RequestMethod.GET)
+  // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
+  public Object myQna(Pageable pageable, @RequestParam("id") String id) throws Exception {
+
+    Map<String, Object> result = new HashMap<>();
+
+    List<BoardDTO> reqList = new ArrayList<>();
+    Page<BoardEntity> boardPages = boardService.getQnaList(pageable, id);
+    int totalPages = boardPages.getTotalPages();
+
+    for (BoardEntity board : boardPages.getContent()) {
+      BoardDTO req = BoardDTO.toDTO(board);
+      reqList.add(req);
+    }
+
+    result.put("result", "성공");
+    result.put("totalPages", totalPages);
+    result.put("nowPage", pageable.getPageNumber() + 1);
+    result.put("boardType", "req");
+    result.put("boardList", reqList);
     return result;
   }
 

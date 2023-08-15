@@ -1,9 +1,13 @@
 package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.data.dto.MemberDto;
+import com.bitc.full505_final_team4.data.entity.BoardEntity;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
+import com.bitc.full505_final_team4.data.repository.BoardRepository;
 import com.bitc.full505_final_team4.data.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
+
   private final MemberRepository memberRepository;
 
   @Override
@@ -33,4 +38,5 @@ public class MemberServiceImpl implements MemberService {
   public boolean confirmNick(String nickname) throws Exception {
     return memberRepository.existsByNickname(nickname);
   }
+
 }

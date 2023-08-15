@@ -13,15 +13,15 @@ function Login(props) {
     const login = (e) => {
         e.preventDefault();
 
-        axios.get(`http://localhost:8080/login`, {
+        axios.post(`http://localhost:8080/login`, null, {
             params: {
                 id: id,
                 pw: pw
             }
         })
             .then(res => {
+                console.log(res)
                 const member = res.data;
-                alert(member.result.name);
             })
             .catch(err => {
                 alert(err);
@@ -36,7 +36,7 @@ function Login(props) {
         <div className={'container'}>
             <h1>login</h1>
             <div className={'my-5'}><br/><br/></div>
-            <form method={'GET'}>
+            <form method={'POST'}>
                 <div className={'row my-5 justify-content-center'}>
                     <div className={'col-sm-6'}>
                         <div className={'row justify-content-center'}>
