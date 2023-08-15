@@ -1,10 +1,8 @@
 package com.bitc.full505_final_team4.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 
@@ -26,14 +24,16 @@ public class NovelPlatformEntity {
   private String platformId;
 
   @Id
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "novel_idx")
-  private NovelEntity novelEntity;
+  @ToString.Exclude
+  private NovelEntity novelIdx;
 
   @Column(nullable = false, length = 100)
   private String novelTitle;
 
-  @Column(nullable = false, length = 200)
+  @Column(nullable = false, length = 500)
   private String novelThumbnail;
 
   @Column(nullable = false, length = 500)
@@ -53,8 +53,8 @@ public class NovelPlatformEntity {
   @Column(nullable = false)
   private int novelCount;
 
-  @Column(nullable = false, length = 45)
-  @ColumnDefault("N")
+  @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
+//  @ColumnDefault("N")
   private String novelCompleteYn;
 
   @Column(nullable = false)
@@ -69,13 +69,40 @@ public class NovelPlatformEntity {
   @Column(length = 45)
   private String novelRelease;
 
-  @Column(length = 45)
-  private String novelRecentUpdate; // 최근 업데이트일
-
   @Column(nullable = false, length = 100)
   public String cateList;
 
+  @Column(length = 45)
+  public String novelRecentUpdate;
 
+  @Column(nullable = false, length = 10)
+  public String ebookCheck;
+
+  @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
+//  @ColumnDefault("N")
+  private String novelAdult;
+
+  @Builder
+  public NovelPlatformEntity(int platform, String platformId, String novelTitle, NovelEntity novelIdx, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String ebookCheck, String novelAdult) {
+    this.platform = platform;
+    this.novelIdx = novelIdx;
+    this.platformId = platformId;
+    this.novelTitle = novelTitle;
+    this.novelThumbnail = novelThumbnail;
+    this.novelIntro = novelIntro;
+    this.novelIntroImg = novelIntroImg;
+    this.novelAuthor = novelAuthor;
+    this.novelCount = novelCount;
+    this.novelCompleteYn = novelCompleteYn;
+    this.novelPrice = novelPrice;
+    this.novelStarRate = novelStarRate;
+    this.novelUpdateDate = novelUpdateDate;
+    this.novelRelease = novelRelease;
+    this.cateList = cateList;
+    this.ebookCheck = ebookCheck;
+    this.novelAdult = novelAdult;
+    this.novelPubli = novelPubli;
+  }
 
 
 }

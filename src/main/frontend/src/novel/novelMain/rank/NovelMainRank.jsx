@@ -16,7 +16,7 @@ function NovelMainRank() {
 
   let rankList;
 
-  if (platform == "ridi"){
+  if (platform == "ridi" || platform == "naver"){
     // 받아온 순위 리스트중 12개만 출력되도록
     rankList = novelList.filter(novel => novel.novelIndexNum <13);
     rankList = rankList.map(novel =>
@@ -26,6 +26,7 @@ function NovelMainRank() {
       </Col>
     );
   } else if (platform == "kakao"){
+    // 카카오는 비교적 없는 정보가 많아 별도 컴포넌트를 사용
     rankList = novelList.filter(novel => novel.novelIndexNum <13);
     rankList = rankList.map(novel =>
       /* 나중에 링크 추가 해야함 */
@@ -56,7 +57,9 @@ function NovelMainRank() {
                 </ul>
               </div>
             </div>
-            <button className={'btn btn-purple px-3 btn-sm rounded-5'}>네이버 시리즈</button>
+            <button className={'btn btn-purple px-3 btn-sm rounded-5'} onClick={(e) => {
+              loadRankListNaver("naver", 0, 12)
+            }}>네이버 시리즈</button>
             <button className={'btn btn-purple px-3 btn-sm rounded-5'} onClick={(e) => {
               loadRankListKakao("kakao", 94)
             }}>카카오 페이지</button>
@@ -95,6 +98,31 @@ function NovelMainRank() {
       MessageUtils.errorMessage("에러 메세지", err);
     })
   }
+
+  // 네이버 소설 불러오기
+  function loadRankListNaver(platform, startNum, endNum) {
+    // MessageUtils.infoMessage("테스트 버튼을 클릭했습니다.");
+
+    axios.get(`/novel/naverRankList`, {
+      params : {
+        startNum : startNum,
+        endNum : endNum
+      }
+    }).then(res => {
+      // MessageUtils.infoMessage("ridiRankList 통신에 성공했습니다.");
+      // console.log(res);
+      console.log(res.data.naverNovelList);
+
+      const list = res.data.naverNovelList;
+
+      setPlatform(platform);
+      setNovelList(list);
+
+    }).catch(err => {
+      MessageUtils.errorMessage("에러 메세지", err);
+    })
+  }
+
 
   // 카카오 소설 불러오기
   function loadRankListKakao(platform, urlId) {

@@ -3,9 +3,17 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.common.JsonUtils;
 import com.bitc.full505_final_team4.common.WebDriverUtil;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
+import com.bitc.full505_final_team4.data.dto.NovelRankDto;
+import com.bitc.full505_final_team4.data.entity.NovelRankEntity;
+import com.bitc.full505_final_team4.data.repository.NovelRankRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,6 +21,7 @@ import org.springframework.beans.propertyeditors.CurrencyEditor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +30,102 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class NovelMainServiceImpl implements NovelMainService{
+
+  private final NovelRankRepository novelRankRepository;
+
+  // 확인용 데이터 불러오기
+  @Override
+  public boolean checkTodayRankData(int platform, int rankNum, LocalDate date) throws Exception {
+    // 오늘 불러온 데이터가 있다면 true 이므로 데이터를 저장하는 메소드를 동작 시킬 필요가 없다.
+    NovelRankEntity check = novelRankRepository.findByPlatformAndRankNumAndUpdateDate(platform, rankNum, date);
+
+    if(!ObjectUtils.isEmpty(check)){
+      return true;
+    } else { return false; }
+  }
+
+  // 리디북스 특정 카테고리 데이터를 저장한다.
+  @Override
+  public boolean storeRidiCategoryRankList(int category, int startNum) throws Exception {
+
+    boolean result = false;
+    int cateRankNum = ridiCategoryRankNum(category);
+
+    List<NovelRankEntity> novelRankList = new ArrayList<>();
+
+    String url = "https://api.ridibooks.com/v2/bestsellers?category_includes=";
+    url += category + "&offset=";
+    // startNum : 첫 순위 번호
+    url += (startNum - 1) + "&limit=50&period=DAILY";
+
+
+    try {
+      // 페이지 json 객체로 변환
+      JSONObject novelResult = (JSONObject) JsonUtils.jsonUrlParser(url).get("data");
+      ArrayList<JSONObject> novelList = (ArrayList<JSONObject>) novelResult.get("items"); // 배열 변환
+
+      if (!novelList.isEmpty()) {
+        for (JSONObject novelItem : novelList) {
+          // 각각 item에 들어있는 book Object
+          HashMap<String, Object> book = (HashMap<String, Object>) novelItem.get("book");
+
+          // 값을 저장할 entity
+//          NovelRankEntity novel = new NovelRankEntity();
+
+          // platform : 리디북스는 3
+          int platform = 3;
+
+          // 소설 순위
+          int rankNum = novelList.indexOf(novelItem) + 1 + cateRankNum; // novelItem의 인덱스 번호
+
+          // 플랫폼 제공 아이디
+          String platformId = book.get("book_id").toString();
+
+          // 소설 제목 얻어오기
+          JSONObject serial = (JSONObject) book.get("serial");
+          String title = serial.get("title").toString();
+
+          // 작가 이름 얻어오기
+          ArrayList authorsList = (ArrayList) book.get("authors");
+          HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+          String author = authors.get("name").toString();
+
+          // 소설 썸네일
+          JSONObject cover = (JSONObject) book.get("cover");
+          String thumbnail = cover.get("large").toString();
+
+          // 소설 카테고리
+          /*JSONArray categories = (JSONArray) book.get("categories");
+          JSONObject categoryFirst = (JSONObject) categories.get(0);
+          novel.setCategory(categoryFirst.get("name").toString());*/
+
+
+          // 소설 별점
+          /*JSONArray ratings = (JSONArray) book.get("ratings");
+          novel.setNovelStarRate(getStarRate(ratings)); // 하위에 구현한 함수 사용*/
+
+          int adultsOnly = 0;
+
+          // 성인 여부
+          if ((Boolean) book.get("adults_only")) {
+            adultsOnly = 1; // 성인 작품 맞음
+          } else {
+            adultsOnly = 0; // 성인 작품 아님
+          }
+
+          novelRankList.add(new NovelRankEntity(platform, rankNum, title, author, thumbnail, platformId, LocalDate.now(), category, adultsOnly)); // entity 리스트에 저장
+        }
+
+        novelRankRepository.saveAll(novelRankList);
+        result = true;
+      }
+    } catch (Exception e){
+      e.printStackTrace();
+    }
+
+
+    return result;
+  }
 
   /* 리디북스 카테고리 별 순위 리스트 불러오기
   * 시작번호로부터 20개 출력
@@ -77,6 +182,8 @@ public class NovelMainServiceImpl implements NovelMainService{
         // 성인 여부
         novel.setAdultsOnly((Boolean) book.get("adults_only"));
 
+
+
         novelDtoList.add(novel);
       }
 
@@ -84,6 +191,72 @@ public class NovelMainServiceImpl implements NovelMainService{
     }
 
     return null;
+  }
+
+  /* 네이버 리스트 불러오기 */
+  @Override
+  public List<NovelMainDto> getNaverRankList(String startNum, String endNum, int totalPageNum) throws Exception {
+    List<NovelMainDto> novelList = new ArrayList<>();
+
+    String url = "https://series.naver.com/novel/top100List.series?rankingTypeCode=DAILY&categoryCode=ALL&page=";
+
+    int start = Integer.parseInt(startNum);
+    int end = Integer.parseInt(endNum);
+
+    for (int i = 1; i <= totalPageNum ; i++) {
+      // 문자열 url을 주소화하여 페이지를 가져옴
+      Document doc = Jsoup.connect(url + i).get();
+
+      try{
+
+        Elements listDoc = doc.getElementsByClass("comic_top_lst").select("li");
+        List<Element> list = listDoc.subList(start, end);
+
+
+        for (Element rankItem : list){
+          NovelMainDto novel = new NovelMainDto();
+
+          // 순위
+          int rankNum = list.indexOf(rankItem);
+          novel.setNovelIndexNum(rankNum + 1);
+
+          // 플랫폼 아이디
+          String link = rankItem.select(".pic").attr("href");
+          String platformId = link.substring(link.lastIndexOf("=") + 1);
+
+          novel.setPlatformId(platformId);
+
+          // 썸네일
+          String thumbnailEl = rankItem.select("img").attr("src");
+          String thumbnail = thumbnailEl.substring(0, thumbnailEl.lastIndexOf("?"));
+          novel.setNovelThumbnail(thumbnail);
+
+          // 제목
+          String title = rankItem.select("h3").select("a").text();
+          if (title.contains("[")){
+            int idx = title.lastIndexOf("[");
+            title = title.substring(0, idx -1);
+          }
+
+          novel.setNovelTitle(title);
+
+          // 작가
+          String author = rankItem.select(".author").text();
+          novel.setNovelAuthor(author);
+
+          // 별점
+          String starRate = rankItem.select(".score_num").text();
+          novel.setNovelStarRate(starRate);
+
+          novelList.add(novel);
+
+        }
+
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+    }
+    return novelList;
   }
 
   @Override
@@ -286,5 +459,33 @@ public class NovelMainServiceImpl implements NovelMainService{
 
     return starRate;
   }
+
+  // 리디 카테고리별 pk 중복 방지를 위한 카테고리별 pk 생성 메소드
+  // 리디북스 카테고리 1750 : 판타지(0) / 1650 : 로맨스(50) / 6050 : 로판(100) / 4150: BL(150)
+  @Override
+  public int ridiCategoryRankNum(int category) throws Exception {
+    int cateRankNum = 0;
+    switch (category){
+      case 1750 : // 판타지
+        cateRankNum = 0;
+        break;
+
+      case 1650 : // 로맨스
+        cateRankNum = 50;
+        break;
+
+      case 6050 : // 로판
+        cateRankNum = 100;
+        break;
+
+      case 4150 : // BL
+        cateRankNum = 150;
+        break;
+    }
+
+    return cateRankNum;
+  }
+
+
 }
 

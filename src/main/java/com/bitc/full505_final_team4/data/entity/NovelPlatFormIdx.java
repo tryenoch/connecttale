@@ -14,5 +14,5 @@ public class NovelPlatFormIdx implements Serializable {
     private int platform;
 
     @EqualsAndHashCode.Include
-    private int novelEntity;
+    private int novelIdx;
 }

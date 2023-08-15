@@ -20,6 +20,8 @@ function BoardList(props) {
 
     useEffect(() => {
         requestData();
+        setCate(0);
+        setKeyword('');
     }, [props.data, nowPage]);
 
     const requestData = () => {
@@ -47,7 +49,14 @@ function BoardList(props) {
     }
 
     const handleSubmit = (event) => {
-        alert(`검색어 : ${keyword}, 종류 : ${cate}`);
+        axios.get(`/board/${cate}/${keyword}`)
+            .then(res => {
+                setBoardList(res.data.boardList);
+            })
+            .catch(err => {
+                alert(`통신에 실패했습니다. err : ${err}`);
+            })
+        // 검색 기능 API 구현
         event.preventDefault();
     }
 
@@ -56,31 +65,33 @@ function BoardList(props) {
             <Col xs={10} className={'my-5 mx-auto'}>
                 <Row className={'border-3 border-black border-bottom py-2'}>
                     <Col className={'ps-0'}><h3 className={'fw-bold'}>{props.data.title}</h3></Col>
-                    <Col className={'pe-0'}>
-                        <form onSubmit={handleSubmit}>
-                            <Row>
-                                <Col className={'px-0'}>
-                                    <Form.Select
-                                        className={'border-2 border-black select-box cursor fw-bold'}
-                                        value={cate}
-                                        onChange={(e) => setCate(e.target.value)}
-                                    >
-                                        <option value={0}>제목</option>
-                                        <option value={1}>작성자</option>
-                                    </Form.Select>
-                                </Col>
-                                <Col xs={8} className={'search-bar'}>
-                                    <input
-                                        type={'text'}
-                                        value={keyword}
-                                        placeholder={'검색어를 입력하세요'}
-                                        onChange={(e) => setKeyword(e.target.value)}
-                                    />
-                                    <button type={'submit'}><i className="bi bi-search"></i></button>
-                                </Col>
-                            </Row>
-                        </form>
-                    </Col>
+                    {
+                        (props.data.id === 0) &&
+                        (<Col className={'pe-0'}>
+                            <form onSubmit={handleSubmit}>
+                                <Row>
+                                    <Col className={'px-0'}>
+                                        <Form.Select
+                                            className={'border-2 border-black select-box cursor fw-bold'}
+                                            value={cate}
+                                            onChange={(e) => setCate(e.target.value)}
+                                        >
+                                            <option value={0}>제목</option>
+                                            <option value={1}>작성자</option>
+                                        </Form.Select>
+                                    </Col>
+                                    <Col xs={8} className={'search-bar'}>
+                                        <input
+                                            type={'text'}
+                                            value={keyword}
+                                            placeholder={'검색어를 입력하세요'}
+                                            onChange={(e) => setKeyword(e.target.value)}
+                                        />
+                                        <button type={'submit'}><i className="bi bi-search"></i></button>
+                                    </Col>
+                                </Row>
+                            </form>
+                        </Col>)}
                 </Row>
                 <Row>
                     <table className={'text-center table'}>
@@ -120,8 +131,8 @@ function BoardList(props) {
                     <div className={'d-flex justify-content-end'}>
                         {
                             // 특정 조건에서만 랜더링 코드
-                            props.data.type === 'req' &&
-                            (<Link to={'/board/write'} className={'btn btn-primary'}>글 쓰기</Link>)
+                            // props.data.type === 'req' &&
+                            (<Link to={`/board/write/${props.data.id}`} className={'btn btn-primary'}>글 쓰기</Link>)
                         }
 
                     </div>

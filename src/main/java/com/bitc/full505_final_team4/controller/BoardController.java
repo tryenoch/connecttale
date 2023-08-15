@@ -1,6 +1,7 @@
 package com.bitc.full505_final_team4.controller;
 
 import com.bitc.full505_final_team4.data.dto.BoardDTO;
+import com.bitc.full505_final_team4.data.dto.BoardReplyDTO;
 import com.bitc.full505_final_team4.data.entity.BoardCateEntity;
 import com.bitc.full505_final_team4.data.entity.BoardEntity;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
@@ -104,9 +105,62 @@ public class BoardController {
     public Object getBoard(@PathVariable int idx) throws Exception {
         Map<String, Object> result = new HashMap<>();
         BoardDTO board = boardService.getBoard(idx);
+        List<BoardReplyDTO> replyList = boardService.getBoardReplyList(idx);
 
         result.put("result", "성공");
         result.put("board", board);
+        result.put("replyList", replyList);
+        return result;
+    }
+
+    @RequestMapping(value = "/board/{idx}", method = RequestMethod.DELETE)
+    public Object removeBoard(@PathVariable int idx) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boardService.deleteBoard(idx);
+
+        result.put("result", "성공");
+        return result;
+    }
+
+    @RequestMapping(value = "/board/reply", method = RequestMethod.POST)
+    public Object setBoardReply(BoardReplyDTO boardReply) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boardService.setBoardReply(boardReply);
+
+        result.put("result", "성공");
+        return result;
+    }
+
+    @RequestMapping(value = "/board/reply/{idx}", method = RequestMethod.DELETE)
+    public Object removeReply(@PathVariable int idx) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boardService.deleteBoardReply(idx);
+
+        result.put("result", "성공");
+        return result;
+    }
+
+    @RequestMapping(value = "/board/{cate}/{keyword}", method = RequestMethod.GET)
+    public Object searchReqBoard(@PathVariable int cate, @PathVariable String keyword) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        List<BoardDTO> boardList = new ArrayList<>();
+        List<BoardEntity> boardEntityList = null;
+        switch (cate) {
+            case 0:
+                boardEntityList = boardService.searchTitleBoard(keyword);
+                break;
+            case 1:
+                boardEntityList = boardService.searchWriterBoard(keyword);
+                break;
+        }
+
+        for (BoardEntity boardEntity : boardEntityList) {
+            BoardDTO board = BoardDTO.toDTO(boardEntity);
+            boardList.add(board);
+        }
+        result.put("result", "성공");
+        result.put("boardList", boardList);
         return result;
     }
 }
