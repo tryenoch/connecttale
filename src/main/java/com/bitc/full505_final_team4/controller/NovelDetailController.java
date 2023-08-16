@@ -205,4 +205,14 @@ public class NovelDetailController {
       e.printStackTrace();
     }
   }
+
+// -------------------------------- 좋아요 버튼 클릭 ------------------------------------
+  @RequestMapping(value = "/novelDetailLike", method = RequestMethod.PUT)
+  public void updateDetailLike() throws Exception {
+
+
+  }
 }
+
+
+

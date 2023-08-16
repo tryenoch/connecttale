@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import novel from "../Novel";
 import {Link} from "react-router-dom";
 import {fetchData} from "../../common/NovelDetailFetch2";
+import axios from "axios";
 
 
 function NovelDetailInfo(props) {
@@ -11,11 +12,15 @@ function NovelDetailInfo(props) {
   const [kakao, setKakao] = useState({});
   const [baseItem, setBaseItem] = useState({});
   
+  console.log(props.novelDetail);
   // console.log(kakao);
   // console.log(naver);
   // console.log(ridi);
   // console.log(baseItem);
   
+  const likeClickHandler = (e) => {
+    // const res = axios.get()
+  }
   
   useEffect(() => {
     setNovelInfo(props.novelDetail);
@@ -61,10 +66,10 @@ function NovelDetailInfo(props) {
   return (
     <div>
       <div className={'row'}>
-        <div className={'col-sm-4'}>
+        <div className={'col-sm-3'}>
           <img src={baseItem.novelThumbnail} alt="" className={'w-100 h-100'}/>
         </div>
-        <div className={'col-sm-8'}>
+        <div className={'col-sm-9'}>
           <div className={'ms-4'}>
             {
               baseItem.cateList == 1
@@ -84,9 +89,15 @@ function NovelDetailInfo(props) {
             }
         
             {/*제목, 좋아요 버튼*/}
-            <div className={'d-flex align-items-center'}>
-              <p className={'fw-bold fs-3'}>{baseItem.novelTitle} [{baseItem.ebookCheck}]</p>
-              <button type={'button'} className={'btn-outline-purple ms-2'}><i className="bi bi-heart"></i><span>좋아요</span></button>
+            <div className={'row'}>
+              <div className={'col-sm-9'}>
+                <p className={'fw-bold fs-3'}>
+                  {baseItem.novelTitle} [{baseItem.ebookCheck}]
+                </p>
+              </div>
+              <div className={'col-sm-3'}>
+                <button type={'button'} className={'btn-outline-purple ms-2'}><i className="bi bi-heart" ></i><span>좋아요</span></button>
+              </div>
             </div>
         
             {/*  플랫폼 별 별점 정보*/}
