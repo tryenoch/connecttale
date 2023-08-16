@@ -52,10 +52,11 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
       String title = dto.getNovelTitle();
       String platformId = dto.getPlatformId();
+      String ebookCheck = dto.getEbookCheck(); // 단행본 웹소설 여부
 
       try {
         // novel table 에 일치하는 제목이 있는지 확인, 없을 경우 exception 반환
-        Optional<NovelEntity> entityNovel = novelMainRepository.findByNovelTitle(title);
+        Optional<NovelEntity> entityNovel = novelMainRepository.findByNovelTitleAndEbookCheck(title, ebookCheck);
 
         // 일치하는 제목이 없다면 부여한 예외 지점으로 넘김
         if (entityNovel.isEmpty()){
@@ -117,13 +118,15 @@ public class NovelNaverServiceImpl implements NovelNaverService{
     try {
 
       platformMainRepository.saveAll(novelPlatformEntityList);
-
+      result = true;
+      System.out.println("SUCCESS MESSAGE : 네이버 신작 목록이 업데이트 되었습니다.");
     } catch (Exception e){
 
       // 오류 발생시 false 반환
       e.printStackTrace();
       result = false;
     }
+
 
     return result;
   }
@@ -137,16 +140,16 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
     List<NovelMainDto> dtoListNotAdult = new ArrayList<>();
 
-    String url = "https://series.naver.com/novel/recentList.series?orderTypeCode=new&is&isFinished=false&page=" + pageNum;
+    String url = "https://series.naver.com/novel/recentList.series?page=" + pageNum;
 
     Document doc = Jsoup.connect(url).get();
 
     try {
 
       // 최신 소설 element 리스트 (총 25개)
-      Elements recentList = doc.getElementsByClass(".lst_list").select("li");
+      Elements recentList = doc.select(".lst_list").select("li");
 
-      for (int i = 0; i < recentList.size(); i++){
+      for (int i = 0; i < recentList.size();){
         NovelMainDto novel = new NovelMainDto();
 
         Element recentNovel = recentList.get(i);
@@ -159,12 +162,17 @@ public class NovelNaverServiceImpl implements NovelNaverService{
             throw new NoSuchElementException();
           }
 
-          Elements infoA = recentNovel.select("div h3 a");
+          Elements infoA = recentNovel.select("div > h3 > a");
 
-          // 제목
           String title = infoA.attr("title");
+
+          // 단행본 웹소설 여부 들고오기
+          String ebookCheck = getEbookCheck(title);
+          novel.setEbookCheck(ebookCheck);
+
           title = editNaverNovelTitle(title); // 소설 제목만 들고오기 [, (제외
           novel.setNovelTitle(title);
+
 
           // 플랫폼 전용 아이디 들고오기
 
@@ -172,8 +180,9 @@ public class NovelNaverServiceImpl implements NovelNaverService{
           platformId = editNaverPlatformId(platformId);
           novel.setPlatformId(platformId);
 
-          dtoListNotAdult.add(novel);
-
+          if(dtoListNotAdult.add(novel)){
+            i++;
+          }
 
         } catch (NoSuchElementException e) {
           // 19금 작품이면 관련 내용 추후 구현, 우선 다음 내용으로 넘어감
@@ -210,11 +219,11 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
       Elements page = doc.select("#container");
 
-      Elements img = page.select("div.aside > a > img");
+      Elements img = page.select("div.aside .pic_area img");
 
-      // novel_title
       String title = img.attr("alt");
-      title = editNaverNovelTitle(title);
+      String editTitle = editNaverNovelTitle(title); // novel_title
+      String ebookCheck = getEbookCheck(title); // ebook_check
 
       // novel_thumbnail
       String imgUrl = img.attr("src");
@@ -226,7 +235,7 @@ public class NovelNaverServiceImpl implements NovelNaverService{
       ageInfo = getAdultYn(ageInfo);
 
 
-      NovelEntity novelEntity = new NovelEntity(title, imgUrl, ageInfo);
+      NovelEntity novelEntity = new NovelEntity(editTitle, imgUrl, ageInfo, ebookCheck);
       novelMainRepository.save(novelEntity);
 
       return novelEntity;
@@ -250,20 +259,24 @@ public class NovelNaverServiceImpl implements NovelNaverService{
       url += platformId;
 
     Document doc = Jsoup.connect(url).get();
-    entity.setPlatform(2); // platform
-
+    entity.setPlatform(2); // platform, naver
+    entity.setPlatformId(platformId); // platform_id
     entity.setNovelIdx(novelEntity); // novel_idx
 
     try {
 
       Elements page = doc.select("#container");
 
-      Elements img = page.select("div.aside a img");
+      Elements img = page.select("div.aside .pic_area img");
 
       // novel_title
       String title = img.attr("alt");
-      title = editNaverNovelTitle(title);
-      entity.setNovelTitle(title);
+      String editTitle = editNaverNovelTitle(title);
+      entity.setNovelTitle(editTitle); // novel_title
+
+      String ebookCheck = getEbookCheck(title);
+      entity.setEbookCheck(ebookCheck); // ebook_check
+
 
       // novel_thumbnail
       String imgUrl = img.attr("src");
@@ -296,18 +309,24 @@ public class NovelNaverServiceImpl implements NovelNaverService{
       double starRate = Double.parseDouble(starInfo);
       entity.setNovelStarRate(starRate); // novel_star_rate
 
-      String firstDate = page.select("tbody#volumeList > tr._volume_row_1 > td.subj > div").select("em").text();
+      /*
+      Elements test1 = page.select(".tbl_buy");
+      Elements test2 = page.select(".tbl_buy").select("#volumeList");
+
+      String firstDate = page.select(".subj").get(0).select("em").text();
       firstDate = getReleaseDate(firstDate);
-      entity.setNovelRelease(firstDate); // novel_release, 오류남
+      entity.setNovelRelease(firstDate); // novel_release, 오류남, 해당페이지에서 동적으로 데이터를 입력하는 부분이라 받아올 수 없음
+      */
 
       String cate = infoList.get(1).select("a").text();
+      cate = cateListConverterIn(cate);
       entity.setCateList(cate); // cate_list
 
       String adultYn = infoList.get(4).select("a").text();
       adultYn = getAdultYn(adultYn);
       entity.setNovelAdult(adultYn); // novel_adult
 
-      // novel_recent_update 얻을 수는 있는데 페이지를 이동해야해서 보류
+      // novel_recent_update 얻을 수는 있는데 페이지 주소를 바꿔야 해서 보류
 
       return entity;
 
@@ -396,7 +415,7 @@ public class NovelNaverServiceImpl implements NovelNaverService{
     String ebookCheck = "웹소설";
 
     if(title.contains("단행본")){
-      ebookCheck = "ebook";
+      ebookCheck = "단행본";
     }
 
     return ebookCheck;
@@ -420,7 +439,12 @@ public class NovelNaverServiceImpl implements NovelNaverService{
   public int getNovelPrice(String priceNum) throws Exception{
     int price = 0;
 
-    price = Integer.parseInt(priceNum);
+    if(priceNum.contains("무료")){
+      price = 0;
+    } else {
+      price = Integer.parseInt(priceNum);
+    }
+
     if(price != 0){
       price = (price * 100);
     }
@@ -439,5 +463,31 @@ public class NovelNaverServiceImpl implements NovelNaverService{
     dateInfo = dateInfo.substring(1, dateInfo.length()-2);
 
     return dateInfo;
+  }
+
+  // entity 에 넣기 위한 숫자 리스트 변환
+  @Override
+  public String cateListConverterIn(String cateItem) throws Exception {
+    String convertNum = "";
+
+    if (cateItem.contains("판타지")){
+      convertNum = "1";
+    } else if (cateItem.contains("현판")) {
+      convertNum = "2";
+    } else if (cateItem.contains("로맨스")) {
+      convertNum = "3";
+    } else if (cateItem.contains("로판")) {
+      convertNum = "4";
+    } else if (cateItem.contains("무협")) {
+      convertNum = "5";
+    } else if (cateItem.contains("미스터리") || cateItem.contains("라이트노벨")){
+      convertNum = "6";
+    } else if (cateItem.contains("BL")) {
+      convertNum = "7";
+    } else {
+      System.out.println("cateListConverterIn : 일치하는 카테고리 명이 없습니다.");
+    }
+
+    return convertNum;
   }
 }

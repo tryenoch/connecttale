@@ -268,6 +268,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
         platformMainRepository.saveAll(novelPlatformEntityList);
 
         result = true;
+        System.out.println("SUCCESS MESSAGE : 리디북스 최신작 등록이 완료되었습니다. ");
       }
 
     }catch (Exception e){
@@ -285,7 +286,8 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
   /**************** 단위로 자른 기능 모음 ****************/
 
-  // json object 에 있는 novel table 관련 데이터 entity 형태로 들고오기 (arrayList 반복문용)
+  // 카테고리 리스트 json 반복문용, 개별 정보 얻기는 데이터 명이 달라서 바꿔야함
+  // json object 에 있는 novel table 관련 데이터 entity 형태로 들고오기
   @Override
   @Transactional
   public NovelEntity getCateNovelEntityFromJson(JSONObject novel) throws Exception {
@@ -320,6 +322,19 @@ public class NovelRidiServiceImpl implements NovelRidiService {
       novelAdult = "N";
     }
 
+
+    // "연재물" 인지 "단행본"인지 여부
+
+    String ebookCheck = "";
+    if (book.get("webTitle") != null ) {
+      ebookCheck = book.get("webTitle").toString();
+    } else if(book.get("web_title") != null ){
+      ebookCheck = book.get("web_title").toString();
+    }
+
+    ebookCheck = getEbookCheck(ebookCheck);
+
+    novelEntity.setEbookCheck(ebookCheck);
     novelEntity.setNovelTitle(title);
     novelEntity.setNovelThumbnail(thumbnail);
     novelEntity.setNovelAdult(novelAdult);
@@ -338,14 +353,25 @@ public class NovelRidiServiceImpl implements NovelRidiService {
   * 플랫폼 번호, 외래키 idx, 플랫폼 전용 아이디, 제목, 작가이름, 썸네일 주소, 별점, 성인작품 여부, 연재일, 소설 설명(intro), 출시일, 총 화수, 출판사, 가격, 완결 여부, 장르, novel or ebook */
   @Override
   @Transactional
-  public NovelPlatformEntity getCatePlatformEntityFromJson(NovelEntity novelEntity, JSONObject novelData) throws Exception {
+  public NovelPlatformEntity getCatePlatformEntityFromJson(NovelEntity novelIdx, JSONObject novelData) throws Exception {
     NovelPlatformEntity novelPlatformEntity = new NovelPlatformEntity();
 
     HashMap<String, Object > book = (HashMap<String, Object>) novelData.get("book");
 
     novelPlatformEntity.setPlatform(3); // 리디북스 플랫폼 번호
-    novelPlatformEntity.setEbookCheck("웹소설"); // 웹소설 여부
+//    novelPlatformEntity.setEbookCheck("웹소설"); // 웹소설 여부
 
+    // "연재물" 인지 "단행본"인지 여부
+
+    String ebookCheck = "";
+    if (book.get("webTitle") != null ) {
+      ebookCheck = book.get("webTitle").toString();
+    } else if(book.get("web_title") != null ){
+      ebookCheck = book.get("web_title").toString();
+    }
+
+    ebookCheck = getEbookCheck(ebookCheck);
+    novelPlatformEntity.setEbookCheck(ebookCheck);
 
     String platformId = "";
 
@@ -404,7 +430,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     rate = getStarRate(ratings);
 
-    novelPlatformEntity.setNovelStarRate(getStarRate(ratings)); // 하위에 구현한 함수 사용
+    novelPlatformEntity.setNovelStarRate(rate); // 하위에 구현한 함수 사용
 
 
     // 성인 여부
@@ -433,8 +459,6 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     novelPlatformEntity.setNovelPubli(publiName);
 
-
-
     novelPlatformEntity.setNovelPrice(price);
 
     // 장르
@@ -442,10 +466,11 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     JSONObject cate = (JSONObject) categories.get(0);
 
     String cateName = cate.get("name").toString();
+    cateName = cateListConverterIn(cateName);
 
     novelPlatformEntity.setCateList(cateName);
 
-    novelPlatformEntity.setNovelIdx(novelEntity); // 외래키 idx 값
+    novelPlatformEntity.setNovelIdx(novelIdx); // 외래키 idx 값
     return novelPlatformEntity;
   }
 
@@ -554,29 +579,67 @@ public class NovelRidiServiceImpl implements NovelRidiService {
   }
 
   @Override
-  public String ridiCategoryNameConverter(int category) throws Exception{
+  public String ridiRankCategoryNameConverter(int category) throws Exception{
 
     String cateName = "";
 
     switch (category){
       case 1750 :
-        cateName = "판타지";
+        cateName = "판타지"; // 판타지
         break;
 
       case 1650 :
-        cateName = "로맨스";
+        cateName = "로맨스"; // 로맨스
         break;
 
       case 6050 :
-        cateName = "로판";
+        cateName = "로판"; // 로판
         break;
 
       case 4150 :
-        cateName = "BL";
+        cateName = "BL"; // BL
         break;
     }
 
     return cateName;
   }
 
+  // DB 저장용
+  @Override
+  public String cateListConverterIn(String cateItem) throws Exception{
+    String convertNum = "";
+
+    if (cateItem.contains("판타지")){
+      convertNum = "1";
+    } else if (cateItem.contains("현판")) {
+      convertNum = "2";
+    } else if (cateItem.contains("로맨스")) {
+      convertNum = "3";
+    } else if (cateItem.contains("로판")) {
+      convertNum = "4";
+    } else if (cateItem.contains("무협")) {
+      convertNum = "5";
+    } else if (cateItem.contains("미스터리") || cateItem.contains("라이트노벨")){
+      convertNum = "6";
+    } else if (cateItem.contains("BL")) {
+      convertNum = "7";
+    } else {
+      System.out.println("cateListConverterIn : 일치하는 카테고리 명이 없습니다.");
+    }
+
+    return convertNum;
+  }
+
+
+  // 웹소설 또는 단행본 converter
+  @Override
+  public String getEbookCheck(String ebookCheck) throws Exception{
+    String editCheckText = "웹소설";
+
+    if(ebookCheck.contains("e북")){
+      editCheckText = "단행본";
+    }
+
+    return editCheckText;
+  }
 }

@@ -163,23 +163,26 @@ public class NovelMainController {
     Map<String, Object> result = new HashMap<>();
 
     int page = Integer.parseInt(pageNum);
-//    boolean b1 = novelNaverService.storeNaverRecentNovel(page);
-//    if (b1){
-//      result.put("result", "success");
-//    } else {
-//      result.put("result", "fail");
-//    }
-
-    try {
-      NovelEntity entity = novelNaverService.getNovelEntityFromJsoup("460599");
-
-
-      NovelPlatformEntity platformEntity = novelNaverService.getNovelPlatformEntityFromJsoup(entity, "460599");
-      platformMainRepository.save(platformEntity);
-
-    } catch (Exception e){
-      e.printStackTrace();
+    boolean b1 = novelNaverService.storeNaverRecentNovel(page);
+    if (b1){
+      result.put("result", "success");
+    } else {
+      result.put("result", "fail");
     }
+
+//    try {
+//
+//      List<NovelMainDto> dtoList = novelNaverService.getNaverRecentNovelList(1);
+//
+//      NovelEntity entity = novelNaverService.getNovelEntityFromJsoup("460599");
+//
+//
+//      NovelPlatformEntity platformEntity = novelNaverService.getNovelPlatformEntityFromJsoup(entity, "460599");
+//      platformMainRepository.save(platformEntity);
+//
+//    } catch (Exception e){
+//      e.printStackTrace();
+//    }
 
 
     return result;
