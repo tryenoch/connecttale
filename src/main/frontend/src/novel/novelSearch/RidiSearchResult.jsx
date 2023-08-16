@@ -19,7 +19,7 @@ function RidiSearchResult(props) {
       if (Object.keys(res.data).length !== 0) {
         // DB에 저장되어 있다면 db에서 platform 데이터 들고와서 novelInfo 변경하기
         console.log(res.data);
-        setNovelInfo(res.data);
+        // setNovelInfo(res.data);
       }
       
       // db에 해당 작품이 없으면 db 저장하기
