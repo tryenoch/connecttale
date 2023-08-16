@@ -1,5 +1,5 @@
 import React from 'react';
-import '../static/css/style.css'
+import '../../static/css/style.css'
 import JoinLogoTop1 from "./JoinLogoTop1";
 import {Link, Route, Routes} from "react-router-dom";
 import Join2 from "./Join2";

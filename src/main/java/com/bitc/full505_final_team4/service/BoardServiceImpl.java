@@ -81,11 +81,6 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Page<BoardEntity> getQnaList(Pageable pageable, String id) throws Exception {
         return boardRepository.findByCreateId_IdAndBoardCate_IdxOrderByBoardIdxDesc(id, 1, pageable);
-
-//        System.out.println("dsadasdasdas ---------------------------------------- ");
-//        List<BoardEntity> dataList = boardRepository.findByCreateIdAndBoardCate(createId, 1);
-//        System.out.println("dsadasdasdas");
-//        return null;
     }
 
     @Override

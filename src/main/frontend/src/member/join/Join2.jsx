@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import '../static/css/style.css'
+import '../../static/css/style.css'
 import JoinLogoTop1 from "./JoinLogoTop1";
 import JoinLogoTop2 from "./JoinLogoTop2";
 import JoinLogoTop3 from "./JoinLogoTop3";

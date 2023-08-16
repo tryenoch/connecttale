@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import JoinLogoTop2 from "./JoinLogoTop2";
+import JoinLogoTop2 from "../join/JoinLogoTop2";
 
 function ChangeInfo(props) {
     const [confirm, setConfirm] = useState({

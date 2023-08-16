@@ -3,6 +3,8 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import com.bitc.full505_final_team4.data.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,4 +42,9 @@ public class MemberServiceImpl implements MemberService {
     return memberRepository.existsByNickname(nickname);
   }
 
+
+  @Override
+  public Page<MemberEntity> getMemberList(Pageable pageable) throws Exception {
+    return memberRepository.findByDeletedYn("N", pageable);
+  }
 }

@@ -21,7 +21,6 @@ import java.util.Map;
 @RestController
 public class MemberController {
   private final MemberService memberService;
-  private final BoardService boardService;
 
   @RequestMapping(value = "/login", method = RequestMethod.POST)
   public Object login(@RequestParam("id") String id, @RequestParam("pw") String pw) throws Exception {
@@ -103,6 +102,27 @@ public class MemberController {
     return result;
   }
 
+// StaffPage 구현
+  @RequestMapping(value = "/staffPage/memberList", method = RequestMethod.GET)
+  // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
+  public Object memberList(Pageable pageable) throws Exception {
 
+    Map<String, Object> result = new HashMap<>();
+
+    List<MemberDto> memberList = new ArrayList<>();
+    Page<MemberEntity> memberPages = memberService.getMemberList(pageable);
+    int totalPages = memberPages.getTotalPages();
+
+    for (MemberEntity member : memberPages.getContent()) {
+      MemberDto mem = MemberDto.toDto(member);
+      memberList.add(mem);
+    }
+
+    result.put("result", "성공");
+    result.put("totalPages", totalPages);
+    result.put("nowPage", pageable.getPageNumber() + 1);
+    result.put("memberList", memberList);
+    return result;
+  }
 
 }

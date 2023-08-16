@@ -5,6 +5,10 @@
 .fs-button {font-size: 50px;}
 .text-color-red {-webkit-text-fill-color: #ff2626}
 
+.btn-mini {
+    line-height: 1;
+}
+
 .input-s1 {width: 100px}
 .input-s2 {width: 200px}
 .input-s3 {width: 300px}
