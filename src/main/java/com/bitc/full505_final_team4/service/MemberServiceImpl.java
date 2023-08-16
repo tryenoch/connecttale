@@ -1,16 +1,9 @@
 package com.bitc.full505_final_team4.service;
 
-import com.bitc.full505_final_team4.data.dto.MemberDto;
-import com.bitc.full505_final_team4.data.entity.BoardEntity;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
-import com.bitc.full505_final_team4.data.repository.BoardRepository;
 import com.bitc.full505_final_team4.data.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +19,14 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public void join(MemberEntity member) throws Exception {
+    memberRepository.save(member);
+  }
+
+  @Override
+  public void change(String id, String pw, String nickName) throws Exception {
+    MemberEntity member = memberRepository.findAllById(id);
+    member.setPw(pw);
+    member.setNickname(nickName);
     memberRepository.save(member);
   }
 

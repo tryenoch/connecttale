@@ -60,6 +60,17 @@ public class MemberController {
     return result;
   }
 
+  @RequestMapping(value = "/myPage/changeInfo", method = RequestMethod.POST)
+  public Object changeInfo(@RequestParam("id") String id, @RequestParam("pw") String pw, @RequestParam("nickname") String nickname) throws Exception {
+
+    memberService.change(id, pw, nickname);
+
+    Map<String, String> result = new HashMap<>();
+    result.put("result", "success");
+
+    return result;
+  }
+
   @RequestMapping(value = "/join/join2", method = RequestMethod.GET)
   public Object confirmId(@RequestParam("id") String id) throws Exception {
 

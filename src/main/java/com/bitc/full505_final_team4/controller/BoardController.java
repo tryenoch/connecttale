@@ -55,6 +55,7 @@ public class BoardController {
         List<BoardDTO> notiList = new ArrayList<>();
         Page<BoardEntity> boardPages = boardService.getNotiList(pageable);
         int totalPages = boardPages.getTotalPages();
+
         for (BoardEntity board : boardPages) {
             BoardDTO noti = BoardDTO.toDTO(board);
             notiList.add(noti);
