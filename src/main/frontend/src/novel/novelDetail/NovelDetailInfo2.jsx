@@ -12,20 +12,26 @@ function NovelDetailInfo(props) {
   const [kakao, setKakao] = useState({});
   const [baseItem, setBaseItem] = useState({});
   
-  console.log(baseItem);
   // console.log(kakao);
   // console.log(naver);
   // console.log(ridi);
   // console.log(baseItem);
   
   const likeClickHandler = () => {
-    const res = axios.put(`novelDetailLike`, null, {
+    axios.put('/novelDetailLike', null, {
       params: {
         novelIdx : baseItem.novelKeyDto.novelIdx,
         novelTitle: baseItem.novelTitle,
-        ebookCheck: baseItem.ebookCheck
+        ebookCheck: baseItem.ebookCheck,
+        id: 'test3'
       }
     })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err.message);
+      })
   }
   
   useEffect(() => {
@@ -102,7 +108,10 @@ function NovelDetailInfo(props) {
                 </p>
               </div>
               <div className={'col-sm-3'}>
-                <button type={'button'} className={'btn-outline-purple ms-2'}><i className="bi bi-heart" ></i><span>좋아요</span></button>
+                <button type={'button'} className={'btn-outline-purple ms-2'} onClick={likeClickHandler}>
+                  <i className="bi bi-heart" ></i>
+                  <span>좋아요</span>
+                </button>
               </div>
             </div>
         

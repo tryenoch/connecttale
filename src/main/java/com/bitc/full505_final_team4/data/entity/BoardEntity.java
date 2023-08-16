@@ -30,7 +30,6 @@ public class BoardEntity {
     @ToString.Exclude
     private BoardCateEntity boardCate;
 
-
     @ManyToOne
     @JoinColumn(name = "create_id", nullable = false)
     @ToString.Exclude

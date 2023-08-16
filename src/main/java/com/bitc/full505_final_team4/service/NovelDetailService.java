@@ -24,4 +24,6 @@ public interface NovelDetailService {
   void insertKakaoToNovel(NovelEntity novelEntity);
 
   void insertKakaoToPlatform(NovelPlatformEntity kakaoPlatformEntity);
+
+  void updateNovelLike(int novelIdx, String id);
 }

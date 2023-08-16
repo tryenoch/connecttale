@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Builder
 public class MemberDto {
   private String id;
   private String pw;
@@ -33,6 +34,21 @@ public class MemberDto {
     this.sFile = sFile;
     this.grade = grade;
     this.deletedYn = deletedYn;
+  }
+
+  public MemberEntity tnEntity(MemberDto dto) {
+    return MemberEntity.builder()
+      .id(id)
+      .pw(pw)
+      .name(name)
+      .nickname(nickname)
+      .gender(gender)
+      .birthday(birthday)
+      .oFile(oFile)
+      .sFile(sFile)
+      .grade(grade)
+      .deletedYn(deletedYn)
+      .build();
   }
 
   public static MemberDto toDto(MemberEntity entity) {

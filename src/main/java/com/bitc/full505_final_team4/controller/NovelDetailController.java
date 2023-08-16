@@ -70,11 +70,11 @@ public class NovelDetailController {
       NovelPlatformEntity kakaoPlatformEntity = novelDetailService.getKakaoCrolling(id, title, ne);
 
 
-      System.out.println(kakaoPlatformEntity); // 1
-      System.out.println("----------------------\n");
-      System.out.println(naverPlatformEntity); // 2
-      System.out.println("----------------------\n");
-      System.out.println(ridiPlatformEntity); // 3
+//      System.out.println(kakaoPlatformEntity); // 1
+//      System.out.println("----------------------\n");
+//      System.out.println(naverPlatformEntity); // 2
+//      System.out.println("----------------------\n");
+//      System.out.println(ridiPlatformEntity); // 3
 
       // 리디북스에 해당 작품이 없을 때
       if (ridiPlatformEntity.getPlatformId() == null) {
@@ -208,9 +208,25 @@ public class NovelDetailController {
 
 // -------------------------------- 좋아요 버튼 클릭 ------------------------------------
   @RequestMapping(value = "/novelDetailLike", method = RequestMethod.PUT)
-  public void updateDetailLike() throws Exception {
+  public String updateDetailLike(@RequestParam("novelIdx") int novelIdx, @RequestParam("novelTitle") String novelTitle, @RequestParam("ebookCheck") String ebookCheck, @RequestParam("id") String id) throws Exception {
+//
+//    System.out.println(novelIdx);
+//    System.out.println(novelTitle);
+//    System.out.println(ebookCheck);
+//    System.out.println(id);
+
+    // ※ 기능 : id와, novelIdx 가 일치하는 테이블의 데이터의 값을 Y/N으로 변경
+
+    // 우선 이미 좋아요가 눌러져있는지를 확인해야함 (값이 Y인가??)
+    // if 값이 'Y'이면 -> N으로 바꿔주고,
+    // 값이 'N'이면 -> Y로 변경해줘야 함
 
 
+    novelDetailService.updateNovelLike(novelIdx, id);
+
+
+
+    return "success";
   }
 }
 

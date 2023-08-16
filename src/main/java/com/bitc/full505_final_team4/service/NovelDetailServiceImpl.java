@@ -342,7 +342,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     StringSelection userId = new StringSelection(kakaoId);
     StringSelection userPw = new StringSelection(kakaoPw);
 
-    String starRateIcon = "data:image/svg+xml,%3csvg width='17' height='16' viewBox='0 0 17 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e %3cpath d='M10 7.46201C10 8.29044 9.32843 8.96201 8.5 8.96201C7.67157 8.96201 7 8.29044 7 7.46201C7 6.63359 7.67157 5.96201 8.5 5.96201C9.32843 5.96201 10 6.63359 10 7.46201Z' fill='black'/%3e %3cpath fill-rule='evenodd' clip-rule='evenodd' d='M12.444 4.08877C13.6846 4.82436 14.6947 5.89236 15.36 7.17201L15.5 7.46201C14.8768 8.7924 13.8873 9.91764 12.6476 10.7059C11.4078 11.4942 9.96913 11.9129 8.5 11.9129C7.03087 11.9129 5.59216 11.4942 4.35242 10.7059C3.11267 9.91764 2.12322 8.7924 1.5 7.46201C2.1112 6.15565 3.07569 5.04634 4.28442 4.2595C5.49316 3.47266 6.89789 3.03968 8.33984 3.0095C9.7818 2.97933 11.2034 3.35317 12.444 4.08877ZM6.8233 9.95642C7.31665 10.2861 7.89665 10.462 8.48999 10.462C9.28564 10.462 10.0487 10.1459 10.6113 9.58333C11.1739 9.02072 11.49 8.25766 11.49 7.46201C11.49 6.86867 11.314 6.28865 10.9844 5.7953C10.6547 5.30195 10.1862 4.91744 9.63806 4.69037C9.08988 4.46331 8.48667 4.4039 7.90472 4.51966C7.32278 4.63541 6.78821 4.92114 6.36865 5.3407C5.94909 5.76025 5.66336 6.2948 5.54761 6.87675C5.43185 7.45869 5.49126 8.06188 5.71832 8.61006C5.94539 9.15824 6.32996 9.62677 6.8233 9.95642Z' fill='black'/%3e %3c/svg%3e";
+//    String starRateIcon = "data:image/svg+xml,%3csvg width='17' height='16' viewBox='0 0 17 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e %3cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.45224 10.8714L5.5916 12.4254C5.47603 12.4858 5.34147 12.4989 5.21632 12.4622C5.09118 12.4255 4.98518 12.3418 4.92076 12.2287C4.8868 12.1232 4.8868 12.0097 4.92076 11.9042L5.52254 8.70769L3.15505 6.4849C3.08698 6.42097 3.03853 6.33905 3.01537 6.24871C2.99221 6.15838 2.99527 6.06333 3.02422 5.97467C3.05317 5.88601 3.10683 5.8074 3.1789 5.74797C3.25096 5.68855 3.33851 5.65076 3.43129 5.63905L6.65691 5.21614L8.0577 2.26554C8.10061 2.18533 8.16453 2.11824 8.24272 2.07147C8.32091 2.02469 8.41037 2 8.50155 2C8.59273 2 8.6822 2.02469 8.76039 2.07147C8.83857 2.11824 8.90256 2.18533 8.94546 2.26554L10.3364 5.21614L13.562 5.63905C13.627 5.64635 13.6898 5.66647 13.7469 5.69821C13.804 5.72994 13.8542 5.77266 13.8946 5.82391C13.935 5.87516 13.9648 5.93389 13.9822 5.99671C13.9996 6.05953 14.0043 6.1252 13.996 6.18985C13.9781 6.30306 13.9225 6.40696 13.8382 6.4849L11.4806 8.70769L12.0725 11.9042C12.0853 11.9676 12.0852 12.0328 12.0721 12.0962C12.0591 12.1595 12.0334 12.2196 11.9965 12.2728C11.9597 12.326 11.9126 12.3713 11.8578 12.406C11.8031 12.4407 11.7419 12.464 11.6779 12.4746C11.5721 12.5085 11.4582 12.5085 11.3524 12.4746L8.45224 10.8714Z' fill='black'/%3e %3c/svg%3e";
 
     try {
 //       카카오 로그인 페이지 접속하기
@@ -417,9 +417,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
 
               // starRate 가져오기
-              WebElement starCateDivEl = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]"));
-              if (starCateDivEl.findElements(By.tagName("img")).get(2).getAttribute("src").equals(starRateIcon)) {
-                kakaoCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]/span[2]")).getText()));
+              WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
+              if (starRateDivEl.findElements(By.tagName("img")).get(2).getAttribute("alt").equals("별점")) {
+                kakaoCrollingData.setNovelStarRate(Double.parseDouble(starRateDivEl.findElements(By.tagName("span")).get(1).getText()));
               }
               else {
                 kakaoCrollingData.setNovelStarRate(0);
@@ -519,9 +519,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
 
               // starRate 가져오기
-              WebElement starCateDivEl = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]"));
-              if (starCateDivEl.findElements(By.tagName("img")).get(2).getAttribute("src").equals(starRateIcon)) {
-                kakaoCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]/span[2]")).getText()));
+              WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
+              if (starRateDivEl.findElements(By.tagName("img")).get(2).getAttribute("alt").equals("별점")) {
+                kakaoCrollingData.setNovelStarRate(Double.parseDouble(starRateDivEl.findElements(By.tagName("span")).get(1).getText()));
               }
               else {
                 kakaoCrollingData.setNovelStarRate(0);
@@ -645,6 +645,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
   @Override
   public void insertKakaoToPlatform(NovelPlatformEntity kakaoPlatformEntity) {
     novelPlatformRepository.save(kakaoPlatformEntity);
+  }
+
+  @Override
+  public void updateNovelLike(int novelIdx, String id) {
+
   }
 }
 

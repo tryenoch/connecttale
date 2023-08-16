@@ -32,7 +32,6 @@ public class NovelLikeEntity {
   @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
   private char likeYn;
 
-
   @Builder
   public NovelLikeEntity(MemberEntity id, NovelEntity novelIdx, char likeYn) {
     this.id = id;

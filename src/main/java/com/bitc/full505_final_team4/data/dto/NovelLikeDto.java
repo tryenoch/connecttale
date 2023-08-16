@@ -1,7 +1,6 @@
 package com.bitc.full505_final_team4.data.dto;
 
 import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,16 +8,17 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Builder
 public class NovelLikeDto {
-  private MemberDto memberId;
+  private MemberDto id;
   private NovelDto novelIdx;
   private char likeYn;
 
 
   @Builder
-  public NovelLikeDto(MemberDto memberDto, NovelDto novelDto, char likeYn) {
-    this.memberId = memberDto;
-    this.novelIdx = novelDto;
+  public NovelLikeDto(MemberDto id, NovelDto novelIdx, char likeYn) {
+    this.id = id;
+    this.novelIdx = novelIdx;
     this.likeYn = likeYn;
   }
 
@@ -26,7 +26,7 @@ public class NovelLikeDto {
 //  public static NovelLikeDto toDto(NovelLikeEntity entity) {
 //
 //    return NovelLikeDto.builder()
-//      .memberId(MemberDto.toDto(entity.getMemberId()))
+//      .id(MemberDto.toDto(entity.getId()))
 //      .novelIdx(NovelDto.toDto(entity.getNovelIdx()))
 //      .likeYn(entity.getLikeYn())
 //      .build();

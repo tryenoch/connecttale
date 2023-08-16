@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 // NovelEntity 에 해당하는 dto
 @Data
 @NoArgsConstructor
+@Builder
 public class NovelDto {
   private int novelIdx;
   private String novelTitle;
