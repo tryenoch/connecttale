@@ -19,7 +19,7 @@ function RidiSearchResult(props) {
       if (Object.keys(res.data).length !== 0) {
         // DB에 저장되어 있다면 db에서 platform 데이터 들고와서 novelInfo 변경하기
         console.log(res.data);
-        setNovelInfo(res.data);
+        // setNovelInfo(res.data);
       }
       
       // db에 해당 작품이 없으면 db 저장하기
@@ -265,7 +265,7 @@ function RidiSearchResult(props) {
                 </div>
                 <div className={'col-sm-10'}>
                   {/*onClick이벤트에 매개변수가 있을때는 페이지 로딩되자마자 함수가 바로 발생되서 이벤트가 발생했을때만 함수가 실행되도록 e => 를 붙여줘야 함*/}
-                  <Link onClick={(e) => fetchData(item.platformId, item.title, item.ebookCheck} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
+                  <Link onClick={(e) => fetchData(item.platformId, item.title, item.ebookCheck)} className={'text-decoration-none text-black fs-5 fw-bold'}>{item.title} <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
                   </Link><br/>
                   <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
                   <p className={'search-info'}>출판사 : {item.publi}</p>

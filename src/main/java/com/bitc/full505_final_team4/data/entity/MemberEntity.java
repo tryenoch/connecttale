@@ -9,13 +9,11 @@ import org.hibernate.annotations.DynamicInsert;
 
 @Entity
 @Table(name = "member")
-@Builder
 @Getter
 @Setter
 @ToString
 @DynamicInsert
 @NoArgsConstructor
-@AllArgsConstructor
 public class MemberEntity {
 
   @Id
@@ -51,4 +49,15 @@ public class MemberEntity {
   @ColumnDefault("N")
   private String deletedYn;
 
+  @Builder
+  public MemberEntity(String id, String pw, String name, String nickname, int gender, String birthday, int grade, String deletedYn) {
+    this.id = id;
+    this.pw = pw;
+    this.name = name;
+    this.nickname = nickname;
+    this.gender = gender;
+    this.birthday = birthday;
+    this.grade = grade;
+    this.deletedYn = deletedYn;
+  }
 }

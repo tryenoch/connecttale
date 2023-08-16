@@ -27,7 +27,7 @@ public interface NovelMainService {
   NovelMainDto getKakaoNovel(String novelId) throws Exception;
 
   /* 리디 별점 계산기 */
-  String getStarRate(JSONArray ratings) throws Exception;
+  double getStarRate(JSONArray ratings) throws Exception;
 
   // 리디 카테고리 pk 생성 관련
   int ridiCategoryRankNum(int category) throws Exception;
