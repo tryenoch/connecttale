@@ -5,6 +5,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {boardList} from "./BoardMain";
+import UploadAdapter from "../common/UploadAdapter";
 
 function BoardWrite() {
 
@@ -25,6 +26,11 @@ function BoardWrite() {
         // submit으로 인한 화면이동을 막기 위해 preventDefault 추가
         event.preventDefault();
         //빈 데이터 안 보내도록 조건 추가
+        if (reqCate === 0) {
+            alert('문의 종류를 입력하세요.');
+            return;
+        }
+
         if (title.trim().length <= 0) {
             alert('제목을 입력하세요.');
             return;
@@ -59,6 +65,14 @@ function BoardWrite() {
     const handleMoveToMenu = () => {
         navi("/board/main");
     }
+    
+    // file upload 코드
+    function MyCustomUploadAdapterPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            return new UploadAdapter(loader)
+        }
+    }
+    
 
     return (
         <Container className={'my-4'}>
@@ -104,6 +118,7 @@ function BoardWrite() {
                         <CKEditor
                             editor={ClassicEditor}
                             config={{
+                                extraPlugins: [MyCustomUploadAdapterPlugin],
                                 placeholder: "내용을 입력하세요.",
                             }}
                             onChange={(event, editor) => {
@@ -112,7 +127,8 @@ function BoardWrite() {
                             }}
                         />
                         <div className={'d-flex justify-content-end'}>
-                            <button type={'button'} className={'btn btn-secondary'} onClick={handleMoveToMenu}>목록</button>
+                            <button type={'button'} className={'btn btn-secondary'} onClick={handleMoveToMenu}>목록
+                            </button>
                             <button type={'submit'} className={'btn btn-primary'}>작성</button>
                         </div>
                     </form>
