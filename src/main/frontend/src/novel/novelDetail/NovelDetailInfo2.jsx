@@ -11,10 +11,10 @@ function NovelDetailInfo(props) {
   const [kakao, setKakao] = useState({});
   const [baseItem, setBaseItem] = useState({});
   
-  console.log(kakao);
-  console.log(naver);
-  console.log(ridi);
-  console.log(baseItem);
+  // console.log(kakao);
+  // console.log(naver);
+  // console.log(ridi);
+  // console.log(baseItem);
   
   
   useEffect(() => {
@@ -118,7 +118,7 @@ function NovelDetailInfo(props) {
                   ? <p>
                     <img src="/ridibooks-icon.jpg" alt="" className={'platform-logo'}/>
                     <span className={'mx-2 novel-score'}>{ridi.novelStarRate}</span>
-                    <span>/ 10점</span>
+                    <span>/ 5점</span>
                   </p>
                   : null
               }

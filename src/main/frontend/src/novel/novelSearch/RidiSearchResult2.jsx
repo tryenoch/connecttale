@@ -39,7 +39,7 @@ function RidiSearchResult2(props) {
                 completeYn: item[i].is_series_complete ? '완결' : '연재중',
                 description: item[i].desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
                 ageGrade: item[i].age_limit == 19 ? "Y" : "N",
-                ebookCheck: item[i].web_title.includes('e북') ? "단행본" : "웹소설"
+                ebookCheck: item[i].web_title.includes('e북') ? '단행본' : '웹소설'
               }
               ridiSearchList.push(data);
             }
@@ -61,7 +61,6 @@ function RidiSearchResult2(props) {
               }
             }
           }
-          console.log(ridiSearchList);
         }
         catch (err) {
           console.log(err.message);
@@ -98,41 +97,43 @@ function RidiSearchResult2(props) {
                   handleLinkClick(item); // 서버에서 데이터 유무 확인후 저장 및 가져오기
               }} to={`/novelDetail/${item.title}`} key={index}>
                 
-                <div className={'row my-4 border-top border-bottom py-2'}>
+                <div className={'row my-4 border-top border-bottom py-2 d-flex align-items-center'}>
                   <div className={'col-sm-2'}>
                     <img src={item.thumbnail} alt="" className={'w-100 h-100'} />
                   </div>
                   <div className={'col-sm-10'}>
-                    {/*onClick이벤트에 매개변수가 있을때는 페이지 로딩되자마자 함수가 바로 발생되서 이벤트가 발생했을때만 함수가 실행되도록 e => 를 붙여줘야 함*/}
-                    <p className={'text-decoration-none text-black fs-5 fw-bold'}>
-                      {item.title}
-                      <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
-                      {
-                        item.ebookCheck == '단행본' ? <span>[{item.ebookCheck}]</span> : null
-                      }
-                    </p><br/>
-                    <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
-                    <p className={'search-info'}>출판사 : {item.publi}</p>
-                    {
-                      item.price != null
-                        ? <p className={'search-info search-price fw-bold'}>가격 : {item.price}원</p>
-                        : <p className={'search-info search-price text-muted'}>가격 정보</p>
-                    }
-                    <div className={'d-flex'}>
-                      <p className={'search-info'}>
-                        평점 <span className={'fw-bold search-score'}>{item.starRate}</span>&nbsp;|
-                      </p>
-                      <p>
-                        &nbsp;<span className={'fw-bold'}>{item.completeYn}
+                    <div>
+                      {/*onClick이벤트에 매개변수가 있을때는 페이지 로딩되자마자 함수가 바로 발생되서 이벤트가 발생했을때만 함수가 실행되도록 e => 를 붙여줘야 함*/}
+                      <p className={'text-decoration-none text-black fs-5 fw-bold'}>
+                        {item.title}
+                        <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
                         {
-                          item.ebookCheck == 'e북'
-                            ? <span>&nbsp;(총{item.count}권)</span>
-                            : <span>&nbsp;(총{item.count}화)</span>
+                          item.ebookCheck == '단행본' ? <span className={'ms-2'}>[{item.ebookCheck}]</span> : null
                         }
-                  </span>
                       </p>
+                      <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
+                      <p className={'search-info'}>출판사 : {item.publi}</p>
+                      {
+                        item.price != null
+                          ? <p className={'search-info search-price fw-bold'}>가격 : {item.price}원</p>
+                          : <p className={'search-info search-price text-muted'}>가격 정보</p>
+                      }
+                      <div className={'d-flex'}>
+                        <p className={'search-info'}>
+                          평점 <span className={'fw-bold search-score'}>{item.starRate}</span>&nbsp;|
+                        </p>
+                        <p>
+                          &nbsp;<span className={'fw-bold'}>{item.completeYn}
+                          {
+                            item.ebookCheck == 'e북'
+                              ? <span>&nbsp;(총{item.count}권)</span>
+                              : <span>&nbsp;(총{item.count}화)</span>
+                          }
+                  </span>
+                        </p>
+                      </div>
+                      <p className={'mt-2'}>{item.description.substring(0, 170)}</p>
                     </div>
-                    <p className={'search-info'}>{item.description.substring(0, 170)}</p>
                   </div>
                 </div>
               </Link>
