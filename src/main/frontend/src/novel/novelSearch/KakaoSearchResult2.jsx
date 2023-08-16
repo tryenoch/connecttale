@@ -83,7 +83,7 @@ function KakaoSearchResult2(props) {
                   handleLinkClick(item)
               }} to={`/novelDetail/${item.title}`} key={index}>
                 
-                <div className={'row my-4 border-top border-bottom py-2'} >
+                <div className={'row my-4 border-top border-bottom py-2 d-flex align-items-center'} >
                   <div className={'col-sm-2'}>
                     {
                       item.ageGrade == 'N'
@@ -92,17 +92,21 @@ function KakaoSearchResult2(props) {
                     }
                   </div>
                   <div className={'col-sm-10'}>
-                    <p className={'text-decoration-none text-black fs-5 fw-bold'}>
-                      {item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
-                    </p><br/>
-                    <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
-                    <p className={'search-info'}>출판사 : {item.publi}</p>
-                    {
-                      item.price != null
-                        ? <p className={'search-price fw-bold'}>가격 : {item.price}</p>
-                        : <p className={'search-price text-muted'}>가격 정보 없음</p>
-                    }
-                    <p className={'search-info'}>{item.description.substring(0, 170)}</p>
+                    <div className={'ms-2'}>
+                      <p className={'search-info text-decoration-none text-black fs-5 fw-bold'}>
+                        {item.title}
+                        <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
+                        {item.ebookCheck == '단행본' ? <span>[{item.ebookCheck}]</span> : null}
+                      </p>
+                      <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
+                      <p className={'search-info'}>출판사 : {item.publi}</p>
+                      {
+                        item.price != null
+                          ? <p className={'search-price fw-bold'}>가격 : {item.price}</p>
+                          : <p className={'search-price text-muted'}>가격 정보 없음</p>
+                      }
+                      <p className={'mt-2'}>{item.description.substring(0, 170)}</p>
+                    </div>
                   </div>
                 </div>
               </Link>

@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 
 export const fetchData = async (platformId, title, ebookCheck) => {
   
+  console.log(ebookCheck);
   let novelDetail = {};
   
   try {
@@ -14,12 +15,11 @@ export const fetchData = async (platformId, title, ebookCheck) => {
         ebookCheck: ebookCheck
       }
     })
-    // console.log(res);
+    console.log(res);
     // DB에 저장되어있는지 유무 확인
     // db에 해당 작품이 있으면 정보 꺼내오기
     if (Object.keys(res.data).length !== 0) {
       // DB에 저장되어 있다면 db에서 platform 데이터 들고와서 novelInfo 변경하기
-      console.log(res.data);
       novelDetail = res.data;
     }
     
@@ -27,7 +27,6 @@ export const fetchData = async (platformId, title, ebookCheck) => {
     else {
       // 리디북스 디테일 페이지 정보 가져오기
       const ridiRes = await axios.get(`https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword=${title}`);
-      console.log(ridiRes);
       
       // 리디북스에 해당 작품 동일한 제목을 가진 작품이 있으면 db 저장, 없으면 카카오/네이버 검색 시도
       
@@ -37,18 +36,18 @@ export const fetchData = async (platformId, title, ebookCheck) => {
             if (ebookCheck === '단행본') {
               if (ridiRes.data.books[i].web_title.includes('[e북]')) {
                 const item = ridiRes.data.books[i];
-                console.log(item);
+                // console.log(item);
                 
                 const ridiRes2 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}`);
-                console.log(ridiRes2);
+                // console.log(ridiRes2);
                 const item2 = ridiRes2.data;
                 // console.log(item2);
                 
                 const ridiRes3 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}/notices`);
-                console.log(ridiRes3);
+                // console.log(ridiRes3);
                 
                 const item3 = ridiRes3.data.notices;
-                console.log(item3);
+                // console.log(item3);
                 
                 const ridiRes4 = await axios.get('https://book-api.ridibooks.com/books/'+ item.b_id + '/descriptions')
                 
@@ -74,6 +73,8 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                   cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
                   ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
                 };
+                
+                console.log(ridiObj);
                 
                 
                 // 리디북스 디테일 정보 디비에 저장
@@ -101,24 +102,24 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                     ebookCheck: ridiObj.ebookCheck
                   }
                 })
+                break;
               }
-              break;
             }
             else if (ebookCheck === '웹소설') {
               if (ridiRes.data.books[i].web_title === '') {
                 const item = ridiRes.data.books[i];
-                console.log(item);
+                // console.log(item);
                 
                 const ridiRes2 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}`);
-                console.log(ridiRes2);
+                // console.log(ridiRes2);
                 const item2 = ridiRes2.data;
                 // console.log(item2);
                 
                 const ridiRes3 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}/notices`);
-                console.log(ridiRes3);
+                // console.log(ridiRes3);
                 
                 const item3 = ridiRes3.data.notices;
-                console.log(item3);
+                // console.log(item3);
                 
                 const ridiObj = {
                   platform: 3,
@@ -140,6 +141,8 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                   cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
                   ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
                 };
+                
+                console.log(ridiObj);
                 
                 
                 // 리디북스 디테일 정보 디비에 저장
@@ -167,8 +170,8 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                     ebookCheck: ridiObj.ebookCheck
                   }
                 })
+                break;
               }
-              break;
             }
           }
           else {
@@ -179,7 +182,6 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                 ne: ebookCheck,
               }
             })
-            break;
           }
         }
       }

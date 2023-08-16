@@ -73,35 +73,41 @@ function NaverSearchResult2(props) {
               }}
                 to={`/novelDetail/${item.title}`} key={index}>
                 
-                <div className={'row my-4 border-top border-bottom py-2'}>
+                <div className={'row my-4 border-top border-bottom py-2 d-flex align-items-center'}>
                   <div className={'col-sm-2'}>
                     <img src={item.thumbnail} alt={item.title} className={'w-100 h-100'} />
                   </div>
                   <div className={'col-sm-10'}>
-                    <p className={'text-decoration-none text-black fs-5 fw-bold'}>
-                      {item.title} <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
-                    </p><br/>
-                    <p className={'search-info'}>작가 : {item.author}</p>
-                    {
-                      item.price != null
-                        ? <p className={'search-info search-price fw-bold'}>가격 : {item.price}</p>
-                        : <p className={'search-info search-price text-muted'}>{null}</p>
-                    }
-                    <div className={'d-flex'}>
-                      <p className={'search-info'}>
-                        평점 <span className={'fw-bold search-score'}>{item.starRate}</span>&nbsp;|
-                      </p>
-                      <p>
-                        &nbsp;<span className={'fw-bold'}>{item.completeYn}
+                    <div className={'ms-2'}>
+                      <p className={'search-info text-decoration-none text-black fs-5 fw-bold'}>
+                        {item.title}
+                        <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
                         {
-                          item.title.indexOf('[단행본]') == -1
-                            ? <span>&nbsp;(총{item.count}화)</span>
-                            : <span>&nbsp;(총{item.count}권)</span>
+                          item.ebookCheck == '단행본' ? <span>[{item.ebookCheck}]</span> : null
                         }
-                  </span>
                       </p>
+                      <p className={'search-info'}>작가 : {item.author}</p>
+                      {
+                        item.price != null
+                          ? <p className={'search-info search-price fw-bold'}>가격 : {item.price}</p>
+                          : <p className={'search-info search-price text-muted'}>{null}</p>
+                      }
+                      <div className={'d-flex'}>
+                        <p className={'search-info'}>
+                          평점 <span className={'fw-bold search-score'}>{item.starRate}</span>&nbsp;|
+                        </p>
+                        <p>
+                          &nbsp;<span className={'fw-bold'}>{item.completeYn}
+                          {
+                            item.title.indexOf('[단행본]') == -1
+                              ? <span>&nbsp;(총{item.count}화)</span>
+                              : <span>&nbsp;(총{item.count}권)</span>
+                          }
+                  </span>
+                        </p>
+                      </div>
+                      <p className={'mt-2'}>{item.description.substring(0, 300)}</p>
                     </div>
-                    <p className={'mt-3'}>{item.description.substring(0, 300)}</p>
                   </div>
                 </div>
               </Link>

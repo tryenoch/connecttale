@@ -11,10 +11,10 @@ function NovelDetailInfo(props) {
   const [kakao, setKakao] = useState({});
   const [baseItem, setBaseItem] = useState({});
   
-  console.log(kakao);
-  console.log(naver);
-  console.log(ridi);
-  console.log(baseItem);
+  // console.log(kakao);
+  // console.log(naver);
+  // console.log(ridi);
+  // console.log(baseItem);
   
   
   useEffect(() => {
@@ -118,7 +118,7 @@ function NovelDetailInfo(props) {
                   ? <p>
                     <img src="/ridibooks-icon.jpg" alt="" className={'platform-logo'}/>
                     <span className={'mx-2 novel-score'}>{ridi.novelStarRate}</span>
-                    <span>/ 10점</span>
+                    <span>/ 5점</span>
                   </p>
                   : null
               }
@@ -127,16 +127,18 @@ function NovelDetailInfo(props) {
         
             {/*출판사, 저자, 총화수, 완결유무, 연재요일, 출판일*/}
             <div className={'my-1'}>
-              <p>{baseItem.novelAuthor}<span className={'ms-2 text-muted'}>저</span></p>
-              <p>{baseItem.novelPubli}<span className={'ms-2 text-muted'}>출판</span></p>
+              <p className={'fw-bold'}>{baseItem.novelAuthor}<span className={'ms-2 text-muted'}>저</span></p>
+              <p className={'fw-bold'}>{baseItem.novelPubli}<span className={'ms-2 text-muted'}>출판</span></p>
               {
                 baseItem.ebookCheck == '웹소설'
-                  ? <p>총 {baseItem.novelCount} 화 | {baseItem.novelCompleteYn == 'Y' ? '완결' : `연재중 | ${baseItem.novelUpdateDate}`}</p>
-                  : <p>총 {baseItem.novelCount} 권 | {baseItem.novelCompleteYn == 'Y' ? '완결' : '연재중'}</p>
+                  ? <p className={'fw-bold'}>총 {baseItem.novelCount} 화 | {baseItem.novelCompleteYn == 'Y' ? '완결' : `연재중 | ${baseItem.novelUpdateDate}`}</p>
+                  : <p className={'fw-bold'}>총 {baseItem.novelCount} 권 | {baseItem.novelCompleteYn == 'Y' ? '완결' : '연재중'}</p>
               }
-
-              <p>출판일 : {baseItem.novelRelease}</p>
-          
+              {
+                baseItem.novelRelease
+                ? <p className={'fw-bold'}>출판일 : {baseItem.novelRelease}</p>
+                  : null
+              }
               {/*가격 정보 및 사이트 바로가기 링크*/}
               <div className={'border p-2 rounded-3 my-2'}>
                 {
@@ -176,6 +178,7 @@ function NovelDetailInfo(props) {
       </div>
       {/*작품 소개 글*/}
       <div className={'my-4'}>
+        <p className={'fs-4 ms-2'}>INTRO</p>
         <p className={'novel-intro'}>{baseItem.novelIntro}</p>
       </div>
       <hr/>
