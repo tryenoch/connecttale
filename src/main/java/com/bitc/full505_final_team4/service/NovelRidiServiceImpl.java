@@ -7,6 +7,7 @@ import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.data.entity.NovelRankEntity;
 import com.bitc.full505_final_team4.data.repository.*;
 import com.bitc.full505_final_team4.service.NovelRidiService;
+import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,6 +22,9 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class NovelRidiServiceImpl implements NovelRidiService {
+
+  @PersistenceContext
+  private EntityManager entityManager;
 
   private final NovelRankRepository novelRankRepository;
   private final NovelMainRepository novelMainRepository;
@@ -244,8 +248,10 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
               // novel entity 객체 리스트에 더하기
               novelEntityList.add(novel);
+//              entityManager.persist(novel);
               // platform entity 객체 리스트에 더하기
               novelPlatformEntityList.add(novelPlatformEntity);
+//              entityManager.persist(novelPlatformEntity);
 
           }catch (Exception e2){
 
@@ -254,6 +260,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
             NovelPlatformEntity novelPlatformEntity = getCatePlatformEntityFromJson(novel, novelList.get(i));
             // platform entity 객체 리스트에 더하기
             novelPlatformEntityList.add(novelPlatformEntity);
+//            entityManager.persist(novelPlatformEntity);
 
           }
 
@@ -261,7 +268,10 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
         // add 한 데이터 목록들 table 에 저장
         novelMainRepository.saveAll(novelEntityList);
+//        entityManager.persist(novelEntityList);
+//
         platformMainRepository.saveAll(novelPlatformEntityList);
+//        entityManager.persist(novelPlatformEntityList);
 
         result = true;
       }
@@ -271,6 +281,8 @@ public class NovelRidiServiceImpl implements NovelRidiService {
       e.printStackTrace();
       result = false;
 
+    } finally {
+      entityManager.clear();
     }
 
 
