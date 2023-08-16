@@ -88,6 +88,7 @@ public class NovelDetailController {
           novelEntity.setNovelTitle(naverPlatformEntity.getNovelTitle());
           novelEntity.setNovelThumbnail(naverPlatformEntity.getNovelThumbnail());
           novelEntity.setNovelAdult(naverPlatformEntity.getNovelAdult());
+          novelEntity.setEbookCheck(naverPlatformEntity.getEbookCheck());
 
           novelDetailService.insertNaverToNovel(novelEntity);
 
@@ -107,6 +108,7 @@ public class NovelDetailController {
           novelEntity.setNovelTitle(naverPlatformEntity.getNovelTitle());
           novelEntity.setNovelThumbnail(naverPlatformEntity.getNovelThumbnail());
           novelEntity.setNovelAdult(naverPlatformEntity.getNovelAdult());
+          novelEntity.setEbookCheck(naverPlatformEntity.getEbookCheck());
 
           novelDetailService.insertNaverToNovel(novelEntity);
 
@@ -121,6 +123,7 @@ public class NovelDetailController {
           novelEntity.setNovelTitle(kakaoPlatformEntity.getNovelTitle());
           novelEntity.setNovelThumbnail(kakaoPlatformEntity.getNovelThumbnail());
           novelEntity.setNovelAdult(kakaoPlatformEntity.getNovelAdult());
+          novelEntity.setEbookCheck(kakaoPlatformEntity.getEbookCheck());
 
           novelDetailService.insertKakaoToNovel(novelEntity);
 
@@ -139,6 +142,7 @@ public class NovelDetailController {
           novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
           novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
           novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
+          novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
 
           novelDetailService.insertRidiToNovel(novelEntity);
 
@@ -157,6 +161,7 @@ public class NovelDetailController {
           novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
           novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
           novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
+          novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
 
           novelDetailService.insertRidiToNovel(novelEntity);
 
@@ -173,6 +178,7 @@ public class NovelDetailController {
           novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
           novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
           novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
+          novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
 
           novelDetailService.insertRidiToNovel(novelEntity);
 
@@ -189,6 +195,7 @@ public class NovelDetailController {
           novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
           novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
           novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
+          novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
 
           novelDetailService.insertRidiToNovel(novelEntity);
 
