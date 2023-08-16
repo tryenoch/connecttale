@@ -61,6 +61,7 @@ function RidiSearchResult2(props) {
               }
             }
           }
+          console.log(ridiSearchList);
         }
         catch (err) {
           console.log(err.message);
@@ -104,7 +105,11 @@ function RidiSearchResult2(props) {
                   <div className={'col-sm-10'}>
                     {/*onClick이벤트에 매개변수가 있을때는 페이지 로딩되자마자 함수가 바로 발생되서 이벤트가 발생했을때만 함수가 실행되도록 e => 를 붙여줘야 함*/}
                     <p className={'text-decoration-none text-black fs-5 fw-bold'}>
-                      {item.title} <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
+                      {item.title}
+                      <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
+                      {
+                        item.ebookCheck == '단행본' ? <span>[{item.ebookCheck}]</span> : null
+                      }
                     </p><br/>
                     <p className={'search-info'}>작가 : {item.author} [{item.category}]</p>
                     <p className={'search-info'}>출판사 : {item.publi}</p>
