@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public interface NovelPlatformRepository extends JpaRepository<NovelPlatformEntity, NovelPlatFormIdx> {
 
-// 작품 platformId로 db내 저장된 platform 테이블 데이터 불러오기
-  Optional<NovelPlatformEntity> findByPlatformId(String platformId);
+// 작품 title로 db내 저장된 platform 테이블 데이터 불러오기
+  List <NovelPlatformEntity> findAllByNovelTitleAndEbookCheck(String title, String ebookCheck);
 
-  List<NovelPlatformEntity> findAllByNovelIdx_NovelIdx(int novelIdx);
+
 }

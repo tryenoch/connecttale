@@ -8,6 +8,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.Element;
@@ -95,8 +96,8 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 ////        }
 ////      }
 //
-//      //      wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector(".flex-1.cursor-pointer")));
-//
+//            wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.cssSelector(".flex-1.cursor-pointer")));
+
 //      // css선택자를 활용하여 해당 태그찾기(같은 클래스값을 가진 태그가 반복되는 형태라 list<WebElement>타입으로 설정함
 //      List<WebElement> elements = driver.findElements(By.cssSelector(".flex-1.cursor-pointer"));
 //
@@ -315,9 +316,9 @@ public class NovelSearchServiceImpl implements NovelSearchService {
           titleList.add(title);
 
           // count 가져오기
-          int countStartIndex = titleEl.getText().indexOf("총");
+          int countStartIndex = titleEl.getText().indexOf("(총");
           int countEndIndex = titleEl.getText().indexOf("/");
-          int count = Integer.parseInt(titleEl.getText().substring(countStartIndex + 2, countEndIndex - 1));
+          int count = Integer.parseInt(titleEl.getText().substring(countStartIndex + 3, countEndIndex - 1));
           countList.add(count);
 
         }
@@ -415,9 +416,9 @@ public class NovelSearchServiceImpl implements NovelSearchService {
             titleList.add(title);
 
             // count 가져오기
-            int countStartIndex = titleEl.getText().indexOf("총");
+            int countStartIndex = titleEl.getText().indexOf("(총");
             int countEndIndex = titleEl.getText().indexOf("/");
-            int count = Integer.parseInt(titleEl.getText().substring(countStartIndex + 2, countEndIndex - 1));
+            int count = Integer.parseInt(titleEl.getText().substring(countStartIndex + 3, countEndIndex - 1));
             countList.add(count);
 
           }

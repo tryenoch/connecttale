@@ -125,23 +125,4 @@ public class MemberController {
     return result;
   }
 
-  @RequestMapping(value = "/staffPage/levelUp", method = RequestMethod.POST)
-  public Object levelUp(@RequestParam("id") String id) throws Exception {
-    Map<String, Object> result = new HashMap<>();
-
-    memberService.levelUp(id);
-    result.put("success", "해당 회원의 등급을 '관리자'로 변경하였습니다.");
-
-    return result;
-  }
-
-  @RequestMapping(value = "/staffPage/deleteMember", method = RequestMethod.POST)
-  public Object deleteMember(@RequestParam("id") String id) throws Exception {
-    Map<String, Object> result = new HashMap<>();
-
-    memberService.deleteMember(id);
-    result.put("success", "해당 회원의 정보를 삭제하였습니다.");
-
-    return result;
-  }
 }

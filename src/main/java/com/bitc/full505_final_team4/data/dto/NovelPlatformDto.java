@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class NovelPlatformDto {
   private int platform; // 1 카카오 2 네이버 3 리디북스
 //  private int novelIdx;
-  private NovelKeyDto novelKeyDto;
+  private NovelDto novelKeyDto;
   private String platformId;
   private String novelTitle;
   private String novelThumbnail;
@@ -29,7 +29,7 @@ public class NovelPlatformDto {
   private String novelAdult;
 
   @Builder
-  public NovelPlatformDto(int platform, NovelKeyDto novelKeyDto, String platformId, String novelTitle, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String ebookCheck, String novelAdult) {
+  public NovelPlatformDto(int platform, NovelDto novelKeyDto, String platformId, String novelTitle, String novelThumbnail, String novelIntro, String novelIntroImg, String novelAuthor, String novelPubli, int novelCount, String novelCompleteYn, int novelPrice, double novelStarRate, String novelUpdateDate, String novelRelease, String cateList, String ebookCheck, String novelAdult) {
     this.platform = platform;
     this.novelKeyDto = novelKeyDto;
     this.platformId = platformId;
@@ -63,6 +63,7 @@ public class NovelPlatformDto {
       .novelIntro(novelIntro)
       .novelIntroImg(novelIntroImg)
       .novelAuthor(novelAuthor)
+      .novelPubli(novelPubli)
       .novelCount(novelCount)
       .novelCompleteYn(novelCompleteYn)
       .novelPrice(novelPrice)
@@ -81,12 +82,13 @@ public class NovelPlatformDto {
     return NovelPlatformDto.builder()
       .platform(entity.getPlatform())
       .platformId(entity.getPlatformId())
-      .novelKeyDto(NovelKeyDto.toDto(entity.getNovelIdx()))
+      .novelKeyDto(NovelDto.toDto(entity.getNovelIdx()))
       .novelTitle(entity.getNovelTitle())
       .novelThumbnail(entity.getNovelThumbnail())
       .novelIntro(entity.getNovelIntro())
       .novelIntroImg(entity.getNovelIntroImg())
       .novelAuthor(entity.getNovelAuthor())
+      .novelPubli(entity.getNovelPubli())
       .novelCount(entity.getNovelCount())
       .novelCompleteYn(entity.getNovelCompleteYn())
       .novelPrice(entity.getNovelPrice())

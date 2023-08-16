@@ -12,10 +12,6 @@ public interface MemberService {
 
   void change(String id, String pw, String nickName) throws Exception;
 
-  void levelUp(String id) throws Exception;
-
-  void deleteMember(String id) throws Exception;
-
   boolean confirmId(String id) throws Exception;
   boolean confirmNick(String nickname) throws Exception;
 

@@ -5,7 +5,6 @@ import axios from "axios";
 
 function MemberList(props) {
 
-    const [id, setId] = useState('');
     const [nowPage, setNowPage] = useState(0);
     const [endPage, setEndPage] = useState(0);
     const [pages, setPages] = useState([1]);
@@ -41,35 +40,7 @@ function MemberList(props) {
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);
             })
-
-    }
-
-    const levelUp = () => {
-        axios.post(`/staffPage/levelUp`, null, {
-        params: {
-        id: id
-        }
-    })
-            .then(res => {
-                alert(res.data.success);
-            })
-            .catch(err => {
-                alert(err);
-            });
-    }
-
-    const deleteMember = () => {
-        axios.post(`/staffPage/deleteMember`, null, {
-            params: {
-                id: id
-            }
-        })
-            .then(res => {
-                alert(res.data.success);
-            })
-            .catch(err => {
-                alert(err);
-            });
+        
     }
 
     const handleSubmit = (event) => {
@@ -118,12 +89,9 @@ function MemberList(props) {
                                         <td>{member.gender}</td>
                                         <td>
                                             {member.grade}
-                                            <button className={'btn btn-mini btn-outline-purple px-2 ms-2'}
-                                            onClick={() => {setId(member.id); levelUp();}}>등업</button>
+                                            <button className={'btn btn-mini btn-outline-purple px-2 ms-2'}>등업</button>
                                         </td>
-                                        <td>
-                                            <button className={'btn btn-mini btn-outline-danger px-2'}>삭제</button>
-                                        </td>
+                                        <td><button className={'btn btn-mini btn-outline-danger px-2'}>삭제</button></td>
                                     </tr>
                                 )
                             })

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {getElement} from "bootstrap/js/src/util";
-import {useParams, useSearchParams} from "react-router-dom";
+import {useLocation, useParams, useSearchParams} from "react-router-dom";
 import NovelDetailInfo from "./novelDetail/NovelDetailInfo";
 import NovelDetailReview from "./novelDetail/NovelDetailReview";
 
@@ -10,13 +10,18 @@ function NovelDetail(props) {
   const [name, setName] = useSearchParams();
   const [ebookChk, setEbookChk] = useSearchParams();
   
-  
   const [platformId, setPlatformId] = useState(seriesId.get("platformId"));
   const [title, setTitle] = useState(name.get("title"));
   const [ebookCheck, setEbookCheck] = useState(ebookChk.get("novelOrEbook"))
+  
+  const location = useLocation();
+  
+  const {state} = location.state;
+  console.log(state);
+  
   return (
     <div className={'container my-4'}>
-      <NovelDetailInfo platformId={platformId} title={title} ebookCheck={ebookCheck}/>
+      <NovelDetailInfo platformId={platformId} title={title} ebookCheck={ebookCheck} novelDetail={state} />
       <NovelDetailReview />
 
     </div>
