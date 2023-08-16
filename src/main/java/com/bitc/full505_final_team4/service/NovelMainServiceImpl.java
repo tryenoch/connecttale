@@ -15,12 +15,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.propertyeditors.CurrencyEditor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -245,7 +247,7 @@ public class NovelMainServiceImpl implements NovelMainService{
           novel.setNovelAuthor(author);
 
           // 별점
-          String starRate = rankItem.select(".score_num").text();
+          double starRate = Double.parseDouble(rankItem.select(".score_num").text());
           novel.setNovelStarRate(starRate);
 
           novelList.add(novel);
@@ -314,12 +316,22 @@ public class NovelMainServiceImpl implements NovelMainService{
 
 //          String locator = "//img[@alt=\"썸네일\"][" + list.indexOf(element) + "]";
           //썸네일
-          String thumbnail = element.findElement(By.cssSelector(".object-cover.visible")).getAttribute("src");
+          String thumbnail = "";
 
-          if (ObjectUtils.isEmpty(thumbnail)){
+          try {
+            /*if (ObjectUtils.isEmpty(element.findElement(By.cssSelector(".object-cover.visible")).getAttribute("src"))){
+              throw new org.openqa.selenium.NoSuchElementException();
+            } else {*/
+              thumbnail = element.findElement(By.cssSelector(".object-cover.visible")).getAttribute("src");
+              novel.setNovelThumbnail(thumbnail);
+
+
+          }catch (NoSuchElementException e){
+            // 썸네일 객체가 없다면 성인 컨텐츠라는 뜻이므로 adultsOnly를 true로 한다
             novel.setAdultsOnly(true);
-          } else {
             novel.setNovelThumbnail(thumbnail);
+
+            // ※ Socket Exception 이 발생하므로 추가 조정할 것
           }
 
           novelDtoList.add(novel);
@@ -406,8 +418,8 @@ public class NovelMainServiceImpl implements NovelMainService{
 
       // 별점
       String starRate = infoTag.findElements(By.tagName("span")).get(1).getText();
-      starRate = String.valueOf(Double.parseDouble(starRate)/2);
-      novel.setNovelStarRate(starRate);
+      double rate = Double.parseDouble(starRate);
+      novel.setNovelStarRate(rate);
 
 
       // 작품설명 메타태그로 들고올 수 있음, 필요시 추가
@@ -424,7 +436,7 @@ public class NovelMainServiceImpl implements NovelMainService{
 
   /* Ridi Json 에서 들고온 ratings 별점으로 변환하기 (10점 만점 기준) */
   @Override
-  public String getStarRate(JSONArray ratings) throws Exception {
+  public double getStarRate(JSONArray ratings) throws Exception {
 
     /* 계산식
     * ((1점 * 1점 count) + ... + (5점 * 5점 count)) / totalCount
@@ -450,14 +462,19 @@ public class NovelMainServiceImpl implements NovelMainService{
 
     }
 
+    DecimalFormat form = new DecimalFormat("#.#");
+
     double total = (multiRating / totalCount) * 2;
+    total = Double.parseDouble(form.format(total));
+
+
     // 왜 한자리수 올림이 안되는 건지...
 //    total = (double) Math.ceil((total * 100) / 100.0);
 
     // 소수점 한자리까지 보여주는 별점 반환
-    starRate = String.format("%.1f", total);
+//    starRate = String.format("%.1f", total);
 
-    return starRate;
+    return total;
   }
 
   // 리디 카테고리별 pk 중복 방지를 위한 카테고리별 pk 생성 메소드

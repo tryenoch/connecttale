@@ -7,20 +7,9 @@ import {Link, Route, Routes, useNavigate} from "react-router-dom";
 import axios from "axios";
 
 function Join2(props) {
-    const [year, setYear] = useState("");
-    const [month, setMonth] = useState("");
-    const [day, setDay] = useState("");
 
     const [confirm, setConfirm] = useState({
-        idConfirm: "",
-        pwConfirm: "",
-        confirmPwConfirm: "",
-        nameConfirm: "",
-        nickConfirm: "",
-        genderConfirm: "",
-        yearConfirm: "",
-        monthConfirm: "",
-        dayConfirm: ""
+        idConfirm: "", pwConfirm: "", confirmPwConfirm: "", nameConfirm: "", nickConfirm: "", genderConfirm: "", birthConfirm: ""
     });
 
     const [userId, setUserId] = useState("");
@@ -29,6 +18,9 @@ function Join2(props) {
     const [name, setName] = useState("");
     const [nick, setNick] = useState("");
     const [gender, setGender] = useState(0);
+    const [year, setYear] = useState("");
+    const [mon, setMon] = useState("");
+    const [day, setDay] = useState("");
 
     const navi = useNavigate();
 
@@ -50,16 +42,16 @@ function Join2(props) {
     const changeGender = (e) => {
         setGender(e.target.value);
     }
+
     const changeYear = (e) => {
         setYear(e.target.value);
     }
-    const changeMonth = (e) => {
-        setMonth(e.target.value);
+    const changeMon = (e) => {
+        setMon(e.target.value);
     }
     const changeDay = (e) => {
         setDay(e.target.value);
     }
-
     const confirmId = () => {
         axios.get('/join/join2', {
             params: {
@@ -69,7 +61,7 @@ function Join2(props) {
             .then(res => {
                 const data = res.data;
                 if (userId === null || userId === "") {
-                    setConfirm({confirm, idConfirm: "아이디를 입력하세요"})
+                    setConfirm({confirm, idConfirm: "아이디를 입력해 주세요"});
                 }
                 else {
                     setConfirm({confirm, idConfirm: data.result});
@@ -78,9 +70,56 @@ function Join2(props) {
             .catch();
     }
 
+    const confirmNick = () => {
+        axios.patch('/join/join2', null, {
+            params: {
+                nickname: nick
+            }
+        })
+            .then(res => {
+                const data = res.data;
+                if (nick === null || nick === "") {
+                    setConfirm({confirm, nickConfirm: "닉네임을 입력해 주세요"});
+                }
+                else {
+                    setConfirm({confirm, nickConfirm: data.result});
+                }
+            })
+            .catch();
+    }
+
     const eventClickOK = () => {
-        if (userId === null || userId === "") {
-            setConfirm({confirm, idConfirm: "아이디를 입력하세요"})
+        if (userId === null || userId === "" || confirm.idConfirm === "이미 사용중인 ID 입니다." ) {
+            setConfirm({confirm, idConfirm: "아이디를 다시 입력하세요"});
+            return;
+        }
+        if (nick === null || nick === "" || confirm.nickConfirm === "이미 사용중인 닉네임입니다.") {
+            setConfirm({confirm, nickConfirm: "닉네임을 입력하세요"});
+            return;
+        }
+        if (pw === null || pw === "") {
+            setConfirm({confirm, pwConfirm: "비밀번호를 입력하세요"});
+            return;
+        }
+        if (pw !== confirmPw) {
+            setConfirm({confirm, confirmPwConfirm: "비밀번호와 다릅니다."});
+            return;
+        }
+        if (name === null || name === "") {
+            setConfirm({confirm, nameConfirm: "이름을 입력하세요"});
+            return;
+        }
+        if (name === null || name === "") {
+            setConfirm({confirm, nameConfirm: "이름을 입력하세요"});
+            return;
+        }
+        if (year === null || year === "" || mon === null || mon === "" || day === null || day === "") {
+            setConfirm({confirm, birthConfirm: "생년월일을 입력하세요"});
+            return;
+        }
+        if (gender === null || gender === "" || gender === 0) {
+            setConfirm({confirm, genderConfirm: "성별을 선택하세요"});
+            return;
         }
         axios.post('/join/join2', null, {
             params: {
@@ -89,7 +128,9 @@ function Join2(props) {
                 name: name,
                 nickname: nick,
                 gender: gender,
-                birthday: year + month + day
+                year: year,
+                mon: mon,
+                day: day
             }
         })
             .then(() => {
@@ -133,13 +174,27 @@ function Join2(props) {
                             <div className={'col-sm-9 d-flex'}>
                                 <input type="text" name={'id'} id={'id'} className={'input-s4 form-control rounded-1'}
                                        placeholder={'아이디를 입력하세요'} onChange={changeId}/>
-                                <button type={'button'} id={'confirm'} className={'btn btn-pupple ms-3'}
+                                <button type={'button'} id={'confirmId'} className={'btn btn-outline-purple ms-3'}
                                         onClick={confirmId}>중복확인
                                 </button>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span
-                                className={'ms-2 mt-2 text-pupple bold'}>{confirm.idConfirm}</span></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.idConfirm}</span></div>
+                        </div>
+                        <div className={'row mt-2'}>
+                            <div className={'col-sm-3'}>
+                                <h4 className={'fw-bold'}>닉네임</h4>
+                            </div>
+                            <div className={'col-sm-9 d-flex'}>
+                                <input type="text" name={'nick'} id={'nick'}
+                                       className={'input-s4 form-control rounded-1'} placeholder={'닉네임을 입력하세요'}
+                                       onChange={changeNick}/>
+                                <button type={'button'} id={'confirmNick'} className={'btn btn-outline-purple ms-3'}
+                                        onClick={confirmNick}>중복확인
+                                </button>
+                            </div>
+                            <div className={'col-sm-3'}></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.nickConfirm}</span></div>
                         </div>
                         <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
@@ -150,8 +205,10 @@ function Join2(props) {
                                        className={'input-s5 form-control rounded-1'} placeholder={'비밀번호를 입력하세요'}
                                        onChange={changePw}/>
                             </div>
+                            <div className={'col-sm-3'}></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.pwConfirm}</span></div>
                         </div>
-                        <div className={'row mt-4'}>
+                        <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>비밀번호 확인</h4>
                             </div>
@@ -160,8 +217,10 @@ function Join2(props) {
                                        className={'input-s5 form-control rounded-1'} placeholder={'한번 더 비밀번호를 입력하세요'}
                                        onChange={changeConfirmPw}/>
                             </div>
+                            <div className={'col-sm-3'}></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-outline-purple bold'}>{confirm.confirmPwConfirm}</span></div>
                         </div>
-                        <div className={'row mt-4'}>
+                        <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>이름</h4>
                             </div>
@@ -170,36 +229,31 @@ function Join2(props) {
                                        className={'input-s5 form-control rounded-1'} placeholder={'이름을 입력하세요'}
                                        onChange={changeName}/>
                             </div>
-                        </div>
-                        <div className={'row mt-4'}>
-                            <div className={'col-sm-3'}>
-                                <h4 className={'fw-bold'}>닉네임</h4>
-                            </div>
-                            <div className={'col-sm-9 d-flex'}>
-                                <input type="text" name={'nick'} id={'nick'}
-                                       className={'input-s5 form-control rounded-1'} placeholder={'닉네임을 입력하세요'}
-                                       onChange={changeNick}/>
-                            </div>
+                            <div className={'col-sm-3'}></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-outline-purple bold'}>{confirm.nameConfirm}</span></div>
                         </div>
                         <div className={'row mt-4'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>생년월일</h4>
                             </div>
                             <div className={'col-sm-9 d-flex'}>
-                                <input type="text" name={'year'} id={'y'} className={'input-s2 form-control rounded-1'}
+                                <input type="number" name={'birth'} id={'yy'} min={1950} max={9999}
+                                       className={'input-s2 form-control rounded-1'}
                                        onChange={changeYear}/>
-                                <label htmlFor="y" className={'ms-1 mt-2'}>년</label>
-                                <input type="text" name={'month'} id={'m'}
-                                       className={'input-s1 form-control rounded-1 ms-4'}
-                                       onChange={changeMonth}/>
-                                <label htmlFor="m" className={'ms-1 mt-2'}>월</label>
-                                <input type="text" name={'day'} id={'d'}
-                                       className={'input-s1 form-control rounded-1 ms-4'}
+                                <span className={'mt-2 ms-2'}>년</span>
+                                <input type="number" name={'birth'} id={'mm'} min={1} max={12} minLength={2}
+                                       className={'input-s1 form-control rounded-1 ms-3'}
+                                       onChange={changeMon}/>
+                                <span className={'mt-2 ms-2'}>월</span>
+                                <input type="number" name={'birth'} id={'dd'} min={1} max={31} minLength={2}
+                                       className={'input-s1 form-control rounded-1 ms-3'}
                                        onChange={changeDay}/>
-                                <label htmlFor="d" className={'ms-1 mt-2'}>일</label>
+                                <span className={'mt-2 ms-2'}>일</span>
                             </div>
+                            <div className={'col-sm-3'}></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.birthConfirm}</span></div>
                         </div>
-                        <div className={'row mt-4'}>
+                        <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>성별</h4>
                             </div>
@@ -209,12 +263,14 @@ function Join2(props) {
                                 <input type="radio" name={'gender'} id={'female'} value={2} onChange={changeGender}/>
                                 <label htmlFor="female" className={'ms-1 mt-2'}>여성</label>
                             </div>
+                            <div className={'col-sm-3'}></div>
+                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.genderConfirm}</span></div>
                         </div>
                         <div className={'row mt-5 justify-content-end'}>
                             <div className={'col-sm-8'}></div>
                             <div className={'col-sm-4'}>
                                 <button type={'button'} onClick={eventClickOK}
-                                        className={'btn btn-pupple-inline ms-5'}>회원가입
+                                        className={'btn btn-purple ms-5'}>회원가입
                                 </button>
                             </div>
                         </div>

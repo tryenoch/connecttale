@@ -77,6 +77,12 @@ public class BoardServiceImpl implements BoardService {
         return BoardDTO.toDTO(boardEntity);
     }
 
+    // myQna 구현
+    @Override
+    public Page<BoardEntity> getQnaList(Pageable pageable, String id) throws Exception {
+        return boardRepository.findByBoardCateAndCreateId_IdxOrderByBoardIdxDesc(1, pageable, id);
+    }
+
     @Override
     public void deleteBoard(int idx) throws Exception {
         boardRepository.deleteById(idx);

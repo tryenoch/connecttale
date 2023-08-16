@@ -21,7 +21,7 @@ function Join3(props) {
             <div className={'row justify-content-center ms-5'}>
                 <div className={'col-sm-3'}>
                     <Link to={'/'}>
-                        <button type={'button'} className={'btn btn-pupple-inline'}>메인페이지로 돌아가기</button>
+                        <button type={'button'} className={'btn btn-purple-inline'}>메인페이지로 돌아가기</button>
                     </Link>
                 </div>
             </div>
