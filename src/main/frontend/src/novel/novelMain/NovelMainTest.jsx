@@ -3,6 +3,7 @@ import axios from "axios";
 
 /* 외부 함수 호출 방법 */
 import * as MessageUtils from "../../common/MessageUtils";
+import RecentNovelInsert from "./RecentNovelInsert";
 
 
 function NovelMainTest() {
@@ -27,15 +28,15 @@ function NovelMainTest() {
       })
   }
 
-  const dataTest2 = () => {
+  const getRidiRecentNovel = () => {
     //alert('테스트 메세지입니다.');
-    axios.get(`/novel/testJpa2`)
+    axios.get(`/novel/ridiRecentNovelUpdate`)
       .then(res => {
-        MessageUtils.infoMessage("비동기 통신에 성공했습니다.");
+        // MessageUtils.infoMessage("비동기 통신에 성공했습니다.");
         console.log(res.data.result);
       })
       .catch(err => {
-        MessageUtils.errorMessage("테스트", err);
+        MessageUtils.errorMessage("리디 신작 업데이트", err);
       })
   }
 
@@ -59,10 +60,11 @@ function NovelMainTest() {
 
   return (
       <div>
-        <button className={'btn btn-purple'} onClick={ dataTest2 } >테스트 버튼</button>
+        <button className={'btn btn-purple'} onClick={ getRidiRecentNovel } >테스트 버튼</button>
         <div>
           테스트 결과 : {title}
         </div>
+        <RecentNovelInsert />
       </div>
   )
 }

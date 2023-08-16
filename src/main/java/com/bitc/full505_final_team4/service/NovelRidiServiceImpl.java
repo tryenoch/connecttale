@@ -7,7 +7,7 @@ import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.data.entity.NovelRankEntity;
 import com.bitc.full505_final_team4.data.repository.*;
 import com.bitc.full505_final_team4.service.NovelRidiService;
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,16 +15,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
+
+import static java.lang.Double.NaN;
 
 // 리디북스 관련 메소드 모음 service
 @Service
 @RequiredArgsConstructor
 public class NovelRidiServiceImpl implements NovelRidiService {
-
-  @PersistenceContext
-  private EntityManager entityManager;
 
   private final NovelRankRepository novelRankRepository;
   private final NovelMainRepository novelMainRepository;
@@ -33,6 +33,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
   // 리디북스 일간 순위 페이지의 특정 카테고리 데이터를 저장한다.
   @Override
+  @Transactional
   public boolean storeRidiCategoryRankList(int category, int startNum) throws Exception {
 
     boolean result = false;
@@ -118,7 +119,6 @@ public class NovelRidiServiceImpl implements NovelRidiService {
    * 시작번호로부터 20개 출력
    * 총 100위까지 출력되도록 함 */
   @Override
-  @Transactional
   public List<NovelMainDto> getRidiRankList(String category, int startNum) throws Exception {
 
     List<NovelMainDto> novelDtoList = new ArrayList<>();
@@ -248,10 +248,8 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
               // novel entity 객체 리스트에 더하기
               novelEntityList.add(novel);
-//              entityManager.persist(novel);
               // platform entity 객체 리스트에 더하기
               novelPlatformEntityList.add(novelPlatformEntity);
-//              entityManager.persist(novelPlatformEntity);
 
           }catch (Exception e2){
 
@@ -260,18 +258,14 @@ public class NovelRidiServiceImpl implements NovelRidiService {
             NovelPlatformEntity novelPlatformEntity = getCatePlatformEntityFromJson(novel, novelList.get(i));
             // platform entity 객체 리스트에 더하기
             novelPlatformEntityList.add(novelPlatformEntity);
-//            entityManager.persist(novelPlatformEntity);
 
           }
 
         }
 
         // add 한 데이터 목록들 table 에 저장
-        novelMainRepository.saveAll(novelEntityList);
-//        entityManager.persist(novelEntityList);
-//
+//        novelMainRepository.saveAll(novelEntityList);
         platformMainRepository.saveAll(novelPlatformEntityList);
-//        entityManager.persist(novelPlatformEntityList);
 
         result = true;
       }
@@ -281,8 +275,6 @@ public class NovelRidiServiceImpl implements NovelRidiService {
       e.printStackTrace();
       result = false;
 
-    } finally {
-      entityManager.clear();
     }
 
 
@@ -332,6 +324,11 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     novelEntity.setNovelThumbnail(thumbnail);
     novelEntity.setNovelAdult(novelAdult);
 
+    // novelPlatformEntity 에 pk 값을 전달하지 못하므로 이 시점에서  entity 서버에 저장한다.
+    // 쓰기 지연을 사용할 수 없으므로 자원 면에서는 손해
+    // autoIncrement 값을 가져오는 방법을 알게 되면 바꿀 것
+    novelMainRepository.save(novelEntity);
+
     return novelEntity;
 
   }
@@ -347,7 +344,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     HashMap<String, Object > book = (HashMap<String, Object>) novelData.get("book");
 
     novelPlatformEntity.setPlatform(3); // 리디북스 플랫폼 번호
-    novelPlatformEntity.setEbookCheck("novel"); // 웹소설 여부
+    novelPlatformEntity.setEbookCheck("웹소설"); // 웹소설 여부
 
 
     String platformId = "";
@@ -403,7 +400,12 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     // 소설 별점
     JSONArray ratings = (JSONArray) book.get("ratings");
-    novelPlatformEntity.setNovelStarRate(Double.parseDouble(getStarRate(ratings))); // 하위에 구현한 함수 사용
+    Double rate = 0.0;
+
+    rate = getStarRate(ratings);
+
+    novelPlatformEntity.setNovelStarRate(getStarRate(ratings)); // 하위에 구현한 함수 사용
+
 
     // 성인 여부
     boolean adultsOnly = false;
@@ -480,7 +482,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
   /* Ridi Json 에서 들고온 ratings 별점으로 변환하기 (10점 만점 기준) */
   @Override
-  public String getStarRate(JSONArray ratings) throws Exception {
+  public double getStarRate(JSONArray ratings) throws Exception {
 
     /* 계산식
      * ((1점 * 1점 count) + ... + (5점 * 5점 count)) / totalCount
@@ -506,14 +508,23 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
     }
 
+    // 자바 소수점 자리수 표현 포맷
+    DecimalFormat form = new DecimalFormat("#.#");
+
     double total = (multiRating / totalCount) * 2;
+    total = Double.parseDouble(form.format(total));
+
     // 왜 한자리수 올림이 안되는 건지...
 //    total = (double) Math.ceil((total * 100) / 100.0);
 
-    // 소수점 한자리까지 보여주는 별점 반환
-    starRate = String.format("%.1f", total);
+//    // 소수점 한자리까지 보여주는 별점 반환
+//    starRate = String.format("%.1f", total);
 
-    return starRate;
+    if(Double.isNaN(total)) {
+      total = 0.0;
+    }
+
+    return total;
   }
 
   // 리디 카테고리별 pk 중복 방지를 위한 카테고리별 pk 생성 메소드
