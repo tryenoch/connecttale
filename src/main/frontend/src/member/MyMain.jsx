@@ -59,8 +59,7 @@ function MyMain(props) {
                     </button>
                 </div>
             </div>
-            <div className={'row p-1'}>
-                <p>찜한작품 내역</p>
+            <div className={'row p-1 mt-3'}>
                 {selectComponent[page]}
             </div>
         </div>

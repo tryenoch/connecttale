@@ -20,7 +20,7 @@ function MyQNA(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/myPage/myQna?createId=test1&page=${nowPage}&size=10`)
+        axios.get(`/myPage/myQna?id=test1&page=${nowPage}&size=10`)
             .then(res => {
 
                 console.log(res.data);
@@ -91,7 +91,7 @@ function MyQNA(props) {
                                     <tr key={index}>
                                         <td>{board.boardIdx}</td>
                                         <td className={'text-start cursor'}>
-                                            <Link to={`/board/detail/${board.boardIdx}`}>
+                                            <Link to={`/board/detail/0/${board.boardIdx}`}>
                                                 {board.boardTitle}
                                             </Link>
                                         </td>

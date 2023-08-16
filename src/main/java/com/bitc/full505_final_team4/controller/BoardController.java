@@ -174,24 +174,23 @@ public class BoardController {
 
     @RequestMapping(value = "/myPage/myQna", method = RequestMethod.GET)
     // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
-    public Object myQna(Pageable pageable, @RequestParam String createId) throws Exception {
+    public Object myQna(Pageable pageable, @RequestParam String id) throws Exception {
 
         Map<String, Object> result = new HashMap<>();
 
-        List<BoardDTO> reqList = new ArrayList<>();
-        Page<BoardEntity> boardPages = boardService.getQnaList(pageable, createId);
+        List<BoardDTO> qnaList = new ArrayList<>();
+        Page<BoardEntity> boardPages = boardService.getQnaList(pageable, id);
         int totalPages = boardPages.getTotalPages();
 
         for (BoardEntity board : boardPages.getContent()) {
             BoardDTO req = BoardDTO.toDTO(board);
-            reqList.add(req);
+            qnaList.add(req);
         }
 
         result.put("result", "성공");
         result.put("totalPages", totalPages);
         result.put("nowPage", pageable.getPageNumber() + 1);
-        result.put("boardType", "req");
-        result.put("boardList", reqList);
+        result.put("boardList", qnaList);
         return result;
     }
 
