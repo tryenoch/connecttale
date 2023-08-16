@@ -13,15 +13,21 @@ function Login(props) {
     const login = (e) => {
         e.preventDefault();
 
-        axios.post(`http://localhost:8080/login`, null, {
+        axios.post(`/login/process`, null, {
             params: {
                 id: id,
                 pw: pw
             }
         })
             .then(res => {
-                console.log(res)
-                const member = res.data;
+                console.log(res.data);
+                if (res.data.user) {
+                    // 세션 저장 구현
+                    navi('/novel');
+                } else {
+                    alert('존재하지 않는 사용자 또는 잘못된 비밀번호입니다.');
+                }
+
             })
             .catch(err => {
                 alert(err);
