@@ -12,14 +12,20 @@ function NovelDetailInfo(props) {
   const [kakao, setKakao] = useState({});
   const [baseItem, setBaseItem] = useState({});
   
-  console.log(props.novelDetail);
+  console.log(baseItem);
   // console.log(kakao);
   // console.log(naver);
   // console.log(ridi);
   // console.log(baseItem);
   
-  const likeClickHandler = (e) => {
-    // const res = axios.get()
+  const likeClickHandler = () => {
+    const res = axios.put(`novelDetailLike`, null, {
+      params: {
+        novelIdx : baseItem.novelKeyDto.novelIdx,
+        novelTitle: baseItem.novelTitle,
+        ebookCheck: baseItem.ebookCheck
+      }
+    })
   }
   
   useEffect(() => {

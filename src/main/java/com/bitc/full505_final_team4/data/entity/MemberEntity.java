@@ -55,7 +55,7 @@ public class MemberEntity {
   private String deletedYn;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "memberId", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
   @ToString.Exclude
   private List<NovelLikeEntity> memberList = new ArrayList<>();
 

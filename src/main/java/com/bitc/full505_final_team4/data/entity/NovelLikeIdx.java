@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class NovelLikeIdx implements Serializable {
   // db 컬럼명 그대로 가져와야됨
   @EqualsAndHashCode.Include
-  private String memberId;
+  private String id;
 
   @EqualsAndHashCode.Include
   private int novelIdx;

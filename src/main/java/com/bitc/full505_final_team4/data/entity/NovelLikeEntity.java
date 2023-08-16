@@ -14,12 +14,13 @@ import org.hibernate.annotations.ColumnDefault;
 @ToString
 @NoArgsConstructor
 public class NovelLikeEntity {
+
   @Id
   @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "id")
   @ToString.Exclude
-  private MemberEntity memberId;
+  private MemberEntity id;
 
   @Id
   @JsonIgnore
@@ -31,9 +32,10 @@ public class NovelLikeEntity {
   @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
   private char likeYn;
 
+
   @Builder
-  public NovelLikeEntity(MemberEntity memberId, NovelEntity novelIdx, char likeYn) {
-    this.memberId = memberId;
+  public NovelLikeEntity(MemberEntity id, NovelEntity novelIdx, char likeYn) {
+    this.id = id;
     this.novelIdx = novelIdx;
     this.likeYn = likeYn;
   }
