@@ -5,6 +5,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {boardList} from "./BoardMain";
+import UploadAdapter from "../common/UploadAdapter";
 
 function BoardWrite() {
 
@@ -25,6 +26,11 @@ function BoardWrite() {
         // submit으로 인한 화면이동을 막기 위해 preventDefault 추가
         event.preventDefault();
         //빈 데이터 안 보내도록 조건 추가
+        if (reqCate === 0) {
+            alert('문의 종류를 입력하세요.');
+            return;
+        }
+
         if (title.trim().length <= 0) {
             alert('제목을 입력하세요.');
             return;
@@ -61,34 +67,11 @@ function BoardWrite() {
     }
     
     // file upload 코드
-    const customUploadAdapter = (loader) => {
-        return {
-            upload() {
-                return new Promise((resolve, reject) => {
-                    const formData = new FormData();
-                    loader.file.then((file) => {
-                        formData.append("file", file);
-
-                        axios
-                            .post("/file/upload", formData)
-                            .then((res) => {
-                                resolve({
-                                    default: res.data.data.uri,
-                                });
-                            })
-                            .catch((err) => reject(err));
-                    });
-                });
-            },
-        };
-    };
-    
-    const uploadPlugin = (editor) => {
-        editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-            return customUploadAdapter(loader);
-        };
+    function MyCustomUploadAdapterPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            return new UploadAdapter(loader)
+        }
     }
-
     
 
     return (
@@ -135,8 +118,8 @@ function BoardWrite() {
                         <CKEditor
                             editor={ClassicEditor}
                             config={{
+                                extraPlugins: [MyCustomUploadAdapterPlugin],
                                 placeholder: "내용을 입력하세요.",
-                                extraPlugins: [uploadPlugin],
                             }}
                             onChange={(event, editor) => {
                                 const data = editor.getData();
