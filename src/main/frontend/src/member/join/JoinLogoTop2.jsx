@@ -1,7 +1,7 @@
 import React from 'react';
-import joinLogo1non from './Logo/joinLogo1non.svg'
-import joinLogo2 from './Logo/joinLogo2.svg'
-import joinLogo3non from './Logo/joinLogo3non.svg'
+import joinLogo1non from '../Logo/joinLogo1non.svg'
+import joinLogo2 from '../Logo/joinLogo2.svg'
+import joinLogo3non from '../Logo/joinLogo3non.svg'
 
 function JoinLogoTop2(props) {
 

@@ -2,11 +2,18 @@ package com.bitc.full505_final_team4.controller;
 
 import com.bitc.full505_final_team4.common.JsonUtils;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
+import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
+import com.bitc.full505_final_team4.data.repository.PlatformMainRepository;
 import com.bitc.full505_final_team4.service.NovelMainService;
+import com.bitc.full505_final_team4.service.NovelNaverService;
 import com.bitc.full505_final_team4.service.NovelRidiService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.openqa.selenium.Platform;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +31,7 @@ public class NovelMainController {
 
   private final NovelMainService novelMainService;
   private final NovelRidiService novelRidiService;
+  private final NovelNaverService novelNaverService;
 
   // jpa 테스트용
   @GetMapping("/testJpa1")
@@ -45,20 +53,6 @@ public class NovelMainController {
     }
 
     result.put("result", res);
-
-    return result;
-  }
-
-  @GetMapping("/testJpa2")
-  public Object testJpa() throws Exception{
-    Map<String, Object> result = new HashMap<>();
-
-    boolean b1 = novelRidiService.storeRidiRecentNovel(1750);
-    if (b1){
-      result.put("result", "success");
-    } else {
-      result.put("result", "fail");
-    }
 
     return result;
   }
@@ -127,6 +121,7 @@ public class NovelMainController {
     return result;
   }
 
+  // 카카오 순위 리스트 가져오기
   @GetMapping("/kakaoRankList")
   public Object getKakaoRankList(@RequestParam("urlId") String urlId) throws Exception {
     Map<String, Object> result = new HashMap<>();
@@ -138,6 +133,54 @@ public class NovelMainController {
     } else {
       result.put("result", "Backend error");
     }
+
+    return result;
+  }
+
+  /**************** 최신 소설 들고오기 ****************/
+
+  // 리디 최신 소설 업데이트
+  @GetMapping("/ridiRecentNovelUpdate")
+  public Object ridiRecentNovelUpdate() throws Exception{
+    Map<String, Object> result = new HashMap<>();
+
+    boolean b1 = novelRidiService.storeRidiRecentNovel(1750);
+    if (b1){
+      result.put("result", "success");
+    } else {
+      result.put("result", "fail");
+    }
+
+    return result;
+  }
+
+  // 테스트용으로 잠깐 씀
+  private final PlatformMainRepository platformMainRepository;
+
+  @GetMapping("/naverRecentNovelUpdate")
+  public Object naverRecentNovelUpdate(@RequestParam("pageNum") String pageNum) throws Exception{
+
+    Map<String, Object> result = new HashMap<>();
+
+    int page = Integer.parseInt(pageNum);
+//    boolean b1 = novelNaverService.storeNaverRecentNovel(page);
+//    if (b1){
+//      result.put("result", "success");
+//    } else {
+//      result.put("result", "fail");
+//    }
+
+    try {
+      NovelEntity entity = novelNaverService.getNovelEntityFromJsoup("460599");
+
+
+      NovelPlatformEntity platformEntity = novelNaverService.getNovelPlatformEntityFromJsoup(entity, "460599");
+      platformMainRepository.save(platformEntity);
+
+    } catch (Exception e){
+      e.printStackTrace();
+    }
+
 
     return result;
   }
