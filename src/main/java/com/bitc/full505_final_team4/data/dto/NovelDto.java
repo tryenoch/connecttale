@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 // NovelEntity 에 해당하는 dto
 @Data
 @NoArgsConstructor
-public class NovelKeyDto {
+public class NovelDto {
   private int novelIdx;
   private String novelTitle;
   private String novelThumbnail;
@@ -16,7 +16,7 @@ public class NovelKeyDto {
   private String ebookCheck;
 
   @Builder
-  public NovelKeyDto(int novelIdx, String novelTitle, String novelThumbnail, String novelAdult, String ebookCheck){
+  public NovelDto(int novelIdx, String novelTitle, String novelThumbnail, String novelAdult, String ebookCheck){
     this.novelIdx = novelIdx;
     this.novelTitle = novelTitle;
     this.novelThumbnail = novelThumbnail;
@@ -25,7 +25,7 @@ public class NovelKeyDto {
   }
 
   // dto 를 entity 로 변환
-  public NovelEntity toEntity(NovelKeyDto dto){
+  public NovelEntity toEntity(NovelDto dto){
     return NovelEntity.builder()
       .novelTitle(novelTitle)
       .novelThumbnail(novelThumbnail)
@@ -35,8 +35,8 @@ public class NovelKeyDto {
   }
 
   // entity 를 dto 로 변환
-  public static NovelKeyDto toDto(NovelEntity entity){
-    return NovelKeyDto.builder()
+  public static NovelDto toDto(NovelEntity entity){
+    return NovelDto.builder()
       .novelIdx(entity.getNovelIdx())
       .novelTitle(entity.getNovelTitle())
       .novelThumbnail(entity.getNovelThumbnail())

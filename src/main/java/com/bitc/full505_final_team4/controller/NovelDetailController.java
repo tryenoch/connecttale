@@ -1,16 +1,12 @@
 package com.bitc.full505_final_team4.controller;
 
-import com.bitc.full505_final_team4.data.dto.NovelDTO;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.service.NovelDetailService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.system.SystemProperties;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
