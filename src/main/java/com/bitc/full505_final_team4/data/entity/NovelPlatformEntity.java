@@ -36,7 +36,7 @@ public class NovelPlatformEntity {
   @Column(nullable = false, length = 500)
   private String novelThumbnail;
 
-  @Column(nullable = false, length = 500)
+  @Column(nullable = false, length = 2000)
   private String novelIntro;
 
   @Column(length = 200)

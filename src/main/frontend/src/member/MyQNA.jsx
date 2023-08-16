@@ -20,11 +20,7 @@ function MyQNA(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/myPage/myQna?page=${nowPage}&size=10`, {
-            params : {
-                id : 'test1'
-            }
-        })
+        axios.get(`/myPage/myQna?createId=test1&page=${nowPage}&size=10`)
             .then(res => {
 
                 console.log(res.data);
