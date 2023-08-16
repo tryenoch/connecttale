@@ -13,13 +13,15 @@ public class NovelKeyDto {
   private String novelTitle;
   private String novelThumbnail;
   private String novelAdult;
+  private String ebookCheck;
 
   @Builder
-  public NovelKeyDto(int novelIdx, String novelTitle, String novelThumbnail, String novelAdult){
+  public NovelKeyDto(int novelIdx, String novelTitle, String novelThumbnail, String novelAdult, String ebookCheck){
     this.novelIdx = novelIdx;
     this.novelTitle = novelTitle;
     this.novelThumbnail = novelThumbnail;
     this.novelAdult = novelAdult;
+    this.ebookCheck = ebookCheck;
   }
 
   // dto 를 entity 로 변환
@@ -28,6 +30,7 @@ public class NovelKeyDto {
       .novelTitle(novelTitle)
       .novelThumbnail(novelThumbnail)
       .novelAdult(novelAdult)
+      .ebookCheck(ebookCheck)
       .build();
   }
 
@@ -38,6 +41,7 @@ public class NovelKeyDto {
       .novelTitle(entity.getNovelTitle())
       .novelThumbnail(entity.getNovelThumbnail())
       .novelAdult(entity.getNovelAdult())
+      .ebookCheck(entity.getEbookCheck())
       .build();
   }
 

@@ -47,13 +47,10 @@ public class NovelDetailController {
           novelDetail.put("ridi", ridiPlatformDto);
         }
       }
-      return novelDetail;
-    }
-    else {
-      return null;
-    }
-    // 플랫폼 별로 나눠서 전달하기
 
+    }
+
+    return novelDetail;
 
   }
   // -------------------------------- db에 데이터 저장 ------------------------------------
@@ -61,7 +58,7 @@ public class NovelDetailController {
   // 리디북스 디테일 페이지 정보 db 저장
 
   @RequestMapping(value = "/novelDetail", method = RequestMethod.POST)
-  public Object insertRidiDetail(@RequestParam("id") String id, @RequestParam("title") String title, @RequestParam("ne") String ne, NovelPlatformEntity ridiPlatformEntity) throws Exception {
+  public void insertRidiDetail(@RequestParam("id") String id, @RequestParam("title") String title, @RequestParam("ne") String ne, NovelPlatformEntity ridiPlatformEntity) throws Exception {
 //
 //    System.out.println(title);
 //    System.out.println(id);
@@ -200,11 +197,9 @@ public class NovelDetailController {
           novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
         }
       }
-      return "success";
     }
     catch (Exception e) {
       e.printStackTrace();
-      return null;
     }
   }
 }

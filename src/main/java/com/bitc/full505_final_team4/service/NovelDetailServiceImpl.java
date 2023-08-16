@@ -121,6 +121,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
       if (!titleEls.isEmpty()) {
         if (ebookCheck.equals("단행본")) {
           for (WebElement titleEl : titleEls) {
+            String testTitle = titleEl.getText();
             if (titleEl.getText().contains(title) && titleEl.getText().contains("[단행본]")) {
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
 
@@ -203,11 +204,6 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               } else {
                 naverCrollingData.setNovelAdult("N");
               }
-
-
-              break;
-            } else {
-              break;
             }
           }
         } else if (ebookCheck.equals("웹소설")) {
@@ -294,10 +290,6 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               } else {
                 naverCrollingData.setNovelAdult("N");
               }
-
-              break;
-            } else {
-              break;
             }
           }
         }

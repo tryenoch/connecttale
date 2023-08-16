@@ -37,6 +37,7 @@ export const fetchData = async (platformId, title, ebookCheck) => {
             if (ebookCheck === '단행본') {
               if (ridiRes.data.books[i].web_title.includes('[e북]')) {
                 const item = ridiRes.data.books[i];
+                console.log(item);
                 
                 const ridiRes2 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}`);
                 console.log(ridiRes2);
@@ -183,17 +184,21 @@ export const fetchData = async (platformId, title, ebookCheck) => {
         }
       }
       
-      // fetchData를 다시 실행되게 해서 db에 저장된 데이터를 불러오게끔
-      
-      // db 저장 했으면 fetchData() 함수를 재실행하여 반환할 데이터 담기
-      // navi(`/novelDetail/${title}`, {
-      //   state: {
-      //     novelDetail: novelDetail,
-      //     // platformId: platformId,
-      //     // title: title,
-      //     // ebookCheck: ebookCheck
-      //   }
-      // });
+      // db저장 후, db에서 데이터 불러오기
+      const res = await axios.get("/novelDetail", {
+        params: {
+          title: title,
+          ebookCheck: ebookCheck
+        }
+      })
+      // console.log(res);
+      // DB에 저장되어있는지 유무 확인
+      // db에 해당 작품이 있으면 정보 꺼내오기
+      if (Object.keys(res.data).length !== 0) {
+        // DB에 저장되어 있다면 db에서 platform 데이터 들고와서 novelInfo 변경하기
+        console.log(res.data);
+        novelDetail = res.data;
+      }
     }
   }
   catch (err) {

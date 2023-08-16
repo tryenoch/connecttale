@@ -5,20 +5,20 @@ import {fetchData} from "../../common/NovelDetailFetch2";
 
 
 function NovelDetailInfo(props) {
-  const [novelInfo, setNovelInfo] = useState({});
+  const [novelInfo, setNovelInfo] = useState(props.novelDetail);
   const [ridi, setRidi] = useState({});
   const [naver, setNaver] = useState({});
   const [kakao, setKakao] = useState({});
   const [baseItem, setBaseItem] = useState({});
   
-  // console.log(kakao);
-  // console.log(naver);
-  // console.log(ridi);
-  // console.log(baseItem);
+  console.log(kakao);
+  console.log(naver);
+  console.log(ridi);
+  console.log(baseItem);
   
   
   useEffect(() => {
-    // setNovelInfo(props.novelDetail);
+    setNovelInfo(props.novelDetail);
     
     if (novelInfo.ridi) {
       setBaseItem(novelInfo.ridi);
