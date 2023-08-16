@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link, Route, Routes} from "react-router-dom";
-import ChangeInfo from "./ChangeInfo";
-import MyMain from "./MyMain";
-import MyContent from "./MyContent";
+import ChangeInfo from "../member/ChangeInfo";
+import MyMain from "../member/MyMain";
+import MyContent from "../member/MyContent";
 import MyQNA from "./MyQNA";
 import MyComment from "./MyComment";
 

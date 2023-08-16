@@ -174,7 +174,7 @@ public class BoardController {
 
     @RequestMapping(value = "/myPage/myQna", method = RequestMethod.GET)
     // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
-    public Object myQna(Pageable pageable, @RequestParam("id") String createId) throws Exception {
+    public Object myQna(Pageable pageable, @RequestParam String createId) throws Exception {
 
         Map<String, Object> result = new HashMap<>();
 
