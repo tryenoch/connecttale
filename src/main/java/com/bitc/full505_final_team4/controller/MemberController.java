@@ -153,4 +153,48 @@ public class MemberController {
     return result;
   }
 
+  // 신고내역 => 신고 구현 완료 되면 구현예정
+//  @RequestMapping(value = "/staffPage/reportList", method = RequestMethod.GET)
+//  // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
+//  public Object reportList(Pageable pageable) throws Exception {
+//
+//    Map<String, Object> result = new HashMap<>();
+//
+//    List<MemberDto> memberList = new ArrayList<>();
+//    Page<MemberEntity> memberPages = memberService.getMemberList(pageable);
+//    int totalPages = memberPages.getTotalPages();
+//
+//    for (MemberEntity member : memberPages.getContent()) {
+//      MemberDto mem = MemberDto.toDto(member);
+//      memberList.add(mem);
+//    }
+//
+//    result.put("result", "성공");
+//    result.put("totalPages", totalPages);
+//    result.put("nowPage", pageable.getPageNumber() + 1);
+//    result.put("memberList", memberList);
+//    return result;
+//  }
+
+  @RequestMapping(value = "/staffPage/levelUp", method = RequestMethod.POST)
+  public Object levelUp(@RequestParam("id") String id) throws Exception {
+
+    Map<String, String> result = new HashMap<>();
+
+    memberService.levelUp(id);
+    result.put("result", "해당 회원님의 등급이 관리자로 변경되었습니다.");
+
+    return result;
+  }
+
+  @RequestMapping(value = "/staffPage/deleteMember", method = RequestMethod.POST)
+  public Object deleteMember(@RequestParam("id") String id) throws Exception {
+
+    Map<String, String> result = new HashMap<>();
+
+    memberService.deleteMember(id);
+    result.put("result", "해당 회원님의 계정이 정지되었습니다.");
+
+    return result;
+  }
 }

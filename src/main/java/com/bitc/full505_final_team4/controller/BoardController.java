@@ -23,6 +23,8 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -187,7 +189,7 @@ public class BoardController {
             qnaList.add(req);
         }
 
-        result.put("result", "성공");
+            result.put("result", "성공");
         result.put("totalPages", totalPages);
         result.put("nowPage", pageable.getPageNumber() + 1);
         result.put("boardList", qnaList);

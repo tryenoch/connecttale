@@ -60,6 +60,11 @@ public class MemberEntity {
   @ToString.Exclude
   private List<NovelLikeEntity> memberList = new ArrayList<>();
 
+  @JsonIgnore
+  @OneToMany(mappedBy = "createId", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  private List<NovelReplyEntity> createId = new ArrayList<>();
+
   @Builder
   public MemberEntity(String id, String pw, String name, String nickname, int gender, String birthday, String oFile, String sFile, int grade, String deletedYn) {
     this.id = id;

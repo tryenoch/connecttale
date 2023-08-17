@@ -62,4 +62,18 @@ public class MemberServiceImpl implements MemberService {
 //    return novelRepository.findByNovelIdx(likeNum);
     return null;
   }
+
+  @Override
+  public void levelUp(String id) throws Exception {
+    MemberEntity member = memberRepository.findAllById(id);
+    member.setGrade(2);
+    memberRepository.save(member);
+  }
+
+  @Override
+  public void deleteMember(String id) throws Exception {
+    MemberEntity member = memberRepository.findAllById(id);
+    member.setDeletedYn("Y");
+    memberRepository.save(member);
+  }
 }

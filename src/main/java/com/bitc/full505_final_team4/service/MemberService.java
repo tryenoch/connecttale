@@ -20,4 +20,6 @@ public interface MemberService {
   Page<MemberEntity> getMemberList(Pageable pageable) throws Exception;
 
   Page<NovelEntity> getLikeList(Pageable pageable, String id) throws Exception;
+  void levelUp(String id) throws Exception;
+  void deleteMember(String id) throws Exception;
 }
