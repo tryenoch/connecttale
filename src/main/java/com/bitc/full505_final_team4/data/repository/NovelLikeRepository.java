@@ -21,6 +21,6 @@ public interface NovelLikeRepository extends JpaRepository<NovelLikeEntity, Nove
 
   Optional<List<NovelLikeEntity>> findAllByNovelIdx(NovelEntity novelIdx);
 
-  NovelLikeEntity findAllByIdAndLikeYn(String id, String like);
+//  NovelLikeEntity findAllByIdAndLikeYn(String id, String like);
 
 }
