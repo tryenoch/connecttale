@@ -26,5 +26,7 @@ public class NovelMainDto {
   private String novelRelease; // 소설 출시일
   private String novelRecentUpdate; // 최근 업데이트일
   private String cateList; // 소설 장르, arrayList로 변환 예정
+
+  private String ebookCheck;
   private boolean adultsOnly; // 성인 여부, true 일 경우 세션 영역 나이 검사 및 19금 뱃지
 }

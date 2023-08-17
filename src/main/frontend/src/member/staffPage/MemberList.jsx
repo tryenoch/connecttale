@@ -3,13 +3,12 @@ import {Col, Form, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import axios from "axios";
 
-function MyQNA(props) {
-    const [keyword, setKeyword] = useState('');
-    // 카테고리 변경 시 페이지 번호가 0으로 초기화 x
+function MemberList(props) {
+
     const [nowPage, setNowPage] = useState(0);
     const [endPage, setEndPage] = useState(0);
     const [pages, setPages] = useState([1]);
-    const [boardList, setBoardList] = useState([{}]);
+    const [memberList, setMemberList] = useState([{}]);
 
     useEffect(() => {
         setNowPage(props.defaultPage);
@@ -20,7 +19,7 @@ function MyQNA(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/myPage/myQna?createId=test1&page=${nowPage}&size=10`)
+        axios.get(`/staffPage/memberList?page=${nowPage}&size=10`)
             .then(res => {
 
                 console.log(res.data);
@@ -36,15 +35,16 @@ function MyQNA(props) {
                 }
                 setPages(arr);
                 setEndPage(res.data.totalPages);
-                setBoardList(res.data.boardList);
+                setMemberList(res.data.memberList);
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);
             })
+        
     }
 
     const handleSubmit = (event) => {
-        alert(`검색어 : ${keyword}`);
+        // alert(`검색어 : ${keyword}`);
         event.preventDefault();
     }
 
@@ -53,50 +53,45 @@ function MyQNA(props) {
         <Row>
             <Col xs={10} className={'my-5 mx-auto'}>
                 <Row className={'border-3 border-black border-bottom py-2'}>
-                    <Col className={'ps-0'}><h3 className={'fw-bold'}>MyQnA</h3></Col>
-                    <Col className={'pe-0'}>
-                        <Row>
-                            <Col xs={8} className={'search-bar'}>
-                                <input
-                                    type={'text'}
-                                    value={keyword}
-                                    placeholder={'검색어를 입력하세요'}
-                                    onChange={(e) => setKeyword(e.target.value)}
-                                />
-                                <button type={'submit'}><i className="bi bi-search"></i></button>
-                            </Col>
-                        </Row>
-                    </Col>
+                    <Col className={'ps-0'}><h3 className={'fw-bold'}>MemberList</h3></Col>
                 </Row>
                 <Row>
                     <table className={'text-center table'}>
                         <colgroup>
-                            <col width={'10%'}/>
-                            <col width={'60%'}/>
-                            <col width={'15%'}/>
-                            <col width={'15%'}/>
+                            <col width={'14.5%'}/>
+                            <col width={'14.5%'}/>
+                            <col width={'14%'}/>
+                            <col width={'14%'}/>
+                            <col width={'14%'}/>
+                            <col width={'14%'}/>
+                            <col width={'14%'}/>
                         </colgroup>
                         <thead>
                         <tr>
-                            <th>번호</th>
-                            <th>제목</th>
-                            <th>작성자</th>
-                            <th>날짜</th>
+                            <th>아이디</th>
+                            <th>이름</th>
+                            <th>닉네임</th>
+                            <th>생일</th>
+                            <th>성별</th>
+                            <th>등급</th>
+                            <th>삭제</th>
                         </tr>
                         </thead>
                         <tbody>
                         {
-                            boardList.map((board, index) => {
+                            memberList.map((member, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{board.boardIdx}</td>
-                                        <td className={'text-start cursor'}>
-                                            <Link to={`/board/detail/${board.boardIdx}`}>
-                                                {board.boardTitle}
-                                            </Link>
+                                        <td>{member.id}</td>
+                                        <td>{member.name}</td>
+                                        <td>{member.nickname}</td>
+                                        <td>{member.birthday}</td>
+                                        <td>{member.gender}</td>
+                                        <td>
+                                            {member.grade}
+                                            <button className={'btn btn-mini btn-outline-purple px-2 ms-2'}>등업</button>
                                         </td>
-                                        <td>{board.createId}</td>
-                                        <td>{board.createDt}</td>
+                                        <td><button className={'btn btn-mini btn-outline-danger px-2'}>삭제</button></td>
                                     </tr>
                                 )
                             })
@@ -162,4 +157,4 @@ function MyQNA(props) {
     )
 }
 
-export default MyQNA;
+export default MemberList;

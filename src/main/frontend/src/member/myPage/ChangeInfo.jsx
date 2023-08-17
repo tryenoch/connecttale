@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import JoinLogoTop2 from "./JoinLogoTop2";
+import JoinLogoTop2 from "../join/JoinLogoTop2";
 
 function ChangeInfo(props) {
     const [confirm, setConfirm] = useState({
@@ -64,7 +64,7 @@ function ChangeInfo(props) {
         })
             .then(() => {
                 alert(`회원정보 수정 성공`);
-                navi('-1');
+                navi(-1);
             })
             .catch(() => {
                 alert('failed');
@@ -72,12 +72,8 @@ function ChangeInfo(props) {
     }
 
     return (
-        <div className={'col-sm-10'}>
-            <div className={'row justify-content-center'}>
-                <div className={'col-sm-10'}>
-                    <JoinLogoTop2/>
-                </div>
-            </div>
+        <div>
+
             <div className={'row mt-4 ms-4 mb-5'}>
                 <div className={'col-sm-10 ms-auto'}>
                     <h2>회원정보 수정</h2>
@@ -86,10 +82,9 @@ function ChangeInfo(props) {
             </div>
             <div className={'row'}>
                 <div className={'col-sm-1'}></div>
-                <div className={'col-sm-10'}>
+                <div className={'col-sm-11'}>
                     <hr/>
                 </div>
-                <div className={'col-sm-1'}></div>
             </div>
             {/*<form onSubmit={eventClickOK} method={'POST'}>*/}
             <form method={'POST'}>
@@ -97,13 +92,22 @@ function ChangeInfo(props) {
                     <div className={'col-sm-10 ms-4 ms-auto'}>
                         <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
+                                <h4 className={'fw-bold'}>아이디</h4>
+                            </div>
+                            <div className={'col-sm-9 d-flex'}>
+                                <input type="text" name={'nick'} id={'nick'}
+                                       className={'input-s5 form-control rounded-1'} value={'test1'} disabled/>
+                            </div>
+                        </div>
+                        <div className={'row mt-4'}>
+                            <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>닉네임</h4>
                             </div>
                             <div className={'col-sm-9 d-flex'}>
                                 <input type="text" name={'nick'} id={'nick'}
                                        className={'input-s4 form-control rounded-1'} placeholder={'닉네임을 입력하세요'}
                                        onChange={changeNick}/>
-                                <button type={'button'} id={'confirmNick'} className={'btn btn-outline-purple ms-3'}
+                                <button type={'button'} id={'confirmNick'} className={'btn btn-outline-purple ms-2'}
                                         onClick={confirmNick}>중복확인
                                 </button>
                             </div>
@@ -137,7 +141,9 @@ function ChangeInfo(props) {
                         <div className={'row mt-5 justify-content-end'}>
                             <div className={'col-sm-8'}></div>
                             <div className={'col-sm-4'}>
-
+                                <button type={'button'} onClick={() => {navi(-1);}}
+                                        className={'btn btn-secondary ms-3'}>취소
+                                </button>
                                 <button type={'button'} onClick={eventClickOK}
                                         className={'btn btn-purple ms-5'}>수정
                                 </button>

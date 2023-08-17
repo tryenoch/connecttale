@@ -20,7 +20,7 @@ public interface BoardService {
     BoardDTO getBoard(int idx) throws Exception;
 
     // myQna 구현
-    Page<BoardEntity> getQnaList(Pageable pageable, String createId) throws Exception;
+    Page<BoardEntity> getQnaList(Pageable pageable, String id) throws Exception;
 
     void deleteBoard(int idx) throws Exception;
 

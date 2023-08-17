@@ -1,0 +1,18 @@
+.platform-logo {
+    width: 20px;
+}
+
+.novel-price, .novel-score {
+    color: rgb(250, 114, 46);
+    font-weight: bold;
+}
+
+.bi-heart {
+    font-size: 30px;
+}
+
+.novel-intro {
+    font-family: 'NanumSquare', sans-serif;
+    padding: 10px;
+    line-height: 2em;
+}
