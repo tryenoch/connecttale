@@ -31,13 +31,13 @@ public class NovelLikeDto {
   }
 
 //   entity -> dto
-//  public static NovelLikeDto toDto(NovelLikeEntity entity) {
-//
-//    return NovelLikeDto.builder()
-//      .id(MemberDto.toDto(entity.getId()))
-//      .novelIdx(NovelDto.toDto(entity.getNovelIdx()))
-//      .likeYn(entity.getLikeYn())
-//      .build();
-//  }
+  public static NovelLikeDto toDto(NovelLikeEntity entity) {
+
+    return NovelLikeDto.builder()
+      .id(MemberDto.toDto(entity.getId()))
+      .novelIdx(NovelDto.toDto(entity.getNovelIdx()))
+      .likeYn(entity.getLikeYn())
+      .build();
+  }
 }
 

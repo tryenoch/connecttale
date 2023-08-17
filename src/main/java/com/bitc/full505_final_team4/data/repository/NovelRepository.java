@@ -8,4 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface NovelRepository extends JpaRepository<NovelEntity, Integer> {
 
 //  Page<NovelEntity> findByNovelIdx(int likeNum);
+  NovelEntity findByNovelTitleAndEbookCheck(String title, String ebookCheck);
+
+  Slice<NovelEntity> findByNovelIdx(int likeNum);
+
 }
