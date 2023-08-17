@@ -26,7 +26,7 @@ public class NovelDto {
   }
 
   // dto 를 entity 로 변환
-  public NovelEntity toEntity(NovelDto dto){
+  public NovelEntity toEntity(NovelDto dto) {
     return NovelEntity.builder()
       .novelTitle(novelTitle)
       .novelThumbnail(novelThumbnail)
