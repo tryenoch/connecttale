@@ -1,10 +1,15 @@
 package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
+import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
 import com.bitc.full505_final_team4.data.repository.MemberRepository;
+import com.bitc.full505_final_team4.data.repository.NovelLikeRepository;
+import com.bitc.full505_final_team4.data.repository.NovelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +17,8 @@ import org.springframework.stereotype.Service;
 public class MemberServiceImpl implements MemberService {
 
   private final MemberRepository memberRepository;
+  private final NovelLikeRepository novelLikeRepository;
+  private final NovelRepository novelRepository;
 
   @Override
   public MemberEntity login(String id, String pw) throws Exception {
@@ -46,5 +53,13 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public Page<MemberEntity> getMemberList(Pageable pageable) throws Exception {
     return memberRepository.findByDeletedYn("N", pageable);
+  }
+
+  @Override
+  public Page<NovelEntity> getLikeList(Pageable pageable, String id) throws Exception {
+    NovelLikeEntity liked = novelLikeRepository.findAllByIdAndLikeYn(id, "Y");
+    int likeNum = liked.getNovelIdx().getNovelIdx();
+//    return novelRepository.findByNovelIdx(likeNum);
+    return null;
   }
 }

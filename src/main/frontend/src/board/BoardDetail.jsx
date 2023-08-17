@@ -125,17 +125,20 @@ function BoardDetail(props) {
                         (<div>
                             <form onSubmit={handleReply}>
                                 <p>닉네임</p>
-                                <input
-                                    type="text"
-                                    value={reply}
-                                    onChange={(event) =>
-                                        setReply(event.target.value)}/>
-                                <button type={'submit'}>전송</button>
+                                <div className={'reply-input py-1'}>
+                                    <input
+                                        type="text"
+                                        value={reply}
+                                        className={'input-s6'}
+                                        onChange={(event) =>
+                                            setReply(event.target.value)}/>
+                                    <button type={'submit'} className={'btn'}><i className="bi bi-send text-purple"></i></button>
+                                </div>
                             </form>
                             {/* 댓글 배열을 이용하여 댓글 구현*/}
                             {
                                 replyList.map((value, index) => {
-                                    return (<div key={index}>
+                                    return (<div key={index} className={'mt-3'}>
                                         <Row>
                                             <Col>
                                                 <h4>{value.createId}</h4>
