@@ -19,27 +19,28 @@ function ReportList(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/staffPage/reportList?page=${nowPage}&size=10`)
-            .then(res => {
-
-                console.log(res.data);
-
-                let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
-                let arr = [];
-                let lastNum = offset + 5;
-                if (lastNum > Math.ceil(res.data.totalPages / 5)) {
-                    lastNum = Math.ceil(res.data.totalPages / 5) + 1;
-                }
-                for (let i = offset; i <= lastNum; i++) {
-                    arr.push(i);
-                }
-                setPages(arr);
-                setEndPage(res.data.totalPages);
-                setReportList(res.data.reportList);
-            })
-            .catch(err => {
-                alert(`통신에 실패했습니다. err : ${err}`);
-            })
+        // axios.get(`/staffPage/reportList?page=${nowPage}&size=10`)
+        //     .then(res => {
+        //
+        //         console.log(res.data);
+        //
+        //         let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
+        //         let arr = [];
+        //         let lastNum = offset + 5;
+        //         if (lastNum > Math.ceil(res.data.totalPages / 5)) {
+        //             lastNum = Math.ceil(res.data.totalPages / 5) + 1;
+        //         }
+        //         for (let i = offset; i <= lastNum; i++) {
+        //             arr.push(i);
+        //         }
+        //         setPages(arr);
+        //         setEndPage(res.data.totalPages);
+        //         setReportList(res.data.reportList);
+        //     })
+        //     .catch(err => {
+        //         alert(`통신에 실패했습니다. err : ${err}`);
+        //     })
+        alert('신고 구현 안됬습니다...');
     }
 
     const handleSubmit = (event) => {
