@@ -125,4 +125,25 @@ public class MemberController {
     return result;
   }
 
+  @RequestMapping(value = "/staffPage/levelUp", method = RequestMethod.POST)
+  public Object levelUp(@RequestParam("id") String id) throws Exception {
+
+    Map<String, String> result = new HashMap<>();
+
+    memberService.levelUp(id);
+    result.put("result", "해당 회원님의 등급이 관리자로 변경되었습니다.");
+
+    return result;
+  }
+
+  @RequestMapping(value = "/staffPage/deleteMember", method = RequestMethod.POST)
+  public Object deleteMember(@RequestParam("id") String id) throws Exception {
+
+    Map<String, String> result = new HashMap<>();
+
+    memberService.deleteMember(id);
+    result.put("result", "해당 회원님의 계정이 정지되었습니다.");
+
+    return result;
+  }
 }
