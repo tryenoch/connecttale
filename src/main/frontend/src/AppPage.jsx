@@ -13,6 +13,7 @@ import Footer from "./layout/Footer";
 import Main from "./Main";
 import {Container} from "react-bootstrap";
 import StaffPage from "./member/staffPage/StaffPage";
+import NovelDetail2 from "./novel/NovelDetail2";
 
 function AppPage(props) {
   return (
@@ -23,7 +24,7 @@ function AppPage(props) {
           <Route index path={"/*"} element={<Main />}/>
           <Route path={'/novel/*'} element={<Novel/>}/>
           <Route path={'/novelCate'} element={<NovelCate/>}/>
-          <Route path={'/novelDetail'} element={<NovelDetail/>}/>
+          <Route path={'/novelDetail/*'} element={<NovelDetail2/>}/>
           <Route path={'/novelSearch'} element={<NovelSearch/>}/>
           <Route path={'/board/*'} element={<Board/>}/>
           <Route path={'/myPage/*'} element={<MyPage/>}/>
