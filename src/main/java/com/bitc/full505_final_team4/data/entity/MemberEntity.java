@@ -18,7 +18,8 @@ import java.util.List;
 @ToString
 @DynamicInsert
 @NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MemberEntity {
 
   @Id
