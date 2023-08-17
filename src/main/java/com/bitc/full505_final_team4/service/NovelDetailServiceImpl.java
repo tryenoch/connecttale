@@ -41,6 +41,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
 
 
+
   @Override
   public List<NovelPlatformEntity> getNovelDetail(String title, String ebookCheck) {
     // 매개변수인 title로 platform 테이블에서 가져오기
@@ -57,6 +58,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
     return novelDetail;
   }
+
+
 
 
   // 네이버 디테일 페이지 정보 크롤링
@@ -655,22 +658,82 @@ public class NovelDetailServiceImpl implements NovelDetailService {
   }
 
 
-  // 좋아요 버튼
+
+  // ---------------- 좋아요 관련 -----------------
+  // 좋아요 버튼 클릭 기능
   @Override
   public void updateNovelLike(int novelIdx, String id) {
+    NovelLikeEntity novelLikeEntity = new NovelLikeEntity();
 
     // 매개변수 novelIdx, id값을 가진 NovelEntity, MemberEntity 가져오기
-    Optional<MemberEntity> likeId = memberRepository.findById(id);
+    Optional<MemberEntity> memberEntity = memberRepository.findById(id);
+    MemberEntity likeId = memberEntity.get();
 
-    Optional<NovelEntity> likeNovelIdx = novelRepository.findById(novelIdx);
+    Optional<NovelEntity> novelEntity = novelRepository.findById(novelIdx);
+    NovelEntity likeNovelIdx = novelEntity.get();
 
 
-    // 유저가 해당 작품을 좋아요 했는지 유무 확인
-    Optional<NovelLikeEntity> = novelLikeRepository.findById;
+    // 해당 유저와 작품으로 등록된 novel_like 데이터가 있는지?? 확인
+    Optional<NovelLikeEntity> check = novelLikeRepository.findByIdAndNovelIdx(likeId, likeNovelIdx);
+//    novelLikeEntity.setId(likeId);
+//    novelLikeEntity.setNovelIdx(likeNovelIdx);
 
-    novelLikeRepository.findByNovelIdxAndId(novelIdx, id);
+    // 데이터 자체가 존재하지 않는 경우
+    if (check.isEmpty()) {
+      // novel_like db에 데이터 저장(like_yn값을 "Y"로)
+      novelLikeEntity.setId(likeId);
+      novelLikeEntity.setNovelIdx(likeNovelIdx);
+      novelLikeEntity.setLikeYn("Y");
+      novelLikeRepository.save(novelLikeEntity);
+    }
+    // 데이터가 존재 하는 경우
+    else {
+      novelLikeEntity = check.get();
+      // like_yn 값이 N이면 -> Y로 수정
+      if (novelLikeEntity.getLikeYn().equals("N")) {
 
+        novelLikeEntity.setLikeYn("Y");
+        novelLikeRepository.save(novelLikeEntity);
+      }
+      // like_yn 값이 Y이면 -> N으로 수정
+      else if (novelLikeEntity.getLikeYn().equals("Y")) {
+        novelLikeEntity.setLikeYn("N");
+        novelLikeRepository.save(novelLikeEntity);
+      }
+    }
   }
+
+  // title, ebookCheck로 novelIdx 가져오기
+  @Override
+  public NovelEntity getNovelIdx(String title, String ebookCheck) {
+    NovelEntity novelIdx = novelRepository.findByNovelTitleAndEbookCheck(title, ebookCheck);
+    return novelIdx;
+  }
+  // novelIdx로 좋아요 값이 "Y"인 count 가져오기
+  @Override
+  public int getNovelLikeCount(NovelEntity novelIdx) {
+
+    int novelLikeCount = novelLikeRepository.countByNovelIdxAndLikeYn(novelIdx, "Y");
+    return novelLikeCount;
+  }
+
+  // novelIdx로 좋아요 테이블 정보 가져오기
+  @Override
+  public List<NovelLikeEntity> getNovelLike(NovelEntity novelIdx) {
+    List<NovelLikeEntity> novelLikeEntityList = new ArrayList<>();
+    Optional<List<NovelLikeEntity>> opt = novelLikeRepository.findAllByNovelIdx(novelIdx);
+
+    if (opt.isPresent()) {
+      for (NovelLikeEntity novelLike : opt.get()) {
+        novelLikeEntityList.add(novelLike);
+      }
+    }
+
+
+    return novelLikeEntityList;
+  }
+
+
 }
 
 

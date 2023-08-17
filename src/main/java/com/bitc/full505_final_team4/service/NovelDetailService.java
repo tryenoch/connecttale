@@ -1,6 +1,7 @@
 package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 
 import java.util.List;
@@ -26,4 +27,10 @@ public interface NovelDetailService {
   void insertKakaoToPlatform(NovelPlatformEntity kakaoPlatformEntity);
 
   void updateNovelLike(int novelIdx, String id);
+
+  NovelEntity getNovelIdx(String title, String ebookCheck);
+
+  int getNovelLikeCount(NovelEntity novelIdx);
+
+  List<NovelLikeEntity> getNovelLike(NovelEntity novelIdx);
 }

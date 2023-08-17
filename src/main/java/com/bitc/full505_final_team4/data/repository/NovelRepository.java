@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NovelRepository extends JpaRepository<NovelEntity, Integer> {
 
+  NovelEntity findByNovelTitleAndEbookCheck(String title, String ebookCheck);
 }

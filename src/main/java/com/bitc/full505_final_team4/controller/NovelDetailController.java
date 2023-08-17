@@ -1,12 +1,15 @@
 package com.bitc.full505_final_team4.controller;
 
+import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.service.NovelDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,10 +22,12 @@ public class NovelDetailController {
   // ---------------------db에 있는 디테일페이지 데이터 불러오기-------------------------
   @RequestMapping(value = "/novelDetail", method = RequestMethod.GET)
   public Object getNovelDetail(@RequestParam("title") String title, @RequestParam("ebookCheck") String ebookCheck) throws Exception {
-    Map<String, NovelPlatformDto> novelDetail = new HashMap<>();
+    Map<String, Object> novelDetail = new HashMap<>();
 
-    // title을 통해 db에 해당 이름으로 저장된 소서 정보 다가져오기
+    // 소설 디테일 정보(제목, 저자, 인트로, 등) 관련 내용
+    // 매개변수 title, ebookCheck를 통해 db에 해당 이름으로 저장된 소설 정보 다가져오기
     List<NovelPlatformEntity> allNovelDetail = novelDetailService.getNovelDetail(title, ebookCheck);
+
 
 
     if (!allNovelDetail.isEmpty()) {
@@ -43,8 +48,39 @@ public class NovelDetailController {
           novelDetail.put("ridi", ridiPlatformDto);
         }
       }
-
     }
+
+    // 여기부터는 좋아요, 리뷰, 신고 관련 프론트로 전달할 내용
+
+    // -------------------좋아요------------------
+    // 1. title, ebookCheck를 통해 novelIdx 얻기
+    NovelEntity novelIdx = novelDetailService.getNovelIdx(title, ebookCheck);
+
+    // 2. novel_idx에 대한 좋아요 수 데이터 가져오기
+    int novelLikeCount = novelDetailService.getNovelLikeCount(novelIdx);
+
+    // 3. novel_idx에 대한 좋아요 테이블 데이터 가져오기
+    List<NovelLikeEntity> novelLikeEntityList = novelDetailService.getNovelLike(novelIdx);
+
+    // NovelLikeEntity 객체를 프론트로 전달하기 위해 DTO 타입으로 변경
+    List<NovelLikeDto> novelLikeList = new ArrayList<>();
+
+    if (!novelLikeEntityList.isEmpty()) {
+      for (NovelLikeEntity novelLikeEntity : novelLikeEntityList) {
+        NovelLikeDto novelLikeDto = NovelLikeDto.toDto(novelLikeEntity);
+        novelLikeList.add(novelLikeDto);
+      }
+    }
+
+    novelDetail.put("novelLikeCount", novelLikeCount);
+    novelDetail.put("novelLikeList", novelLikeList);
+
+
+    // -------------------리뷰------------------
+
+
+    // -------------------신고------------------
+
 
     return novelDetail;
 
@@ -219,18 +255,16 @@ public class NovelDetailController {
 //    System.out.println(ebookCheck);
 //    System.out.println(id);
 
-    // ※ 기능 : id와, novelIdx 가 일치하는 테이블의 데이터의 값을 Y/N으로 변경
-
-    // 우선 이미 좋아요가 눌러져있는지를 확인해야함 (값이 Y인가??)
-    // if 값이 'Y'이면 -> N으로 바꿔주고,
-    // 값이 'N'이면 -> Y로 변경해줘야 함
-
-
-    novelDetailService.updateNovelLike(novelIdx, id);
-
-
-
-    return "success";
+    try {
+      // ※ 기능 : id와, novelIdx 가 일치하는 테이블의 데이터의 값을 Y/N으로 변경
+      // 여기까지는 db저장 및 수정(like_yn)
+      novelDetailService.updateNovelLike(novelIdx, id);
+      return "좋아요 버튼 누르기 success";
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      return "좋아요 버튼 누르기 fail";
+    }
   }
 }
 
