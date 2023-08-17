@@ -82,7 +82,7 @@ public class NovelPlatformDto {
     return NovelPlatformDto.builder()
       .platform(entity.getPlatform())
       .platformId(entity.getPlatformId())
-      .novelKeyDto(NovelDto.toDto(entity.getNovelIdx()))
+      .novelKeyDto(NovelDto(entity.getNovelIdx()))
       .novelTitle(entity.getNovelTitle())
       .novelThumbnail(entity.getNovelThumbnail())
       .novelIntro(entity.getNovelIntro())

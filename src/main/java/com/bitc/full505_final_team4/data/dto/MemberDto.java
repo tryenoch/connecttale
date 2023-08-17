@@ -4,6 +4,7 @@ package com.bitc.full505_final_team4.data.dto;
 
 import com.bitc.full505_final_team4.data.entity.BoardEntity;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
+import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,6 +56,7 @@ public class MemberDto {
       .build();
 
   }
+
 }
 
 
