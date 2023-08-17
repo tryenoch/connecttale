@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.*;
-
+/* 임시 수정 1 */
 @Service
 @RequiredArgsConstructor
 public class NovelNaverServiceImpl implements NovelNaverService{
