@@ -16,4 +16,7 @@ public interface MemberService {
   boolean confirmNick(String nickname) throws Exception;
 
   Page<MemberEntity> getMemberList(Pageable pageable) throws Exception;
+
+  void levelUp(String id) throws Exception;
+  void deleteMember(String id) throws Exception;
 }
