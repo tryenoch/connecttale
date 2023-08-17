@@ -10,6 +10,8 @@ public interface NovelMainRepository extends JpaRepository<NovelEntity, Integer>
   // 소설 제목으로 select 하기
   Optional<NovelEntity> findByNovelTitle(String title);
 
+  Optional<NovelEntity> findByNovelTitleAndEbookCheck(String title, String ebookCheck);
+
 //  NovelEntity findByNovelTitle(String title);
 
 }

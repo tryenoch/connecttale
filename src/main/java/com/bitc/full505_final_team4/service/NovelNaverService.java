@@ -40,4 +40,6 @@ public interface NovelNaverService {
   int getNovelPrice(String priceNum) throws Exception;
 
   String getReleaseDate(String dateInfo) throws Exception;
+
+  String cateListConverterIn(String cateItem) throws Exception;
 }

@@ -1,6 +1,8 @@
 package com.bitc.full505_final_team4.data.dto;
 
 
+
+import com.bitc.full505_final_team4.data.entity.BoardEntity;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@Builder
 public class MemberDto {
   private String id;
   private String pw;
@@ -19,21 +23,6 @@ public class MemberDto {
   private String sFile;
   private int grade;
   private String deletedYn;
-
-
-  @Builder
-  public MemberDto(String id, String pw, String name, String nickname, int gender, String birthday, String sFile, String oFile, int grade, String deletedYn) {
-    this.id = id;
-    this.pw = pw;
-    this.name = name;
-    this.nickname = nickname;
-    this.gender = gender;
-    this.birthday = birthday;
-    this.sFile = sFile;
-    this.oFile = oFile;
-    this.grade = grade;
-    this.deletedYn = deletedYn;
-  }
 
 
   public MemberEntity tnEntity(MemberDto dto) {
@@ -64,6 +53,7 @@ public class MemberDto {
       .grade(entity.getGrade())
       .deletedYn(entity.getDeletedYn())
       .build();
+
   }
 }
 
