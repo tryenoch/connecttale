@@ -1,7 +1,11 @@
 package com.bitc.full505_final_team4.service;
 
+import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
+import com.bitc.full505_final_team4.data.repository.MemberRepository;
+import com.bitc.full505_final_team4.data.repository.NovelLikeRepository;
 import com.bitc.full505_final_team4.data.repository.NovelPlatformRepository;
 import com.bitc.full505_final_team4.data.repository.NovelRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
   private final NovelPlatformRepository novelPlatformRepository;
   private final NovelRepository novelRepository;
+  private final NovelLikeRepository novelLikeRepository;
+  private final MemberRepository memberRepository;
+
 
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
@@ -647,8 +654,21 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     novelPlatformRepository.save(kakaoPlatformEntity);
   }
 
+
+  // 좋아요 버튼
   @Override
   public void updateNovelLike(int novelIdx, String id) {
+
+    // 매개변수 novelIdx, id값을 가진 NovelEntity, MemberEntity 가져오기
+    Optional<MemberEntity> likeId = memberRepository.findById(id);
+
+    Optional<NovelEntity> likeNovelIdx = novelRepository.findById(novelIdx);
+
+
+    // 유저가 해당 작품을 좋아요 했는지 유무 확인
+    Optional<NovelLikeEntity> = novelLikeRepository.findById;
+
+    novelLikeRepository.findByNovelIdxAndId(novelIdx, id);
 
   }
 }

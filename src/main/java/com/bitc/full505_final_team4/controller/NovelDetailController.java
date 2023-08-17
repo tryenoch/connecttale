@@ -206,6 +206,10 @@ public class NovelDetailController {
     }
   }
 
+
+
+
+
 // -------------------------------- 좋아요 버튼 클릭 ------------------------------------
   @RequestMapping(value = "/novelDetailLike", method = RequestMethod.PUT)
   public String updateDetailLike(@RequestParam("novelIdx") int novelIdx, @RequestParam("novelTitle") String novelTitle, @RequestParam("ebookCheck") String ebookCheck, @RequestParam("id") String id) throws Exception {

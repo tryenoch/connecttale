@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NovelLikeRepository extends JpaRepository<NovelLikeEntity, NovelLikeIdx> {
 
+  void findByNovelIdxAndId(int novelIdx, String id);
 }
