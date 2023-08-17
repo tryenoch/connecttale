@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class MemberDto {
   private String id;
@@ -43,18 +44,17 @@ public class MemberDto {
 
   public static MemberDto toDto(MemberEntity entity) {
     return MemberDto.builder()
-      .id(entity.getId())
-      .pw(entity.getPw())
-      .name(entity.getName())
-      .nickname(entity.getNickname())
-      .gender(entity.getGender())
-      .birthday(entity.getBirthday())
-      .oFile(entity.getOFile())
-      .sFile(entity.getSFile())
-      .grade(entity.getGrade())
-      .deletedYn(entity.getDeletedYn())
-      .build();
-
+        .id(entity.getId())
+        .pw(entity.getPw())
+        .name(entity.getName())
+        .nickname(entity.getNickname())
+        .gender(entity.getGender())
+        .birthday(entity.getBirthday())
+        .oFile(entity.getOFile())
+        .sFile(entity.getSFile())
+        .grade(entity.getGrade())
+        .deletedYn(entity.getDeletedYn())
+        .build();
   }
 
 }

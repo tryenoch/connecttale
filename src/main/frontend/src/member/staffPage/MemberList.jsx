@@ -2,14 +2,29 @@ import React, {useEffect, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import axios from "axios";
+import LikeList from "../myPage/LikeList";
+import MyContent from "../myPage/MyContent";
+import MyQNA from "../myPage/MyQNA";
+import MyComment from "../myPage/MyComment";
 
 function MemberList(props) {
 
     const [id, setId] = useState("");
+    const [memberGrade, setMemberGrade] = useState(1);
     const [nowPage, setNowPage] = useState(0);
     const [endPage, setEndPage] = useState(0);
     const [pages, setPages] = useState([1]);
     const [memberList, setMemberList] = useState([{}]);
+
+    const grade = {
+        1: "일반회원",
+        2: "관리자"
+    };
+
+    const useBtn = {
+        1: false,
+        2: true
+    }
 
     useEffect(() => {
         setNowPage(props.defaultPage);
@@ -117,20 +132,16 @@ function MemberList(props) {
                                         <td>{member.birthday}</td>
                                         <td>{member.gender}</td>
                                         <td>
-                                            {member.grade}
-                                            <button className={'btn btn-mini btn-outline-purple px-2 ms-2'}
-                                                    onClick={() => {
-                                                        setId(member.id);
-                                                        levelUp();
-                                                    }}>등업
+                                            {grade[member.grade]} <br/>
+                                            <button className={'btn btn-mini btn-outline-purple px-2 mt-2'}
+                                                    onClick={() => { setId(member.id); levelUp(); }}
+                                                    disabled={useBtn[member.grade]}>등업
                                             </button>
                                         </td>
                                         <td>
                                             <button className={'btn btn-mini btn-outline-danger px-2'}
-                                                    onClick={() => {
-                                                        setId(member.id);
-                                                        deleteMember();
-                                                    }}>삭제
+                                                    onClick={() => { setId(member.id); deleteMember(); }}
+                                                    disabled={useBtn[member.grade]}>삭제
                                             </button>
                                         </td>
                                     </tr>
