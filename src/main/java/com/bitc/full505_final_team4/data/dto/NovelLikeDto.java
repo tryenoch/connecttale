@@ -12,14 +12,22 @@ import lombok.NoArgsConstructor;
 public class NovelLikeDto {
   private MemberDto id;
   private NovelDto novelIdx;
-  private char likeYn;
+  private String likeYn;
 
 
   @Builder
-  public NovelLikeDto(MemberDto id, NovelDto novelIdx, char likeYn) {
+  public NovelLikeDto(MemberDto id, NovelDto novelIdx, String likeYn) {
     this.id = id;
     this.novelIdx = novelIdx;
     this.likeYn = likeYn;
+  }
+
+  public static NovelLikeDto toDto(NovelLikeEntity novel) {
+    return NovelLikeDto.builder()
+        .id(MemberDto.toDto(novel.getId()))
+        .novelIdx(NovelDto.toDto(novel.getNovelIdx()))
+        .likeYn(novel.getLikeYn())
+        .build();
   }
 
 //   entity -> dto
