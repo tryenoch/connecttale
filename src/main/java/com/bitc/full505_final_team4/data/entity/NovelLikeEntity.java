@@ -18,7 +18,7 @@ public class NovelLikeEntity {
   @Id
   @JsonIgnore
   @ManyToOne
-  @JoinColumn(name = "id")
+  @JoinColumn(name = "id", nullable = false)
   @ToString.Exclude
   private MemberEntity id;
 
@@ -30,10 +30,10 @@ public class NovelLikeEntity {
   private NovelEntity novelIdx;
 
   @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
-  private char likeYn;
+  private String likeYn;
 
   @Builder
-  public NovelLikeEntity(MemberEntity id, NovelEntity novelIdx, char likeYn) {
+  public NovelLikeEntity(MemberEntity id, NovelEntity novelIdx, String likeYn) {
     this.id = id;
     this.novelIdx = novelIdx;
     this.likeYn = likeYn;
