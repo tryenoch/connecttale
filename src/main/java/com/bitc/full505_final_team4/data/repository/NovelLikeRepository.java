@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface NovelLikeRepository extends JpaRepository<NovelLikeEntity, NovelLikeIdx> {
-  Page<NovelLikeEntity> findAllByIdAndLikeYn(MemberEntity member, String like);
+//  Page<NovelLikeEntity> findAllByIdAndLikeYn(MemberEntity member, String like);
 }

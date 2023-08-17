@@ -60,17 +60,17 @@ public class MemberServiceImpl implements MemberService {
     return memberRepository.findByDeletedYn("N", pageable);
   }
 
-  @Override
-  public Page<NovelEntity> getLikeList(Pageable pageable, String id) throws Exception {
-    Page<NovelEntity> likeNovel = null;
-    MemberEntity member = memberRepository.findAllById(id);
-    Page<NovelLikeEntity> liked = novelLikeRepository.findAllByIdAndLikeYn(member, "Y");
-    for (NovelLikeEntity novel : liked.getContent()) {
-      NovelLikeDto req = NovelLikeDto.toDto(novel);
-      likeNovel = novelRepository.findByNovelIdx(req.getNovelIdx().getNovelIdx());
-    }
-    return likeNovel;
-  }
+//  @Override
+//  public Page<NovelEntity> getLikeList(Pageable pageable, String id) throws Exception {
+//    Page<NovelEntity> likeNovel = null;
+//    MemberEntity member = memberRepository.findAllById(id);
+//    Page<NovelLikeEntity> liked = novelLikeRepository.findAllByIdAndLikeYn(member, "Y");
+//    for (NovelLikeEntity novel : liked.getContent()) {
+//      NovelLikeDto req = NovelLikeDto.toDto(novel);
+//      likeNovel = novelRepository.findByNovelIdx(req.getNovelIdx().getNovelIdx());
+//    }
+//    return likeNovel;
+//  }
 
   @Override
   public void levelUp(String id) throws Exception {
