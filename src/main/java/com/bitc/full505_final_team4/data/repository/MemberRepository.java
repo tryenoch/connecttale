@@ -7,17 +7,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository <MemberEntity, String> {
+public interface MemberRepository extends JpaRepository<MemberEntity, String> {
 
-  MemberEntity findByIdAndPw(String id, String pw);
+    MemberEntity findByIdAndPw(String id, String pw);
 
-  MemberEntity save(MemberEntity member);
+    MemberEntity save(MemberEntity member);
 
-  boolean existsById(String id);
+    boolean existsById(String id);
 
-  boolean existsByNickname(String nickname);
+    boolean existsByNickname(String nickname);
 
-  MemberEntity findAllById(String id);
+    MemberEntity findAllById(String id);
 
+    boolean existsByIdAndPw(String id, String pw);
   Page<MemberEntity> findByDeletedYn(String deletedYn, Pageable pageable);
 }
