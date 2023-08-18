@@ -79,12 +79,13 @@ function LikeList(props) {
                                 })
                                 .catch(err => {
                                     console.log(err.message)
-                                })
+                                });
 
                         })
                         .catch(err => {
                             console.log(err.message);
-                        })
+                        });
+                    window.location.reload();
                 }}>
                     <i className="bi bi-heart-fill text-purple"></i>
                 </p>

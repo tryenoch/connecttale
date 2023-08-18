@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.service;
 
+import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -75,16 +78,24 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
-  public List<NovelEntity> getLikeList(String id) throws Exception {
-    List<NovelEntity> likeNovel = new ArrayList<>();
+  public Object getLikeList(String id, Pageable pageable) throws Exception {
+
+    Map<String, Object> result = new HashMap<>();
+
+    List<NovelDto> likeList = new ArrayList<>();
     MemberEntity member = memberRepository.findAllById(id);
-    List<NovelLikeEntity> liked = novelLikeRepository.findAllByIdAndLikeYn(member, "Y");
-    for (int i=0 ; i < liked.size() ; i++) {
-      NovelLikeEntity novel = liked.get(i);
-      NovelLikeDto req = NovelLikeDto.toDto(novel);
-      likeNovel = novelRepository.findByNovelIdx(req.getNovelIdx().getNovelIdx());
+    Page<NovelLikeEntity> likedPage = novelLikeRepository.findAllByIdAndLikeYn(member, "Y", pageable);
+    int totalPages = likedPage.getTotalPages();
+
+    for (NovelLikeEntity like : likedPage.getContent()) {
+      NovelLikeDto req = NovelLikeDto.toDto(like);
+      likeList.add(req.getNovelIdx());
     }
-    return likeNovel;
+
+    result.put("likeList", likeList);
+    result.put("totalPages", totalPages);
+    result.put("nowPage", pageable.getPageNumber() + 1);
+    return result;
   }
 
   @Override

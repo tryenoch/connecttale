@@ -31,22 +31,22 @@ function LikeList(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/myPage/likeList?id=${sessionStorage.getItem('id')}`)
+        axios.get(`/myPage/likeList?id=${sessionStorage.getItem('id')}&page=${nowPage}&size=10`)
             .then(res => {
 
                 console.log(res.data);
 
-                // let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
-                // let arr = [];
-                // let lastNum = offset + 5;
-                // if (lastNum > Math.ceil(res.data.totalPages / 5)) {
-                //     lastNum = Math.ceil(res.data.totalPages / 5) + 1;
-                // }
-                // for (let i = offset; i <= lastNum; i++) {
-                //     arr.push(i);
-                // }
-                // setPages(arr);
-                // setEndPage(res.data.totalPages);
+                let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
+                let arr = [];
+                let lastNum = offset + 5;
+                if (lastNum > Math.ceil(res.data.totalPages / 5)) {
+                    lastNum = Math.ceil(res.data.totalPages / 5) + 1;
+                }
+                for (let i = offset; i <= lastNum; i++) {
+                    arr.push(i);
+                }
+                setPages(arr);
+                setEndPage(res.data.totalPages);
                 setAdult(res.data.likeList.novelAdult);
                 setLikeList(res.data.likeList);
             })
@@ -55,23 +55,24 @@ function LikeList(props) {
             })
     }
 
-    const handleLinkClick = async (like) => {
-        console.log(like);
-        try {
-            const novelDetail = await fetchData(like.novelThumbnail, like.novelTitle, like.ebookCheck, like.novelIdx, like.novelAdult);
-            navi(`/novelDetail/${like.novelTitle}`, {
-                state: {
-                    novelDetail: novelDetail,
-                }
-            });
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-    const handleSubmit = (event) => {
-        alert(`검색어 : ${keyword}`);
-        event.preventDefault();
-    }
+
+    // const handleLinkClick = async (like) => {
+    //     console.log(like);
+    //     try {
+    //         const novelDetail = await fetchData(like.novelThumbnail, like.novelTitle, like.ebookCheck, like.novelIdx, like.novelAdult);
+    //         navi(`/novelDetail/${like.novelTitle}`, {
+    //             state: {
+    //                 novelDetail: novelDetail,
+    //             }
+    //         });
+    //     } catch (error) {
+    //         console.log(error.message);
+    //     }
+    // };
+    // const handleSubmit = (event) => {
+    //     alert(`검색어 : ${keyword}`);
+    //     event.preventDefault();
+    // }
 
     return (
         <div className={'container'}>
@@ -91,6 +92,59 @@ function LikeList(props) {
                         </div>
                 }
             </Row>
+            <div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>
+                <a
+                    className={nowPage <= 0 ? 'text-black-50' : ''}
+                    onClick={() => {
+                        if (nowPage <= 0) {
+                            return null
+                        }
+                        return setNowPage(0)
+                    }}
+                ><i className="bi bi-chevron-double-left"></i>
+                </a>
+                <a
+                    className={nowPage <= 0 ? 'text-black-50' : ''}
+                    onClick={() => {
+                        if (nowPage <= 0) {
+                            return null
+                        }
+                        return setNowPage(nowPage - 1)
+                    }}>
+                    <i className="bi bi-chevron-left"></i>
+                </a>
+                {
+                    pages.map((value) => {
+                        return (
+                            <a
+                                key={value}
+                                className={nowPage === value - 1 ? 'text-black' : 'text-black-50'}
+                                onClick={() => setNowPage(value - 1)}
+                            >{value}</a>);
+                    })
+                }
+                <a
+                    className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
+                    onClick={() => {
+                        if (nowPage >= endPage - 1) {
+                            return null
+                        }
+                        return setNowPage(nowPage + 1)
+                    }}
+                ><i className="bi bi-chevron-right"></i>
+                </a>
+                <a
+                    className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
+                    onClick={() => {
+                        if (nowPage >= endPage - 1) {
+                            return null
+                        }
+                        return setNowPage(endPage - 1)
+                    }}
+                ><i className="bi bi-chevron-double-right"></i>
+                </a>
+
+            </div>
         </div>
     )
 }

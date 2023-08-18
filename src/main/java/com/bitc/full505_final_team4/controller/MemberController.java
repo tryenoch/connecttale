@@ -155,13 +155,10 @@ public class MemberController {
 
 //  pagenation 실패.
   @RequestMapping(value = "/myPage/likeList", method = RequestMethod.GET)
-  public Object likeList(@RequestParam String id) throws Exception {
+  public Object likeList(Pageable pageable, @RequestParam String id) throws Exception {
 
-    Map<String, Object> result = new HashMap<>();
-    List<NovelEntity> likePages = memberService.getLikeList(id);
+    Object result = memberService.getLikeList(id, pageable);
 
-    result.put("result", "성공");
-    result.put("likeList", likePages);
     return result;
   }
 
