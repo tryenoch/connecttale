@@ -20,8 +20,8 @@ function NovelDetail(props) {
       <div className={'container my-5'}>
         <div className={'row'}>
           <div className={'col-sm-9 mx-auto'}>
-            <NovelDetailInfo2 novelDetail={location.state.novelDetail}/>
-            <NovelDetailReview />
+            <NovelDetailInfo2 novelDetail={location.state.novelDetail} />
+            <NovelDetailReview novelIdx={location.state.novelDetail} />
           </div>
         </div>
       </div>

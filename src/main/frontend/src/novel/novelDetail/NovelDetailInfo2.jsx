@@ -14,6 +14,7 @@ function NovelDetailInfo(props) {
   const [novelLikeCount, setNovelLikeCount] = useState(0);
   
   const [id, setId] = useState(sessionStorage.getItem('id'));
+  
   // console.log(kakao);
   // console.log(naver);
   // console.log(ridi);
@@ -21,17 +22,17 @@ function NovelDetailInfo(props) {
   
   // 좋아요 버튼 클릭이벤트
   const likeClickHandler = () => {
+    // 좋아요 버튼 눌렀을때 db에 like_yn값을 'Y'/'N'으로 변경하는 axios 통신
     axios.put('/novelDetailLike', null, {
       params: {
         novelIdx : baseItem.novelKeyDto.novelIdx,
-        novelTitle: baseItem.novelTitle,
-        ebookCheck: baseItem.ebookCheck,
         id: id
       }
     })
       .then((res) => {
-        console.log(res);
+        
         // console.log(res);
+        // db의 작품 정보(제목, 저자, 별점 등)와 함께 좋아요 관련 정보를 받아오기 위한 axios통신
         axios.get("/novelDetail", {
           params: {
             title: baseItem.novelTitle,

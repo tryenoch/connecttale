@@ -80,6 +80,7 @@ public class NovelDetailController {
     // -------------------리뷰------------------
 
 
+
     // -------------------신고------------------
 
 
@@ -249,7 +250,7 @@ public class NovelDetailController {
 
 // -------------------------------- 좋아요 버튼 클릭 ------------------------------------
   @RequestMapping(value = "/novelDetailLike", method = RequestMethod.PUT)
-  public String updateDetailLike(@RequestParam("novelIdx") int novelIdx, @RequestParam("novelTitle") String novelTitle, @RequestParam("ebookCheck") String ebookCheck, @RequestParam("id") String id) throws Exception {
+  public String updateDetailLike(@RequestParam("novelIdx") int novelIdx, @RequestParam("id") String id) throws Exception {
 //
 //    System.out.println(novelIdx);
 //    System.out.println(novelTitle);
@@ -267,6 +268,7 @@ public class NovelDetailController {
       return "좋아요 버튼 누르기 fail";
     }
   }
+
 }
 
 
