@@ -7,10 +7,7 @@ import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.data.repository.PlatformMainRepository;
-import com.bitc.full505_final_team4.service.NovelKakaoService;
-import com.bitc.full505_final_team4.service.NovelMainService;
-import com.bitc.full505_final_team4.service.NovelNaverService;
-import com.bitc.full505_final_team4.service.NovelRidiService;
+import com.bitc.full505_final_team4.service.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -47,6 +44,7 @@ public class NovelMainController {
   private final NovelRidiService novelRidiService;
   private final NovelNaverService novelNaverService;
   private final NovelKakaoService novelKakaoService;
+  private final NovelCommonEditService novelCommonEditService;
 
   // jpa 테스트용
   @GetMapping("/testJpa1")
@@ -198,34 +196,26 @@ public class NovelMainController {
     Map<String, Object> result = new HashMap<>();
     boolean resultB = false;
 
-    /*List<NovelEntity> entityList = novelKakaoService.getKakaoRecentNovelList();
-
-    for(NovelEntity entity : entityList){
-
-      NovelDto dto = NovelDto.toDto(entity);
-      System.out.println(dto);
-
-    }
-    System.out.println("총 리스트 수 : " + entityList.size());*/
-
     String url = "https://page.kakao.com/menu/10011/screen/84?sort_opt=latest";
 
-    try {
+    /*try {
 
-      Document doc = Jsoup.connect(url).get();
+      List<NovelEntity> entityList = novelKakaoService.getKakaoRecentNovelList();
 
-      Elements recentList = doc.select("div.mb-4pxr.flex-col > div > div.flex.grow.flex-col > div > div > div").select("a");
+      List<NovelDto> list = new ArrayList<>();
 
-      String  labelText = recentList.get(1).select("div").attr("aria-label");
+      for (NovelEntity novel : entityList) {
+        NovelDto dto = NovelDto.toDto(novel);
+        list.add(dto);
+        System.out.println(dto);
+      }
 
-      System.out.println(labelText);
-      System.out.println("총 리스트 수 : " + recentList.size());
-
+      System.out.println("[SUCCESS] 테스트가 완료되었습니다. ");
       resultB = true;
 
     } catch (Exception e){
       System.out.println("[ERROR] 테스트 중 오류가 발생했습니다 " + e.getMessage());
-    }
+    }*/
 
     result.put("result", resultB);
 

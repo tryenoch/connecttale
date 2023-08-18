@@ -3,6 +3,8 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import com.bitc.full505_final_team4.data.repository.NovelMainRepository;
+import com.bitc.full505_final_team4.data.repository.NovelPlatformRepository;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,16 +14,15 @@ import org.openqa.selenium.WebDriver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class NovelKakaoServiceImpl implements NovelKakaoService{
 
   private final NovelCommonEditService novelCommonEditService;
+  private final NovelMainRepository novelMainRepository;
+  private final NovelPlatformRepository novelPlatformRepository;
 
   @Override
   @Transactional
@@ -32,6 +33,13 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
   @Override
   @Transactional
   public boolean storeKakaoRecentNovel() throws Exception {
+
+    // novel table 에 막 저장된, 전체 연령가 카카오 소설 목록
+    HashMap<String, NovelEntity> novelEntityList = getKakaoRecentNovelList();
+
+
+
+
     return false;
   }
 
@@ -41,12 +49,13 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
   /*
    * 19세 또는 15세 작품 catch 문으로 이동 (추후 구현)
    * db 에 저장되지 않은 작품이면 NovelDto 생성 및 Entity 변환
+   * platform Id 와 entity 를 전달해줌
    * */
   @Override
   @Transactional
-  public List<NovelEntity> getKakaoRecentNovelList() throws Exception {
+  public HashMap<String, NovelEntity> getKakaoRecentNovelList() throws Exception {
 
-    List<NovelEntity> entityListNotAdult = new ArrayList<>();
+    HashMap<String, NovelEntity> novelList = new HashMap<>();
 
     String url = "https://page.kakao.com/menu/10011/screen/84?sort_opt=latest";
 
@@ -55,42 +64,73 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
     try {
 
       // 신작 리스트 Element 리스트
-      Elements recentList = doc.select("div.mb-4pxr.flex-col > div > div.flex.grow.flex-col > div > div > div").select("a");
+      List<Element> recentList = doc.select("div.mb-4pxr.flex-col > div > div.flex.grow.flex-col > div > div > div").select("a").subList(0, 15);
 
       // 반복문으로 연령이 걸리는 작품 먼저 거르기
       for (int i = 0; i < recentList.size();){
 
         Element listItem = recentList.get(i);
 
-        Elements mainDiv = listItem.select("div");
-
-        String findText = mainDiv.attr("aria-label");
-        String ageInfo = getAgeInfo(findText); // 15세 또는 19세 작품인지
-        String ebookCheck = getEbookCheck(findText); // 웹소설 여부
-        String platformId = listItem.attr("href");
-        platformId = getPlatformId(platformId); // 플랫폼 아이디
-
-
-
-
         try {
 
+          Elements mainDiv = listItem.select("div");
+
+          String findText = mainDiv.attr("aria-label");
+          String ageInfo = getAgeInfo(findText); // 15세 또는 19세 작품인지
+
+          if (ageInfo.equals("Y") || ageInfo.equals("M")){
+            throw new NoSuchElementException();
+          }
+
+          String ebookCheck = getEbookCheck(findText); // 웹소설 여부
+          String platformId = listItem.attr("href");
+          platformId = getPlatformId(platformId); // 플랫폼 아이디
+
+          // Entity 에 넣을 제목 양식 다듬기
+          String novelTitle = mainDiv.select(".text-el-60.line-clamp-2").text();
+          novelTitle = novelCommonEditService.editTitleForNovelEntity(novelTitle);
+
+          // novel table 에 있는지 확인하기(제목, 연령, 웹소설 여부)
+          Optional<NovelEntity> novelCheck = novelMainRepository.findByNovelTitleAndEbookCheckAndNovelAdult(novelTitle, ebookCheck, ageInfo);
+
+          if(!novelCheck.isEmpty()){
+            // novel table 에 있는지 추가 검사
+            throw new Exception();
+          } else {
+
+            // 없으면 entity 생성
+            String thumbnail = mainDiv.select(".select-none.object-cover").attr("src"); // 썸네일 정보
+
+            NovelEntity novel = NovelEntity.builder()
+                    .novelThumbnail(thumbnail)
+                    .novelAdult(ageInfo)
+                    .novelTitle(novelTitle)
+                    .ebookCheck(ebookCheck)
+                    .build();
+
+            novelMainRepository.save(novel); // db 저장, 그래야 idx 값이 생김
+            novelList.put(platformId, novel);
+          }
+
         } catch (NoSuchElementException e){
+
           // 작품이 15세 또는 19세로 로그인 해야 content 페이지에 접속이 가능하므로 우선 넘김
-
           i++;
+          continue;
+        } catch (Exception e){
+          // Novel table 에 이미 등록되어 있으므로 추가 등록 할 필요가 없다.
+          i++;
+          continue;
         }
-
-
 
       }
 
     } catch (Exception e){
-      System.out.println("[ERROR] Jsoup 크롤링 중 요소를 찾는 데 오류가 발생했습니다. ");
+      System.out.println("[ERROR] Jsoup 크롤링 중 오류가 발생했습니다. ");
       e.printStackTrace();
     }
 
-    return entityListNotAdult;
+    return novelList;
   }
 
 
@@ -131,19 +171,9 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
 
   }
 
-  // 제목 양식 정리하기 (최대 3번 검사, "["괄호만 들어가있는 경우)
+  // NovelCommonEditService 내의 editTitleForNovelEntity 함수로 대체
   @Override
   public String getTitle (String title) throws Exception {
-
-
-
-    if(title.contains("[")) {
-      int idx = 0;
-
-      idx = title.indexOf("[");
-      title = title.substring(0, idx);
-
-    }
 
     return title;
   }
