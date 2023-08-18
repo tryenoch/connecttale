@@ -72,6 +72,7 @@ public class NovelDetailController {
       }
     }
 
+    novelDetail.put("novelIdx", novelIdx);
     novelDetail.put("novelLikeCount", novelLikeCount);
     novelDetail.put("novelLikeList", novelLikeList);
 
