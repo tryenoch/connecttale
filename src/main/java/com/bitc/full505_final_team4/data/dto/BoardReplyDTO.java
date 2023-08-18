@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 public class BoardReplyDTO {
@@ -22,7 +23,7 @@ public class BoardReplyDTO {
         this.reply = reply;
         this.createId = createId;
         // 데이터 포맷 변경
-        this.createDt = String.valueOf(createDt);
+        this.createDt = createDt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
     }
 
     public static BoardReplyDTO toDTO(BoardReplyEntity entity) {
