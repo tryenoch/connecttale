@@ -45,7 +45,7 @@ function RecentNovelInsert(props) {
     // alert('테스트 메세지입니다.');
     axios.get(`/novel/kakaoRecentNovelUpdate`)
         .then(res => {
-          MessageUtils.infoMessage("비동기 통신에 성공했습니다.");
+          // MessageUtils.infoMessage("비동기 통신에 성공했습니다.");
           console.log(res.data.result);
         })
         .catch(err => {
