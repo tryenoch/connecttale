@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 public class BoardDTO {
@@ -15,7 +17,7 @@ public class BoardDTO {
     private String boardTitle;
     private String boardContents;
     private String createId;
-    private LocalDateTime createDt;
+    private String createDt;
     private String reqCate;
     private int boardCate;
     private int hitCnt;
@@ -26,7 +28,8 @@ public class BoardDTO {
         this.boardTitle = boardTitle;
         this.boardContents = boardContents;
         this.createId = createId;
-        this.createDt = createDt;
+        // 데이터 포맷 변경
+        this.createDt = createDt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
         this.reqCate = reqCate;
         this.hitCnt = hitCnt;
     }

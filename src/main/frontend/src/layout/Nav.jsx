@@ -9,7 +9,6 @@ function Nav(props) {
 
   /* 로그인 관련 state 추후 설정*/
   // const [loginInfo, setLoginInfo] = setLoginInfo(false);
-  const loginInfo = false;
 
   return (
     <Navbar expand={"md"} className={''}>
@@ -28,7 +27,7 @@ function Nav(props) {
         <div className={''}>
           <Link to={'/board'} className={'me-3 menu'}>커뮤니티</Link>
           {/* 로그인 정보가 있을 때와 없을 때 다르게 나오도록 함 */}
-          <LoginButton status={loginInfo}/>
+          <LoginButton/>
         </div>
       </Container>
     </Navbar>
