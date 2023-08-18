@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
+import java.util.List;
+
 public interface MemberService {
 
   MemberEntity login(String id, String pw) throws Exception;
@@ -19,7 +21,7 @@ public interface MemberService {
 
   Page<MemberEntity> getMemberList(Pageable pageable) throws Exception;
 
-//  Page<NovelEntity> getLikeList(Pageable pageable, String id) throws Exception;
+  List<NovelEntity> getLikeList(String id) throws Exception;
   void levelUp(String id) throws Exception;
   void deleteMember(String id) throws Exception;
 }

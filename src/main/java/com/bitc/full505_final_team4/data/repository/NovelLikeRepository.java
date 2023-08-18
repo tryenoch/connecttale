@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.List;
 
 public interface NovelLikeRepository extends JpaRepository<NovelLikeEntity, NovelLikeIdx> {
-//  Page<NovelLikeEntity> findAllByIdAndLikeYn(MemberEntity member, String like);
+  List<NovelLikeEntity> findAllByIdAndLikeYn(MemberEntity id, String like);
 
 
   Optional<NovelLikeEntity> findByIdAndNovelIdx(MemberEntity likeId, NovelEntity likeNovelIdx);
@@ -26,6 +26,5 @@ public interface NovelLikeRepository extends JpaRepository<NovelLikeEntity, Nove
 
   Optional<List<NovelLikeEntity>> findAllByNovelIdx(NovelEntity novelIdx);
 
-  NovelLikeEntity findAllByIdAndLikeYn(String id, String like);
 
 }
