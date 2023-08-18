@@ -4,9 +4,24 @@
 .mini-block {width: 150px; height: 150px;}
 .fs-button {font-size: 50px;}
 .text-color-red {-webkit-text-fill-color: #ff2626}
+.text-color-blue {-webkit-text-fill-color: #262aff}
 
 .btn-mini {
     line-height: 1;
+}
+
+.reply-input {
+    border : 1px solid #ddd;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 0.95rem;
+}
+.reply-input input{
+    border : none;
+}
+
+.reply-input input:focus {
+    outline: none;
 }
 
 .input-s1 {width: 100px}
@@ -14,6 +29,7 @@
 .input-s3 {width: 300px}
 .input-s4 {width: 400px}
 .input-s5 {width: 500px}
+.input-s6 {width: 65em}
 
 .text-purple {
     color: #9766ff;
