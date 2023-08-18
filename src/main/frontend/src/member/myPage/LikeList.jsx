@@ -1,12 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {Col, Row} from "react-bootstrap";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import MyContent from "./MyContent";
 import MyQNA from "./MyQNA";
 import MyComment from "./MyComment";
+import {fetchData} from "../../common/NovelDetailFetch2";
 
 function LikeList(props) {
+    const navi = useNavigate();
+
     const [keyword, setKeyword] = useState('');
     // 카테고리 변경 시 페이지 번호가 0으로 초기화 x
     const [nowPage, setNowPage] = useState(0);
@@ -52,6 +55,19 @@ function LikeList(props) {
             })
     }
 
+    const handleLinkClick = async (like) => {
+        console.log(like);
+        try {
+            const novelDetail = await fetchData(like.novelThumbnail, like.novelTitle, like.ebookCheck, like.novelIdx, like.novelAdult);
+            navi(`/novelDetail/${like.novelTitle}`, {
+                state: {
+                    novelDetail: novelDetail,
+                }
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
     const handleSubmit = (event) => {
         alert(`검색어 : ${keyword}`);
         event.preventDefault();
@@ -62,27 +78,37 @@ function LikeList(props) {
             <h1>찜한 목록</h1>
             <Row>
                 {
-                    likeList.map((like, index) => {
-                        return (
-                            <div key={index}>
-                                <Link></Link>
-                                <Col className={"rank-item"}>
-                                    <div>
-                                        <div className={"rank-item-img"}>
-                                            {/*세션 영역에 저장된 성인 여부에 따라 이미지 보이는 거 다르게 해야함 */}
-                                            {
-                                                adultsOnly[adult] ? <img src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"} alt={"Adults content"}/>
-                                                    : <img src={like.novelThumbnail} alt=""/>
-                                            }
+                    likeList.length != 0
+                        ? likeList.map((like, index) => {
+                            return (
+                                <Col className={"rank-item"} sm={2} key={index}>
+                                    <Link
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            handleLinkClick(like);
+                                        }} to={`/novelDetail/${like.title}`}>
+
+                                        <div>
+                                            <div className={"rank-item-img"}>
+                                                {/*세션 영역에 저장된 성인 여부에 따라 이미지 보이는 거 다르게 해야함 */}
+                                                {
+                                                    adultsOnly[adult] ? <img
+                                                            src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"}
+                                                            alt={"Adults content"}/>
+                                                        : <img src={like.novelThumbnail} alt=""/>
+                                                }
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className={"rank-info w-100"}>
-                                        <p className={"item-title"}>{like.novelTitle}</p>
-                                    </div>
+                                        <div className={"rank-info w-100"}>
+                                            <p className={"item-title"}>{like.novelTitle}</p>
+                                        </div>
+                                    </Link>
                                 </Col>
-                            </div>
-                        )
-                    })
+                            )
+                        })
+                        : <div className={'d-flex justify-content-center'}>
+                            <p className={'my-5'}>찜한 목록이 없습니다.</p>
+                        </div>
                 }
             </Row>
             {/*<div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>*/}
