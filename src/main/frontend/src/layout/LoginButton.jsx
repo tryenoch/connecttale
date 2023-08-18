@@ -1,28 +1,34 @@
-import React from 'react';
-import {Link} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import {Link, useNavigate} from "react-router-dom";
 
 function LoginButton(props) {
-  
-  const loginInfo = props.status;
-  
-  return (
-    <div className={"d-inline"}>
-      {
-        loginInfo?
-        /* 로그인 정보가 있을 경우 적용 */
 
-          <div className={"d-inline logout"}>
-            <Link to={'/myPage'} className={'me-2'}>마이페이지</Link>
+    const navi = useNavigate();
+    const [button, setButton] = useState();
+
+    useEffect(() => {
+        if (sessionStorage.getItem('grade') == 2) {
+            setButton(<Link to={'/staffPage'} className={'me-2'}>관리자페이지</Link>);
+        } else {
+            setButton(<Link to={'/myPage'} className={'me-2'}>마이페이지</Link>);
+        }
+    });
+    const handleLogout = () => {
+        sessionStorage.clear();
+        navi('/novel');
+    }
+
+    if (sessionStorage.getItem('member') != null) {
+        return (<div className={"d-inline logout"}>
+            {button}
             |
-            <Link to={'/logout'} className={'ms-2 round'}>로그아웃</Link>
-          </div>
-        :
-          /* 로그인 정보가 없을 경우 적용 */
-          <Link to={'/login'} className={'btn btn-purple round'}>로그인</Link>
-      }
-      
-    </div>
-  )
+            <Link to={'/logout'} className={'ms-2 round'} onClick={handleLogout}>로그아웃</Link>
+        </div>)
+    } else {
+        return (<div className={"d-inline"}>
+            <Link to={'/login'} className={'btn btn-purple round'}>로그인</Link>
+        </div>)
+    }
 }
 
 export default LoginButton;

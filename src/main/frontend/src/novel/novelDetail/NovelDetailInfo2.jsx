@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import novel from "../Novel";
 import {Link} from "react-router-dom";
-import {fetchData} from "../../common/NovelDetailFetch2";
 import axios from "axios";
 
 
@@ -11,23 +10,43 @@ function NovelDetailInfo(props) {
   const [naver, setNaver] = useState({});
   const [kakao, setKakao] = useState({});
   const [baseItem, setBaseItem] = useState({});
+  const [novelLikeList, setNovelLikeList] = useState([]);
+  const [novelLikeCount, setNovelLikeCount] = useState(0);
   
+  const [id, setId] = useState(sessionStorage.getItem('id'));
   // console.log(kakao);
   // console.log(naver);
   // console.log(ridi);
   // console.log(baseItem);
   
+  // 좋아요 버튼 클릭이벤트
   const likeClickHandler = () => {
     axios.put('/novelDetailLike', null, {
       params: {
         novelIdx : baseItem.novelKeyDto.novelIdx,
         novelTitle: baseItem.novelTitle,
         ebookCheck: baseItem.ebookCheck,
-        id: 'test3'
+        id: id
       }
     })
-      .then(res => {
+      .then((res) => {
         console.log(res);
+        // console.log(res);
+        axios.get("/novelDetail", {
+          params: {
+            title: baseItem.novelTitle,
+            ebookCheck: baseItem.ebookCheck
+          }
+        })
+          .then(res2 => {
+            console.log(res2);
+            setNovelLikeList(res2.data.novelLikeList);
+            setNovelLikeCount(res2.data.novelLikeCount);
+          })
+          .catch(err => {
+            console.log(err.message)
+          })
+
       })
       .catch(err => {
         console.log(err.message);
@@ -37,6 +56,7 @@ function NovelDetailInfo(props) {
   useEffect(() => {
     setNovelInfo(props.novelDetail);
     
+    // 소설 디테일 정보 setState 해주는 곳
     if (novelInfo.ridi) {
       setBaseItem(novelInfo.ridi);
     } else if (novelInfo.naver) {
@@ -71,6 +91,17 @@ function NovelDetailInfo(props) {
     else if (novelInfo.kakao != undefined) {
       setKakao(novelInfo.kakao);
     }
+    
+    // 좋아요 정보 setState 해주는 곳
+    if (novelInfo.novelLikeCount) {
+      setNovelLikeCount(novelInfo.novelLikeCount);
+    }
+    
+    if (novelInfo.novelLikeList) {
+      setNovelLikeList(novelInfo.novelLikeList);
+    }
+    
+    
   }, [props.novelDetail]);
   
   
@@ -110,7 +141,7 @@ function NovelDetailInfo(props) {
               <div className={'col-sm-3'}>
                 <button type={'button'} className={'btn-outline-purple ms-2'} onClick={likeClickHandler}>
                   <i className="bi bi-heart" ></i>
-                  <span>좋아요</span>
+                  <span>{novelLikeCount}</span>
                 </button>
               </div>
             </div>
@@ -206,6 +237,17 @@ function NovelDetailInfo(props) {
       <div className={'my-4'}>
         <p className={'fs-4 ms-2'}>INTRO</p>
         <p className={'novel-intro'}>{baseItem.novelIntro}</p>
+        {
+          novelLikeList.map((item, index) => {
+            return (
+              <div key={index}>
+                <p>{item.id.id}</p>
+                <p>{item.novelIdx.novelIdx}</p>
+                <p>{item.likeYn}</p>
+              </div>
+            )
+          })
+        }
       </div>
       <hr/>
     </div>

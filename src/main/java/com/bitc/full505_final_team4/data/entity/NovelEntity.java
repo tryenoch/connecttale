@@ -43,6 +43,10 @@ public class NovelEntity {
   @ToString.Exclude
   private List<NovelLikeEntity> novelLikeList = new ArrayList<>();
 
+  @JsonIgnore
+  @OneToMany(mappedBy = "novelIdx", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  private List<NovelReplyEntity> novelReplyList = new ArrayList<>();
 
   @Builder
   public NovelEntity(String novelTitle, String novelThumbnail, String  novelAdult, String ebookCheck){

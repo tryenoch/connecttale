@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 
 export const fetchData = async (platformId, title, ebookCheck) => {
   
-  console.log(ebookCheck);
+  // console.log(ebookCheck);
   let novelDetail = {};
   
   try {
@@ -15,14 +15,14 @@ export const fetchData = async (platformId, title, ebookCheck) => {
         ebookCheck: ebookCheck
       }
     })
+    
     console.log(res);
     // DB에 저장되어있는지 유무 확인
     // db에 해당 작품이 있으면 정보 꺼내오기
-    if (Object.keys(res.data).length !== 0) {
+    if (res.data.kakao || res.data.naver || res.data.ridi) {
       // DB에 저장되어 있다면 db에서 platform 데이터 들고와서 novelInfo 변경하기
       novelDetail = res.data;
     }
-    
     // db에 해당 작품이 없으면 db 저장하기
     else {
       // 리디북스 디테일 페이지 정보 가져오기
@@ -174,6 +174,7 @@ export const fetchData = async (platformId, title, ebookCheck) => {
               }
             }
           }
+          // 리디북스에는 해당 작품 검색결과가 없는 경우, 카카오/네이버만 검색 시도
           else {
             const novelRes = await axios.post('/novelDetail', null, {
               params: {
@@ -196,9 +197,9 @@ export const fetchData = async (platformId, title, ebookCheck) => {
       // console.log(res);
       // DB에 저장되어있는지 유무 확인
       // db에 해당 작품이 있으면 정보 꺼내오기
-      if (Object.keys(res.data).length !== 0) {
+      if (res.data.kakao || res.data.naver || res.data.ridi) {
         // DB에 저장되어 있다면 db에서 platform 데이터 들고와서 novelInfo 변경하기
-        console.log(res.data);
+        // console.log(res.data);
         novelDetail = res.data;
       }
     }

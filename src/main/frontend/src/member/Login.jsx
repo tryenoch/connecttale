@@ -13,15 +13,29 @@ function Login(props) {
     const login = (e) => {
         e.preventDefault();
 
-        axios.post(`http://localhost:8080/login`, null, {
+        axios.post(`/login/process`, null, {
             params: {
                 id: id,
                 pw: pw
             }
         })
             .then(res => {
-                console.log(res)
-                const member = res.data;
+                console.log(res.data);
+                if (res.data.user) {
+                    // 세션 저장 구현
+                    const member = res.data.userInfo;
+                    sessionStorage.setItem("member", JSON.stringify(member));
+                    sessionStorage.setItem("id", member.id);
+                    const year = new Date().getFullYear();
+                    const birth = Number(member.birthday.substring(0, 4));
+                    const adult = (year - birth) >= 19 ? 'Y' : 'N';
+                    sessionStorage.setItem("adult",adult);
+                    sessionStorage.setItem('grade', member.grade);
+                    navi('/');
+                } else {
+                    alert('존재하지 않는 사용자 또는 잘못된 비밀번호입니다.');
+                }
+
             })
             .catch(err => {
                 alert(err);

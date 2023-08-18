@@ -1,32 +1,21 @@
-import React from 'react';
-// import NovelDetailInfo from "./novelDetail/NovelDetailInfo";
-import NovelDetailReview from "./novelDetail/NovelDetailReview";
-import {useLocation, useParams, useSearchParams} from "react-router-dom";
-import NovelDetailInfo2 from "./novelDetail/NovelDetailInfo2";
+import React, {useEffect, useState} from 'react';
+
+import {Route, Routes, useLocation, useParams, useSearchParams} from "react-router-dom";
+import NovelDetail from "./NovelDetail";
+
 
 function NovelDetail2(props) {
-  const location = useLocation();
   
-  // const state = location.state;
-  // console.log(state.novelDetail);
   
-  console.log(location.state);
-  
-  if (!location.state || !location.state.novelDetail) {
-    return <div>스테이트로 정보가 넘어오지 않았습니다.</div>; // 데이터가 없을 경우 로딩 처리
-  }
-  else {
-    return (
-      <div className={'container my-5'}>
-        <div className={'row'}>
-          <div className={'col-sm-9 mx-auto'}>
-            <NovelDetailInfo2 novelDetail={location.state.novelDetail}/>
-            <NovelDetailReview />
-          </div>
-        </div>
-      </div>
-    )
-  }
+  return (
+    <div>
+      {/* 라우트 주소 설정은 여기서 */}
+      <Routes>
+        <Route index element={<NovelDetail/>} />
+        <Route path={'/:title'} element={<NovelDetail />} />
+      </Routes>
+    </div>
+  )
 }
 
 export default NovelDetail2;
