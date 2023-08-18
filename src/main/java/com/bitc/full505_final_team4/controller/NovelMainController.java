@@ -198,24 +198,18 @@ public class NovelMainController {
 
     String url = "https://page.kakao.com/menu/10011/screen/84?sort_opt=latest";
 
-    /*try {
+    try {
 
-      List<NovelEntity> entityList = novelKakaoService.getKakaoRecentNovelList();
+      boolean resultInfo = novelKakaoService.storeKakaoRecentNovel();
 
-      List<NovelDto> list = new ArrayList<>();
-
-      for (NovelEntity novel : entityList) {
-        NovelDto dto = NovelDto.toDto(novel);
-        list.add(dto);
-        System.out.println(dto);
-      }
+      System.out.println(resultInfo);
 
       System.out.println("[SUCCESS] 테스트가 완료되었습니다. ");
       resultB = true;
 
     } catch (Exception e){
       System.out.println("[ERROR] 테스트 중 오류가 발생했습니다 " + e.getMessage());
-    }*/
+    }
 
     result.put("result", resultB);
 
@@ -230,7 +224,7 @@ public class NovelMainController {
 // 성공
 //    String url = "https://page.kakao.com/menu/10011/screen/84?sort_opt=latest";
 // 실패
-    String url1 = "https://page.kakao.com/content/62199555";
+    String url1 = "https://page.kakao.com/search/result?keyword=%EC%9D%B4%20%EA%B2%B0%ED%98%BC%EC%9D%80%20%EC%96%B4%EC%B0%A8%ED%94%BC&categoryUid=11";
     String url2 = "https://page.kakao.com/content/53725396";
 
     /* 셀레니움 시도 */
@@ -258,28 +252,6 @@ public class NovelMainController {
     } finally {
       driver.quit();
     }
-
-
-//    Document doc = Jsoup.connect(url).get();
-
-//    Elements recentNovel = doc.select("div.mb-4pxr.flex-col > div > div.flex.grow.flex-col > div > div > div");
-//    Elements recentNovel = doc.select("div.jsx-1469927737.jsx-1458499084.jsx-2778911690.w-320pxr");
-//    String  dateInfo = recentNovel.select(".info").text();
-//
-//    dateInfo = novelNaverService.getUpdateDateInList(dateInfo);
-
-//    if(ObjectUtils.isEmpty(recentNovel)){
-//      System.out.println("해당 요소를 찾지 못했습니다.");
-//    } else{
-//      System.out.println(recentNovel);
-//    }
-
-    /*boolean b1 = novelRidiService.storeRidiRecentNovel(1750);
-    if (b1){
-      result.put("result", "success");
-    } else {
-      result.put("result", "fail");
-    }*/
 
     return result;
   }
