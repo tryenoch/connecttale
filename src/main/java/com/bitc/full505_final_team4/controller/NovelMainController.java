@@ -196,6 +196,7 @@ public class NovelMainController {
   public Object kakaoRecentNovelUpdate() throws Exception{
 
     Map<String, Object> result = new HashMap<>();
+    boolean resultB = false;
 
     /*List<NovelEntity> entityList = novelKakaoService.getKakaoRecentNovelList();
 
@@ -209,12 +210,24 @@ public class NovelMainController {
 
     String url = "https://page.kakao.com/menu/10011/screen/84?sort_opt=latest";
 
-    Document doc = Jsoup.connect(url).get();
+    try {
 
-    Elements recentList = doc.select("div.mb-4pxr.flex-col > div > div.flex.grow.flex-col > div > div > div").select("a");
+      Document doc = Jsoup.connect(url).get();
 
-    System.out.println(recentList);
-    System.out.println("총 리스트 수 : " + recentList);
+      Elements recentList = doc.select("div.mb-4pxr.flex-col > div > div.flex.grow.flex-col > div > div > div").select("a");
+
+      String  labelText = recentList.get(1).select("div").attr("aria-label");
+
+      System.out.println(labelText);
+      System.out.println("총 리스트 수 : " + recentList.size());
+
+      resultB = true;
+
+    } catch (Exception e){
+      System.out.println("[ERROR] 테스트 중 오류가 발생했습니다 " + e.getMessage());
+    }
+
+    result.put("result", resultB);
 
     return result;
 

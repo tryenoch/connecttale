@@ -3,6 +3,7 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 
@@ -24,7 +25,7 @@ public interface NovelKakaoService {
   List<NovelEntity> getKakaoRecentNovelList() throws Exception;
 
   // jsoup 에서 전달해준 Elements 로 NovelDto 만들기 및 Entity 저장
-  NovelEntity getNovelEntity(Elements novelInfo) throws Exception;
+  NovelEntity getNovelEntity(Element novelInfo) throws Exception;
 
   // NovelEntity 와 아이디에 해당하는 json 파일에서 Dto 정보 얻어오기
   // 이후 selenium 함수로 얻어온 데이터를 더하여 dto 완성, driver 선언부 확인하기
@@ -32,7 +33,15 @@ public interface NovelKakaoService {
 
   // json 에서 얻어오지 못하는 데이터 Selenium 으로 얻어오기
   // 함수 선언부 밖에서 driver.quit 해줘야함
-  HashMap<String, Object> addRemainData(WebDriver driver, String platformId);
+  HashMap<String, Object> addRemainData(WebDriver driver, String platformId) throws Exception;
+
+  // [jsoup] a 태그에서 플랫폼 아이디 자르기
+  String getPlatformId(String hrefText) throws Exception;
+
+  // 제목 양식 정리하기
+  String getTitle (String title) throws Exception;
+
+  String getAgeInfo(String info) throws Exception;
 
   // 웹소설인지 단행본인지 체크
   String getEbookCheck(String title) throws Exception;
