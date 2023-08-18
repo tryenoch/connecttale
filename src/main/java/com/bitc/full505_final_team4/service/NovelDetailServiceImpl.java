@@ -31,6 +31,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class NovelDetailServiceImpl implements NovelDetailService {
 
+  private final NovelCommonEditService novelCommonEditService;
+
   private final NovelPlatformRepository novelPlatformRepository;
   private final NovelRepository novelRepository;
   private final NovelLikeRepository novelLikeRepository;
@@ -42,19 +44,12 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
 
 
+  // 매개변수인 title, ebookCheck, novelAdult로 platform 테이블에서 가져오기
   @Override
-  public List<NovelPlatformEntity> getNovelDetail(String title, String ebookCheck) {
-    // 매개변수인 title로 platform 테이블에서 가져오기
-    List<NovelPlatformEntity> novelDetail = novelPlatformRepository.findAllByNovelTitleAndEbookCheck(title, ebookCheck);
+  public List<NovelPlatformEntity> getNovelDetail(String title, String ebookCheck, String novelAdult) {
 
+    List<NovelPlatformEntity> novelDetail = novelPlatformRepository.findAllByNovelTitleAndEbookCheckAndNovelAdult(title, ebookCheck, novelAdult);
 
-//    Optional List<NovelPlatformEntity> allNovel = novelPlatformRepository.findAllByNovelTitle(title);
-//    if (!allNovel.isEmpty()) {
-//      // NovelEntity 타입(= novel_idx 칼럼과 같은 개념임)
-//
-//      List<NovelPlatformEntity> novelDetailAll = novelPlatformRepository.findAllByNovelIdx_NovelIdx(novelIdx.getNovelIdx());
-//      for (NovelPlatformEntity p : novelDetailAll) {
-//        novelDetail.add(p);
 
     return novelDetail;
   }
@@ -64,7 +59,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
   // 네이버 디테일 페이지 정보 크롤링
   @Override
-  public NovelPlatformEntity getNaverCrolling(String platformId, String title, String ebookCheck) {
+  public NovelPlatformEntity getNaverCrolling(String title, String ebookCheck, String ageGrade) {
     NovelPlatformEntity naverCrollingData = new NovelPlatformEntity();
 
     WebDriver driver;
@@ -126,13 +121,13 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
       // 해당 작품과 동일한 이름의 작품을 찾는 페이지 접속하기
       driver.get(naverSearchUrl);
-
-      List<WebElement> titleEls = driver.findElements(By.className("N=a:nov.title"));
-      if (!titleEls.isEmpty()) {
-        if (ebookCheck.equals("단행본")) {
+      if (!driver.findElements(By.className("N=a:nov.title")).isEmpty()) {
+        List<WebElement> titleEls = driver.findElements(By.className("N=a:nov.title"));
+        if (ebookCheck.equals("단행본") && ageGrade.equals("Y")) {
           for (WebElement titleEl : titleEls) {
-            String testTitle = titleEl.getText();
-            if (titleEl.getText().contains(title) && titleEl.getText().contains("[단행본]")) {
+//            String testTitle = titleEl.getText();
+            // 제목, ebookCheck, 성인여부가 일치하는 제목의 url 주소 얻기(같은 제목, 같은 ebookCheck인데 19세, 전체이용가 모두 있는 경우가 있기 때문)
+            if (titleEl.getText().contains(title) && titleEl.getText().contains("[단행본]") && !titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
 
               // 검색결과 페이지에서 가져올 정보
@@ -147,10 +142,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               naverCrollingData.setNovelIntro(titleParentEl.findElement(By.className("dsc")).getText());
               // -------------------------------
 
+
               // 작품 디테일 페이지 접속하기
               driver.get(titleEl.getAttribute("href"));
 
-              // novelTitle 가져오기
+              // novelTitle 설정하기
               naverCrollingData.setNovelTitle(title);
 
               // novelThumbnail 가져오기
@@ -216,9 +212,12 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
             }
           }
-        } else if (ebookCheck.equals("웹소설")) {
+        }
+        else if (ebookCheck.equals("단행본") && ageGrade.equals("N")) {
           for (WebElement titleEl : titleEls) {
-            if (titleEl.getText().contains(title) && !titleEl.getText().contains("[단행본]")) {
+//            String testTitle = titleEl.getText();
+            // 제목, ebookCheck, 성인여부가 일치하는 제목의 url 주소 얻기(같은 제목, 같은 ebookCheck인데 19세, 전체이용가 모두 있는 경우가 있기 때문)
+            if (titleEl.getText().contains(title) && titleEl.getText().contains("[단행본]") && titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
 
               // 검색결과 페이지에서 가져올 정보
@@ -231,16 +230,16 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               // novelIntro 가져오기
               WebElement titleParentEl = titleEl.findElement(By.xpath("..")).findElement(By.xpath(".."));
               naverCrollingData.setNovelIntro(titleParentEl.findElement(By.className("dsc")).getText());
-
               // -------------------------------
+
 
               // 작품 디테일 페이지 접속하기
               driver.get(titleEl.getAttribute("href"));
 
-              // novelTitle 저장하기(페이지 내에 있는 작품이기에 그냥 검색한 키워드가 곧 작품 제목이 됨)
+              // novelTitle 설정하기
               naverCrollingData.setNovelTitle(title);
 
-//              // novelThumbnail 가져오기
+              // novelThumbnail 가져오기
               WebElement leftSide = driver.findElement(By.xpath("//*[@id=\"container\"]/div[1]"));
               WebElement thumbnailEl = leftSide.findElement(By.tagName("img"));
 
@@ -295,6 +294,188 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               // ebookCheck 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
               naverCrollingData.setEbookCheck(ebookCheck);
 
+              // novelAdult 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[5]")).getText().equals("청소년 이용불가")) {
+                naverCrollingData.setNovelAdult("Y");
+              } else {
+                naverCrollingData.setNovelAdult("N");
+              }
+            }
+          }
+        }
+
+        else if (ebookCheck.equals("웹소설") && ageGrade.equals("Y")) {
+          for (WebElement titleEl : titleEls) {
+//            String testTitle = titleEl.getText();
+            // 제목, ebookCheck, 성인여부가 일치하는 제목의 url 주소 얻기(같은 제목, 같은 ebookCheck인데 19세, 전체이용가 모두 있는 경우가 있기 때문)
+            if (titleEl.getText().contains(title) && !titleEl.getText().contains("[단행본]") && !titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
+              int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
+
+              // 검색결과 페이지에서 가져올 정보
+              // platform 구분하기
+              naverCrollingData.setPlatform(2);
+
+              // platformId 가져오기
+              naverCrollingData.setPlatformId(titleEl.getAttribute("href").substring(platformIdIndex + 1));
+
+              // novelIntro 가져오기
+              WebElement titleParentEl = titleEl.findElement(By.xpath("..")).findElement(By.xpath(".."));
+              naverCrollingData.setNovelIntro(titleParentEl.findElement(By.className("dsc")).getText());
+              // -------------------------------
+
+
+              // 작품 디테일 페이지 접속하기
+              driver.get(titleEl.getAttribute("href"));
+
+              // novelTitle 설정하기
+              naverCrollingData.setNovelTitle(title);
+
+              // novelThumbnail 가져오기
+              WebElement leftSide = driver.findElement(By.xpath("//*[@id=\"container\"]/div[1]"));
+              WebElement thumbnailEl = leftSide.findElement(By.tagName("img"));
+
+              naverCrollingData.setNovelThumbnail(thumbnailEl.getAttribute("src"));
+
+
+              // novelAuthor 가져오기
+              naverCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[3]/a")).getText());
+
+              // novelPubli 가져오기
+              naverCrollingData.setNovelPubli(driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[4]/a")).getText());
+
+              // novelCount 가져오기
+              naverCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"content\"]/h5/strong")).getText()));
+
+              // novelCompleteYn 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[1]/span")).getText().equals("완결")) {
+                naverCrollingData.setNovelCompleteYn("Y");
+              } else {
+                naverCrollingData.setNovelCompleteYn("N");
+              }
+
+              // novelPrice 가져오기
+              naverCrollingData.setNovelPrice(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"content\"]/div[4]/div/dl/dd/div/div[1]/span/span")).getText()));
+
+              // novelStarRate 가져오기
+              naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
+
+              // novelRelease 가져오기
+              int novelReleaseStartIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf("(");
+              int novelReleaseEndIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf(")");
+
+              naverCrollingData.setNovelRelease(driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex - 1));
+
+              // cateList 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("판타지")) {
+                naverCrollingData.setCateList("1");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("현판")) {
+                naverCrollingData.setCateList("2");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("로맨스")) {
+                naverCrollingData.setCateList("3");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("로판")) {
+                naverCrollingData.setCateList("4");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("무협")) {
+                naverCrollingData.setCateList("5");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("드라마")) {
+                naverCrollingData.setCateList("6");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("BL")) {
+                naverCrollingData.setCateList("7");
+              }
+
+              // ebookCheck 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
+              naverCrollingData.setEbookCheck(ebookCheck);
+
+              // novelAdult 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[5]")).getText().equals("청소년 이용불가")) {
+                naverCrollingData.setNovelAdult("Y");
+              } else {
+                naverCrollingData.setNovelAdult("N");
+              }
+            }
+          }
+        }
+        else if (ebookCheck.equals("웹소설") && ageGrade.equals("N")) {
+          for (WebElement titleEl : titleEls) {
+//            String testTitle = titleEl.getText();
+            // 제목, ebookCheck, 성인여부가 일치하는 제목의 url 주소 얻기(같은 제목, 같은 ebookCheck인데 19세, 전체이용가 모두 있는 경우가 있기 때문)
+            if (titleEl.getText().contains(title) && !titleEl.getText().contains("[단행본]") && titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
+              int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
+
+              // 검색결과 페이지에서 가져올 정보
+              // platform 구분하기
+              naverCrollingData.setPlatform(2);
+
+              // platformId 가져오기
+              naverCrollingData.setPlatformId(titleEl.getAttribute("href").substring(platformIdIndex + 1));
+
+              // novelIntro 가져오기
+              WebElement titleParentEl = titleEl.findElement(By.xpath("..")).findElement(By.xpath(".."));
+              naverCrollingData.setNovelIntro(titleParentEl.findElement(By.className("dsc")).getText());
+              // -------------------------------
+
+
+              // 작품 디테일 페이지 접속하기
+              driver.get(titleEl.getAttribute("href"));
+
+              // novelTitle 설정하기
+              naverCrollingData.setNovelTitle(title);
+
+              // novelThumbnail 가져오기
+              WebElement leftSide = driver.findElement(By.xpath("//*[@id=\"container\"]/div[1]"));
+              WebElement thumbnailEl = leftSide.findElement(By.tagName("img"));
+
+              naverCrollingData.setNovelThumbnail(thumbnailEl.getAttribute("src"));
+
+
+              // novelAuthor 가져오기
+              naverCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[3]/a")).getText());
+
+              // novelPubli 가져오기
+              naverCrollingData.setNovelPubli(driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[4]/a")).getText());
+
+              // novelCount 가져오기
+              naverCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"content\"]/h5/strong")).getText()));
+
+              // novelCompleteYn 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[1]/span")).getText().equals("완결")) {
+                naverCrollingData.setNovelCompleteYn("Y");
+              } else {
+                naverCrollingData.setNovelCompleteYn("N");
+              }
+
+              // novelPrice 가져오기
+              naverCrollingData.setNovelPrice(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"content\"]/div[4]/div/dl/dd/div/div[1]/span/span")).getText()));
+
+              // novelStarRate 가져오기
+              naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
+
+              // novelRelease 가져오기
+              int novelReleaseStartIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf("(");
+              int novelReleaseEndIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf(")");
+
+              naverCrollingData.setNovelRelease(driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex - 1));
+
+              // cateList 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("판타지")) {
+                naverCrollingData.setCateList("1");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("현판")) {
+                naverCrollingData.setCateList("2");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("로맨스")) {
+                naverCrollingData.setCateList("3");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("로판")) {
+                naverCrollingData.setCateList("4");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("무협")) {
+                naverCrollingData.setCateList("5");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("드라마")) {
+                naverCrollingData.setCateList("6");
+              } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("BL")) {
+                naverCrollingData.setCateList("7");
+              }
+
+              // ebookCheck 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
+              naverCrollingData.setEbookCheck(ebookCheck);
+
+              // novelAdult 가져오기
               if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[5]")).getText().equals("청소년 이용불가")) {
                 naverCrollingData.setNovelAdult("Y");
               } else {
@@ -316,7 +497,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
   // 카카오 디테일 페이지 크롤링
   @Override
-  public NovelPlatformEntity getKakaoCrolling(String id, String title, String ne) {
+  public NovelPlatformEntity getKakaoCrolling(String title, String ne, String ageGrade) {
     NovelPlatformEntity kakaoCrollingData = new NovelPlatformEntity();
 
     WebDriver driver;
@@ -402,9 +583,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
         for (WebElement aEl : aEls) {
           WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
           // 찾는 작품이 단행본일 경우
-          if (ne.equals("단행본")) {
-            // 작품 이름을 포함하면서, 단행본도 포함한 제목을 찾음
-            if (searchTitleEl.getText().contains(title) && searchTitleEl.getText().contains("[단행본]")) {
+          if (ne.equals("단행본") && ageGrade.equals("Y")) {
+            // 작품 이름을 포함하면서, 종류, 성인여부가 모두 동일한 작품을 찾기
+            if (searchTitleEl.getText().contains(title) && searchTitleEl.getText().contains("[단행본]") && aEl.findElement(By.tagName("div")).getAttribute("aria-label").contains("19세 연령 제한")) {
               // platform 구분하기
               kakaoCrollingData.setPlatform(1);
 
@@ -412,6 +593,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               int platformIdIndex = aEl.getAttribute("href").lastIndexOf("/");
               kakaoCrollingData.setPlatformId(aEl.getAttribute("href").substring(platformIdIndex + 1));
 
+              // 작품 디테일 페이지로 접속하기
               driver.get(aEl.getAttribute("href"));
 
               // novelTitle 저장하기(페이지 내에 있는 작품이기에 그냥 검색한 키워드가 곧 작품 제목이 됨)
@@ -502,9 +684,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setEbookCheck(ne);
             }
           }
-          else if (ne.equals("웹소설")) {
-            // 작품제목을 포함하면서 단행본을 포함하지 않는 제목 찾기
-            if (searchTitleEl.getText().contains(title) && !searchTitleEl.getText().contains("[단행본]")) {
+          else if (ne.equals("단행본") && ageGrade.equals("N")) {
+            if (searchTitleEl.getText().contains(title) && searchTitleEl.getText().contains("[단행본]") && !aEl.findElement(By.tagName("div")).getAttribute("aria-label").contains("19세 연령 제한")) {
               // platform 구분하기
               kakaoCrollingData.setPlatform(1);
 
@@ -512,12 +693,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               int platformIdIndex = aEl.getAttribute("href").lastIndexOf("/");
               kakaoCrollingData.setPlatformId(aEl.getAttribute("href").substring(platformIdIndex + 1));
 
-              // 작품 디테일 페이지 접속하기
+              // 작품 디테일 페이지로 접속하기
               driver.get(aEl.getAttribute("href"));
 
               // novelTitle 저장하기(페이지 내에 있는 작품이기에 그냥 검색한 키워드가 곧 작품 제목이 됨)
               kakaoCrollingData.setNovelTitle(title);
-
 
               // novelThumbnail 가져오기
               kakaoCrollingData.setNovelThumbnail(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[1]/div/div/img")).getAttribute("src"));
@@ -576,18 +756,212 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
 
-              // 작품소개 탭 클릭
-//              driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[1]/div/div/div[2]/a")).click();
-//              Thread.sleep(200);
+              // novelIntro 가져오기
+              driver.get("https://page.kakao.com/content/" + kakaoCrollingData.getPlatformId() + "?tab_type=about");
+              kakaoCrollingData.setNovelIntro(driver.findElement(By.cssSelector(".whitespace-pre-wrap.break-words")).getText());
+
+              // novelPubli 가져오기
+              kakaoCrollingData.setNovelPubli(driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(1).findElement(By.tagName("div")).getText());
+
+              // novelAdult 가져오기
+              if (driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(2).findElement(By.tagName("div")).getText().equals("19세이용가")) {
+                kakaoCrollingData.setNovelAdult("Y");
+              }
+              else {
+                kakaoCrollingData.setNovelAdult("N");
+              }
+
+              // novelPrice 가져오기
+              if (driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(3).findElement(By.tagName("div")).getText().indexOf("원") == -1) {
+                kakaoCrollingData.setNovelPrice(0);
+              }
+              else {
+                int novelPriceIndex = driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(3).findElement(By.tagName("div")).getText().indexOf("원");
+                kakaoCrollingData.setNovelPrice(Integer.parseInt(driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(3).findElement(By.tagName("div")).getText().substring(0, novelPriceIndex)));
+              }
+
+              // ebookCheck 가져오기
+              kakaoCrollingData.setEbookCheck(ne);
+            }
+          }
+          else if (ne.equals("웹소설") && ageGrade.equals("Y")) {
+            if (searchTitleEl.getText().contains(title) && !searchTitleEl.getText().contains("[단행본]") && aEl.findElement(By.tagName("div")).getAttribute("aria-label").contains("19세 연령 제한")) {
+              // platform 구분하기
+              kakaoCrollingData.setPlatform(1);
+
+              // platformId 가져오기
+              int platformIdIndex = aEl.getAttribute("href").lastIndexOf("/");
+              kakaoCrollingData.setPlatformId(aEl.getAttribute("href").substring(platformIdIndex + 1));
+
+              // 작품 디테일 페이지로 접속하기
+              driver.get(aEl.getAttribute("href"));
+
+              // novelTitle 저장하기(페이지 내에 있는 작품이기에 그냥 검색한 키워드가 곧 작품 제목이 됨)
+              kakaoCrollingData.setNovelTitle(title);
+
+              // novelThumbnail 가져오기
+              kakaoCrollingData.setNovelThumbnail(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[1]/div/div/img")).getAttribute("src"));
+
+              // novelAuthor 가져오기
+              kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
+
+              // novelCount 가져오기
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+
+              // starRate 가져오기
+              WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
+              if (starRateDivEl.findElements(By.tagName("img")).get(2).getAttribute("alt").equals("별점")) {
+                kakaoCrollingData.setNovelStarRate(Double.parseDouble(starRateDivEl.findElements(By.tagName("span")).get(1).getText()));
+              }
+              else {
+                kakaoCrollingData.setNovelStarRate(0);
+              }
+
+              // novelCompleteYn 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
+                kakaoCrollingData.setNovelCompleteYn("Y");
+              }
+              else {
+                kakaoCrollingData.setNovelCompleteYn("N");
+              }
+
+              // novelUpdateDate 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
+                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
+              }
+
+              // cateList 가져오기
+              String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();
+              if (category.contains("판타지")) {
+                kakaoCrollingData.setCateList("1");
+              }
+              else if (category.contains("현판")) {
+                kakaoCrollingData.setCateList("2");
+              }
+              else if (category.contains("로맨스")) {
+                kakaoCrollingData.setCateList("3");
+              }
+              else if (category.contains("로판")) {
+                kakaoCrollingData.setCateList("4");
+              }
+              else if (category.contains("무협")) {
+                kakaoCrollingData.setCateList("5");
+              }
+              else if (category.contains("드라마")) {
+                kakaoCrollingData.setCateList("6");
+              }
+              else if (category.contains("BL")) {
+                kakaoCrollingData.setCateList("7");
+              }
+
 
               // novelIntro 가져오기
               driver.get("https://page.kakao.com/content/" + kakaoCrollingData.getPlatformId() + "?tab_type=about");
               kakaoCrollingData.setNovelIntro(driver.findElement(By.cssSelector(".whitespace-pre-wrap.break-words")).getText());
 
-
               // novelPubli 가져오기
               kakaoCrollingData.setNovelPubli(driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(1).findElement(By.tagName("div")).getText());
 
+              // novelAdult 가져오기
+              if (driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(2).findElement(By.tagName("div")).getText().equals("19세이용가")) {
+                kakaoCrollingData.setNovelAdult("Y");
+              }
+              else {
+                kakaoCrollingData.setNovelAdult("N");
+              }
+
+              // novelPrice 가져오기
+              if (driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(3).findElement(By.tagName("div")).getText().indexOf("원") == -1) {
+                kakaoCrollingData.setNovelPrice(0);
+              }
+              else {
+                int novelPriceIndex = driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(3).findElement(By.tagName("div")).getText().indexOf("원");
+                kakaoCrollingData.setNovelPrice(Integer.parseInt(driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(3).findElement(By.tagName("div")).getText().substring(0, novelPriceIndex)));
+              }
+
+              // ebookCheck 가져오기
+              kakaoCrollingData.setEbookCheck(ne);
+            }
+          }
+          else if (ne.equals("웹소설") && ageGrade.equals("N")) {
+            if (searchTitleEl.getText().contains(title) && !searchTitleEl.getText().contains("[단행본]") && !aEl.findElement(By.tagName("div")).getAttribute("aria-label").contains("19세 연령 제한")) {
+              // platform 구분하기
+              kakaoCrollingData.setPlatform(1);
+
+              // platformId 가져오기
+              int platformIdIndex = aEl.getAttribute("href").lastIndexOf("/");
+              kakaoCrollingData.setPlatformId(aEl.getAttribute("href").substring(platformIdIndex + 1));
+
+              // 작품 디테일 페이지로 접속하기
+              driver.get(aEl.getAttribute("href"));
+
+              // novelTitle 저장하기(페이지 내에 있는 작품이기에 그냥 검색한 키워드가 곧 작품 제목이 됨)
+              kakaoCrollingData.setNovelTitle(title);
+
+              // novelThumbnail 가져오기
+              kakaoCrollingData.setNovelThumbnail(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[1]/div/div/img")).getAttribute("src"));
+
+              // novelAuthor 가져오기
+              kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
+
+              // novelCount 가져오기
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+
+              // starRate 가져오기
+              WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
+              if (starRateDivEl.findElements(By.tagName("img")).get(2).getAttribute("alt").equals("별점")) {
+                kakaoCrollingData.setNovelStarRate(Double.parseDouble(starRateDivEl.findElements(By.tagName("span")).get(1).getText()));
+              }
+              else {
+                kakaoCrollingData.setNovelStarRate(0);
+              }
+
+              // novelCompleteYn 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
+                kakaoCrollingData.setNovelCompleteYn("Y");
+              }
+              else {
+                kakaoCrollingData.setNovelCompleteYn("N");
+              }
+
+              // novelUpdateDate 가져오기
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
+                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
+              }
+
+              // cateList 가져오기
+              String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();
+              if (category.contains("판타지")) {
+                kakaoCrollingData.setCateList("1");
+              }
+              else if (category.contains("현판")) {
+                kakaoCrollingData.setCateList("2");
+              }
+              else if (category.contains("로맨스")) {
+                kakaoCrollingData.setCateList("3");
+              }
+              else if (category.contains("로판")) {
+                kakaoCrollingData.setCateList("4");
+              }
+              else if (category.contains("무협")) {
+                kakaoCrollingData.setCateList("5");
+              }
+              else if (category.contains("드라마")) {
+                kakaoCrollingData.setCateList("6");
+              }
+              else if (category.contains("BL")) {
+                kakaoCrollingData.setCateList("7");
+              }
+
+
+              // novelIntro 가져오기
+              driver.get("https://page.kakao.com/content/" + kakaoCrollingData.getPlatformId() + "?tab_type=about");
+              kakaoCrollingData.setNovelIntro(driver.findElement(By.cssSelector(".whitespace-pre-wrap.break-words")).getText());
+
+              // novelPubli 가져오기
+              kakaoCrollingData.setNovelPubli(driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(1).findElement(By.tagName("div")).getText());
 
               // novelAdult 가져오기
               if (driver.findElements(By.cssSelector(".font-small1.mb-8pxr")).get(2).findElement(By.tagName("div")).getText().equals("19세이용가")) {
@@ -705,8 +1079,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
   // title, ebookCheck로 novelIdx 가져오기
   @Override
-  public NovelEntity getNovelIdx(String title, String ebookCheck) {
-    NovelEntity novelIdx = novelRepository.findByNovelTitleAndEbookCheck(title, ebookCheck);
+  public NovelEntity getNovelIdx(String title, String ebookCheck, String novelAdult) {
+    NovelEntity novelIdx = novelRepository.findByNovelTitleAndEbookCheckAndNovelAdult(title, ebookCheck, novelAdult);
     return novelIdx;
   }
   // novelIdx로 좋아요 값이 "Y"인 count 가져오기

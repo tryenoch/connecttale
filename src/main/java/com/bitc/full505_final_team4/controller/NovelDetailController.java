@@ -21,12 +21,12 @@ public class NovelDetailController {
 
   // ---------------------db에 있는 디테일페이지 데이터 불러오기-------------------------
   @RequestMapping(value = "/novelDetail", method = RequestMethod.GET)
-  public Object getNovelDetail(@RequestParam("title") String title, @RequestParam("ebookCheck") String ebookCheck) throws Exception {
+  public Object getNovelDetail(@RequestParam("title") String title, @RequestParam("ebookCheck") String ebookCheck, @RequestParam("ageGrade") String novelAdult) throws Exception {
     Map<String, Object> novelDetail = new HashMap<>();
 
     // 소설 디테일 정보(제목, 저자, 인트로, 등) 관련 내용
     // 매개변수 title, ebookCheck를 통해 db에 해당 이름으로 저장된 소설 정보 다가져오기
-    List<NovelPlatformEntity> allNovelDetail = novelDetailService.getNovelDetail(title, ebookCheck);
+    List<NovelPlatformEntity> allNovelDetail = novelDetailService.getNovelDetail(title, ebookCheck, novelAdult);
 
 
 
@@ -53,8 +53,8 @@ public class NovelDetailController {
     // 여기부터는 좋아요, 리뷰, 신고 관련 프론트로 전달할 내용
 
     // -------------------좋아요------------------
-    // 1. title, ebookCheck를 통해 novelIdx 얻기
-    NovelEntity novelIdx = novelDetailService.getNovelIdx(title, ebookCheck);
+    // 1. title, ebookCheck, ageGrade를 통해 novelIdx 얻기
+    NovelEntity novelIdx = novelDetailService.getNovelIdx(title, ebookCheck, novelAdult);
 
     // 2. novel_idx에 대한 좋아요 수 데이터 가져오기
     int novelLikeCount = novelDetailService.getNovelLikeCount(novelIdx);
@@ -92,7 +92,7 @@ public class NovelDetailController {
   // 리디북스 디테일 페이지 정보 db 저장
 
   @RequestMapping(value = "/novelDetail", method = RequestMethod.POST)
-  public void insertRidiDetail(@RequestParam("id") String id, @RequestParam("title") String title, @RequestParam("ne") String ne, NovelPlatformEntity ridiPlatformEntity) throws Exception {
+  public void insertRidiDetail(@RequestParam("title") String title, @RequestParam("ne") String ne, @RequestParam("ageGrade") String novelAdult ,NovelPlatformEntity ridiPlatformEntity) throws Exception {
 //
 //    System.out.println(title);
 //    System.out.println(id);
@@ -103,9 +103,9 @@ public class NovelDetailController {
 
     try {
       // 네이버 디테일페이지 정보 가져와서 platform entity에 저장
-      NovelPlatformEntity naverPlatformEntity = novelDetailService.getNaverCrolling(id, title, ne);
+      NovelPlatformEntity naverPlatformEntity = novelDetailService.getNaverCrolling(title, ne, novelAdult);
       // 카카오 디테일페이지 정보 가져와서 platform entity에 저장
-      NovelPlatformEntity kakaoPlatformEntity = novelDetailService.getKakaoCrolling(id, title, ne);
+      NovelPlatformEntity kakaoPlatformEntity = novelDetailService.getKakaoCrolling(title, ne, novelAdult);
 
 
 //      System.out.println(kakaoPlatformEntity); // 1
@@ -243,9 +243,6 @@ public class NovelDetailController {
       e.printStackTrace();
     }
   }
-
-
-
 
 
 // -------------------------------- 좋아요 버튼 클릭 ------------------------------------

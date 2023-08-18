@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import {fetchData} from "../../common/NovelDetailFetch2";
+import {titleEdit} from "../../common/TitleEdit";
 
 function NaverSearchResult2(props) {
   const [novelSearchList, setNovelSearchList] = useState([]);
@@ -25,7 +26,7 @@ function NaverSearchResult2(props) {
             const data = {
               platform: 2,
               platformId: item.platformId[i],
-              title: item.title[i].includes('[') ? item.title[i].substring(0, item.title[i].indexOf('[')) : item.title[i],
+              title: titleEdit(item.title[i]),
               thumbnail: item.thumbnail[i],
               author: item.author[i],
               starRate: item.starRate[i],
@@ -48,7 +49,7 @@ function NaverSearchResult2(props) {
   
   const handleLinkClick = async (item) => {
     try {
-      const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck);
+      const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck, item.ageGrade);
       navi(`/novelDetail/${item.title}`, {
         state: {
           novelDetail: novelDetail,

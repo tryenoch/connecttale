@@ -3,7 +3,7 @@ import React from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
-export const fetchData = async (platformId, title, ebookCheck) => {
+export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
   
   // console.log(ebookCheck);
   let novelDetail = {};
@@ -12,7 +12,8 @@ export const fetchData = async (platformId, title, ebookCheck) => {
     const res = await axios.get("/novelDetail", {
       params: {
         title: title,
-        ebookCheck: ebookCheck
+        ebookCheck: ebookCheck,
+        ageGrade: ageGrade
       }
     })
     
@@ -33,8 +34,8 @@ export const fetchData = async (platformId, title, ebookCheck) => {
       if (ridiRes.data.books) {
         for (let i = 0; i < ridiRes.data.books.length; i++) {
           if (title === ridiRes.data.books[i].title) {
-            if (ebookCheck === '단행본') {
-              if (ridiRes.data.books[i].web_title.includes('[e북]')) {
+            if (ebookCheck === '단행본' && ageGrade === 'Y') {
+              if (ridiRes.data.books[i].web_title.includes('[e북]') && ridiRes.data.books[i].age_limit == 19) {
                 const item = ridiRes.data.books[i];
                 // console.log(item);
                 
@@ -56,7 +57,7 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                 const ridiObj = {
                   platform: 3,
                   platformId: item.b_id,
-                  novelTitle: item.title,
+                  novelTitle: title,
                   novelThumbnail: "https://img.ridicdn.net/cover/"+ item.b_id +"/xxlarge",
                   novelIntro: item4.intro.replace(/<[^>]*>/g, ""),
                   novelAuthor: item.authors_info.map(auth => {
@@ -80,9 +81,9 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                 // 리디북스 디테일 정보 디비에 저장
                 const ridiRes5 = await axios.post('/novelDetail', null, {
                   params: {
-                    id: platformId,
                     title: title,
                     ne: ebookCheck,
+                    ageGrade: ageGrade,
                     
                     platform: ridiObj.platform,
                     platformId: ridiObj.platformId,
@@ -105,28 +106,32 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                 break;
               }
             }
-            else if (ebookCheck === '웹소설') {
-              if (ridiRes.data.books[i].web_title === '') {
+            else if (ebookCheck === '단행본' && ageGrade === 'N') {
+              if (ridiRes.data.books[i].web_title.includes('[e북]') && ridiRes.data.books[i].age_limit != 19) {
                 const item = ridiRes.data.books[i];
                 // console.log(item);
-                
+    
                 const ridiRes2 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}`);
                 // console.log(ridiRes2);
                 const item2 = ridiRes2.data;
                 // console.log(item2);
-                
+    
                 const ridiRes3 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}/notices`);
                 // console.log(ridiRes3);
-                
+    
                 const item3 = ridiRes3.data.notices;
                 // console.log(item3);
-                
+    
+                const ridiRes4 = await axios.get('https://book-api.ridibooks.com/books/'+ item.b_id + '/descriptions')
+    
+                const item4 = ridiRes4.data.descriptions;
+    
                 const ridiObj = {
                   platform: 3,
                   platformId: item.b_id,
-                  novelTitle: item.title,
+                  novelTitle: title,
                   novelThumbnail: "https://img.ridicdn.net/cover/"+ item.b_id +"/xxlarge",
-                  novelIntro: item.desc.replace(/<\/?[^>]+(>|$)/g, "").substring(13),
+                  novelIntro: item4.intro.replace(/<[^>]*>/g, ""),
                   novelAuthor: item.authors_info.map(auth => {
                     return auth.name;
                   }).toString(),
@@ -141,17 +146,17 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                   cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
                   ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
                 };
-                
+    
                 console.log(ridiObj);
-                
-                
+    
+    
                 // 리디북스 디테일 정보 디비에 저장
-                const ridiRes4 = await axios.post('/novelDetail', null, {
+                const ridiRes5 = await axios.post('/novelDetail', null, {
                   params: {
-                    id: platformId,
                     title: title,
                     ne: ebookCheck,
-                    
+                    ageGrade: ageGrade,
+        
                     platform: ridiObj.platform,
                     platformId: ridiObj.platformId,
                     novelTitle: ridiObj.novelTitle,
@@ -173,14 +178,158 @@ export const fetchData = async (platformId, title, ebookCheck) => {
                 break;
               }
             }
+            else if (ebookCheck === '웹소설' && ageGrade === 'Y') {
+              if (!ridiRes.data.books[i].web_title.includes('[e북]') && ridiRes.data.books[i].age_limit == 19) {
+                const item = ridiRes.data.books[i];
+                // console.log(item);
+    
+                const ridiRes2 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}`);
+                // console.log(ridiRes2);
+                const item2 = ridiRes2.data;
+                // console.log(item2);
+    
+                const ridiRes3 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}/notices`);
+                // console.log(ridiRes3);
+    
+                const item3 = ridiRes3.data.notices;
+                // console.log(item3);
+    
+                const ridiRes4 = await axios.get('https://book-api.ridibooks.com/books/'+ item.b_id + '/descriptions')
+    
+                const item4 = ridiRes4.data.descriptions;
+    
+                const ridiObj = {
+                  platform: 3,
+                  platformId: item.b_id,
+                  novelTitle: title,
+                  novelThumbnail: "https://img.ridicdn.net/cover/"+ item.b_id +"/xxlarge",
+                  novelIntro: item4.intro.replace(/<[^>]*>/g, ""),
+                  novelAuthor: item.authors_info.map(auth => {
+                    return auth.name;
+                  }).toString(),
+                  novelPubli: item.publisher,
+                  novelCount: item.book_count,
+                  novelPrice : item.price !== 0 ? item.price : item.series_prices_info[0].max_price,
+                  novelStarRate: item.buyer_rating_score,
+                  novelCompleteYn: item.is_series_complete ? "Y" : "N",
+                  novelAdult: item.age_limit === 19 ? "Y" : "N",
+                  novelRelease: item2.publish.ridibooks_register.substring(0, 10),
+                  novelUpdateDate: item3.length === 0 ? null : item3[0].title,
+                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
+                  ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
+                };
+    
+                console.log(ridiObj);
+    
+    
+                // 리디북스 디테일 정보 디비에 저장
+                const ridiRes5 = await axios.post('/novelDetail', null, {
+                  params: {
+                    title: title,
+                    ne: ebookCheck,
+                    ageGrade: ageGrade,
+        
+                    platform: ridiObj.platform,
+                    platformId: ridiObj.platformId,
+                    novelTitle: ridiObj.novelTitle,
+                    novelThumbnail: ridiObj.novelThumbnail,
+                    novelIntro: ridiObj.novelIntro,
+                    novelAuthor: ridiObj.novelAuthor,
+                    novelPubli: ridiObj.novelPubli,
+                    novelCount: ridiObj.novelCount,
+                    novelPrice : ridiObj.novelPrice,
+                    novelStarRate: ridiObj.novelStarRate,
+                    novelCompleteYn: ridiObj.novelCompleteYn,
+                    novelAdult: ridiObj.novelAdult,
+                    novelRelease: ridiObj.novelRelease,
+                    novelUpdateDate: ridiObj.novelUpdateDate,
+                    cateList: ridiObj.cateList,
+                    ebookCheck: ridiObj.ebookCheck
+                  }
+                })
+                break;
+              }
+            }
+            else if (ebookCheck === '웹소설' && ageGrade === 'N') {
+              if (!ridiRes.data.books[i].web_title.includes('[e북]') && ridiRes.data.books[i].age_limit != 19) {
+                const item = ridiRes.data.books[i];
+                // console.log(item);
+    
+                const ridiRes2 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}`);
+                // console.log(ridiRes2);
+                const item2 = ridiRes2.data;
+                // console.log(item2);
+    
+                const ridiRes3 = await axios.get(`https://book-api.ridibooks.com/books/${item.b_id}/notices`);
+                // console.log(ridiRes3);
+    
+                const item3 = ridiRes3.data.notices;
+                // console.log(item3);
+    
+                const ridiRes4 = await axios.get('https://book-api.ridibooks.com/books/'+ item.b_id + '/descriptions')
+    
+                const item4 = ridiRes4.data.descriptions;
+    
+                const ridiObj = {
+                  platform: 3,
+                  platformId: item.b_id,
+                  novelTitle: title,
+                  novelThumbnail: "https://img.ridicdn.net/cover/"+ item.b_id +"/xxlarge",
+                  novelIntro: item4.intro.replace(/<[^>]*>/g, ""),
+                  novelAuthor: item.authors_info.map(auth => {
+                    return auth.name;
+                  }).toString(),
+                  novelPubli: item.publisher,
+                  novelCount: item.book_count,
+                  novelPrice : item.price !== 0 ? item.price : item.series_prices_info[0].max_price,
+                  novelStarRate: item.buyer_rating_score,
+                  novelCompleteYn: item.is_series_complete ? "Y" : "N",
+                  novelAdult: item.age_limit === 19 ? "Y" : "N",
+                  novelRelease: item2.publish.ridibooks_register.substring(0, 10),
+                  novelUpdateDate: item3.length === 0 ? null : item3[0].title,
+                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
+                  ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
+                };
+    
+                console.log(ridiObj);
+    
+    
+                // 리디북스 디테일 정보 디비에 저장
+                const ridiRes5 = await axios.post('/novelDetail', null, {
+                  params: {
+                    title: title,
+                    ne: ebookCheck,
+                    ageGrade: ageGrade,
+        
+                    platform: ridiObj.platform,
+                    platformId: ridiObj.platformId,
+                    novelTitle: ridiObj.novelTitle,
+                    novelThumbnail: ridiObj.novelThumbnail,
+                    novelIntro: ridiObj.novelIntro,
+                    novelAuthor: ridiObj.novelAuthor,
+                    novelPubli: ridiObj.novelPubli,
+                    novelCount: ridiObj.novelCount,
+                    novelPrice : ridiObj.novelPrice,
+                    novelStarRate: ridiObj.novelStarRate,
+                    novelCompleteYn: ridiObj.novelCompleteYn,
+                    novelAdult: ridiObj.novelAdult,
+                    novelRelease: ridiObj.novelRelease,
+                    novelUpdateDate: ridiObj.novelUpdateDate,
+                    cateList: ridiObj.cateList,
+                    ebookCheck: ridiObj.ebookCheck
+                  }
+                });
+                break;
+              }
+            }
           }
           // 리디북스에는 해당 작품 검색결과가 없는 경우, 카카오/네이버만 검색 시도
           else {
             const novelRes = await axios.post('/novelDetail', null, {
               params: {
-                id: platformId,
                 title: title,
                 ne: ebookCheck,
+                ageGrade: ageGrade,
               }
             })
           }
@@ -191,7 +340,8 @@ export const fetchData = async (platformId, title, ebookCheck) => {
       const res = await axios.get("/novelDetail", {
         params: {
           title: title,
-          ebookCheck: ebookCheck
+          ebookCheck: ebookCheck,
+          ageGrade: ageGrade
         }
       })
       // console.log(res);
