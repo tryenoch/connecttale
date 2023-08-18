@@ -13,6 +13,7 @@ function NovelDetailInfo(props) {
   const [novelLikeList, setNovelLikeList] = useState([]);
   const [novelLikeCount, setNovelLikeCount] = useState(0);
   
+  const [id, setId] = useState(sessionStorage.getItem('id'));
   // console.log(kakao);
   // console.log(naver);
   // console.log(ridi);
@@ -25,7 +26,7 @@ function NovelDetailInfo(props) {
         novelIdx : baseItem.novelKeyDto.novelIdx,
         novelTitle: baseItem.novelTitle,
         ebookCheck: baseItem.ebookCheck,
-        id: 'test3'
+        id: id
       }
     })
       .then((res) => {
