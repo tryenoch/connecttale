@@ -27,7 +27,7 @@ function RidiSearchResult2(props) {
               const res = await axios.get(`https://book-api.ridibooks.com/books/${item[i].b_id}/descriptions`)
                 intro = res.data.descriptions.intro.replace(/(<([^>]+)>)/ig, '');
               
-              console.log(res);
+              // console.log(res);
               
               const data = {
                 platform: 3,

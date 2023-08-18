@@ -8,7 +8,8 @@ function KakaoSearchResult2(props) {
   const navi = useNavigate();
   
   useEffect(() => {
-    // 현재 로직상 useEffect는 props.keyword가 변경될 때 마다 실행하게끔 되어있는데, 아래 setSearchWord(props.keyword)가 존재하면 searchWord 스테이트가 계속 변경되게되어 useEffect가 무한루프가 되어버림
+    // 현재 로직상 useEffect는 props.keyword가
+    // 변경될 때 마다 실행하게끔 되어있는데, 아래 setSearchWord(props.keyword)가 존재하면 searchWord 스테이트가 계속 변경되게되어 useEffect가 무한루프가 되어버림
     // setSearchWord(props.keyword);
     
     axios.get('/searchKakao', {
@@ -59,6 +60,7 @@ function KakaoSearchResult2(props) {
   
   // 링크 클릭시 상세페이지로 이동과 동시에 fetchData() 함수 실행시켜서 db로 부터 온 데이터도 함께 전송하기 위한 클릭이벤트
   const handleLinkClick = async (item) => {
+    console.log(item);
     try {
       const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck);
       navi(`/novelDetail/${item.title}`, {
@@ -80,7 +82,7 @@ function KakaoSearchResult2(props) {
               <Link
                 onClick={ e => {
                   e.preventDefault();
-                  handleLinkClick(item)
+                  handleLinkClick(item);
               }} to={`/novelDetail/${item.title}`} key={index}>
                 
                 <div className={'row my-4 border-top border-bottom py-2 d-flex align-items-center'} >

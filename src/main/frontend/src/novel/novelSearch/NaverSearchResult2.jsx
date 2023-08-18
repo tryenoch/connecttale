@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
-import {fetchData, test} from "../../common/NovelDetailFetch2";
-import novelDetail from "../NovelDetail";
+import {fetchData} from "../../common/NovelDetailFetch2";
 
 function NaverSearchResult2(props) {
   const [novelSearchList, setNovelSearchList] = useState([]);

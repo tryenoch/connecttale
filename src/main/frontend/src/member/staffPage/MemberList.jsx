@@ -21,6 +21,11 @@ function MemberList(props) {
         2: "관리자"
     };
 
+    const gender = {
+        1: "남성",
+        2: "여성"
+    };
+
     const useBtn = {
         1: false,
         2: true
@@ -102,13 +107,13 @@ function MemberList(props) {
                 <Row>
                     <table className={'text-center table'}>
                         <colgroup>
-                            <col width={'14.5%'}/>
-                            <col width={'14.5%'}/>
+                            <col width={'10%'}/>
+                            <col width={'10%'}/>
+                            <col width={'10%'}/>
                             <col width={'14%'}/>
-                            <col width={'14%'}/>
-                            <col width={'14%'}/>
-                            <col width={'14%'}/>
-                            <col width={'14%'}/>
+                            <col width={'6%'}/>
+                            <col width={'20%'}/>
+                            <col width={'10%'}/>
                         </colgroup>
                         <thead>
                         <tr>
@@ -130,10 +135,10 @@ function MemberList(props) {
                                         <td>{member.name}</td>
                                         <td>{member.nickname}</td>
                                         <td>{member.birthday}</td>
-                                        <td>{member.gender}</td>
+                                        <td>{gender[member.gender]}</td>
                                         <td>
-                                            {grade[member.grade]} <br/>
-                                            <button className={'btn btn-mini btn-outline-purple px-2 mt-2'}
+                                            {grade[member.grade]}
+                                            <button className={'btn btn-mini btn-outline-purple px-2 ms-2'}
                                                     onClick={() => { setId(member.id); levelUp(); }}
                                                     disabled={useBtn[member.grade]}>등업
                                             </button>
