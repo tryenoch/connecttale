@@ -20,6 +20,8 @@ function BoardDetail(props) {
     const [hitCnt, setHitCnt] = useState(0);
     const [reply, setReply] = useState('');
     const [replyList, setReplyList] = useState([]);
+    const [nickName, setNickName] = useState('');
+    const [loginId, setLoginId] = useState('');
 
     useEffect(() => {
         axios.get(`/board/${profile.idx}`)
@@ -30,11 +32,14 @@ function BoardDetail(props) {
                 setBoardIdx(board.boardIdx);
                 setTitle(board.boardTitle);
                 setContents(board.boardContents);
+                setNickName(board.nickName);
                 setCreateId(board.createId);
                 setCreateDt(board.createDt);
                 setReqCate(board.reqCate);
                 setHitCnt(board.hitCnt);
                 setReplyList(res.data.replyList);
+
+                setLoginId(sessionStorage.getItem('id'));
             })
             .catch(err => {
             });
@@ -59,9 +64,8 @@ function BoardDetail(props) {
                 // DTO와 params의 멤버가 동일 해야함
                 idx: 0,
                 reply: reply,
-                //     세션값
                 boardIdx: boardIdx,
-                createId: 'test1',
+                createId: loginId,
             }
         })
             .then(res => {
@@ -104,7 +108,7 @@ function BoardDetail(props) {
                         </Col>
                     </Row>
                     <div className={'d-flex justify-content-between p-2'}>
-                        <span>작성자: {createId}</span>
+                        <span>작성자: {nickName}</span>
                         <span>작성일: {createDt}</span>
                         <span>조회수: {hitCnt}</span>
                     </div>
@@ -124,7 +128,7 @@ function BoardDetail(props) {
                         (profile.cate == 0) &&
                         (<div>
                             <form onSubmit={handleReply}>
-                                <p>닉네임</p>
+                                <p>{JSON.parse(sessionStorage.getItem('member')).nickname}</p>
                                 <div className={'reply-input py-1'}>
                                     <input
                                         type="text"
@@ -132,7 +136,8 @@ function BoardDetail(props) {
                                         className={'input-s6'}
                                         onChange={(event) =>
                                             setReply(event.target.value)}/>
-                                    <button type={'submit'} className={'btn'}><i className="bi bi-send text-purple"></i></button>
+                                    <button type={'submit'} className={'btn'}><i className="bi bi-send text-purple"></i>
+                                    </button>
                                 </div>
                             </form>
                             {/* 댓글 배열을 이용하여 댓글 구현*/}
@@ -141,11 +146,16 @@ function BoardDetail(props) {
                                     return (<div key={index} className={'mt-3'}>
                                         <Row>
                                             <Col>
-                                                <h4>{value.createId}</h4>
+                                                <h4>{value.nickName}</h4>
                                             </Col>
                                             <Col className={'d-flex justify-content-end'}>
-                                                <button type={"button"} className={'btn btn-danger'} onClick={(event) => handelReplyDelete(event, value.idx)}>삭제
-                                                </button>
+                                                {
+                                                    //댓글 닉네임 가져오기 id랑
+                                                    ((sessionStorage.getItem('id') == value.createId) || (sessionStorage.getItem('grade') == 2)) &&
+                                                    <button type={"button"} className={'btn btn-danger'}
+                                                            onClick={(event) => handelReplyDelete(event, value.idx)}>삭제
+                                                    </button>
+                                                }
                                             </Col>
                                         </Row>
                                         <p>{value.createDt}</p>
