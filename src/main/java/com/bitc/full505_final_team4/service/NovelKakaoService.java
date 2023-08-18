@@ -22,7 +22,7 @@ public interface NovelKakaoService {
   * 19세 또는 15세 작품 catch 문으로 이동 (추후 구현)
   * db 에 저장되지 않은 작품이면 NovelDto 생성 및 Entity 변환
   * */
-  List<NovelEntity> getKakaoRecentNovelList() throws Exception;
+  HashMap<String, NovelEntity> getKakaoRecentNovelList() throws Exception;
 
   // jsoup 에서 전달해준 Elements 로 NovelDto 만들기 및 Entity 저장
   NovelEntity getNovelEntity(Element novelInfo) throws Exception;

@@ -43,13 +43,14 @@ public class NovelCommonEditService {
     }
 
 
+    // 익명으로 전해드립니다 [BL] [특전포함]
     // 불필요한 장르명을 나타내는 [BL] 이 포함되어 있을 경우 해당 부분 삭제
     if(editTitle1.contains("[BL]")){
       idx1 = editTitle1.indexOf("[BL]");
 
       // 뒤에 붙일 문자열을 먼저 정의
-      editTitle2 = editTitle1.substring(idx1 + 4);
-      editTitle1 = editTitle1.substring(0, idx1);
+      editTitle2 = editTitle1.substring(idx1 + 4); // [특전포함]
+      editTitle1 = editTitle1.substring(0, idx1); // 익명으로 전해드립니다
       editTitle1 = editTitle1 + editTitle2;
     }
 
@@ -81,6 +82,22 @@ public class NovelCommonEditService {
     } else if (editTitle1.contains("(19세 완전판)")) {
 
       idx1 = editTitle1.indexOf("(19세 완전판)");
+      editTitle2 = editTitle1.substring(idx1 + 9);
+      editTitle1 = editTitle1.substring(0, idx1);
+      editTitle1 = editTitle1 + editTitle2;
+
+    }
+
+    if(editTitle1.contains("[15세 개정판]")) {
+
+      idx1 = editTitle1.indexOf("[15세 개정판]");
+      editTitle2 = editTitle1.substring(idx1 + 9);
+      editTitle1 = editTitle1.substring(0, idx1);
+      editTitle1 = editTitle1 + editTitle2;
+
+    } else if (editTitle1.contains("(15세 개정판)")) {
+
+      idx1 = editTitle1.indexOf("(15세 개정판)");
       editTitle2 = editTitle1.substring(idx1 + 9);
       editTitle1 = editTitle1.substring(0, idx1);
       editTitle1 = editTitle1 + editTitle2;
