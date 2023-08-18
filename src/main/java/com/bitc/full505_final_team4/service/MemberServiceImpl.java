@@ -45,6 +45,20 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  public void changeNick(String id, String nickName) throws Exception {
+    MemberEntity member = memberRepository.findAllById(id);
+    member.setNickname(nickName);
+    memberRepository.save(member);
+  }
+
+  @Override
+  public void changePw(String id, String pw) throws Exception {
+    MemberEntity member = memberRepository.findAllById(id);
+    member.setPw(pw);
+    memberRepository.save(member);
+  }
+
+  @Override
   public boolean confirmId(String id) throws Exception {
     return memberRepository.existsById(id);
   }

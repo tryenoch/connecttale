@@ -11,6 +11,7 @@ function MyQNA(props) {
     const [pages, setPages] = useState([1]);
     const [boardList, setBoardList] = useState([{}]);
 
+
     useEffect(() => {
         setNowPage(props.defaultPage);
     }, [])
@@ -20,7 +21,7 @@ function MyQNA(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/myPage/myQna?id=test1&page=${nowPage}&size=10`)
+        axios.get(`/myPage/myQna?id=${sessionStorage.getItem('id')}&page=${nowPage}&size=10`)
             .then(res => {
 
                 console.log(res.data);

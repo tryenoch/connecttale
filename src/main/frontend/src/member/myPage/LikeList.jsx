@@ -10,6 +10,8 @@ import {fetchData} from "../../common/NovelDetailFetch2";
 function LikeList(props) {
     const navi = useNavigate();
 
+    const [novelLikeList, setNovelLikeList] = useState([]);
+    const [novelLikeCount, setNovelLikeCount] = useState(0);
     const [keyword, setKeyword] = useState('');
     // 카테고리 변경 시 페이지 번호가 0으로 초기화 x
     const [nowPage, setNowPage] = useState(0);
@@ -31,7 +33,7 @@ function LikeList(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/myPage/likeList?id=test3&page=${nowPage}&size=10`)
+        axios.get(`/myPage/likeList?id=${sessionStorage.getItem('id')}&page=${nowPage}&size=10`)
             .then(res => {
 
                 console.log(res.data);
@@ -54,6 +56,37 @@ function LikeList(props) {
                 alert(`통신에 실패했습니다. err : ${err}`);
             })
     }
+
+    // const likeClickHandler = async (like) => {
+    //     axios.put('/novelDetailLike', null, {
+    //         params: {
+    //             novelIdx: like.novelIdx,
+    //             id: sessionStorage.getItem('id')
+    //         }
+    //     })
+    //         .then((res) => {
+    //             console.log(res);
+    //             // console.log(res);
+    //             axios.get("/novelDetail", {
+    //                 params: {
+    //                     title: like.novelTitle,
+    //                     ebookCheck: like.ebookCheck
+    //                 }
+    //             })
+    //                 .then(res2 => {
+    //                     console.log(res2);
+    //                     setNovelLikeList(res2.data.novelLikeList);
+    //                     setNovelLikeCount(res2.data.novelLikeCount);
+    //                 })
+    //                 .catch(err => {
+    //                     console.log(err.message)
+    //                 })
+    //
+    //         })
+    //         .catch(err => {
+    //             console.log(err.message);
+    //         })
+    // }
 
     const handleLinkClick = async (like) => {
         console.log(like);
@@ -82,27 +115,61 @@ function LikeList(props) {
                         ? likeList.map((like, index) => {
                             return (
                                 <Col className={"rank-item"} sm={2} key={index}>
-                                    <Link
-                                        onClick={e => {
-                                            e.preventDefault();
-                                            handleLinkClick(like);
-                                        }} to={`/novelDetail/${like.title}`}>
 
-                                        <div>
-                                            <div className={"rank-item-img"}>
-                                                {/*세션 영역에 저장된 성인 여부에 따라 이미지 보이는 거 다르게 해야함 */}
+                                    <div>
+                                        <div className={"rank-item-img"}>
+                                            {/*세션 영역에 저장된 성인 여부에 따라 이미지 보이는 거 다르게 해야함 */}
+                                            <Link
+                                                onClick={e => {
+                                                    e.preventDefault();
+                                                    handleLinkClick(like);
+                                                }} to={`/novelDetail/${like.title}`}>
                                                 {
                                                     adultsOnly[adult] ? <img
                                                             src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"}
                                                             alt={"Adults content"}/>
                                                         : <img src={like.novelThumbnail} alt=""/>
                                                 }
-                                            </div>
+                                            </Link>
+                                            <button className={'rank-num btn align-items-end'} onClick={() => {
+                                                axios.put('/novelDetailLike', null, {
+                                                    params: {
+                                                        novelIdx: like.novelIdx,
+                                                        novelTitle: like.novelTitle,
+                                                        ebookCheck: like.ebookCheck,
+                                                        id: sessionStorage.getItem('id')
+                                                    }
+                                                })
+                                                    .then((res) => {
+                                                        console.log(res);
+                                                        // console.log(res);
+                                                        axios.get("/novelDetail", {
+                                                            params: {
+                                                                title: like.novelTitle,
+                                                                ebookCheck: like.ebookCheck
+                                                            }
+                                                        })
+                                                            .then(res2 => {
+                                                                console.log(res2);
+                                                                setNovelLikeList(res2.data.novelLikeList);
+                                                                setNovelLikeCount(res2.data.novelLikeCount);
+                                                            })
+                                                            .catch(err => {
+                                                                console.log(err.message)
+                                                            })
+
+                                                    })
+                                                    .catch(err => {
+                                                        console.log(err.message);
+                                                    })
+                                            }}>
+                                                <i className="bi bi-heart-fill text-purple"></i>
+                                            </button>
                                         </div>
-                                        <div className={"rank-info w-100"}>
-                                            <p className={"item-title"}>{like.novelTitle}</p>
-                                        </div>
-                                    </Link>
+                                    </div>
+                                    <div className={"rank-info w-100"}>
+                                        <p className={"item-title"}>{like.novelTitle}</p>
+                                    </div>
                                 </Col>
                             )
                         })
@@ -111,59 +178,6 @@ function LikeList(props) {
                         </div>
                 }
             </Row>
-            {/*<div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>*/}
-            {/*    <a*/}
-            {/*        className={nowPage <= 0 ? 'text-black-50' : ''}*/}
-            {/*        onClick={() => {*/}
-            {/*            if (nowPage <= 0) {*/}
-            {/*                return null*/}
-            {/*            }*/}
-            {/*            return setNowPage(0)*/}
-            {/*        }}*/}
-            {/*    ><i className="bi bi-chevron-double-left"></i>*/}
-            {/*    </a>*/}
-            {/*    <a*/}
-            {/*        className={nowPage <= 0 ? 'text-black-50' : ''}*/}
-            {/*        onClick={() => {*/}
-            {/*            if (nowPage <= 0) {*/}
-            {/*                return null*/}
-            {/*            }*/}
-            {/*            return setNowPage(nowPage - 1)*/}
-            {/*        }}>*/}
-            {/*        <i className="bi bi-chevron-left"></i>*/}
-            {/*    </a>*/}
-            {/*    {*/}
-            {/*        pages.map((value) => {*/}
-            {/*            return (*/}
-            {/*                <a*/}
-            {/*                    key={value}*/}
-            {/*                    className={nowPage === value - 1 ? 'text-black' : 'text-black-50'}*/}
-            {/*                    onClick={() => setNowPage(value - 1)}*/}
-            {/*                >{value}</a>);*/}
-            {/*        })*/}
-            {/*    }*/}
-            {/*    <a*/}
-            {/*        className={nowPage >= endPage - 1 ? 'text-black-50' : ''}*/}
-            {/*        onClick={() => {*/}
-            {/*            if (nowPage >= endPage - 1) {*/}
-            {/*                return null*/}
-            {/*            }*/}
-            {/*            return setNowPage(nowPage + 1)*/}
-            {/*        }}*/}
-            {/*    ><i className="bi bi-chevron-right"></i>*/}
-            {/*    </a>*/}
-            {/*    <a*/}
-            {/*        className={nowPage >= endPage - 1 ? 'text-black-50' : ''}*/}
-            {/*        onClick={() => {*/}
-            {/*            if (nowPage >= endPage - 1) {*/}
-            {/*                return null*/}
-            {/*            }*/}
-            {/*            return setNowPage(endPage - 1)*/}
-            {/*        }}*/}
-            {/*    ><i className="bi bi-chevron-double-right"></i>*/}
-            {/*    </a>*/}
-
-            {/*</div>*/}
         </div>
     )
 }
