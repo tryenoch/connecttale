@@ -12,6 +12,5 @@ public interface NovelRepository extends JpaRepository<NovelEntity, Integer> {
 
   NovelEntity findByNovelTitleAndEbookCheck(String title, String ebookCheck);
 
-  List<NovelEntity> findByNovelIdx(int likeNum);
 
 }

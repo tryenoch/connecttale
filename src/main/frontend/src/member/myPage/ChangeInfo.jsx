@@ -43,32 +43,61 @@ function ChangeInfo(props) {
     }
 
     const eventClickOK = () => {
-        if (nick === null || nick === "" || confirm.nickConfirm === "이미 사용중인 닉네임입니다.") {
-            setConfirm({confirm, nickConfirm: "닉네임을 확인하세요"});
-            return;
-        }
-        if (pw === null || pw === "") {
+        if ((nick === "" || confirm.nickConfirm === "이미 사용중인 닉네임입니다.") && pw === "") {
+            setConfirm({confirm, nickConfirm: "닉네임을 다시 입력해주세요"});
             setConfirm({confirm, pwConfirm: "비밀번호를 입력하세요"});
             return;
         }
-        if (pw !== confirmPw) {
-            setConfirm({confirm, confirmPwConfirm: "비밀번호와 다릅니다."});
-            return;
-        }
-        axios.post('/myPage/changeInfo', null, {
-            params: {
-                id: 'test1',
-                pw: pw,
-                nickname: nick
-            }
-        })
-            .then(() => {
-                alert(`회원정보 수정 성공`);
-                navi(-1);
+        if (nick !== "" && pw === "") {
+            axios.post('/myPage/changeNick', null, {
+                params: {
+                    id: sessionStorage.getItem('id'),
+                    nickname: nick
+                }
             })
-            .catch(() => {
-                alert('failed');
-            });
+                .then(() => {
+                    alert(`회원정보 수정 성공`);
+                    navi(-1);
+                })
+                .catch(() => {
+                    alert('failed');
+                });
+        }
+        if (pw !== "" && nick === "") {
+            if (pw !== confirmPw) {
+                setConfirm({confirm, confirmPwConfirm: "비밀번호와 다릅니다."});
+                return;
+            }
+            axios.post('/myPage/changePw', null, {
+                params: {
+                    id: sessionStorage.getItem('id'),
+                    pw: pw,
+                }
+            })
+                .then(() => {
+                    alert(`회원정보 수정 성공`);
+                    navi(-1);
+                })
+                .catch(() => {
+                    alert('failed');
+                });
+        }
+        if (pw !== "" && pw === confirmPw && nick !== "" && confirm.nickConfirm !== "이미 사용중인 닉네임입니다.") {
+            axios.post('/myPage/changeInfo', null, {
+                params: {
+                    id: sessionStorage.getItem('id'),
+                    pw: pw,
+                    nickname: nick
+                }
+            })
+                .then(() => {
+                    alert(`회원정보 수정 성공`);
+                    navi(-1);
+                })
+                .catch(() => {
+                    alert('failed');
+                });
+        }
     }
 
     return (
@@ -96,7 +125,7 @@ function ChangeInfo(props) {
                             </div>
                             <div className={'col-sm-9 d-flex'}>
                                 <input type="text" name={'nick'} id={'nick'}
-                                       className={'input-s5 form-control rounded-1'} value={'test1'} disabled/>
+                                       className={'input-s5 form-control rounded-1'} value={sessionStorage.getItem('id')} disabled/>
                             </div>
                         </div>
                         <div className={'row mt-4'}>

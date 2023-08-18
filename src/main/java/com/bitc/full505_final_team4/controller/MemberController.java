@@ -76,6 +76,28 @@ public class MemberController {
     return result;
   }
 
+  @RequestMapping(value = "/myPage/changeNick", method = RequestMethod.POST)
+  public Object changeNick(@RequestParam("id") String id, @RequestParam("nickname") String nickname) throws Exception {
+
+    memberService.changeNick(id, nickname);
+
+    Map<String, String> result = new HashMap<>();
+    result.put("result", "success");
+
+    return result;
+  }
+
+  @RequestMapping(value = "/myPage/changePw", method = RequestMethod.POST)
+  public Object changePw(@RequestParam("id") String id, @RequestParam("pw") String pw) throws Exception {
+
+    memberService.changePw(id, pw);
+
+    Map<String, String> result = new HashMap<>();
+    result.put("result", "success");
+
+    return result;
+  }
+
   @RequestMapping(value = "/join/join2", method = RequestMethod.GET)
   public Object confirmId(@RequestParam("id") String id) throws Exception {
 
@@ -133,13 +155,10 @@ public class MemberController {
 
 //  pagenation 실패.
   @RequestMapping(value = "/myPage/likeList", method = RequestMethod.GET)
-  public Object likeList(@RequestParam String id) throws Exception {
+  public Object likeList(Pageable pageable, @RequestParam String id) throws Exception {
 
-    Map<String, Object> result = new HashMap<>();
-    List<NovelEntity> likePages = memberService.getLikeList(id);
+    Object result = memberService.getLikeList(id, pageable);
 
-    result.put("result", "성공");
-    result.put("likeList", likePages);
     return result;
   }
 

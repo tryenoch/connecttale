@@ -15,13 +15,16 @@ public interface MemberService {
   void join(MemberEntity member) throws Exception;
 
   void change(String id, String pw, String nickName) throws Exception;
+  void changeNick(String id, String nickName) throws Exception;
+
+  void changePw(String id, String pw) throws Exception;
 
   boolean confirmId(String id) throws Exception;
   boolean confirmNick(String nickname) throws Exception;
 
   Page<MemberEntity> getMemberList(Pageable pageable) throws Exception;
 
-  List<NovelEntity> getLikeList(String id) throws Exception;
+  Object getLikeList(String id, Pageable pageable) throws Exception;
   void levelUp(String id) throws Exception;
   void deleteMember(String id) throws Exception;
 }
