@@ -52,7 +52,7 @@ public class NovelPlatformDto {
 
 
   // dto 를 entity 로 변환
-  public NovelPlatformEntity toEntity(NovelRankDto dto){
+  public NovelPlatformEntity toEntity(NovelPlatformDto dto){
 
     return NovelPlatformEntity.builder()
       .platform(platform)
