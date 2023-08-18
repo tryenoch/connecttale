@@ -22,6 +22,14 @@ public class NovelLikeDto {
     this.likeYn = likeYn;
   }
 
+//  public static NovelLikeDto toDto(NovelLikeEntity novel) {
+//    return NovelLikeDto.builder()
+//        .id(MemberDto.toDto(novel.getId()))
+//        .novelIdx(NovelDto.toDto(novel.getNovelIdx()))
+//        .likeYn(novel.getLikeYn())
+//        .build();
+//  }
+
 //   entity -> dto
   public static NovelLikeDto toDto(NovelLikeEntity entity) {
 

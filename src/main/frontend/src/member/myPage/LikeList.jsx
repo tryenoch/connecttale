@@ -33,19 +33,19 @@ function LikeList(props) {
 
                 console.log(res.data);
 
-                let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
-                let arr = [];
-                let lastNum = offset + 5;
-                if (lastNum > Math.ceil(res.data.totalPages / 5)) {
-                    lastNum = Math.ceil(res.data.totalPages / 5) + 1;
-                }
-                for (let i = offset; i <= lastNum; i++) {
-                    arr.push(i);
-                }
-                setPages(arr);
-                setEndPage(res.data.totalPages);
-                setAdult(res.data);
-                setLikeList(res.data);
+                // let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
+                // let arr = [];
+                // let lastNum = offset + 5;
+                // if (lastNum > Math.ceil(res.data.totalPages / 5)) {
+                //     lastNum = Math.ceil(res.data.totalPages / 5) + 1;
+                // }
+                // for (let i = offset; i <= lastNum; i++) {
+                //     arr.push(i);
+                // }
+                // setPages(arr);
+                // setEndPage(res.data.totalPages);
+                setAdult(res.data.likeList.novelAdult);
+                setLikeList(res.data.likeList);
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);
@@ -65,9 +65,10 @@ function LikeList(props) {
                     likeList.map((like, index) => {
                         return (
                             <div key={index}>
+                                <Link></Link>
                                 <Col className={"rank-item"}>
                                     <div>
-                                        <div className={"rank-item-img text-center"}>
+                                        <div className={"rank-item-img"}>
                                             {/*세션 영역에 저장된 성인 여부에 따라 이미지 보이는 거 다르게 해야함 */}
                                             {
                                                 adultsOnly[adult] ? <img src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"} alt={"Adults content"}/>
@@ -84,59 +85,59 @@ function LikeList(props) {
                     })
                 }
             </Row>
-            <div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>
-                <a
-                    className={nowPage <= 0 ? 'text-black-50' : ''}
-                    onClick={() => {
-                        if (nowPage <= 0) {
-                            return null
-                        }
-                        return setNowPage(0)
-                    }}
-                ><i className="bi bi-chevron-double-left"></i>
-                </a>
-                <a
-                    className={nowPage <= 0 ? 'text-black-50' : ''}
-                    onClick={() => {
-                        if (nowPage <= 0) {
-                            return null
-                        }
-                        return setNowPage(nowPage - 1)
-                    }}>
-                    <i className="bi bi-chevron-left"></i>
-                </a>
-                {
-                    pages.map((value) => {
-                        return (
-                            <a
-                                key={value}
-                                className={nowPage === value - 1 ? 'text-black' : 'text-black-50'}
-                                onClick={() => setNowPage(value - 1)}
-                            >{value}</a>);
-                    })
-                }
-                <a
-                    className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
-                    onClick={() => {
-                        if (nowPage >= endPage - 1) {
-                            return null
-                        }
-                        return setNowPage(nowPage + 1)
-                    }}
-                ><i className="bi bi-chevron-right"></i>
-                </a>
-                <a
-                    className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
-                    onClick={() => {
-                        if (nowPage >= endPage - 1) {
-                            return null
-                        }
-                        return setNowPage(endPage - 1)
-                    }}
-                ><i className="bi bi-chevron-double-right"></i>
-                </a>
+            {/*<div className={'d-flex justify-content-center mx-auto my-3 pages cursor'}>*/}
+            {/*    <a*/}
+            {/*        className={nowPage <= 0 ? 'text-black-50' : ''}*/}
+            {/*        onClick={() => {*/}
+            {/*            if (nowPage <= 0) {*/}
+            {/*                return null*/}
+            {/*            }*/}
+            {/*            return setNowPage(0)*/}
+            {/*        }}*/}
+            {/*    ><i className="bi bi-chevron-double-left"></i>*/}
+            {/*    </a>*/}
+            {/*    <a*/}
+            {/*        className={nowPage <= 0 ? 'text-black-50' : ''}*/}
+            {/*        onClick={() => {*/}
+            {/*            if (nowPage <= 0) {*/}
+            {/*                return null*/}
+            {/*            }*/}
+            {/*            return setNowPage(nowPage - 1)*/}
+            {/*        }}>*/}
+            {/*        <i className="bi bi-chevron-left"></i>*/}
+            {/*    </a>*/}
+            {/*    {*/}
+            {/*        pages.map((value) => {*/}
+            {/*            return (*/}
+            {/*                <a*/}
+            {/*                    key={value}*/}
+            {/*                    className={nowPage === value - 1 ? 'text-black' : 'text-black-50'}*/}
+            {/*                    onClick={() => setNowPage(value - 1)}*/}
+            {/*                >{value}</a>);*/}
+            {/*        })*/}
+            {/*    }*/}
+            {/*    <a*/}
+            {/*        className={nowPage >= endPage - 1 ? 'text-black-50' : ''}*/}
+            {/*        onClick={() => {*/}
+            {/*            if (nowPage >= endPage - 1) {*/}
+            {/*                return null*/}
+            {/*            }*/}
+            {/*            return setNowPage(nowPage + 1)*/}
+            {/*        }}*/}
+            {/*    ><i className="bi bi-chevron-right"></i>*/}
+            {/*    </a>*/}
+            {/*    <a*/}
+            {/*        className={nowPage >= endPage - 1 ? 'text-black-50' : ''}*/}
+            {/*        onClick={() => {*/}
+            {/*            if (nowPage >= endPage - 1) {*/}
+            {/*                return null*/}
+            {/*            }*/}
+            {/*            return setNowPage(endPage - 1)*/}
+            {/*        }}*/}
+            {/*    ><i className="bi bi-chevron-double-right"></i>*/}
+            {/*    </a>*/}
 
-            </div>
+            {/*</div>*/}
         </div>
     )
 }

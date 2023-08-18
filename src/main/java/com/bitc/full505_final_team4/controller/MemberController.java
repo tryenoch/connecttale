@@ -131,27 +131,17 @@ public class MemberController {
     return result;
   }
 
-//  @RequestMapping(value = "/myPage/likeList", method = RequestMethod.GET)
-//  // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
-//  public Object likeList(Pageable pageable, @RequestParam String id) throws Exception {
-//
-//    Map<String, Object> result = new HashMap<>();
-//
-//    List<NovelDto> likeList = new ArrayList<>();
-//    Page<NovelEntity> likePages = memberService.getLikeList(pageable, id);
-//    int totalPages = likePages.getTotalPages();
-//
-//    for (NovelEntity board : likePages.getContent()) {
-//      NovelDto req = NovelDto.toDto(board);
-//      likeList.add(req);
-//    }
-//
-//    result.put("result", "성공");
-//    result.put("totalPages", totalPages);
-//    result.put("nowPage", pageable.getPageNumber() + 1);
-//    result.put("likeList", likeList);
-//    return result;
-//  }
+//  pagenation 실패.
+  @RequestMapping(value = "/myPage/likeList", method = RequestMethod.GET)
+  public Object likeList(@RequestParam String id) throws Exception {
+
+    Map<String, Object> result = new HashMap<>();
+    List<NovelEntity> likePages = memberService.getLikeList(id);
+
+    result.put("result", "성공");
+    result.put("likeList", likePages);
+    return result;
+  }
 
   // 신고내역 => 신고 구현 완료 되면 구현예정
 //  @RequestMapping(value = "/staffPage/reportList", method = RequestMethod.GET)

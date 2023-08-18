@@ -20,5 +20,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity, String> {
     MemberEntity findAllById(String id);
 
     boolean existsByIdAndPw(String id, String pw);
-  Page<MemberEntity> findByDeletedYn(String deletedYn, Pageable pageable);
+
+    Page<MemberEntity> findByDeletedYn(String deletedYn, Pageable pageable);
 }

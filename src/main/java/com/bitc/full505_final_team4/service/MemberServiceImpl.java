@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.service;
 
+import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
@@ -8,9 +9,13 @@ import com.bitc.full505_final_team4.data.repository.NovelLikeRepository;
 import com.bitc.full505_final_team4.data.repository.NovelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,13 +60,18 @@ public class MemberServiceImpl implements MemberService {
     return memberRepository.findByDeletedYn("N", pageable);
   }
 
-//  @Override
-//  public Page<NovelEntity> getLikeList(Pageable pageable, String id) throws Exception {
-//    NovelLikeEntity liked = novelLikeRepository.findAllByIdAndLikeYn(id, "Y");
-//    int likeNum = liked.getNovelIdx().getNovelIdx();
-////    return novelRepository.findByNovelIdx(likeNum);
-//    return null;
-//  }
+  @Override
+  public List<NovelEntity> getLikeList(String id) throws Exception {
+    List<NovelEntity> likeNovel = new ArrayList<>();
+    MemberEntity member = memberRepository.findAllById(id);
+    List<NovelLikeEntity> liked = novelLikeRepository.findAllByIdAndLikeYn(member, "Y");
+    for (int i=0 ; i < liked.size() ; i++) {
+      NovelLikeEntity novel = liked.get(i);
+      NovelLikeDto req = NovelLikeDto.toDto(novel);
+      likeNovel = novelRepository.findByNovelIdx(req.getNovelIdx().getNovelIdx());
+    }
+    return likeNovel;
+  }
 
   @Override
   public void levelUp(String id) throws Exception {
