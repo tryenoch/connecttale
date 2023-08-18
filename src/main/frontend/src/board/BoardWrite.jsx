@@ -14,12 +14,12 @@ function BoardWrite() {
     const [title, setTitle] = useState('');
     const [contents, setContents] = useState('');
     const [boardCate, setBoardCate] = useState(1);
-    const [createId, setCreateId] = useState('test1');
+    const [createId, setCreateId] = useState('');
     const [reqCate, setReqCate] = useState(0);
 
     useEffect(() => {
         setBoardCate(boardList[query.id].code);
-        // setCreateId() // 세션값 저장
+        setCreateId(sessionStorage.getItem('id'));
     }, []);
 
     const handleSubmit = (event) => {
@@ -65,14 +65,14 @@ function BoardWrite() {
     const handleMoveToMenu = () => {
         navi("/board/main");
     }
-    
+
     // file upload 코드
     function MyCustomUploadAdapterPlugin(editor) {
         editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
             return new UploadAdapter(loader)
         }
     }
-    
+
 
     return (
         <Container className={'my-4'}>

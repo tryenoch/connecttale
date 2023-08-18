@@ -16,6 +16,7 @@ public class BoardDTO {
     private int boardIdx;
     private String boardTitle;
     private String boardContents;
+    private String nickName;
     private String createId;
     private String createDt;
     private String reqCate;
@@ -23,13 +24,16 @@ public class BoardDTO {
     private int hitCnt;
 
     @Builder
-    public BoardDTO(int boardIdx, String boardTitle, String boardContents, String createId, LocalDateTime createDt, String reqCate, int hitCnt) {
+    public BoardDTO(int boardIdx, String boardTitle, String boardContents, String nickName, String createId, LocalDateTime createDt, String reqCate, int hitCnt) {
         this.boardIdx = boardIdx;
         this.boardTitle = boardTitle;
         this.boardContents = boardContents;
+        this.nickName = nickName;
         this.createId = createId;
         // 데이터 포맷 변경
-        this.createDt = createDt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        if (createDt != null) {
+            this.createDt = createDt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        }
         this.reqCate = reqCate;
         this.hitCnt = hitCnt;
     }
@@ -42,7 +46,8 @@ public class BoardDTO {
                 .boardIdx(entity.getBoardIdx())
                 .boardTitle(entity.getBoardTitle())
                 .boardContents(entity.getBoardContents())
-                .createId(entity.getCreateId().getNickname())
+                .nickName(entity.getCreateId().getNickname())
+                .createId(entity.getCreateId().getId())
                 .createDt(entity.getCreateDt())
                 .reqCate(reqName)
                 .hitCnt(entity.getHitCnt())

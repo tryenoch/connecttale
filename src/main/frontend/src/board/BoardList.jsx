@@ -33,8 +33,8 @@ function BoardList(props) {
                 let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
                 let arr = [];
                 let lastNum = offset + 5;
-                if (lastNum > Math.ceil(res.data.totalPages / 5)) {
-                    lastNum = Math.ceil(res.data.totalPages / 5) + 1;
+                if (lastNum > res.data.totalPages) {
+                    lastNum = res.data.totalPages;
                 }
                 for (let i = offset; i <= lastNum; i++) {
                     arr.push(i);
@@ -112,18 +112,30 @@ function BoardList(props) {
                         <tbody>
                         {
                             boardList.map((board, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{board.boardIdx}</td>
-                                        <td className={'text-start cursor'}>
-                                            <Link to={`/board/detail/${props.data.id}/${board.boardIdx}`}>
-                                                {board.boardTitle}
-                                            </Link>
-                                        </td>
-                                        <td>{board.createId}</td>
-                                        <td>{board.createDt}</td>
-                                    </tr>
-                                )
+                                if (sessionStorage.getItem('id') == board.createId || sessionStorage.getItem('grade') == 2) {
+                                    return (
+                                        <tr key={index}>
+                                            <td>{board.boardIdx}</td>
+                                            <td className={'text-start cursor'}>
+                                                <Link to={`/board/detail/${props.data.id}/${board.boardIdx}`}>
+                                                    {board.boardTitle}
+                                                </Link>
+                                            </td>
+                                            <td>{board.nickName}</td>
+                                            <td>{board.createDt}</td>
+                                        </tr>
+                                    )
+                                } else {
+                                    return (
+                                        <tr key={index}>
+                                            <td>{board.boardIdx}</td>
+                                            <td className={'text-start'}>{board.boardTitle}</td>
+                                            <td>{board.nickName}</td>
+                                            <td>{board.createDt}</td>
+                                        </tr>
+                                    )
+                                }
+
                             })
                         }
                         </tbody>
@@ -131,7 +143,9 @@ function BoardList(props) {
                     <div className={'d-flex justify-content-end'}>
                         {
                             // 특정 조건에서만 랜더링 코드
-                            // props.data.type === 'req' &&
+                            ((props.data.type === 'req' &&
+                                    sessionStorage.getItem('id') != null) ||
+                                (sessionStorage.getItem('grade') == 2)) &&
                             (<Link to={`/board/write/${props.data.id}`} className={'btn btn-primary'}>글 쓰기</Link>)
                         }
 
