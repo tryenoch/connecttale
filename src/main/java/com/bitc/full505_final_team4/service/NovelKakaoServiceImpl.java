@@ -3,6 +3,7 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,7 +18,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class NovelKakaoServiceImpl implements NovelKakaoService{
+
+  private final NovelCommonEditService novelCommonEditService;
 
   @Override
   @Transactional

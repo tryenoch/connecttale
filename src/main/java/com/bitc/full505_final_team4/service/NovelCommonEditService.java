@@ -119,7 +119,8 @@ public class NovelCommonEditService {
 
     }
 
-    // 제일 마지막에 공백이 남아있을 경우 제거(정규 표현식 사용)
+    // 최종 문자열에서 맨앞, 맨뒤 공백이 남아있을 경우 제거(정규 표현식 사용)
+    editTitle1 = editTitle1.stripLeading();
     editTitle1 = editTitle1.replaceAll("\\s+$", "");
     return editTitle1;
   }
