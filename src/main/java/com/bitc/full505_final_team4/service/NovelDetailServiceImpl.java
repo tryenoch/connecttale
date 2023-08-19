@@ -210,6 +210,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               } else {
                 naverCrollingData.setNovelAdult("N");
               }
+              break;
             }
           }
         }
@@ -300,6 +301,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               } else {
                 naverCrollingData.setNovelAdult("N");
               }
+              break;
             }
           }
         }
@@ -391,6 +393,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               } else {
                 naverCrollingData.setNovelAdult("N");
               }
+              break;
             }
           }
         }
@@ -481,6 +484,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               } else {
                 naverCrollingData.setNovelAdult("N");
               }
+              break;
             }
           }
         }
@@ -575,18 +579,13 @@ public class NovelDetailServiceImpl implements NovelDetailService {
       // 해당 작품과 동일한 이름의 작품을 찾는 카카오 페이지 접속하기
       driver.get(kakaoSearchUrl);
 
-
-      List<WebElement> aEls = driver.findElements(By.cssSelector(".flex-1.cursor-pointer"));
-      System.out.println(aEls);
-      // 검색 결과가 있는 경우
-      if (!aEls.isEmpty()) {
-        for (WebElement aEl : aEls) {
-          WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
-          // 찾는 작품이 단행본일 경우
-          if (ne.equals("단행본") && ageGrade.equals("Y")) {
-            // 작품 이름을 포함하면서, 종류, 성인여부가 모두 동일한 작품을 찾기
-            if (searchTitleEl.getText().contains(title) && searchTitleEl.getText().contains("[단행본]") && aEl.findElement(By.tagName("div")).getAttribute("aria-label").contains("19세 연령 제한")) {
-              // platform 구분하기
+      if (!driver.findElements(By.cssSelector(".flex-1.cursor-pointer")).isEmpty()) {
+        List<WebElement> aEls = driver.findElements(By.cssSelector(".flex-1.cursor-pointer"));
+        if (ne.equals("단행본") && ageGrade.equals("Y")) {
+          for (WebElement aEl : aEls) {
+            WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
+            WebElement ariaLabelEl = aEl.findElement(By.tagName("div"));
+            if (searchTitleEl.getText().contains(title) && searchTitleEl.getText().contains("[단행본]") && ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")) {
               kakaoCrollingData.setPlatform(1);
 
               // platformId 가져오기
@@ -682,11 +681,16 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // ebookCheck 가져오기
               kakaoCrollingData.setEbookCheck(ne);
+
+              break;
             }
           }
-          else if (ne.equals("단행본") && ageGrade.equals("N")) {
-            if (searchTitleEl.getText().contains(title) && searchTitleEl.getText().contains("[단행본]") && !aEl.findElement(By.tagName("div")).getAttribute("aria-label").contains("19세 연령 제한")) {
-              // platform 구분하기
+        }
+        else if (ne.equals("단행본") && ageGrade.equals("N")) {
+          for (WebElement aEl : aEls) {
+            WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
+            WebElement ariaLabelEl = aEl.findElement(By.tagName("div"));
+            if (searchTitleEl.getText().contains(title) && searchTitleEl.getText().contains("[단행본]") && !ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")) {
               kakaoCrollingData.setPlatform(1);
 
               // platformId 가져오기
@@ -782,11 +786,16 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // ebookCheck 가져오기
               kakaoCrollingData.setEbookCheck(ne);
+
+              break;
             }
           }
-          else if (ne.equals("웹소설") && ageGrade.equals("Y")) {
-            if (searchTitleEl.getText().contains(title) && !searchTitleEl.getText().contains("[단행본]") && aEl.findElement(By.tagName("div")).getAttribute("aria-label").contains("19세 연령 제한")) {
-              // platform 구분하기
+        }
+        else if (ne.equals("웹소설") && ageGrade.equals("Y")) {
+          for (WebElement aEl : aEls) {
+            WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
+            WebElement ariaLabelEl = aEl.findElement(By.tagName("div"));
+            if (searchTitleEl.getText().contains(title) && !searchTitleEl.getText().contains("[단행본]") && ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")) {
               kakaoCrollingData.setPlatform(1);
 
               // platformId 가져오기
@@ -882,11 +891,16 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // ebookCheck 가져오기
               kakaoCrollingData.setEbookCheck(ne);
+
+              break;
             }
           }
-          else if (ne.equals("웹소설") && ageGrade.equals("N")) {
-            if (searchTitleEl.getText().contains(title) && !searchTitleEl.getText().contains("[단행본]") && !aEl.findElement(By.tagName("div")).getAttribute("aria-label").contains("19세 연령 제한")) {
-              // platform 구분하기
+        }
+        else if (ne.equals("웹소설") && ageGrade.equals("N")) {
+          for (WebElement aEl : aEls) {
+            WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
+            WebElement ariaLabelEl = aEl.findElement(By.tagName("div"));
+            if (searchTitleEl.getText().contains(title) && !searchTitleEl.getText().contains("[단행본]") && !ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")) {
               kakaoCrollingData.setPlatform(1);
 
               // platformId 가져오기
@@ -982,6 +996,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // ebookCheck 가져오기
               kakaoCrollingData.setEbookCheck(ne);
+
+              break;
             }
           }
         }

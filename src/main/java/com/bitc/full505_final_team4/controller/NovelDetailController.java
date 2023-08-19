@@ -24,6 +24,10 @@ public class NovelDetailController {
   public Object getNovelDetail(@RequestParam("title") String title, @RequestParam("ebookCheck") String ebookCheck, @RequestParam("ageGrade") String novelAdult) throws Exception {
     Map<String, Object> novelDetail = new HashMap<>();
 
+    // 1. title, ebookCheck, ageGrade를 통해 novelIdx 얻기
+    NovelEntity novelIdx = novelDetailService.getNovelIdx(title, ebookCheck, novelAdult);
+
+
     // 소설 디테일 정보(제목, 저자, 인트로, 등) 관련 내용
     // 매개변수 title, ebookCheck를 통해 db에 해당 이름으로 저장된 소설 정보 다가져오기
     List<NovelPlatformEntity> allNovelDetail = novelDetailService.getNovelDetail(title, ebookCheck, novelAdult);
@@ -53,8 +57,7 @@ public class NovelDetailController {
     // 여기부터는 좋아요, 리뷰, 신고 관련 프론트로 전달할 내용
 
     // -------------------좋아요------------------
-    // 1. title, ebookCheck, ageGrade를 통해 novelIdx 얻기
-    NovelEntity novelIdx = novelDetailService.getNovelIdx(title, ebookCheck, novelAdult);
+
 
     // 2. novel_idx에 대한 좋아요 수 데이터 가져오기
     int novelLikeCount = novelDetailService.getNovelLikeCount(novelIdx);
@@ -100,12 +103,10 @@ public class NovelDetailController {
 //    System.out.println(ridiPlatformEntity);
 
     NovelEntity novelEntity = new NovelEntity();
-
-    try {
-      // 네이버 디테일페이지 정보 가져와서 platform entity에 저장
-      NovelPlatformEntity naverPlatformEntity = novelDetailService.getNaverCrolling(title, ne, novelAdult);
-      // 카카오 디테일페이지 정보 가져와서 platform entity에 저장
-      NovelPlatformEntity kakaoPlatformEntity = novelDetailService.getKakaoCrolling(title, ne, novelAdult);
+    // 네이버 디테일페이지 정보 가져와서 platform entity에 저장
+    NovelPlatformEntity naverPlatformEntity = novelDetailService.getNaverCrolling(title, ne, novelAdult);
+    // 카카오 디테일페이지 정보 가져와서 platform entity에 저장
+    NovelPlatformEntity kakaoPlatformEntity = novelDetailService.getKakaoCrolling(title, ne, novelAdult);
 
 
 //      System.out.println(kakaoPlatformEntity); // 1
@@ -114,133 +115,129 @@ public class NovelDetailController {
 //      System.out.println("----------------------\n");
 //      System.out.println(ridiPlatformEntity); // 3
 
-      // 리디북스에 해당 작품이 없을 때
-      if (ridiPlatformEntity.getPlatformId() == null) {
+    // 리디북스에 해당 작품이 없을 때
+    if (ridiPlatformEntity.getPlatformId() == null) {
 
-        // 네이버, 카카오만 있을 경우,
-        if (naverPlatformEntity.getPlatformId() != null && kakaoPlatformEntity.getPlatformId() != null) {
-          novelEntity.setNovelTitle(naverPlatformEntity.getNovelTitle());
-          novelEntity.setNovelThumbnail(naverPlatformEntity.getNovelThumbnail());
-          novelEntity.setNovelAdult(naverPlatformEntity.getNovelAdult());
-          novelEntity.setEbookCheck(naverPlatformEntity.getEbookCheck());
+      // 네이버, 카카오만 있을 경우,
+      if (naverPlatformEntity.getPlatformId() != null && kakaoPlatformEntity.getPlatformId() != null) {
+        novelEntity.setNovelTitle(naverPlatformEntity.getNovelTitle());
+        novelEntity.setNovelThumbnail(naverPlatformEntity.getNovelThumbnail());
+        novelEntity.setNovelAdult(naverPlatformEntity.getNovelAdult());
+        novelEntity.setEbookCheck(naverPlatformEntity.getEbookCheck());
 
-          novelDetailService.insertNaverToNovel(novelEntity);
+        // 네이버 디테일 페이지 정보를 novel entity에 저장
+        novelDetailService.insertNaverToNovel(novelEntity);
 
-          // 네이버 디테일 페이지 정보를 novel entity에 저장
-          naverPlatformEntity.setNovelIdx(novelEntity);
+        naverPlatformEntity.setNovelIdx(novelEntity);
 
-          // 네이버 디테일 페이지 정보를 NovelPlatformEntity에 저장
-          novelDetailService.insertNaverToPlatform(naverPlatformEntity);
+        // 네이버 디테일 페이지 정보를 NovelPlatformEntity에 저장
+        novelDetailService.insertNaverToPlatform(naverPlatformEntity);
 
-          kakaoPlatformEntity.setNovelIdx(novelEntity);
-          // 카카오 디테일 페이지 정보를 NovelPlatformEntity에 저장
-          novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
+        kakaoPlatformEntity.setNovelIdx(novelEntity);
+        // 카카오 디테일 페이지 정보를 NovelPlatformEntity에 저장
+        novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
 
-        }
-        // 네이버만 있을 경우,
-        else if (naverPlatformEntity.getPlatformId() != null) {
-          novelEntity.setNovelTitle(naverPlatformEntity.getNovelTitle());
-          novelEntity.setNovelThumbnail(naverPlatformEntity.getNovelThumbnail());
-          novelEntity.setNovelAdult(naverPlatformEntity.getNovelAdult());
-          novelEntity.setEbookCheck(naverPlatformEntity.getEbookCheck());
-
-          novelDetailService.insertNaverToNovel(novelEntity);
-
-          // 네이버 디테일 페이지 정보를 novel entity에 저장
-          naverPlatformEntity.setNovelIdx(novelEntity);
-
-          // 네이버 디테일 페이지 정보를 NovelPlatformEntity에 저장
-          novelDetailService.insertNaverToPlatform(naverPlatformEntity);
-        }
-        // 카카오만 있을 경우,
-        else if (kakaoPlatformEntity.getPlatformId() != null) {
-          novelEntity.setNovelTitle(kakaoPlatformEntity.getNovelTitle());
-          novelEntity.setNovelThumbnail(kakaoPlatformEntity.getNovelThumbnail());
-          novelEntity.setNovelAdult(kakaoPlatformEntity.getNovelAdult());
-          novelEntity.setEbookCheck(kakaoPlatformEntity.getEbookCheck());
-
-          novelDetailService.insertKakaoToNovel(novelEntity);
-
-          // 카카오 디테일 페이지 정보를 novel entity에 저장
-          kakaoPlatformEntity.setNovelIdx(novelEntity);
-
-          // 카카오 디테일 페이지 정보를 NovelPlatformEntity에 저장
-          novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
-        }
       }
+      // 네이버만 있을 경우,
+      else if (naverPlatformEntity.getPlatformId() != null) {
+        novelEntity.setNovelTitle(naverPlatformEntity.getNovelTitle());
+        novelEntity.setNovelThumbnail(naverPlatformEntity.getNovelThumbnail());
+        novelEntity.setNovelAdult(naverPlatformEntity.getNovelAdult());
+        novelEntity.setEbookCheck(naverPlatformEntity.getEbookCheck());
 
-      // 리디에 해당 작품이 있을 때,
-      else {
-        // 리디, 카카오, 네이버 모두 있을 경우,
-        if (naverPlatformEntity.getPlatformId() != null && kakaoPlatformEntity.getPlatformId() != null) {
-          novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
-          novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
-          novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
-          novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
+        novelDetailService.insertNaverToNovel(novelEntity);
 
-          novelDetailService.insertRidiToNovel(novelEntity);
+        // 네이버 디테일 페이지 정보를 novel entity에 저장
+        naverPlatformEntity.setNovelIdx(novelEntity);
 
-          ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
-          novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
+        // 네이버 디테일 페이지 정보를 NovelPlatformEntity에 저장
+        novelDetailService.insertNaverToPlatform(naverPlatformEntity);
+      }
+      // 카카오만 있을 경우,
+      else if (kakaoPlatformEntity.getPlatformId() != null) {
+        novelEntity.setNovelTitle(kakaoPlatformEntity.getNovelTitle());
+        novelEntity.setNovelThumbnail(kakaoPlatformEntity.getNovelThumbnail());
+        novelEntity.setNovelAdult(kakaoPlatformEntity.getNovelAdult());
+        novelEntity.setEbookCheck(kakaoPlatformEntity.getEbookCheck());
 
-          naverPlatformEntity.setNovelIdx(novelEntity);
-          novelDetailService.insertNaverToPlatform(naverPlatformEntity);
+        novelDetailService.insertKakaoToNovel(novelEntity);
 
-          kakaoPlatformEntity.setNovelIdx(novelEntity);
-          novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
-        }
+        // 카카오 디테일 페이지 정보를 novel entity에 저장
+        kakaoPlatformEntity.setNovelIdx(novelEntity);
 
-        // 리디, 네이버만 있을 경우
-        else if (naverPlatformEntity.getPlatformId() != null) {
-          novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
-          novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
-          novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
-          novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
-
-          novelDetailService.insertRidiToNovel(novelEntity);
-
-          // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
-          ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
-          novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
-
-          naverPlatformEntity.setNovelIdx(novelEntity);
-          novelDetailService.insertNaverToPlatform(naverPlatformEntity);
-        }
-
-        // 리디, 카카오만 있는 경우
-        else if (kakaoPlatformEntity.getPlatformId() != null) {
-          novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
-          novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
-          novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
-          novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
-
-          novelDetailService.insertRidiToNovel(novelEntity);
-
-          // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
-          ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
-          novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
-
-          kakaoPlatformEntity.setNovelIdx(novelEntity);
-          novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
-        }
-
-        // 리디만 있는 경우
-        else if (naverPlatformEntity.getPlatformId() == null && kakaoPlatformEntity.getPlatformId() == null) {
-          novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
-          novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
-          novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
-          novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
-
-          novelDetailService.insertRidiToNovel(novelEntity);
-
-          // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
-          ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
-          novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
-        }
+        // 카카오 디테일 페이지 정보를 NovelPlatformEntity에 저장
+        novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
       }
     }
-    catch (Exception e) {
-      e.printStackTrace();
+
+    // 리디에 해당 작품이 있을 때,
+    else {
+      // 리디, 카카오, 네이버 모두 있을 경우,
+      if (naverPlatformEntity.getPlatformId() != null && kakaoPlatformEntity.getPlatformId() != null) {
+        novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
+        novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
+        novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
+        novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
+
+        novelDetailService.insertRidiToNovel(novelEntity);
+
+        ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
+        novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
+
+        naverPlatformEntity.setNovelIdx(novelEntity);
+        novelDetailService.insertNaverToPlatform(naverPlatformEntity);
+
+        kakaoPlatformEntity.setNovelIdx(novelEntity);
+        novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
+      }
+
+      // 리디, 네이버만 있을 경우
+      else if (naverPlatformEntity.getPlatformId() != null) {
+        novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
+        novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
+        novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
+        novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
+
+        novelDetailService.insertRidiToNovel(novelEntity);
+
+        // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
+        ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
+        novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
+
+        naverPlatformEntity.setNovelIdx(novelEntity);
+        novelDetailService.insertNaverToPlatform(naverPlatformEntity);
+      }
+
+      // 리디, 카카오만 있는 경우
+      else if (kakaoPlatformEntity.getPlatformId() != null) {
+        novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
+        novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
+        novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
+        novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
+
+        novelDetailService.insertRidiToNovel(novelEntity);
+
+        // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
+        ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
+        novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
+
+        kakaoPlatformEntity.setNovelIdx(novelEntity);
+        novelDetailService.insertKakaoToPlatform(kakaoPlatformEntity);
+      }
+
+      // 리디만 있는 경우
+      else if (naverPlatformEntity.getPlatformId() == null && kakaoPlatformEntity.getPlatformId() == null) {
+        novelEntity.setNovelTitle(ridiPlatformEntity.getNovelTitle());
+        novelEntity.setNovelThumbnail(ridiPlatformEntity.getNovelThumbnail());
+        novelEntity.setNovelAdult(ridiPlatformEntity.getNovelAdult());
+        novelEntity.setEbookCheck(ridiPlatformEntity.getEbookCheck());
+
+        novelDetailService.insertRidiToNovel(novelEntity);
+
+        // 리디북스 디테일 페이지 정보를 NovelPlatformEntity에 저장
+        ridiPlatformEntity.setNovelIdx(novelEntity); // 복합키인 novel 엔티티 추가
+        novelDetailService.insertRidiToPlatform(ridiPlatformEntity);
+      }
     }
   }
 
