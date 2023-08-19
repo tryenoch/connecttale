@@ -1,13 +1,7 @@
 package com.bitc.full505_final_team4.service;
 
-import com.bitc.full505_final_team4.data.entity.MemberEntity;
-import com.bitc.full505_final_team4.data.entity.NovelEntity;
-import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
-import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
-import com.bitc.full505_final_team4.data.repository.MemberRepository;
-import com.bitc.full505_final_team4.data.repository.NovelLikeRepository;
-import com.bitc.full505_final_team4.data.repository.NovelPlatformRepository;
-import com.bitc.full505_final_team4.data.repository.NovelRepository;
+import com.bitc.full505_final_team4.data.entity.*;
+import com.bitc.full505_final_team4.data.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
@@ -37,6 +31,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
   private final NovelRepository novelRepository;
   private final NovelLikeRepository novelLikeRepository;
   private final MemberRepository memberRepository;
+  private final NovelReplyRepository novelReplyRepository;
+  private final ReplyLikeRepository replyLikeRepository;
+
 
 
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
@@ -1122,6 +1119,102 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
     return novelLikeEntityList;
   }
+
+
+  // novelIdx로 리뷰(댓글) 테이블 정보 가져오기
+  @Override
+  public List<NovelReplyEntity> getNovelReply(NovelEntity novelIdx) {
+    List<NovelReplyEntity> novelReplyEntityList = new ArrayList<>();
+    // novelIdx에 해당하는 리뷰 테이블 데이터 optional 타입으로 가져오기
+    Optional<List<NovelReplyEntity>> opt = novelReplyRepository.findAllByNovelIdxOrderByCreateDtDesc(novelIdx);
+
+    if (opt.isPresent()) {
+      for (NovelReplyEntity novelReplyEntity : opt.get()) {
+        novelReplyEntityList.add(novelReplyEntity);
+      }
+    }
+    return novelReplyEntityList;
+  }
+
+  // 리뷰 등록하기
+  @Override
+  public void insertNovelReview(int novelIdx, String id, String replyContent, String spoilerYn) {
+    NovelReplyEntity novelReplyEntity = new NovelReplyEntity();
+
+    // 매개변수 novelIdx, id값을 가진 NovelEntity, MemberEntity 가져오기
+    Optional<NovelEntity> novelEntity = novelRepository.findById(novelIdx);
+    NovelEntity replyNovelIdx = novelEntity.get();
+
+    Optional<MemberEntity> memberEntity = memberRepository.findById(id);
+    MemberEntity replyId = memberEntity.get();
+
+    // db등록을 위해 NovelReplyEntity 정보 설정하기
+    novelReplyEntity.setId(replyId);
+    novelReplyEntity.setNovelIdx(replyNovelIdx);
+    novelReplyEntity.setReplyContent(replyContent);
+    novelReplyEntity.setSpoilerYn(spoilerYn);
+
+    // 기본값 'N'이 적용이 안되서 수동으로 설정해줌
+    novelReplyEntity.setDeletedYn("N");
+
+    // db등록을 위해 NovelReplyEntity 정보 설정하기
+    novelReplyRepository.save(novelReplyEntity);
+
+  }
+
+  // 리뷰에 좋아요 클릭
+  @Override
+  public void updateReviewLike(String id, int replyIdx) {
+
+    ReplyLikeEntity replyLikeEntity = new ReplyLikeEntity();
+
+    // 매개변수인 id, replyIdx 값으로 memberEntity, novelReplyEntity 찾기
+    Optional<MemberEntity> memberOpt = memberRepository.findById(id);
+    MemberEntity memberEntity = memberOpt.get();
+
+    Optional<NovelReplyEntity> novelReplyOpt = novelReplyRepository.findById(replyIdx);
+    NovelReplyEntity novelReplyEntity = novelReplyOpt.get();
+
+    // memberEntity, novelReplyEntity로 reply_like 테이블 조회하여 데이터 존재여부 확인
+    Optional<ReplyLikeEntity> replyLikeOpt = replyLikeRepository.findByIdAndReplyIdx(memberEntity, novelReplyEntity);
+
+    // 조회된 데이터가 없을 경우, 좋아요 Y 값 입력하기
+    if (!replyLikeOpt.isPresent()) {
+      replyLikeEntity.setId(memberEntity);
+      replyLikeEntity.setReplyIdx(novelReplyEntity);
+      replyLikeEntity.setLikeYn("Y");
+      replyLikeRepository.save(replyLikeEntity);
+    }
+    // 조회된 데이터가 있을경우, 좋아요가 Y/N 인지 확인해서 반대로 수정
+    else {
+      replyLikeEntity = replyLikeOpt.get();
+      if (replyLikeEntity.getLikeYn().equals("Y")) {
+        replyLikeEntity.setLikeYn("N");
+        replyLikeRepository.save(replyLikeEntity);
+      }
+      else {
+        replyLikeEntity.setLikeYn("Y");
+        replyLikeRepository.save(replyLikeEntity);
+      }
+    }
+  }
+
+  // replyIdx를 통해 replyLike 테이블 데이터 리스트 가져오기
+//  @Override
+//  public List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity) {
+//    List<ReplyLikeEntity> replyLikeEntityList = new ArrayList<>();
+//
+//    // novelReplyEntity(replyIdx)를 통해 모든 replyLike 테이블 정보 얻어오기
+//    Optional<List<ReplyLikeEntity>> replyLikeOptList = replyLikeRepository.findAllByReplyIdx(novelReplyEntity);
+//
+//    if (replyLikeOptList.isPresent()) {
+//      for (ReplyLikeEntity replyLikeEntity : replyLikeOptList.get()) {
+//        replyLikeEntityList.add(replyLikeEntity);
+//      }
+//    }
+//
+//    return replyLikeEntityList;
+//  }
 
 
 }

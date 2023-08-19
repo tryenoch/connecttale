@@ -2,9 +2,9 @@ package com.bitc.full505_final_team4.controller;
 
 import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
-import com.bitc.full505_final_team4.data.entity.NovelEntity;
-import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
-import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
+import com.bitc.full505_final_team4.data.dto.NovelReplyDto;
+import com.bitc.full505_final_team4.data.dto.ReplyLikeDto;
+import com.bitc.full505_final_team4.data.entity.*;
 import com.bitc.full505_final_team4.service.NovelDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +23,6 @@ public class NovelDetailController {
   @RequestMapping(value = "/novelDetail", method = RequestMethod.GET)
   public Object getNovelDetail(@RequestParam("title") String title, @RequestParam("ebookCheck") String ebookCheck, @RequestParam("ageGrade") String novelAdult) throws Exception {
     Map<String, Object> novelDetail = new HashMap<>();
-
-    // 1. title, ebookCheck, ageGrade를 통해 novelIdx 얻기
-    NovelEntity novelIdx = novelDetailService.getNovelIdx(title, ebookCheck, novelAdult);
 
 
     // 소설 디테일 정보(제목, 저자, 인트로, 등) 관련 내용
@@ -57,7 +54,8 @@ public class NovelDetailController {
     // 여기부터는 좋아요, 리뷰, 신고 관련 프론트로 전달할 내용
 
     // -------------------좋아요------------------
-
+    // 1. title, ebookCheck, ageGrade를 통해 novelIdx 얻기
+    NovelEntity novelIdx = novelDetailService.getNovelIdx(title, ebookCheck, novelAdult);
 
     // 2. novel_idx에 대한 좋아요 수 데이터 가져오기
     int novelLikeCount = novelDetailService.getNovelLikeCount(novelIdx);
@@ -80,8 +78,43 @@ public class NovelDetailController {
     novelDetail.put("novelLikeList", novelLikeList);
 
 
-    // -------------------리뷰------------------
+    // --------------------------------- 리뷰 관련 정보 가져오기 ----------------------------------
+    List<NovelReplyDto> novelReplyList = new ArrayList<>();
 
+    // 리뷰에 대한 좋아요인 ReplyLikeDto 객체 생성
+//    List<ReplyLikeDto> replyLikeList = new ArrayList<>();
+
+    // 리뷰에 대한 좋아요 개수를 가져오기 위한 변수 선언
+//    int replyLikeCount = 0;
+
+    // novelIdx를 통해 novelReplyEntity 리스트 가져오기
+    List<NovelReplyEntity> novelReplyEntityList = novelDetailService.getNovelReply(novelIdx);
+    if (!novelReplyEntityList.isEmpty()) {
+
+      // entity 리스트를 -> dto 리스트로 변환하여 서버로 전달
+      for (NovelReplyEntity novelReplyEntity : novelReplyEntityList) {
+        NovelReplyDto novelReplyDto = NovelReplyDto.toDto(novelReplyEntity);
+        novelReplyList.add(novelReplyDto);
+
+        // replyIdx에 해당하는 replyLike 테이블의 좋아요 Y값의 Count 가져오기
+//        List<ReplyLikeEntity> replyLikeEntityList = novelDetailService.getReplyLikeList(novelReplyEntity);
+
+        // replyIdx로 가져온 replyLike 리스트를 dto로 변환하여 replyLikeList에 저장
+//        for (ReplyLikeEntity replyLikeEntity : replyLikeEntityList) {
+//
+//          ReplyLikeDto replyLikeDto = ReplyLikeDto.toDto(replyLikeEntity);
+//          replyLikeList.add(replyLikeDto);
+//        }
+
+        // replyIdx에 대한 좋아요 count 가져오기
+
+      }
+    }
+
+    
+    novelDetail.put("novelReplyList", novelReplyList);
+//      novelDetail.put("replyLikeList", replyLikeList);
+    // --------------------------------- 댓글 좋아요 가져오기 ----------------------------------
 
 
     // -------------------신고------------------
@@ -90,8 +123,9 @@ public class NovelDetailController {
     return novelDetail;
 
   }
-  // -------------------------------- db에 데이터 저장 ------------------------------------
 
+
+  // -------------------------------- db에 데이터 저장 ------------------------------------
   // 리디북스 디테일 페이지 정보 db 저장
 
   @RequestMapping(value = "/novelDetail", method = RequestMethod.POST)
@@ -260,6 +294,45 @@ public class NovelDetailController {
     catch (Exception e) {
       e.printStackTrace();
       return "좋아요 버튼 누르기 fail";
+    }
+  }
+
+// -------------------------------- 리뷰 작성 클릭 ------------------------------------
+  @RequestMapping(value = "/novelDetailReview", method = RequestMethod.POST)
+  public String updateDetailReview(@RequestParam("novelIdx") int novelIdx, @RequestParam("id") String id, @RequestParam("replyContent") String replyContent, @RequestParam("spoCheck") boolean spoCheck) throws Exception {
+    String spoilerYn = "";
+
+    // true/false로 넘어온 값을 Y/N 형식으로 바꿔주기
+    if (spoCheck == true) {
+      spoilerYn = "Y";
+    }
+    else {
+      spoilerYn = "N";
+    }
+
+    try {
+      novelDetailService.insertNovelReview(novelIdx, id, replyContent, spoilerYn);
+      return "댓글 등록 성공";
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      return "댓글 등록 실패";
+    }
+  }
+
+  // ------------------------------- 리뷰에 좋아요 클릭 --------------------------------
+  @RequestMapping(value = "/novelDetailReview", method = RequestMethod.PUT)
+  public String updateReviewLike(@RequestParam("id") String id, @RequestParam("replyIdx") int replyIdx) throws Exception {
+
+    try {
+      novelDetailService.updateReviewLike(id, replyIdx);
+
+
+      return "댓글 좋아요 성공";
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      return "댓글 좋아요 실패";
     }
   }
 

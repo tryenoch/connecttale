@@ -1,8 +1,6 @@
 package com.bitc.full505_final_team4.service;
 
-import com.bitc.full505_final_team4.data.entity.NovelEntity;
-import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
-import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
+import com.bitc.full505_final_team4.data.entity.*;
 
 import java.util.List;
 
@@ -33,4 +31,13 @@ public interface NovelDetailService {
   int getNovelLikeCount(NovelEntity novelIdx);
 
   List<NovelLikeEntity> getNovelLike(NovelEntity novelIdx);
+
+  List<NovelReplyEntity> getNovelReply(NovelEntity novelIdx);
+
+  void insertNovelReview(int novelIdx, String id, String replyContent, String spoilerYn);
+
+  void updateReviewLike(String id, int replyIdx);
+
+//  List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity);
+
 }

@@ -21,7 +21,7 @@ function NovelDetail(props) {
         <div className={'row'}>
           <div className={'col-sm-9 mx-auto'}>
             <NovelDetailInfo2 novelDetail={location.state.novelDetail} />
-            <NovelDetailReview novelIdx={location.state.novelDetail} />
+            <NovelDetailReview novelDetail={location.state.novelDetail} />
           </div>
         </div>
       </div>
