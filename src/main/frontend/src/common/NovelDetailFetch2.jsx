@@ -71,7 +71,7 @@ export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
                   novelAdult: item.age_limit === 19 ? "Y" : "N",
                   novelRelease: item2.publish.ridibooks_register.substring(0, 10),
                   novelUpdateDate: item3.length === 0 ? null : item3[0].title,
-                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
+                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : "8",
                   ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
                 };
                 
@@ -143,7 +143,7 @@ export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
                   novelAdult: item.age_limit === 19 ? "Y" : "N",
                   novelRelease: item2.publish.ridibooks_register.substring(0, 10),
                   novelUpdateDate: item3.length === 0 ? null : item3[0].title,
-                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
+                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : "8",
                   ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
                 };
     
@@ -215,7 +215,7 @@ export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
                   novelAdult: item.age_limit === 19 ? "Y" : "N",
                   novelRelease: item2.publish.ridibooks_register.substring(0, 10),
                   novelUpdateDate: item3.length === 0 ? null : item3[0].title,
-                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
+                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : "8",
                   ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
                 };
     
@@ -287,7 +287,7 @@ export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
                   novelAdult: item.age_limit === 19 ? "Y" : "N",
                   novelRelease: item2.publish.ridibooks_register.substring(0, 10),
                   novelUpdateDate: item3.length === 0 ? null : item3[0].title,
-                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : null,
+                  cateList: item.parent_category_name.includes('BL') ? "7" : item.parent_category_name.includes("로맨스") ? "3" : item.parent_category_name.includes("로판") ? "4" : item.parent_category_name.includes("판타지") ? "1" : "8",
                   ebookCheck: item.web_title.includes("e북") ? "단행본" : "웹소설"
                 };
     
@@ -344,7 +344,7 @@ export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
           ageGrade: ageGrade
         }
       })
-      // console.log(res);
+      console.log(res);
       // DB에 저장되어있는지 유무 확인
       // db에 해당 작품이 있으면 정보 꺼내오기
       if (res.data.kakao || res.data.naver || res.data.ridi) {

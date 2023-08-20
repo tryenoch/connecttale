@@ -1,9 +1,6 @@
 package com.bitc.full505_final_team4.controller;
 
-import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
-import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
-import com.bitc.full505_final_team4.data.dto.NovelReplyDto;
-import com.bitc.full505_final_team4.data.dto.ReplyLikeDto;
+import com.bitc.full505_final_team4.data.dto.*;
 import com.bitc.full505_final_team4.data.entity.*;
 import com.bitc.full505_final_team4.service.NovelDetailService;
 import lombok.RequiredArgsConstructor;
@@ -79,42 +76,18 @@ public class NovelDetailController {
 
 
     // --------------------------------- 리뷰 관련 정보 가져오기 ----------------------------------
-    List<NovelReplyDto> novelReplyList = new ArrayList<>();
+    List<NovelReplyLikeInterface>  novelReplyLikeList = new ArrayList<>();
 
-    // 리뷰에 대한 좋아요인 ReplyLikeDto 객체 생성
-//    List<ReplyLikeDto> replyLikeList = new ArrayList<>();
 
-    // 리뷰에 대한 좋아요 개수를 가져오기 위한 변수 선언
-//    int replyLikeCount = 0;
 
-    // novelIdx를 통해 novelReplyEntity 리스트 가져오기
-    List<NovelReplyEntity> novelReplyEntityList = novelDetailService.getNovelReply(novelIdx);
-    if (!novelReplyEntityList.isEmpty()) {
-
-      // entity 리스트를 -> dto 리스트로 변환하여 서버로 전달
-      for (NovelReplyEntity novelReplyEntity : novelReplyEntityList) {
-        NovelReplyDto novelReplyDto = NovelReplyDto.toDto(novelReplyEntity);
-        novelReplyList.add(novelReplyDto);
-
-        // replyIdx에 해당하는 replyLike 테이블의 좋아요 Y값의 Count 가져오기
-//        List<ReplyLikeEntity> replyLikeEntityList = novelDetailService.getReplyLikeList(novelReplyEntity);
-
-        // replyIdx로 가져온 replyLike 리스트를 dto로 변환하여 replyLikeList에 저장
-//        for (ReplyLikeEntity replyLikeEntity : replyLikeEntityList) {
-//
-//          ReplyLikeDto replyLikeDto = ReplyLikeDto.toDto(replyLikeEntity);
-//          replyLikeList.add(replyLikeDto);
-//        }
-
-        // replyIdx에 대한 좋아요 count 가져오기
-
-      }
+    // novelIdx를 통해 novelReplyEntity, replyLikeEntity의 좋아요 수가 조인된 entity를 가져오기
+    // COUNT, SUM 등의 함수가 사용된 조인 결과 테이블을 가져올 경우, 해당 데이터를 담을 인터페이스가 필요함
+    List<NovelReplyLikeInterface> novelReplyLikeInterfaceList = novelDetailService.getNovelReply(novelIdx);
+    for (NovelReplyLikeInterface novelReplyLikeInterface : novelReplyLikeInterfaceList) {
+      novelReplyLikeList.add(novelReplyLikeInterface);
     }
 
-    
-    novelDetail.put("novelReplyList", novelReplyList);
-//      novelDetail.put("replyLikeList", replyLikeList);
-    // --------------------------------- 댓글 좋아요 가져오기 ----------------------------------
+    novelDetail.put("novelReplyList", novelReplyLikeList);
 
 
     // -------------------신고------------------

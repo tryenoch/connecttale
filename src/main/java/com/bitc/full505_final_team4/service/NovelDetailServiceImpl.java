@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.service;
 
+import com.bitc.full505_final_team4.data.dto.NovelReplyLikeInterface;
 import com.bitc.full505_final_team4.data.entity.*;
 import com.bitc.full505_final_team4.data.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +12,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import javax.swing.text.Element;
-import javax.swing.text.html.Option;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -197,6 +196,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("BL")) {
                 naverCrollingData.setCateList("7");
               }
+              else {
+                naverCrollingData.setCateList("8");
+              }
 
               // ebookCheck 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
               naverCrollingData.setEbookCheck(ebookCheck);
@@ -287,6 +289,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                 naverCrollingData.setCateList("6");
               } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("BL")) {
                 naverCrollingData.setCateList("7");
+              }
+              else {
+                naverCrollingData.setCateList("8");
               }
 
               // ebookCheck 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
@@ -380,6 +385,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("BL")) {
                 naverCrollingData.setCateList("7");
               }
+              else {
+                naverCrollingData.setCateList("8");
+              }
 
               // ebookCheck 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
               naverCrollingData.setEbookCheck(ebookCheck);
@@ -470,6 +478,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                 naverCrollingData.setCateList("6");
               } else if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("BL")) {
                 naverCrollingData.setCateList("7");
+              }
+              else {
+                naverCrollingData.setCateList("8");
               }
 
               // ebookCheck 가져오기 : 이거는 상세페이지로 이동할 때 이미 정해져있음
@@ -622,10 +633,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelUpdateDate 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
-                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
-                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
-              }
+//              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+//                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
+//                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
+//              }
 
               // cateList 가져오기
               String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();
@@ -649,6 +660,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
               else if (category.contains("BL")) {
                 kakaoCrollingData.setCateList("7");
+              }
+              else {
+                kakaoCrollingData.setCateList("8");
               }
 
 
@@ -727,10 +741,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelUpdateDate 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
-                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
-                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
-              }
+//              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+//                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
+//                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
+//              }
 
               // cateList 가져오기
               String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();
@@ -754,6 +768,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
               else if (category.contains("BL")) {
                 kakaoCrollingData.setCateList("7");
+              }
+              else {
+                kakaoCrollingData.setCateList("8");
               }
 
 
@@ -832,10 +849,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelUpdateDate 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
-                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
-                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
-              }
+//              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+//                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
+//                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
+//              }
 
               // cateList 가져오기
               String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();
@@ -859,6 +876,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
               else if (category.contains("BL")) {
                 kakaoCrollingData.setCateList("7");
+              }
+              else {
+                kakaoCrollingData.setCateList("8");
               }
 
 
@@ -937,10 +957,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelUpdateDate 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
-                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
-                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
-              }
+//              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+//                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
+//                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
+//              }
 
               // cateList 가져오기
               String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();
@@ -964,6 +984,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
               else if (category.contains("BL")) {
                 kakaoCrollingData.setCateList("7");
+              }
+              else {
+                kakaoCrollingData.setCateList("8");
               }
 
 
@@ -1121,19 +1144,19 @@ public class NovelDetailServiceImpl implements NovelDetailService {
   }
 
 
-  // novelIdx로 리뷰(댓글) 테이블 정보 가져오기
+  // novelIdx로 리뷰(댓글) 테이블 정보 가져오기(댓글 좋아요 수도 함께 가져오기)
   @Override
-  public List<NovelReplyEntity> getNovelReply(NovelEntity novelIdx) {
-    List<NovelReplyEntity> novelReplyEntityList = new ArrayList<>();
+  public List<NovelReplyLikeInterface> getNovelReply(NovelEntity novelIdx) {
+    List<NovelReplyLikeInterface> novelReplyLikeInterfaceList = new ArrayList<>();
     // novelIdx에 해당하는 리뷰 테이블 데이터 optional 타입으로 가져오기
-    Optional<List<NovelReplyEntity>> opt = novelReplyRepository.findAllByNovelIdxOrderByCreateDtDesc(novelIdx);
+    Optional<List<NovelReplyLikeInterface>> opt = novelReplyRepository.findNovelReplyFetchJoin(novelIdx);
 
     if (opt.isPresent()) {
-      for (NovelReplyEntity novelReplyEntity : opt.get()) {
-        novelReplyEntityList.add(novelReplyEntity);
+      for (NovelReplyLikeInterface novelReplyLikeInterface : opt.get()) {
+        novelReplyLikeInterfaceList.add(novelReplyLikeInterface);
       }
     }
-    return novelReplyEntityList;
+    return novelReplyLikeInterfaceList;
   }
 
   // 리뷰 등록하기

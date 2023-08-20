@@ -69,10 +69,11 @@ function NovelDetailReview(props) {
 
       </div>
       
-      {/* 리뷰 댓글 리스트 구간*/}
+      {/* 리뷰(댓글) 리스트 구간*/}
       {
-        novelReplyList.map((item, index) => {
-          return (
+        novelReplyList.map((item, index) => (
+          item.spoilerYn == 'N' &&
+          (
             <div key={index} className={'row my-4 d-flex align-items-center border-bottom'}>
               <div className={'col-sm-3'}>
                 <p>{item.id.nickname} ({item.id.id})</p>
@@ -82,12 +83,12 @@ function NovelDetailReview(props) {
                 <p>{item.replyContent}</p>
               </div>
               <div className={'col-sm-3 d-flex justify-content-end'}>
-                <button className={'btn btn-outline-purple'}>좋아요</button>
+                <button className={'btn btn-outline-purple'}>좋아요({item.likeCnt})</button>
                 <button className={'btn btn-outline-danger'}>신고</button>
               </div>
             </div>
           )
-        })
+        ))
       }
     </div>
   )
