@@ -34,15 +34,14 @@ function ChangeInfo(props) {
                 const data = res.data;
                 if (nick === null || nick === "") {
                     setConfirm({confirm, nickConfirm: "닉네임을 입력해 주세요"});
-                }
-                else {
+                } else {
                     setConfirm({confirm, nickConfirm: data.result});
                 }
             })
             .catch();
     }
 
-    const eventClickOK = () => {
+    const eventClickOK = (e) => {
         if ((nick === "" || confirm.nickConfirm === "이미 사용중인 닉네임입니다.") && pw === "") {
             setConfirm({confirm, nickConfirm: "닉네임을 다시 입력해주세요"});
             setConfirm({confirm, pwConfirm: "비밀번호를 입력하세요"});
@@ -99,6 +98,30 @@ function ChangeInfo(props) {
                 });
         }
     }
+    const reload = () => {
+        axios.post(`/login/reload`, null, {
+            params: {
+                id: sessionStorage.getItem('id'),
+            }
+        })
+            .then(res => {
+                console.log(res.data);
+                // 세션 저장 구현
+                const member = res.data.userInfo;
+                sessionStorage.setItem("member", JSON.stringify(member));
+                sessionStorage.setItem("id", member.id);
+                const year = new Date().getFullYear();
+                const birth = Number(member.birthday.substring(0, 4));
+                const adult = (year - birth) >= 19 ? 'Y' : 'N';
+                sessionStorage.setItem("adult", adult);
+                sessionStorage.setItem('grade', member.grade);
+                navi('/');
+            })
+            .catch(err => {
+                alert(err);
+            });
+
+    }
 
     return (
         <div>
@@ -124,8 +147,9 @@ function ChangeInfo(props) {
                                 <h4 className={'fw-bold'}>아이디</h4>
                             </div>
                             <div className={'col-sm-9 d-flex'}>
-                                <input type="text" name={'nick'} id={'nick'}
-                                       className={'input-s5 form-control rounded-1'} value={sessionStorage.getItem('id')} disabled/>
+                                <input type="text" name={'id'} id={'id'}
+                                       className={'input-s5 form-control rounded-1'}
+                                       value={sessionStorage.getItem('id')} disabled/>
                             </div>
                         </div>
                         <div className={'row mt-4'}>
@@ -141,7 +165,8 @@ function ChangeInfo(props) {
                                 </button>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.nickConfirm}</span></div>
+                            <div className={'col-sm-9'}><span
+                                className={'ms-2 mt-2 text-purple bold'}>{confirm.nickConfirm}</span></div>
                         </div>
                         <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
@@ -153,7 +178,8 @@ function ChangeInfo(props) {
                                        onChange={changePw}/>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.pwConfirm}</span></div>
+                            <div className={'col-sm-9'}><span
+                                className={'ms-2 mt-2 text-purple bold'}>{confirm.pwConfirm}</span></div>
                         </div>
                         <div className={'row mt-2'}>
                             <div className={'col-sm-3'}>
@@ -165,12 +191,15 @@ function ChangeInfo(props) {
                                        onChange={changeConfirmPw}/>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-outline-purple bold'}>{confirm.confirmPwConfirm}</span></div>
+                            <div className={'col-sm-9'}><span
+                                className={'ms-2 mt-2 text-outline-purple bold'}>{confirm.confirmPwConfirm}</span></div>
                         </div>
                         <div className={'row mt-5 justify-content-end'}>
                             <div className={'col-sm-8'}></div>
                             <div className={'col-sm-4'}>
-                                <button type={'button'} onClick={() => {navi(-1);}}
+                                <button type={'button'} onClick={() => {
+                                    navi(-1);
+                                }}
                                         className={'btn btn-secondary ms-3'}>취소
                                 </button>
                                 <button type={'button'} onClick={eventClickOK}
