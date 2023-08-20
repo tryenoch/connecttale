@@ -22,9 +22,9 @@ function KakaoRankItem(props) {
         <div className={"rank-item-img text-center"}>
           <h3 className={"rank-num"}>{rankNum}</h3>
           {/*세션 영역에 저장된 성인 여부에 따라 이미지 보이는 거 다르게 해야함 */}
-          { adultsOnly ? // 성인 유저이며 해당 작품이 성인작품일 경우
-            sessionAdult =="Y" ?
-              <div>
+          { adultsOnly ? // 성인작품일 경우
+            sessionAdult =="Y" ? // 세션 정보가 있고 사용자가 성인일 경우
+              <div className={"rank-item-img"}>
                 <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="19세 미만 구독불가" className="adult-img">
                   <circle cx="12" cy="12" r="12" fill="#fff"></circle>
                   <path opacity="0.8" d="M.5 12a11.5 11.5 0 1023 0 11.5 11.5 0 10-23 0" stroke="#DC3232"></path>
@@ -39,12 +39,19 @@ function KakaoRankItem(props) {
                     </clipPath>
                   </defs>
                 </svg>
-                <img src={thumbnail} alt=""/>
+                <div className={"rank-item-img"}>
+                  <img src={thumbnail} alt=""/>
+                </div>
               </div>
               // 세션 정보가 없거나 성인 유저가 아닐 경우
-              : <img src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"} alt={"Adults content"}/>
+              :
+              <div className={"rank-item-img"}>
+                <img src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"} alt={"Adults content"}/>
+              </div>
             // 세션 여부와 상관 없이 성인 작품이 아닐 경우
-            : <img src={thumbnail} alt=""/>
+            : <div className={"rank-item-img"}>
+              <img src={thumbnail} alt=""/>
+            </div>
           }
         </div>
       </div>
