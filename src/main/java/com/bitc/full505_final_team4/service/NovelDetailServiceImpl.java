@@ -1143,20 +1143,20 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     return novelLikeEntityList;
   }
 
-
+  // ----------------------------------- 리뷰 관련 --------------------------------------------------
   // novelIdx로 리뷰(댓글) 테이블 정보 가져오기(댓글 좋아요 수도 함께 가져오기)
   @Override
-  public List<NovelReplyLikeInterface> getNovelReply(NovelEntity novelIdx) {
-    List<NovelReplyLikeInterface> novelReplyLikeInterfaceList = new ArrayList<>();
+  public List<NovelReplyEntity> getNovelReply(NovelEntity novelIdx) {
+    List<NovelReplyEntity> novelReplyEntityList= new ArrayList<>();
     // novelIdx에 해당하는 리뷰 테이블 데이터 optional 타입으로 가져오기
-    Optional<List<NovelReplyLikeInterface>> opt = novelReplyRepository.findNovelReplyFetchJoin(novelIdx);
+    Optional<List<NovelReplyEntity>> opt = novelReplyRepository.findAllByNovelIdxOrderByCreateDtDesc(novelIdx);
 
     if (opt.isPresent()) {
-      for (NovelReplyLikeInterface novelReplyLikeInterface : opt.get()) {
-        novelReplyLikeInterfaceList.add(novelReplyLikeInterface);
+      for (NovelReplyEntity novelReplyEntity : opt.get()) {
+        novelReplyEntityList.add(novelReplyEntity);
       }
     }
-    return novelReplyLikeInterfaceList;
+    return novelReplyEntityList;
   }
 
   // 리뷰 등록하기
@@ -1171,21 +1171,26 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     Optional<MemberEntity> memberEntity = memberRepository.findById(id);
     MemberEntity replyId = memberEntity.get();
 
-    // db등록을 위해 NovelReplyEntity 정보 설정하기
-    novelReplyEntity.setId(replyId);
-    novelReplyEntity.setNovelIdx(replyNovelIdx);
-    novelReplyEntity.setReplyContent(replyContent);
-    novelReplyEntity.setSpoilerYn(spoilerYn);
+    try {
+      // db등록을 위해 NovelReplyEntity 정보 설정하기
+      novelReplyEntity.setId(replyId);
+      novelReplyEntity.setNovelIdx(replyNovelIdx);
+      novelReplyEntity.setReplyContent(replyContent);
+      novelReplyEntity.setSpoilerYn(spoilerYn);
 
-    // 기본값 'N'이 적용이 안되서 수동으로 설정해줌
-    novelReplyEntity.setDeletedYn("N");
+      // 기본값 'N'이 적용이 안되서 수동으로 설정해줌
+      novelReplyEntity.setDeletedYn("N");
 
-    // db등록을 위해 NovelReplyEntity 정보 설정하기
-    novelReplyRepository.save(novelReplyEntity);
+      // db등록을 위해 NovelReplyEntity 정보 설정하기
+      novelReplyRepository.save(novelReplyEntity);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
 
   }
 
-  // 리뷰에 좋아요 클릭
+  // 리뷰(댓글)에 좋아요 클릭
   @Override
   public void updateReviewLike(String id, int replyIdx) {
 
@@ -1202,7 +1207,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     Optional<ReplyLikeEntity> replyLikeOpt = replyLikeRepository.findByIdAndReplyIdx(memberEntity, novelReplyEntity);
 
     // 조회된 데이터가 없을 경우, 좋아요 Y 값 입력하기
-    if (!replyLikeOpt.isPresent()) {
+    if (replyLikeOpt.isEmpty()) {
       replyLikeEntity.setId(memberEntity);
       replyLikeEntity.setReplyIdx(novelReplyEntity);
       replyLikeEntity.setLikeYn("Y");
@@ -1215,7 +1220,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
         replyLikeEntity.setLikeYn("N");
         replyLikeRepository.save(replyLikeEntity);
       }
-      else {
+      else if (replyLikeEntity.getLikeYn().equals("N")){
         replyLikeEntity.setLikeYn("Y");
         replyLikeRepository.save(replyLikeEntity);
       }

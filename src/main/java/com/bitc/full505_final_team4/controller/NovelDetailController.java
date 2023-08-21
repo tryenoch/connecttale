@@ -76,18 +76,22 @@ public class NovelDetailController {
 
 
     // --------------------------------- 리뷰 관련 정보 가져오기 ----------------------------------
-    List<NovelReplyLikeInterface>  novelReplyLikeList = new ArrayList<>();
+    List<NovelReplyDto>  novelReplyList = new ArrayList<>();
 
 
 
-    // novelIdx를 통해 novelReplyEntity, replyLikeEntity의 좋아요 수가 조인된 entity를 가져오기
-    // COUNT, SUM 등의 함수가 사용된 조인 결과 테이블을 가져올 경우, 해당 데이터를 담을 인터페이스가 필요함
-    List<NovelReplyLikeInterface> novelReplyLikeInterfaceList = novelDetailService.getNovelReply(novelIdx);
-    for (NovelReplyLikeInterface novelReplyLikeInterface : novelReplyLikeInterfaceList) {
-      novelReplyLikeList.add(novelReplyLikeInterface);
+    // novelIdx를 통해 novel_reply 테이블 데이터 가져오기
+    List<NovelReplyEntity> novelReplyEntityList = novelDetailService.getNovelReply(novelIdx);
+    for (NovelReplyEntity novelReplyEntity : novelReplyEntityList) {
+      NovelReplyDto novelReplyDto = NovelReplyDto.toDto(novelReplyEntity);
+      novelReplyList.add(novelReplyDto);
+
+      // novelIdx를 통해 reply_like 테이블 리스트 가져오기
     }
 
-    novelDetail.put("novelReplyList", novelReplyLikeList);
+    novelDetail.put("novelReplyList", novelReplyList);
+
+
 
 
     // -------------------신고------------------
@@ -272,7 +276,7 @@ public class NovelDetailController {
 
 // -------------------------------- 리뷰 작성 클릭 ------------------------------------
   @RequestMapping(value = "/novelDetailReview", method = RequestMethod.POST)
-  public String updateDetailReview(@RequestParam("novelIdx") int novelIdx, @RequestParam("id") String id, @RequestParam("replyContent") String replyContent, @RequestParam("spoCheck") boolean spoCheck) throws Exception {
+  public void updateDetailReview(@RequestParam("novelIdx") int novelIdx, @RequestParam("id") String id, @RequestParam("replyContent") String replyContent, @RequestParam("spoCheck") boolean spoCheck) throws Exception {
     String spoilerYn = "";
 
     // true/false로 넘어온 값을 Y/N 형식으로 바꿔주기
@@ -285,16 +289,15 @@ public class NovelDetailController {
 
     try {
       novelDetailService.insertNovelReview(novelIdx, id, replyContent, spoilerYn);
-      return "댓글 등록 성공";
+
     }
     catch (Exception e) {
       e.printStackTrace();
-      return "댓글 등록 실패";
     }
   }
 
   // ------------------------------- 리뷰에 좋아요 클릭 --------------------------------
-  @RequestMapping(value = "/novelDetailReview", method = RequestMethod.PUT)
+  @RequestMapping(value = "/novelDetailReplyLike", method = RequestMethod.PUT)
   public String updateReviewLike(@RequestParam("id") String id, @RequestParam("replyIdx") int replyIdx) throws Exception {
 
     try {
