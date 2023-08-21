@@ -31,6 +31,9 @@ public interface NovelRidiService {
   // 작품 아이디에 해당하는 작품 설명 들고오기
   String getNovelIntro(String platformId) throws Exception;
 
+  // 작품 출시일 들고오기
+  String getReleaseDate(String infoDate) throws Exception;
+
   /* 리디 별점 계산기 */
   double getStarRate(JSONArray ratings) throws Exception;
 
@@ -45,4 +48,7 @@ public interface NovelRidiService {
 
   // ridi ebook check 변환 함수
   String getEbookCheck(String ebookCheck) throws Exception;
+
+  // adult_yn 변환 함수
+  String getAdultYn(String info) throws Exception;
 }
