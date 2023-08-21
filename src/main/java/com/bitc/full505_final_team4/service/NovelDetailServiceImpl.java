@@ -1171,17 +1171,22 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     Optional<MemberEntity> memberEntity = memberRepository.findById(id);
     MemberEntity replyId = memberEntity.get();
 
-    // db등록을 위해 NovelReplyEntity 정보 설정하기
-    novelReplyEntity.setId(replyId);
-    novelReplyEntity.setNovelIdx(replyNovelIdx);
-    novelReplyEntity.setReplyContent(replyContent);
-    novelReplyEntity.setSpoilerYn(spoilerYn);
+    try {
+      // db등록을 위해 NovelReplyEntity 정보 설정하기
+      novelReplyEntity.setId(replyId);
+      novelReplyEntity.setNovelIdx(replyNovelIdx);
+      novelReplyEntity.setReplyContent(replyContent);
+      novelReplyEntity.setSpoilerYn(spoilerYn);
 
-    // 기본값 'N'이 적용이 안되서 수동으로 설정해줌
-    novelReplyEntity.setDeletedYn("N");
+      // 기본값 'N'이 적용이 안되서 수동으로 설정해줌
+      novelReplyEntity.setDeletedYn("N");
 
-    // db등록을 위해 NovelReplyEntity 정보 설정하기
-    novelReplyRepository.save(novelReplyEntity);
+      // db등록을 위해 NovelReplyEntity 정보 설정하기
+      novelReplyRepository.save(novelReplyEntity);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
 
   }
 
