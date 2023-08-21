@@ -18,11 +18,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.propertyeditors.CurrencyEditor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -279,64 +283,67 @@ public class NovelMainServiceImpl implements NovelMainService{
         // 브라우저 이동 시 생기는 로드시간을 기다린다.
         // HTTP 응답속도보다 자바의 컴파일 속도가 더 빠르기 때문에 임의적으로 1초를 대기한다
 //        Thread.sleep(1000);
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-      } catch (Exception e){
-        e.printStackTrace();
-      }
+//        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 
-    }
+        // 대기시간 duration 객체 생성
+        Duration duration = Duration.ofSeconds(60);
+        // WebDriverWait 객체 생성 : 페이지가 열릴때까지 duration 만큼 기다림
+        WebDriverWait wait = new WebDriverWait(driver, duration);
 
-    try {
-      //카카오 웹소설 랭킹 리스트 들고오기
+        try {
+          //카카오 웹소설 랭킹 리스트 들고오기
+          wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath("//div[@style='border-color:transparent;border-width:4px']")));
+
+
 //      WebElement element = driver.findElement(By.cssSelector(".foldable:grid-inner-border-cols6"));
-      List<WebElement> list = driver.findElements(By.xpath("//div[@style='border-color:transparent;border-width:4px']")).subList(0, 12);
-      // list = list.subList(0, 20);// 20개 리스트 들고오기
+          List<WebElement> list = driver.findElements(By.xpath("//div[@style='border-color:transparent;border-width:4px']")).subList(0, 12);
+          // list = list.subList(0, 20);// 20개 리스트 들고오기
 
-      if(!ObjectUtils.isEmpty(list)){ // list 가 null 값이 아니라면
-        for(WebElement element : list){
-          /* dto 에 필수적으로 넣어야 하는 요소
-          * 플랫폼 아이디, 제목, 썸네일 주소, 플랫폼 이름 */
-          NovelMainDto novel = new NovelMainDto();
+          if(!ObjectUtils.isEmpty(list)){ // list 가 null 값이 아니라면
+            for(WebElement element : list){
+              /* dto 에 필수적으로 넣어야 하는 요소
+               * 플랫폼 아이디, 제목, 썸네일 주소, 플랫폼 이름 */
+              NovelMainDto novel = new NovelMainDto();
 
-          novel.setPlatform("kakao"); // 플랫폼 이름 입력
+              novel.setPlatform("kakao"); // 플랫폼 이름 입력
 
-          //순위 불러오기
-          novel.setNovelIndexNum(list.indexOf(element) + 1); // novelItem의 인덱스 번호
+              //순위 불러오기
+              novel.setNovelIndexNum(list.indexOf(element) + 1); // novelItem의 인덱스 번호
 
-          // a 태그에서 id 값 잘라오기
-          String id = element.findElement(By.tagName("a")).getAttribute("href");
-          int idIdx = id.lastIndexOf("/")+1;
-          id = id.substring(idIdx);
+              // a 태그에서 id 값 잘라오기
+              String id = element.findElement(By.tagName("a")).getAttribute("href");
+              int idIdx = id.lastIndexOf("/")+1;
+              id = id.substring(idIdx);
 
-          novel.setPlatformId(id);
+              novel.setPlatformId(id);
 
-          // 제목
-          String title = element.findElement(By.cssSelector(".line-clamp-2")).getText();
-          novel.setNovelTitle(title);
+              // 제목
+              String title = element.findElement(By.cssSelector(".line-clamp-2")).getText();
+              novel.setNovelTitle(title);
 
 //          String locator = "//img[@alt=\"썸네일\"][" + list.indexOf(element) + "]";
-          //썸네일
-          String thumbnail = "";
+              //썸네일
+              String thumbnail = "";
 
-          try {
+              try {
             /*if (ObjectUtils.isEmpty(element.findElement(By.cssSelector(".object-cover.visible")).getAttribute("src"))){
               throw new org.openqa.selenium.NoSuchElementException();
             } else {*/
-              thumbnail = element.findElement(By.cssSelector(".object-cover.visible")).getAttribute("src");
-              novel.setNovelThumbnail(thumbnail);
+                thumbnail = element.findElement(By.cssSelector(".object-cover.visible")).getAttribute("src");
+                novel.setNovelThumbnail(thumbnail);
 
 
-          }catch (NoSuchElementException e){
-            // 썸네일 객체가 없다면 성인 컨텐츠라는 뜻이므로 adultsOnly를 true로 한다
-            novel.setAdultsOnly(true);
-            novel.setNovelThumbnail(thumbnail);
+              }catch (NoSuchElementException e){
+                // 썸네일 객체가 없다면 성인 컨텐츠라는 뜻이므로 adultsOnly를 true로 한다
+                novel.setAdultsOnly(true);
+                novel.setNovelThumbnail(thumbnail);
 
-            // ※ Socket Exception 이 발생하므로 추가 조정할 것
+                // ※ Socket Exception 이 발생하므로 추가 조정할 것
+              }
+
+              novelDtoList.add(novel);
+            }
           }
-
-          novelDtoList.add(novel);
-        }
-      }
 
       /*
       // element 리스트 내 아이디를 담을 배열
@@ -358,13 +365,30 @@ public class NovelMainServiceImpl implements NovelMainService{
         NovelMainDto novel = getKakaoNovel(novelId);
         novelDtoList.add(novel);
       }*/
+        }
+        catch (Exception e){
+          e.printStackTrace();
+
+          // 이미 켜져있던 크롬드라이버를 강제종료하는 트라이캐치문
+          try {
+            Process process = Runtime.getRuntime().exec("taskkill /f /im chromedriver.exe /t");
+            int exitCode = process.waitFor();
+          } catch (IOException | InterruptedException e2) {
+          }
+
+
+        }
+        finally {
+          driver.quit();
+        }
+
+      } catch (Exception e){
+        e.printStackTrace();
+      }
+
     }
-    catch (Exception e){
-      e.printStackTrace();
-    }
-    finally {
-      driver.quit();
-    }
+
+
 
     return novelDtoList;
   }
