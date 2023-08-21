@@ -26,6 +26,7 @@ import static java.lang.Double.NaN;
 @RequiredArgsConstructor
 public class NovelRidiServiceImpl implements NovelRidiService {
 
+  private final NovelCommonEditService novelCommonService;
   private final NovelRankRepository novelRankRepository;
   private final NovelMainRepository novelMainRepository;
   private final PlatformMainRepository platformMainRepository;
@@ -147,6 +148,8 @@ public class NovelRidiServiceImpl implements NovelRidiService {
 
         // 소설 제목 얻어오기
         JSONObject serial = (JSONObject) book.get("serial");
+//        String title = serial.get("title").toString();
+//        title = novelCommonService.editTitleForNovelEntity(title);
         novel.setNovelTitle(serial.get("title").toString());
 
         // 작가 이름 얻어오기
@@ -213,19 +216,22 @@ public class NovelRidiServiceImpl implements NovelRidiService {
           // 소설 제목 불러오기
           JSONObject serial = (JSONObject) book.get("serial");
           String title = serial.get("title").toString();
+          title = novelCommonService.editTitleForNovelEntity(title);
 
           // 소설 썸네일
           JSONObject cover = (JSONObject) book.get("cover");
-          String thumbnail = cover.get("large").toString();
+          String thumbnail = cover.get("large").toString(); // novel_thumbnail
 
-          boolean adultsOnly = (Boolean) book.get("adultsOnly");
+          String  adultsOnly = book.get("adultsOnly").toString();
+          adultsOnly = getAdultYn(adultsOnly); // novel_adult
 
           try {
 
             // novel table 에 일치하는 제목이 있는지 확인, 없을 경우 exeption 반환
-            Optional<NovelEntity> entityNovel = novelMainRepository.findByNovelTitle(title);
+            Optional<NovelEntity> entityNovel = novelMainRepository.findByNovelTitleAndEbookCheckAndNovelAdult(title, "웹소설", adultsOnly);
 
             if(entityNovel.isEmpty()){
+
               throw new NoSuchElementException();
 
             } else {
@@ -300,6 +306,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     // 소설 제목 불러오기
     JSONObject serial = (JSONObject) book.get("serial");
     String title = serial.get("title").toString();
+    title = novelCommonService.editTitleForNovelEntity(title);
 
     // 소설 썸네일
     JSONObject cover = (JSONObject) book.get("cover");
@@ -361,7 +368,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     novelPlatformEntity.setPlatform(3); // 리디북스 플랫폼 번호
 //    novelPlatformEntity.setEbookCheck("웹소설"); // 웹소설 여부
 
-    // "연재물" 인지 "단행본"인지 여부
+    // "웹소설" 인지 "단행본"인지 여부
 
     String ebookCheck = "";
     if (book.get("webTitle") != null ) {
@@ -382,6 +389,19 @@ public class NovelRidiServiceImpl implements NovelRidiService {
       platformId = book.get("bookId").toString();
     }
 
+    String dateInfo = "";
+
+    // 출시일
+    if(!ObjectUtils.isEmpty(book.get("publication_date"))){
+      dateInfo = book.get("publication_date").toString();
+    } else if (!ObjectUtils.isEmpty(book.get("publicationDate"))) {
+      dateInfo = book.get("publicationDate").toString();
+    }
+
+    dateInfo = getReleaseDate(dateInfo);
+
+    novelPlatformEntity.setNovelRelease(dateInfo);
+
     // 플랫폼 제공 아이디
     novelPlatformEntity.setPlatformId(platformId);
 
@@ -392,7 +412,9 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     novelPlatformEntity.setNovelUpdateDate(getNovelUpdateDate(platformId));
 
     JSONObject serial = (JSONObject) book.get("serial");
-    novelPlatformEntity.setNovelTitle(serial.get("title").toString()); // 제목
+    String title = serial.get("title").toString();
+    title = novelCommonService.editTitleForNovelEntity(title);
+    novelPlatformEntity.setNovelTitle(title); // 제목
 
     int totalCount = Integer.parseInt(serial.get("total").toString()); // total 이 Long 값으로 반환됨
     novelPlatformEntity.setNovelCount(totalCount); // 총 화수
@@ -604,6 +626,15 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     return cateName;
   }
 
+  // 작품 출시일 들고오기
+  @Override
+  public String getReleaseDate(String infoDate) throws Exception{
+
+    infoDate = infoDate.substring(0, 10);
+
+    return infoDate;
+  }
+
   // DB 저장용
   @Override
   public String cateListConverterIn(String cateItem) throws Exception{
@@ -641,5 +672,17 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     }
 
     return editCheckText;
+  }
+
+  // novel_adult 변환 함수
+  @Override
+  public String getAdultYn(String info) throws Exception {
+    String novelAdult = "N";
+
+    if (info.contains("true")){
+      novelAdult = "Y";
+    }
+
+    return novelAdult;
   }
 }
