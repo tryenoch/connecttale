@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
+import novel from "../Novel";
 
 function NovelDetailReview(props) {
   const [novelInfo, setNovelInfo] = useState(props.novelDetail);
   const [novelReplyList, setNovelReplyList] = useState([]);
   
-  const [replyContent, setRepleyContent] = useState('');
+  const [replyContent, setReplyContent] = useState('');
   const [spoCheck, setSpoCheck] = useState(false);
+  // const [replyLikeCnt, setReplyLikeCnt] = useState(0);
   
-  const [id, setId] = useState(sessionStorage.getItem("id"));
+  const [loginId, setLoginId] = useState(sessionStorage.getItem("id")? sessionStorage.getItem("id") : 'noUser');
   
   
   useEffect(() => {
@@ -16,18 +18,19 @@ function NovelDetailReview(props) {
     if (novelInfo.novelReplyList) {
       setNovelReplyList(novelInfo.novelReplyList);
     }
-    
+
   }, [props.novelDetail])
   
-  const replyInputChange = e => setRepleyContent(e.target.value);
+  const replyInputChange = e => setReplyContent(e.target.value);
   const spoCheckClick = e => setSpoCheck(e.target.checked)
+  
   
   // 리뷰(댓글) 등록 버튼 클릭
   const replySubmit = () => {
     axios.post('/novelDetailReview',null, {
       params : {
         novelIdx : novelInfo.novelIdx.novelIdx,
-        id : id,
+        id : loginId,
         replyContent : replyContent,
         spoCheck : spoCheck
       }
@@ -49,6 +52,28 @@ function NovelDetailReview(props) {
         console.log(err.message);
       })
   }
+  
+  // const replyLikeClick = (item) => {
+  //   axios.put('/novelDetailReplyLike', null, {
+  //     params: {
+  //       id: loginId,
+  //       replyIdx: item.replyIdx
+  //     }
+  //   })
+  //     .then(res => {
+  //       // console.log(res);
+  //       axios.get('/novelDetail', {
+  //         params : {
+  //           title: novelInfo.novelIdx.novelTitle,
+  //           ebookCheck: novelInfo.novelIdx.ebookCheck,
+  //           ageGrade: novelInfo.novelIdx.novelAdult
+  //         }
+  //       })
+  //         .then(res2 => {
+  //           setNovelInfo(res2.data);
+  //         })
+  //     })
+  // }
   
   
   return (
@@ -72,7 +97,7 @@ function NovelDetailReview(props) {
       {/* 리뷰(댓글) 리스트 구간*/}
       {
         novelReplyList.map((item, index) => (
-          item.spoilerYn == 'N' &&
+          item.spoilerYn == 'N' ?
           (
             <div key={index} className={'row my-4 d-flex align-items-center border-bottom'}>
               <div className={'col-sm-3'}>
@@ -83,11 +108,12 @@ function NovelDetailReview(props) {
                 <p>{item.replyContent}</p>
               </div>
               <div className={'col-sm-3 d-flex justify-content-end'}>
-                <button className={'btn btn-outline-purple'}>좋아요({item.likeCnt})</button>
+                <button type={'button'} className={'btn btn-outline-purple'}>좋아요()</button>
                 <button className={'btn btn-outline-danger'}>신고</button>
               </div>
             </div>
           )
+            : null
         ))
       }
     </div>

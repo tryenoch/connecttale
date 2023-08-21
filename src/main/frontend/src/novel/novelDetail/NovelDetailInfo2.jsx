@@ -142,7 +142,7 @@ function NovelDetailInfo(props) {
               </div>
               <div className={'col-sm-3'}>
                 <button type={'button'} className={'btn-outline-purple ms-2'} onClick={likeClickHandler}>
-                  <i className="bi bi-heart btn-novel-like" ></i>
+                  <i className="bi bi-heart detail-heart" ></i>
                   <span>{novelLikeCount}</span>
                 </button>
               </div>
