@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.openqa.selenium.devtools.Reply;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class NovelReplyEntity {
   @Id
   @Column(name = "reply_idx")
@@ -33,18 +35,32 @@ public class NovelReplyEntity {
 
   @JsonIgnore
   @ManyToOne
-  @JoinColumn(name = "create_id", nullable = false)
+  @JoinColumn(name = "id", nullable = false)
   @ToString.Exclude
-  private MemberEntity createId;
+  private MemberEntity id;
 
   @Column(nullable = false)
   private LocalDateTime createDt = LocalDateTime.now();
 
-  @Column(nullable = false)
-  @ColumnDefault("N")
+  @Column(nullable = false,  columnDefinition = "CHAR(1) DEFAULT 'N'")
   private String deletedYn;
 
-  @Column(nullable = false)
-  @ColumnDefault("N")
+  @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
   private String spoilerYn;
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "replyIdx", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  private List<ReplyLikeEntity> replyLikeList = new ArrayList<>();
+
+  @Builder NovelReplyEntity(int replyIdx, NovelEntity novelIdx, String replyContent, MemberEntity id, LocalDateTime createDt, String deletedYn, String spoilerYn) {
+    this.replyIdx = replyIdx;
+    this.novelIdx = novelIdx;
+    this.replyContent = replyContent;
+    this.id = id;
+    this.createDt = createDt;
+    this.deletedYn = deletedYn;
+    this.spoilerYn = spoilerYn;
+  }
+
 }

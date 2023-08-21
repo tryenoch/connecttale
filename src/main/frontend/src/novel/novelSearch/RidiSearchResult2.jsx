@@ -3,6 +3,7 @@ import axios from "axios";
 import {Link, useNavigate} from "react-router-dom";
 
 import {fetchData} from "../../common/NovelDetailFetch2";
+import {titleEdit} from "../../common/TitleEdit";
 
 function RidiSearchResult2(props) {
   const [novelSearchList, setNovelSearchList] = useState([]);
@@ -32,7 +33,7 @@ function RidiSearchResult2(props) {
               const data = {
                 platform: 3,
                 platformId: item[i].b_id,
-                title: item[i].title,
+                title: titleEdit(item[i].title),
                 thumbnail: "https://img.ridicdn.net/cover/"+ item[i].b_id +"/xxlarge",
                 author: item[i].authors_info.map(auth => {
                   return auth.name;
@@ -81,7 +82,7 @@ function RidiSearchResult2(props) {
   
   const handleLinkClick = async (item) => {
     try {
-      const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck);
+      const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck, item.ageGrade);
       navi(`/novelDetail/${item.title}`, {
         state: {
           novelDetail: novelDetail,
@@ -132,7 +133,7 @@ function RidiSearchResult2(props) {
                         <p>
                           &nbsp;<span className={'fw-bold'}>{item.completeYn}
                           {
-                            item.ebookCheck == 'e북'
+                            item.ebookCheck == '단행본'
                               ? <span>&nbsp;(총{item.count}권)</span>
                               : <span>&nbsp;(총{item.count}화)</span>
                           }
