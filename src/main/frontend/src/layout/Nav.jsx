@@ -19,7 +19,7 @@ function Nav(props) {
             <span>CONNECTTALE</span>
             {/*<span>TALE</span>*/}
           </Link>
-          <Link to={'/novelRank'} className={'menu me-3'}>순위</Link>
+          <Link to={'/novel/novelRank'} className={'menu me-3'}>순위</Link>
           <Link to={'/novelCate'} className={'menu me-1'}>카테고리</Link>
           {/* novel search form */}
           <NovelSearchForm />
