@@ -1,6 +1,6 @@
 package com.bitc.full505_final_team4.service;
 
-import com.bitc.full505_final_team4.data.dto.NovelReplyLikeInterface;
+import com.bitc.full505_final_team4.data.dto.ReplyLikeInterface;
 import com.bitc.full505_final_team4.data.entity.*;
 import com.bitc.full505_final_team4.data.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +33,9 @@ public class NovelDetailServiceImpl implements NovelDetailService {
   private final NovelReplyRepository novelReplyRepository;
   private final ReplyLikeRepository replyLikeRepository;
 
-
-
+  // 셀레니움 사용을 위한 크롬드라이버 설정
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
-
 
 
   // 매개변수인 title, ebookCheck, novelAdult로 platform 테이블에서 가져오기
@@ -49,8 +47,6 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
     return novelDetail;
   }
-
-
 
 
   // 네이버 디테일 페이지 정보 크롤링
@@ -1227,24 +1223,30 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     }
   }
 
-  // replyIdx를 통해 replyLike 테이블 데이터 리스트 가져오기
-//  @Override
-//  public List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity) {
-//    List<ReplyLikeEntity> replyLikeEntityList = new ArrayList<>();
-//
-//    // novelReplyEntity(replyIdx)를 통해 모든 replyLike 테이블 정보 얻어오기
-//    Optional<List<ReplyLikeEntity>> replyLikeOptList = replyLikeRepository.findAllByReplyIdx(novelReplyEntity);
-//
-//    if (replyLikeOptList.isPresent()) {
-//      for (ReplyLikeEntity replyLikeEntity : replyLikeOptList.get()) {
-//        replyLikeEntityList.add(replyLikeEntity);
-//      }
-//    }
-//
-//    return replyLikeEntityList;
-//  }
+  // novelReplyEntity(replyIdx)를 통해 replyLikeEntity 리스트 가져오기
+  @Override
+  public List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity) {
+    List<ReplyLikeEntity> replyLikeEntityList = new ArrayList<>();
 
+    // novelReplyEntity(replyIdx)를 통해 모든 replyLike 테이블 정보 얻어오기
+    Optional<List<ReplyLikeEntity>> replyLikeOptList = replyLikeRepository.findAllByReplyIdx(novelReplyEntity);
 
+    if (replyLikeOptList.isPresent()) {
+      for (ReplyLikeEntity replyLikeEntity : replyLikeOptList.get()) {
+        replyLikeEntityList.add(replyLikeEntity);
+      }
+    }
+
+    return replyLikeEntityList;
+  }
+
+  // novelReplyEntity(replyIdx)를 통해 좋아요가 'Y'인 개수가 출력되는 엔티티 가져오기
+  @Override
+  public List<ReplyLikeInterface> getReplyLikeCount() {
+    List<ReplyLikeInterface> replyLikeInterfaceList = replyLikeRepository.findReplyLikeCount();
+
+    return replyLikeInterfaceList;
+  }
 }
 
 

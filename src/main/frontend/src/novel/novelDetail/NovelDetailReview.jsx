@@ -8,16 +8,16 @@ function NovelDetailReview(props) {
   const [ebookCheck, setEbookCheck] = useState(props.novelDetail.novelIdx.ebookCheck);
   const [novelAdult, setNovelAdult] = useState(props.novelDetail.novelIdx.novelAdult);
   
-  // 렌더링에 사용되는 state 들
+  // 렌더링에 사용되는 state
   const [novelInfo, setNovelInfo] = useState(props.novelDetail);
   // const [novelReplyList, setNovelReplyList] = useState(novelInfo.novelReplyList);
   
-  // input에 값변화 state
+  // input에 입력값 state
   const [replyContent, setReplyContent] = useState('');
   const [spoCheck, setSpoCheck] = useState(false);
   // const [replyLikeCnt, setReplyLikeCnt] = useState(0);
   
-  // 세션id값 받아오기, 세션 정보 없으면 noUser가 됨
+  // 세션id값 받아오기, 세션 정보 없으면 noUser가 됨 -> 서버에서 memberEntity 못찾게끔
   const [loginId, setLoginId] = useState(sessionStorage.getItem("id")? sessionStorage.getItem("id") : 'noUser');
   
   
@@ -69,6 +69,7 @@ function NovelDetailReview(props) {
       })
   }
   
+  // 리뷰(댓글)에 좋아요 클릭 이벤트
   const replyLikeClick = (item, index) => {
     console.log(item.replyIdx);
     console.log(index);
@@ -82,9 +83,9 @@ function NovelDetailReview(props) {
         // console.log(res);
         axios.get('/novelDetail', {
           params : {
-            title: novelInfo.novelIdx.novelTitle,
-            ebookCheck: novelInfo.novelIdx.ebookCheck,
-            ageGrade: novelInfo.novelIdx.novelAdult
+            title: title,
+            ebookCheck: ebookCheck,
+            ageGrade: novelAdult
           }
         })
           .then(res2 => {
@@ -126,7 +127,11 @@ function NovelDetailReview(props) {
                 <p>{item.replyContent}</p>
               </div>
               <div className={'col-sm-3 d-flex justify-content-end'}>
-                <button type={'button'} key={index} onClick={() => replyLikeClick(item, index)} className={'btn btn-outline-purple fs-6'} >좋아요()</button>
+                <button type={'button'} key={index} onClick={() => replyLikeClick(item, index)} className={'btn btn-outline-purple fs-6'} >좋아요({
+                  novelInfo.replyLikeCountList.map((item2, index2) => {
+                    item.replyIdx == item2.replyIdx.replyIdx ? <span key={index2}>item2.likeCnt</span> : <span key={index2}>0</span>
+                  })
+                })</button>
                 <button className={'btn btn-outline-danger fs-6'}>신고</button>
               </div>
             </div>
