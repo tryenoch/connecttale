@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {fetchData} from "../../common/NovelDetailFetch2";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import {titleEdit} from "../../common/TitleEdit";
 
 function KakaoSearchResult2(props) {
   const [novelSearchList, setNovelSearchList] = useState([]);
@@ -33,7 +34,7 @@ function KakaoSearchResult2(props) {
                 const data = {
                   platform: 1,
                   platformId: item.seriesId,
-                  title: item.metaInfo.ogTitle.includes('[') ? item.metaInfo.ogTitle.substring(0, item.metaInfo.ogTitle.indexOf('[')) : item.metaInfo.ogTitle,
+                  title: titleEdit(item.metaInfo.ogTitle),
                   thumbnail: item.metaInfo.image,
                   author: item.metaInfo.author,
                   description: item.metaInfo.description,
@@ -62,7 +63,7 @@ function KakaoSearchResult2(props) {
   const handleLinkClick = async (item) => {
     console.log(item);
     try {
-      const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck);
+      const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck, item.ageGrade);
       navi(`/novelDetail/${item.title}`, {
         state: {
           novelDetail: novelDetail,
@@ -87,11 +88,7 @@ function KakaoSearchResult2(props) {
                 
                 <div className={'row my-4 border-top border-bottom py-2 d-flex align-items-center'} >
                   <div className={'col-sm-2'}>
-                    {
-                      item.ageGrade == 'N'
-                        ? <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
-                        : <img src="/onlyAdult.png" alt="" className={'w-100 h-100'}/>
-                    }
+                    <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
                   </div>
                   <div className={'col-sm-10'}>
                     <div className={'ms-2'}>

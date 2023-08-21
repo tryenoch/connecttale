@@ -14,44 +14,11 @@ function NovelDetailInfo(props) {
   const [novelLikeCount, setNovelLikeCount] = useState(0);
   
   const [id, setId] = useState(sessionStorage.getItem('id'));
+  
   // console.log(kakao);
   // console.log(naver);
   // console.log(ridi);
   // console.log(baseItem);
-  
-  // 좋아요 버튼 클릭이벤트
-  const likeClickHandler = () => {
-    axios.put('/novelDetailLike', null, {
-      params: {
-        novelIdx : baseItem.novelKeyDto.novelIdx,
-        novelTitle: baseItem.novelTitle,
-        ebookCheck: baseItem.ebookCheck,
-        id: id
-      }
-    })
-      .then((res) => {
-        console.log(res);
-        // console.log(res);
-        axios.get("/novelDetail", {
-          params: {
-            title: baseItem.novelTitle,
-            ebookCheck: baseItem.ebookCheck
-          }
-        })
-          .then(res2 => {
-            console.log(res2);
-            setNovelLikeList(res2.data.novelLikeList);
-            setNovelLikeCount(res2.data.novelLikeCount);
-          })
-          .catch(err => {
-            console.log(err.message)
-          })
-
-      })
-      .catch(err => {
-        console.log(err.message);
-      })
-  }
   
   useEffect(() => {
     setNovelInfo(props.novelDetail);
@@ -105,6 +72,41 @@ function NovelDetailInfo(props) {
   }, [props.novelDetail]);
   
   
+  
+  // 좋아요 버튼 클릭이벤트
+  const likeClickHandler = () => {
+    // 좋아요 버튼 눌렀을때 db에 like_yn값을 'Y'/'N'으로 변경하는 axios 통신
+    axios.put('/novelDetailLike', null, {
+      params: {
+        novelIdx : baseItem.novelKeyDto.novelIdx,
+        id: id
+      }
+    })
+      .then((res) => {
+        
+        // console.log(res);
+        // db의 작품 정보(제목, 저자, 별점 등)와 함께 좋아요 관련 정보를 받아오기 위한 axios통신
+        axios.get("/novelDetail", {
+          params: {
+            title: baseItem.novelTitle,
+            ebookCheck: baseItem.ebookCheck,
+            ageGrade: baseItem.novelAdult
+          }
+        })
+          .then(res2 => {
+            console.log(res2);
+            setNovelLikeList(res2.data.novelLikeList);
+            setNovelLikeCount(res2.data.novelLikeCount);
+          })
+          .catch(err => {
+            console.log(err.message)
+          })
+
+      })
+      .catch(err => {
+        console.log(err.message);
+      })
+  }
   
   return (
     <div>
@@ -237,17 +239,6 @@ function NovelDetailInfo(props) {
       <div className={'my-4'}>
         <p className={'fs-4 ms-2'}>INTRO</p>
         <p className={'novel-intro'}>{baseItem.novelIntro}</p>
-        {
-          novelLikeList.map((item, index) => {
-            return (
-              <div key={index}>
-                <p>{item.id.id}</p>
-                <p>{item.novelIdx.novelIdx}</p>
-                <p>{item.likeYn}</p>
-              </div>
-            )
-          })
-        }
       </div>
       <hr/>
     </div>

@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+
 /* 임시 수정 1 */
 @Service
 @RequiredArgsConstructor
@@ -53,6 +55,7 @@ public class NovelNaverServiceImpl implements NovelNaverService{
       String title = dto.getNovelTitle();
       String platformId = dto.getPlatformId();
       String ebookCheck = dto.getEbookCheck(); // 단행본 웹소설 여부
+      String updateDate = dto.getNovelUpdateDate(); // 네이버 플랫폼 해당 작품 출시일
 
       try {
         // novel table 에 일치하는 제목이 있는지 확인, 없을 경우 exception 반환
@@ -73,7 +76,7 @@ public class NovelNaverServiceImpl implements NovelNaverService{
           }
 
           // novel 과 platform 테이블 둘 다 데이터가 있으므로 다음 번호로 넘어간다.
-          // 업데이트 된 경우에 대해서 나중에 추가 로직 필요
+          // 정보가 업데이트 된 경우에 대해서 추후 추가 로직 필요
           i++;
 
         }
@@ -89,6 +92,7 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
         // platform entity 생성
         NovelPlatformEntity novelPlatformEntity = getNovelPlatformEntityFromJsoup(novelEntity, platformId);
+        novelPlatformEntity.setNovelUpdateDate(updateDate); // 출시일 정보 더하기
 
         // list 에 더하기
         novelPlatformEntityList.add(novelPlatformEntity);
@@ -106,6 +110,7 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
         // platform entity 생성
         NovelPlatformEntity novelPlatformEntity = getNovelPlatformEntityFromJsoup(novelEntity, platformId);
+        novelPlatformEntity.setNovelUpdateDate(updateDate); // 출시일 정보 더하기
 
         // list 에 더하기
         novelPlatformEntityList.add(novelPlatformEntity);
@@ -119,6 +124,8 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
       platformMainRepository.saveAll(novelPlatformEntityList);
       result = true;
+
+      TimeUnit.SECONDS.sleep(2); // 2초 후 아래 메세지 출력
       System.out.println("SUCCESS MESSAGE : 네이버 신작 목록이 업데이트 되었습니다.");
     } catch (Exception e){
 
@@ -175,10 +182,16 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
 
           // 플랫폼 전용 아이디 들고오기
-
           String platformId = infoA.attr("href");
           platformId = editNaverPlatformId(platformId);
           novel.setPlatformId(platformId);
+
+          // 추가된 날짜 들고오기
+          String  dateInfo = recentNovel.select(".info").text();
+          dateInfo = getUpdateDateInList(dateInfo);
+
+          novel.setNovelUpdateDate(dateInfo);
+
 
           if(dtoListNotAdult.add(novel)){
             i++;
@@ -198,6 +211,25 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
 
     return dtoListNotAdult;
+  }
+
+  @Override
+  public String getUpdateDateInList(String dateInfo) throws Exception {
+    /*
+    * 예시 : 평점 10.0 | 필리포스 | 2023.08.17. | 25화 무료
+    * 결과 : 2023.08.17
+    * */
+    String editDate = "";
+
+    if(dateInfo.contains("|")){
+      int idx1 = dateInfo.indexOf("|");
+      int idx2 = dateInfo.indexOf("|", idx1 +1);
+      // lastIndex를 하니 변수가 생겨 수정
+
+      editDate = dateInfo.substring(idx2 + 2, idx2 + 13);
+    }
+
+    return editDate;
   }
 
   // jsoup 으로 novel 에 맞는 정보 들고온 후 entity save 및 리턴

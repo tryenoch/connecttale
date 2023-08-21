@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface NovelRepository extends JpaRepository<NovelEntity, Integer> {
 
-  NovelEntity findByNovelTitleAndEbookCheck(String title, String ebookCheck);
+  NovelEntity findByNovelTitleAndEbookCheckAndNovelAdult(String title, String ebookCheck, String novelAdult);
 
 
 }
