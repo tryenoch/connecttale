@@ -14,6 +14,9 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
 
     Page<BoardEntity> findByBoardCate_IdxOrderByBoardIdxDesc(int idx, Pageable pageable);
 
+    // myQna 구현
+    Page<BoardEntity> findByCreateId_IdAndBoardCate_IdxOrderByBoardIdxDesc(String id, int idx, Pageable pageable);
+
     BoardEntity findByBoardIdx(int idx);
 
     List<BoardEntity> findByBoardCate_IdxAndBoardTitleContainsOrderByBoardIdxDesc(int idx, String title);

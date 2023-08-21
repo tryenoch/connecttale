@@ -1,5 +1,5 @@
 import React from 'react';
-import '../static/css/style.css'
+import '../../static/css/style.css'
 import JoinLogoTop1 from "./JoinLogoTop1";
 import {Link, Route, Routes} from "react-router-dom";
 import Join2 from "./Join2";
@@ -20,11 +20,11 @@ function Join1(props) {
             </div>
             <Link to={'/join/join2'}>
                 <div className={'row justify-content-center mt-5'}>
-                    <button className={'btn btn-pupple block m-3'}>
+                    <button className={'btn btn-outline-purple block m-3'}>
                         14세 이상<br/>
                         <i className="bi bi-person fs-button"></i>
                     </button>
-                    <button className={'btn btn-light-pupple block m-3'}>
+                    <button className={'btn btn-light-purple block m-3'}>
                         14세 미만 <br/>
                         <i className="bi bi-people fs-button"></i>
                     </button>

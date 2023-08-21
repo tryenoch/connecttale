@@ -3,9 +3,12 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.common.JsonUtils;
 import com.bitc.full505_final_team4.common.WebDriverUtil;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
+import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.dto.NovelRankDto;
+import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.data.entity.NovelRankEntity;
 import com.bitc.full505_final_team4.data.repository.NovelRankRepository;
+import com.bitc.full505_final_team4.data.repository.PlatformMainRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -21,6 +24,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.propertyeditors.CurrencyEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -32,12 +38,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class NovelMainServiceImpl implements NovelMainService{
 
   private final NovelRankRepository novelRankRepository;
+  private final PlatformMainRepository platformMainRepository;
 
   // 확인용 데이터 불러오기
   @Override
@@ -455,6 +463,21 @@ public class NovelMainServiceImpl implements NovelMainService{
     }
 
     return novel;
+  }
+
+  // 최신 리스트 itemCount 수만큼 들고오기
+  @Override
+  public List<NovelPlatformDto> getRecentNovelList(int itemCount) throws Exception{
+
+    Pageable pageable = PageRequest.of(0, itemCount);
+
+    List<NovelPlatformEntity> entityList = platformMainRepository.findNovelPlatformEntitiesByOrderByNovelReleaseDesc(pageable);
+
+    // entity 리스트를 dto 리스트로 변환
+    List<NovelPlatformDto> list = entityList.stream().map(m -> new NovelPlatformDto().toDto(m)).collect(Collectors.toList());
+
+
+    return list;
   }
 
 

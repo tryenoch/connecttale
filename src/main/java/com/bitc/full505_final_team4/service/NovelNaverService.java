@@ -3,6 +3,7 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
+import org.jsoup.nodes.Element;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,9 @@ public interface NovelNaverService {
 
   // jsoup 으로 최신 소설 list 들고오기 페이지당 25개 (소설 제목, 플랫폼 전용 아이디)
   List<NovelMainDto> getNaverRecentNovelList(int pageNum) throws Exception;
+
+  // 리스트 에서 각 li 의 날짜 정보 들고오기
+  String getUpdateDateInList(String element) throws Exception;
 
   // jsoup 으로 novel 에 맞는 정보 들고온 후 entity save 및 리턴
   NovelEntity getNovelEntityFromJsoup(String platformId) throws Exception;
@@ -40,4 +44,6 @@ public interface NovelNaverService {
   int getNovelPrice(String priceNum) throws Exception;
 
   String getReleaseDate(String dateInfo) throws Exception;
+
+  String cateListConverterIn(String cateItem) throws Exception;
 }

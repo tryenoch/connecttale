@@ -1,18 +1,27 @@
 package com.bitc.full505_final_team4.controller;
 
 import com.bitc.full505_final_team4.common.JsonUtils;
+import com.bitc.full505_final_team4.common.WebDriverUtil;
+import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
+import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.data.repository.PlatformMainRepository;
-import com.bitc.full505_final_team4.service.NovelMainService;
-import com.bitc.full505_final_team4.service.NovelNaverService;
-import com.bitc.full505_final_team4.service.NovelRidiService;
+import com.bitc.full505_final_team4.service.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +29,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 @RequiredArgsConstructor
@@ -32,6 +44,8 @@ public class NovelMainController {
   private final NovelMainService novelMainService;
   private final NovelRidiService novelRidiService;
   private final NovelNaverService novelNaverService;
+  private final NovelKakaoService novelKakaoService;
+  private final NovelCommonEditService novelCommonEditService;
 
   // jpa 테스트용
   @GetMapping("/testJpa1")
@@ -137,7 +151,24 @@ public class NovelMainController {
     return result;
   }
 
-  /**************** 최신 소설 들고오기 ****************/
+  // 최신 소설 목록 들고오기
+  @GetMapping("/recentNovelList")
+  public Object getRecentNovelList(@RequestParam("itemCount") String itemCount) throws Exception {
+    Map<String, Object> result = new HashMap<>();
+
+    List<NovelPlatformDto> recentNovelList = novelMainService.getRecentNovelList(Integer.parseInt(itemCount));
+
+    if (!ObjectUtils.isEmpty(recentNovelList)){
+      result.put("list", recentNovelList);
+      result.put("result", "success");
+    } else {
+      result.put("result", "Backend Error");
+    }
+
+    return result;
+  }
+
+  /**************** 최신 소설 업데이트 버튼 ****************/
 
   // 리디 최신 소설 업데이트
   @GetMapping("/ridiRecentNovelUpdate")
@@ -154,8 +185,8 @@ public class NovelMainController {
     return result;
   }
 
-  // 테스트용으로 잠깐 씀
-  private final PlatformMainRepository platformMainRepository;
+  // 네이버 최신 소설 업데이트
+//  private final PlatformMainRepository platformMainRepository;
 
   @GetMapping("/naverRecentNovelUpdate")
   public Object naverRecentNovelUpdate(@RequestParam("pageNum") String pageNum) throws Exception{
@@ -163,26 +194,105 @@ public class NovelMainController {
     Map<String, Object> result = new HashMap<>();
 
     int page = Integer.parseInt(pageNum);
-//    boolean b1 = novelNaverService.storeNaverRecentNovel(page);
-//    if (b1){
-//      result.put("result", "success");
-//    } else {
-//      result.put("result", "fail");
-//    }
-
-    try {
-      NovelEntity entity = novelNaverService.getNovelEntityFromJsoup("460599");
-
-
-      NovelPlatformEntity platformEntity = novelNaverService.getNovelPlatformEntityFromJsoup(entity, "460599");
-      platformMainRepository.save(platformEntity);
-
-    } catch (Exception e){
-      e.printStackTrace();
+    boolean b1 = novelNaverService.storeNaverRecentNovel(page);
+    if (b1){
+      result.put("result", "success");
+    } else {
+      result.put("result", "fail");
     }
 
 
     return result;
+  }
+
+  // 카카오 최신 소설 업데이트
+//  private final PlatformMainRepository platformMainRepository;
+
+  @GetMapping("/kakaoRecentNovelUpdate")
+  public Object kakaoRecentNovelUpdate() throws Exception{
+
+    Map<String, Object> result = new HashMap<>();
+    boolean resultB = false;
+
+    String url = "https://page.kakao.com/menu/10011/screen/84?sort_opt=latest";
+
+    try {
+
+      boolean resultInfo = novelKakaoService.storeKakaoRecentNovel();
+
+      System.out.println(resultInfo);
+
+      System.out.println("[SUCCESS] 테스트가 완료되었습니다. ");
+      resultB = true;
+
+    } catch (Exception e){
+      System.out.println("[ERROR] 테스트 중 오류가 발생했습니다 " + e.getMessage());
+    }
+
+    result.put("result", resultB);
+
+    return result;
+
+  }
+
+  // 테스트
+  @GetMapping("/getTest1")
+  public Object getTest1() throws Exception{
+    Map<String, Object> result = new HashMap<>();
+// 성공
+//    String url = "https://page.kakao.com/menu/10011/screen/84?sort_opt=latest";
+// 실패
+    String url1 = "https://page.kakao.com/search/result?keyword=%EC%9D%B4%20%EA%B2%B0%ED%98%BC%EC%9D%80%20%EC%96%B4%EC%B0%A8%ED%94%BC&categoryUid=11";
+    String url2 = "https://page.kakao.com/content/53725396";
+
+    /* 셀레니움 시도 */
+    WebDriver driver = WebDriverUtil.getChromeDriver();
+    try {
+      driver.get(url1);
+      driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+
+      String  element1 = driver.findElement(By.cssSelector("div.jsx-1469927737.jsx-1458499084.jsx-2778911690.w-320pxr")).getText();
+
+      System.out.println(element1);
+
+      driver.get(url2);
+      driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+
+      String  element2 = driver.findElement(By.cssSelector("div.jsx-1469927737.jsx-1458499084.jsx-2778911690.w-320pxr")).getText();
+
+      System.out.println(element2);
+
+
+      System.out.println("RESULT : Selenium 크롤링 테스트가 완료되었습니다.");
+    }catch (Exception e){
+      System.out.println("RESULT : Selenium 크롤링 중 오류가 발생 했습니다.");
+      e.printStackTrace();
+    } finally {
+      driver.quit();
+    }
+
+    return result;
+  }
+
+  @GetMapping("/getTest2")
+  public Object getTest2() throws Exception {
+
+
+    try {
+
+      ArrayList<HashMap> list = novelKakaoService.getKakaoRecentNovelList();
+
+      for (HashMap<String, Object> item :list){
+        System.out.println(item);
+      }
+
+
+    }catch (Exception e){
+      System.out.println("RESULT : 크롤링 시도 중 오류가 발생 했습니다.");
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
 }
