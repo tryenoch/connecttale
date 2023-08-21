@@ -33,7 +33,7 @@ public interface NovelDetailService {
 
   List<NovelLikeEntity> getNovelLike(NovelEntity novelIdx);
 
-  List<NovelReplyLikeInterface> getNovelReply(NovelEntity novelIdx);
+  List<NovelReplyEntity> getNovelReply(NovelEntity novelIdx);
 
   void insertNovelReview(int novelIdx, String id, String replyContent, String spoilerYn);
 
