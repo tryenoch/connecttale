@@ -140,7 +140,7 @@ public class NovelMainController {
   public Object getKakaoRankList(@RequestParam("urlId") String urlId) throws Exception {
     Map<String, Object> result = new HashMap<>();
 
-    List<NovelMainDto> kakaoNovelList = novelMainService.getKakaoList(urlId);
+    List<NovelMainDto> kakaoNovelList = novelKakaoService.getKakaoList(urlId);
     if (!ObjectUtils.isEmpty(kakaoNovelList)){
       result.put("kakaoNovelList", kakaoNovelList);
       result.put("result", "success");
@@ -151,7 +151,7 @@ public class NovelMainController {
     return result;
   }
 
-  // 최신 소설 목록 들고오기
+  // db 에서 최신 소설 목록 들고오기
   @GetMapping("/recentNovelList")
   public Object getRecentNovelList(@RequestParam("itemCount") String itemCount) throws Exception {
     Map<String, Object> result = new HashMap<>();
@@ -186,7 +186,6 @@ public class NovelMainController {
   }
 
   // 네이버 최신 소설 업데이트
-//  private final PlatformMainRepository platformMainRepository;
 
   @GetMapping("/naverRecentNovelUpdate")
   public Object naverRecentNovelUpdate(@RequestParam("pageNum") String pageNum) throws Exception{
@@ -206,8 +205,6 @@ public class NovelMainController {
   }
 
   // 카카오 최신 소설 업데이트
-//  private final PlatformMainRepository platformMainRepository;
-
   @GetMapping("/kakaoRecentNovelUpdate")
   public Object kakaoRecentNovelUpdate() throws Exception{
 
@@ -280,12 +277,11 @@ public class NovelMainController {
 
     try {
 
-      ArrayList<HashMap> list = novelKakaoService.getKakaoRecentNovelList();
+      List<NovelMainDto> list = novelKakaoService.getKakaoList("94");
 
-      for (HashMap<String, Object> item :list){
+      for(NovelMainDto item : list){
         System.out.println(item);
       }
-
 
     }catch (Exception e){
       System.out.println("RESULT : 크롤링 시도 중 오류가 발생 했습니다.");

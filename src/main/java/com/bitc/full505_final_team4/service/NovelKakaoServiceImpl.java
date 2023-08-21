@@ -3,6 +3,7 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.common.JsonUtils;
 import com.bitc.full505_final_team4.common.WebDriverUtil;
 import com.bitc.full505_final_team4.data.dto.NovelDto;
+import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
@@ -20,7 +21,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.util.ObjectUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +33,65 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
   private final NovelCommonEditService novelCommonEditService;
   private final NovelMainRepository novelMainRepository;
   private final NovelPlatformRepository novelPlatformRepository;
+
+  // 카카오 순위 리스트 불러오기 (jsoup) 사용
+  @Override
+  public List<NovelMainDto> getKakaoList(String urlId) throws Exception{
+    List<NovelMainDto> list = new ArrayList<>();
+
+    String url = "https://page.kakao.com/menu/10011/screen/" + urlId;
+
+    Document doc = Jsoup.connect(url).get();
+
+    try {
+      List<Element> rankList = doc.select("div.mb-4pxr.flex-col > div > div.flex.grow.flex-col > div > div > div").select("a");
+
+      if(!ObjectUtils.isEmpty(rankList)){
+        for (Element element : rankList){
+
+          // 따온 정보를 dto에 저장
+          NovelMainDto novel = new NovelMainDto();
+
+          novel.setPlatform("kakao");
+          novel.setNovelIndexNum(rankList.indexOf(element) + 1);
+
+          // a 태그에서 id 값 잘라오기
+          String id = element.attr("href");
+          id = getPlatformId(id);
+          novel.setPlatformId(id);
+
+          // 제목
+          String title = element.select(".text-el-60.line-clamp-2").text();
+          title = novelCommonEditService.editTitleForNovelEntity(title);
+          novel.setNovelTitle(title);
+
+          // 썸네일
+          String thumbnail = "";
+
+          thumbnail = element.select(".select-none.object-cover").attr("src");
+          thumbnail = thumbnail.substring(0, thumbnail.length() -1);
+
+          boolean adultsOnly = false;
+
+          if (ObjectUtils.isEmpty(element.select(".select-none.object-cover"))){
+            adultsOnly = true;
+          }
+
+          novel.setNovelThumbnail(thumbnail);
+          novel.setAdultsOnly(adultsOnly);
+
+          list.add(novel);
+        }
+      }
+
+    } catch (Exception e){
+      System.out.println("[ERROR] 카카오 랭크 리스트 크롤링 중 오류가 발생하였습니다.");
+      e.printStackTrace();
+    }
+
+
+    return list;
+  }
 
   @Override
   @Transactional
