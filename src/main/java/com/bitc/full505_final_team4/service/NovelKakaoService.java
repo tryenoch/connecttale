@@ -1,16 +1,21 @@
 package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.data.dto.NovelDto;
+import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public interface NovelKakaoService {
+
+  // 카카오 순위 리스트 불러오기 (jsoup) 사용
+  List<NovelMainDto> getKakaoList(String urlId) throws Exception;
   boolean storeKakaoRankList() throws Exception;
 
   boolean storeKakaoRecentNovel() throws Exception;
@@ -22,7 +27,7 @@ public interface NovelKakaoService {
   * 19세 또는 15세 작품 catch 문으로 이동 (추후 구현)
   * db 에 저장되지 않은 작품이면 NovelDto 생성 및 Entity 변환
   * */
-  HashMap<String, NovelEntity> getKakaoRecentNovelList() throws Exception;
+  ArrayList<HashMap> getKakaoRecentNovelList() throws Exception;
 
   // jsoup 에서 전달해준 Elements 로 NovelDto 만들기 및 Entity 저장
   NovelEntity getNovelEntity(Element novelInfo) throws Exception;
@@ -43,8 +48,16 @@ public interface NovelKakaoService {
 
   String getAgeInfo(String info) throws Exception;
 
+  String getAgeInfoFromJson(String info) throws Exception;
+
   // 웹소설인지 단행본인지 체크
   String getEbookCheck(String title) throws Exception;
+
+  // 가격 정보 얻어오기
+  int getPriceInfo (String retailPrice) throws Exception;
+
+  // 총 화수 구하기
+  int getNovelCount (String info) throws Exception;
 
   // 연재중(연재요일) 또는 완결 여부
   String getCompleteNovel(String novelUpdateInfo) throws Exception;
