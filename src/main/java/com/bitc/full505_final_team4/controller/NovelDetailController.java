@@ -276,7 +276,7 @@ public class NovelDetailController {
 
 // -------------------------------- 리뷰 작성 클릭 ------------------------------------
   @RequestMapping(value = "/novelDetailReview", method = RequestMethod.POST)
-  public String updateDetailReview(@RequestParam("novelIdx") int novelIdx, @RequestParam("id") String id, @RequestParam("replyContent") String replyContent, @RequestParam("spoCheck") boolean spoCheck) throws Exception {
+  public void updateDetailReview(@RequestParam("novelIdx") int novelIdx, @RequestParam("id") String id, @RequestParam("replyContent") String replyContent, @RequestParam("spoCheck") boolean spoCheck) throws Exception {
     String spoilerYn = "";
 
     // true/false로 넘어온 값을 Y/N 형식으로 바꿔주기
@@ -289,11 +289,10 @@ public class NovelDetailController {
 
     try {
       novelDetailService.insertNovelReview(novelIdx, id, replyContent, spoilerYn);
-      return "댓글 등록 성공";
+
     }
     catch (Exception e) {
       e.printStackTrace();
-      return "댓글 등록 실패";
     }
   }
 
