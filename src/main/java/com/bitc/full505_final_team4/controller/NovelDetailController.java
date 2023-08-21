@@ -108,7 +108,7 @@ public class NovelDetailController {
       replyLikeCountList.add(replyLikeInterface);
     }
     novelDetail.put("novelReplyList", novelReplyList);
-    novelDetail.put("replyLikeList", replyLikeList);
+//    novelDetail.put("replyLikeList", replyLikeList);
     novelDetail.put("replyLikeCountList", replyLikeCountList);
 
 
