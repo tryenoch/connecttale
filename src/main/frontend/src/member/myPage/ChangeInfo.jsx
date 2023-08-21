@@ -202,7 +202,7 @@ function ChangeInfo(props) {
                                 }}
                                         className={'btn btn-secondary ms-3'}>취소
                                 </button>
-                                <button type={'button'} onClick={eventClickOK}
+                                <button type={'button'} onClick={() => {eventClickOK(); reload();}}
                                         className={'btn btn-purple ms-5'}>수정
                                 </button>
                             </div>
