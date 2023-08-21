@@ -1,13 +1,7 @@
 package com.bitc.full505_final_team4.controller;
 
-import com.bitc.full505_final_team4.data.dto.BoardDTO;
-import com.bitc.full505_final_team4.data.dto.MemberDto;
-import com.bitc.full505_final_team4.data.dto.NovelDto;
-import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
-import com.bitc.full505_final_team4.data.entity.BoardEntity;
-import com.bitc.full505_final_team4.data.entity.MemberEntity;
-import com.bitc.full505_final_team4.data.entity.NovelEntity;
-import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
+import com.bitc.full505_final_team4.data.dto.*;
+import com.bitc.full505_final_team4.data.entity.*;
 import com.bitc.full505_final_team4.service.BoardService;
 import com.bitc.full505_final_team4.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -203,6 +197,15 @@ public class MemberController {
 
     memberService.deleteMember(id);
     result.put("result", "해당 회원님의 계정이 정지되었습니다.");
+
+    return result;
+  }
+
+  @RequestMapping(value = "/myPage/myComment", method = RequestMethod.GET)
+  // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
+  public Object myComment(Pageable pageable, @RequestParam String id) throws Exception {
+
+    Object result = memberService.getReplyList(pageable, id);
 
     return result;
   }

@@ -2,11 +2,14 @@ package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
+import com.bitc.full505_final_team4.data.dto.NovelReplyDto;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
+import com.bitc.full505_final_team4.data.entity.NovelReplyEntity;
 import com.bitc.full505_final_team4.data.repository.MemberRepository;
 import com.bitc.full505_final_team4.data.repository.NovelLikeRepository;
+import com.bitc.full505_final_team4.data.repository.NovelReplyRepository;
 import com.bitc.full505_final_team4.data.repository.NovelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
 
   private final MemberRepository memberRepository;
   private final NovelLikeRepository novelLikeRepository;
-  private final NovelRepository novelRepository;
+  private final NovelReplyRepository novelReplyRepository;
 
   @Override
   public MemberEntity login(String id, String pw) throws Exception {
@@ -99,6 +103,31 @@ public class MemberServiceImpl implements MemberService {
   }
 
   @Override
+  public Object getReplyList(Pageable pageable, String id) {
+    Map<String, Object> result = new HashMap<>();
+
+    List<NovelEntity> novel = new ArrayList<>();
+    List<NovelReplyDto> replyList = new ArrayList<>();
+    MemberEntity replyId = memberRepository.findAllById(id);
+    Page<NovelReplyEntity> replyPage = novelReplyRepository.findById(replyId, pageable);
+
+    int totalPages = replyPage.getTotalPages();
+
+    for (NovelReplyEntity reply : replyPage.getContent()) {
+      NovelReplyDto req = NovelReplyDto.toDto(reply);
+      replyList.add(req);
+      novel.add(req.getNovelIdx());
+    }
+
+    result.put("replyLost", replyList);
+    result.put("novel", novel);
+    result.put("totalPages", totalPages);
+    result.put("nowPage", pageable.getPageNumber() + 1);
+    return result;
+
+  }
+
+  @Override
   public void levelUp(String id) throws Exception {
     MemberEntity member = memberRepository.findAllById(id);
     member.setGrade(2);
@@ -111,4 +140,5 @@ public class MemberServiceImpl implements MemberService {
     member.setDeletedYn("Y");
     memberRepository.save(member);
   }
+
 }
