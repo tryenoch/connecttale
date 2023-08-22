@@ -47,75 +47,74 @@ public class NovelDetailController {
           novelDetail.put("ridi", ridiPlatformDto);
         }
       }
-    }
 
-    // 여기부터는 좋아요, 리뷰, 신고 관련 프론트로 전달할 내용
+      // 여기부터는 좋아요, 리뷰, 신고 관련 프론트로 전달할 내용
 
-    // -------------------좋아요------------------
-    // 1. title, ebookCheck, ageGrade를 통해 novelIdx 얻기
-    NovelEntity novelIdx = novelDetailService.getNovelIdx(title, ebookCheck, novelAdult);
+      // -------------------좋아요------------------
+      // 1. title, ebookCheck, ageGrade를 통해 novelIdx 얻기
+      NovelEntity novelIdx = novelDetailService.getNovelIdx(title, ebookCheck, novelAdult);
 
-    // 2. novel_idx에 대한 좋아요 수 데이터 가져오기
-    int novelLikeCount = novelDetailService.getNovelLikeCount(novelIdx);
+      // 2. novel_idx에 대한 좋아요 수 데이터 가져오기
+      int novelLikeCount = novelDetailService.getNovelLikeCount(novelIdx);
 
-    // 3. novel_idx에 대한 좋아요 테이블 데이터 가져오기
-    List<NovelLikeEntity> novelLikeEntityList = novelDetailService.getNovelLike(novelIdx);
+      // 3. novel_idx에 대한 좋아요 테이블 데이터 가져오기
+      List<NovelLikeEntity> novelLikeEntityList = novelDetailService.getNovelLike(novelIdx);
 
-    // NovelLikeEntity 객체를 프론트로 전달하기 위해 DTO 타입으로 변경
-    List<NovelLikeDto> novelLikeList = new ArrayList<>();
+      // NovelLikeEntity 객체를 프론트로 전달하기 위해 DTO 타입으로 변경
+      List<NovelLikeDto> novelLikeList = new ArrayList<>();
 
-    if (!novelLikeEntityList.isEmpty()) {
-      for (NovelLikeEntity novelLikeEntity : novelLikeEntityList) {
-        NovelLikeDto novelLikeDto = NovelLikeDto.toDto(novelLikeEntity);
-        novelLikeList.add(novelLikeDto);
+      if (!novelLikeEntityList.isEmpty()) {
+        for (NovelLikeEntity novelLikeEntity : novelLikeEntityList) {
+          NovelLikeDto novelLikeDto = NovelLikeDto.toDto(novelLikeEntity);
+          novelLikeList.add(novelLikeDto);
 
-
-      }
-    }
-
-    novelDetail.put("novelIdx", novelIdx);
-    novelDetail.put("novelLikeCount", novelLikeCount);
-    novelDetail.put("novelLikeList", novelLikeList);
-
-
-    // --------------------------------- 리뷰 관련 정보 가져오기 ----------------------------------
-    List<NovelReplyDto> novelReplyList = new ArrayList<>();
-    List<ReplyLikeDto> replyLikeList = new ArrayList<>();
-    // COUNT 함수가 사용된 ENTITY를 가져오기 위해 필요한 인터페이스 객체 생성
-
-
-    // novelIdx를 통해 novel_reply 테이블 데이터 가져오기
-    List<NovelReplyEntity> novelReplyEntityList = novelDetailService.getNovelReply(novelIdx);
-    for (NovelReplyEntity novelReplyEntity : novelReplyEntityList) {
-      NovelReplyDto novelReplyDto = NovelReplyDto.toDto(novelReplyEntity);
-      novelReplyList.add(novelReplyDto);
-
-      // novelIdx를 통해 찾은 reply_like 테이블의 reply_idx를 이용해서 like_yn='Y'인 개수 구하기
-      // 1. replyIdx에 해당하는 replyLike 엔티티 가져오기
-      List<ReplyLikeEntity> replyLikeEntityList = novelDetailService.getReplyLikeList(novelReplyEntity);
-      for (ReplyLikeEntity replyLikeEntity : replyLikeEntityList) {
-        ReplyLikeDto replyLikeDto = ReplyLikeDto.toDto(replyLikeEntity);
-        replyLikeList.add(replyLikeDto);
+        }
       }
 
-    }
+      novelDetail.put("novelIdx", novelIdx);
+      novelDetail.put("novelLikeCount", novelLikeCount);
+      novelDetail.put("novelLikeList", novelLikeList);
+
+
+      // --------------------------------- 리뷰 관련 정보 가져오기 ----------------------------------
+      List<NovelReplyDto> novelReplyList = new ArrayList<>();
+      List<ReplyLikeDto> replyLikeList = new ArrayList<>();
+      // COUNT 함수가 사용된 ENTITY를 가져오기 위해 필요한 인터페이스 객체 생성
+
+
+      // novelIdx를 통해 novel_reply 테이블 데이터 가져오기
+      List<NovelReplyEntity> novelReplyEntityList = novelDetailService.getNovelReply(novelIdx);
+      for (NovelReplyEntity novelReplyEntity : novelReplyEntityList) {
+        NovelReplyDto novelReplyDto = NovelReplyDto.toDto(novelReplyEntity);
+        novelReplyList.add(novelReplyDto);
+
+        // novelIdx를 통해 찾은 reply_like 테이블의 reply_idx를 이용해서 like_yn='Y'인 개수 구하기
+        // 1. replyIdx에 해당하는 replyLike 엔티티 가져오기
+        List<ReplyLikeEntity> replyLikeEntityList = novelDetailService.getReplyLikeList(novelReplyEntity);
+        for (ReplyLikeEntity replyLikeEntity : replyLikeEntityList) {
+          ReplyLikeDto replyLikeDto = ReplyLikeDto.toDto(replyLikeEntity);
+          replyLikeList.add(replyLikeDto);
+        }
+
+      }
 //
-    // 2. reply 해당하는 좋아요 'Y'인 개수가 나오는 entity 가져오기
-    List<ReplyLikeInterface> replyLikeCountList = new ArrayList<>();
-    List<ReplyLikeInterface> replyLikeInterfaceList = novelDetailService.getReplyLikeCount();
+      // 2. reply 해당하는 좋아요 'Y'인 개수가 나오는 entity 가져오기
+      List<ReplyLikeInterface> replyLikeCountList = new ArrayList<>();
+      List<ReplyLikeInterface> replyLikeInterfaceList = novelDetailService.getReplyLikeCount();
 
-    for (ReplyLikeInterface replyLikeInterface : replyLikeInterfaceList) {
-      replyLikeCountList.add(replyLikeInterface);
-    }
-    novelDetail.put("novelReplyList", novelReplyList);
+      for (ReplyLikeInterface replyLikeInterface : replyLikeInterfaceList) {
+        replyLikeCountList.add(replyLikeInterface);
+      }
+      novelDetail.put("novelReplyList", novelReplyList);
 //    novelDetail.put("replyLikeList", replyLikeList);
-    novelDetail.put("replyLikeCountList", replyLikeCountList);
+      novelDetail.put("replyLikeCountList", replyLikeCountList);
 
 
-    // -------------------신고------------------
-
-
-    return novelDetail;
+      return novelDetail;
+    }
+    else {
+      return null;
+    }
 
   }
 
@@ -124,14 +123,15 @@ public class NovelDetailController {
   // 리디북스 디테일 페이지 정보 db 저장
 
   @RequestMapping(value = "/novelDetail", method = RequestMethod.POST)
-  public void insertNovelDetail(@RequestParam("title") String title, @RequestParam("ne") String ne, @RequestParam("ageGrade") String novelAdult ,NovelPlatformEntity ridiPlatformEntity) throws Exception {
+  public void insertNovelDetail(@RequestParam("title") String title, @RequestParam("ne") String ne, @RequestParam("ageGrade") String novelAdult) throws Exception {
 //
 //    System.out.println(title);
 //    System.out.println(id);
 //    System.out.println(ne);
-//    System.out.println(ridiPlatformEntity);
 
     NovelEntity novelEntity = new NovelEntity();
+    // 리디북스 디테일 정보 Json 타입으로 받아와서 platform entity에 저장
+    NovelPlatformEntity ridiPlatformEntity = novelDetailService.getRidiCrolling(title, ne, novelAdult); // 크롤링은 아니지만 이름 통일을 위해
     // 네이버 디테일페이지 정보 가져와서 platform entity에 저장
     NovelPlatformEntity naverPlatformEntity = novelDetailService.getNaverCrolling(title, ne, novelAdult);
     // 카카오 디테일페이지 정보 가져와서 platform entity에 저장
