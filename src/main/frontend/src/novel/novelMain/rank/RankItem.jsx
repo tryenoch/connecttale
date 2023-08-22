@@ -50,8 +50,8 @@ function RankItem(props) {
               </div>
             // 세션 여부와 상관 없이 성인 작품이 아닐 경우
             : <div className={"rank-item-img"}>
-              <img src={thumbnail} alt=""/>
-            </div>
+                <img src={thumbnail} alt=""/>
+              </div>
           }
         </div>
       </div>

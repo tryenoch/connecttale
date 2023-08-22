@@ -118,3 +118,83 @@ p {
   letter-spacing: -0.05em;
   font-weight: bold;
 }
+
+/* total list */
+
+.platform-list {
+  border : 1px dotted #9b71ff;
+}
+.sub-rank-title {
+  font-weight: 800;
+  color : #8244ff;
+  font-size: 1.5em;
+  padding: 0.5rem 0.8rem;
+}
+
+.total-list {
+  background-color: #fff;
+  border-radius: 5px;
+  /*border : 1px solid #d7c7ff;*/
+}
+
+.total-list + .total-list::before {
+  content: "";
+  display: block;
+  border-top: 1px solid #ddd;
+  width: 95%;
+  margin: auto auto 0.5rem auto;
+}
+
+.total-item {
+  height: 7rem;
+  vertical-align: middle;
+}
+
+.total-item:hover {
+  cursor: pointer;
+  background-color: #e8e0ff;
+  transition: all 0.5s ease;
+  border-radius: 8px;
+}
+
+.total-num {
+  font-family: 'GmarketSans';
+  font-weight: 800;
+  margin-bottom: 0;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #544f5b;
+  text-align: center;
+}
+
+.total-img {
+  height: 6em;
+  width: 100%;
+  position: relative;
+}
+
+.total-img .adult-img{
+  font-size: 1.0em;
+  right: 1.0rem;
+  top : 0.3em;
+}
+
+.total-img img{
+  height: 100%;
+  margin-left: 0.2em;
+  border-radius: 5px;
+  object-fit: cover;
+  background-color: #ddd; /* 이미지 없을 경우 */
+}
+
+.total-item .info {
+  margin-left: 0.1em;
+  padding-right: 1em;
+}
+
+.total-item .info h5 {
+  font-weight: 800;
+  font-size: 1.1em;
+  letter-spacing: -0.05em;
+  margin-bottom: 0.1em;
+}
