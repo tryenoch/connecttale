@@ -53,6 +53,11 @@ public class NovelReplyEntity {
   @ToString.Exclude
   private List<ReplyLikeEntity> replyLikeList = new ArrayList<>();
 
+  @JsonIgnore
+  @OneToMany(mappedBy = "replyIdx", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  private List<ReportEntity> reportList = new ArrayList<>();
+
   @Builder NovelReplyEntity(int replyIdx, NovelEntity novelIdx, String replyContent, MemberEntity id, LocalDateTime createDt, String deletedYn, String spoilerYn) {
     this.replyIdx = replyIdx;
     this.novelIdx = novelIdx;
