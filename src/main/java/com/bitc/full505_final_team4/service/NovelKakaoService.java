@@ -1,6 +1,7 @@
 package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.data.dto.NovelDto;
+import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import org.jsoup.nodes.Element;
@@ -12,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface NovelKakaoService {
+
+  // 카카오 순위 리스트 불러오기 (jsoup) 사용
+  List<NovelMainDto> getKakaoList(String urlId) throws Exception;
   boolean storeKakaoRankList() throws Exception;
 
   boolean storeKakaoRecentNovel() throws Exception;

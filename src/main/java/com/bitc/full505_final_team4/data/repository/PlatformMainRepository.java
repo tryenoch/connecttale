@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import org.springframework.data.domain.Pageable;
+import java.util.List;
 import java.util.Optional;
 
 // service main 패키지와 연동되는 repository
@@ -20,4 +22,9 @@ public interface PlatformMainRepository extends JpaRepository<NovelPlatformEntit
   NovelPlatformEntity queryFindByNovel(@Param("platform") int platform, @Param("novelIdx") int novelIdx, @Param("novelOrEbook") String novelOrEbook);*/
 
   Optional<NovelPlatformEntity> findByPlatformAndNovelIdx_NovelIdx(int platform, int novelIdx);
+
+  /*@Query(
+    "SELECT p FROM NovelPlatformEntity AS p ORDER BY p.novelRelease"
+  )*/
+  List<NovelPlatformEntity> findNovelPlatformEntitiesByOrderByNovelReleaseDesc(Pageable pageable);
 }

@@ -5,6 +5,7 @@ import NovelTest from "./NovelTest";
 import NovelMain from "./NovelMain";
 import NovelMainTest from "./novelMain/NovelMainTest";
 import NovelMainRank from "./novelMain/rank/NovelMainRank";
+import TotalRankList from "./novelMain/rank/TotalRankList";
 
 function novel(props) {
 
@@ -16,7 +17,7 @@ function novel(props) {
             <Route path={"/novelMain"} element={<NovelMain />}/>
             <Route path={"/novelTest"} element={<NovelTest />}/>
             <Route path={"/novelMainTest"} element={<NovelMainTest />}/>
-            <Route path={"/novelRank/*"} element={<NovelMainRank />} />
+            <Route path={"/novelRank/*"} element={<TotalRankList />} />
           </Routes>
         </div>
     )

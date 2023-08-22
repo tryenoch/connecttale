@@ -4,6 +4,7 @@ import com.bitc.full505_final_team4.common.JsonUtils;
 import com.bitc.full505_final_team4.common.WebDriverUtil;
 import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
+import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.data.repository.PlatformMainRepository;
@@ -139,7 +140,7 @@ public class NovelMainController {
   public Object getKakaoRankList(@RequestParam("urlId") String urlId) throws Exception {
     Map<String, Object> result = new HashMap<>();
 
-    List<NovelMainDto> kakaoNovelList = novelMainService.getKakaoList(urlId);
+    List<NovelMainDto> kakaoNovelList = novelKakaoService.getKakaoList(urlId);
     if (!ObjectUtils.isEmpty(kakaoNovelList)){
       result.put("kakaoNovelList", kakaoNovelList);
       result.put("result", "success");
@@ -150,7 +151,24 @@ public class NovelMainController {
     return result;
   }
 
-  /**************** 최신 소설 들고오기 ****************/
+  // db 에서 최신 소설 목록 들고오기
+  @GetMapping("/recentNovelList")
+  public Object getRecentNovelList(@RequestParam("itemCount") String itemCount) throws Exception {
+    Map<String, Object> result = new HashMap<>();
+
+    List<NovelPlatformDto> recentNovelList = novelMainService.getRecentNovelList(Integer.parseInt(itemCount));
+
+    if (!ObjectUtils.isEmpty(recentNovelList)){
+      result.put("list", recentNovelList);
+      result.put("result", "success");
+    } else {
+      result.put("result", "Backend Error");
+    }
+
+    return result;
+  }
+
+  /**************** 최신 소설 업데이트 버튼 ****************/
 
   // 리디 최신 소설 업데이트
   @GetMapping("/ridiRecentNovelUpdate")
@@ -168,7 +186,6 @@ public class NovelMainController {
   }
 
   // 네이버 최신 소설 업데이트
-//  private final PlatformMainRepository platformMainRepository;
 
   @GetMapping("/naverRecentNovelUpdate")
   public Object naverRecentNovelUpdate(@RequestParam("pageNum") String pageNum) throws Exception{
@@ -188,8 +205,6 @@ public class NovelMainController {
   }
 
   // 카카오 최신 소설 업데이트
-//  private final PlatformMainRepository platformMainRepository;
-
   @GetMapping("/kakaoRecentNovelUpdate")
   public Object kakaoRecentNovelUpdate() throws Exception{
 
@@ -259,19 +274,14 @@ public class NovelMainController {
   @GetMapping("/getTest2")
   public Object getTest2() throws Exception {
 
-    String urlString = "https://page.kakao.com/graphql";
 
     try {
 
-      URL url = new URL(urlString);
+      List<NovelMainDto> list = novelKakaoService.getKakaoList("94");
 
-      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      connection.setRequestMethod("POST");
-      connection.setRequestProperty("Content-Type", "application/json");
-
-      Connection conn = Jsoup.connect(urlString);
-      Document html = conn.post();
-
+      for(NovelMainDto item : list){
+        System.out.println(item);
+      }
 
     }catch (Exception e){
       System.out.println("RESULT : 크롤링 시도 중 오류가 발생 했습니다.");

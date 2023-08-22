@@ -61,9 +61,15 @@ public class MemberEntity {
   private List<NovelLikeEntity> memberList = new ArrayList<>();
 
   @JsonIgnore
-  @OneToMany(mappedBy = "createId", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
   @ToString.Exclude
-  private List<NovelReplyEntity> createId = new ArrayList<>();
+  private List<NovelReplyEntity> replyMemberList = new ArrayList<>();
+
+  @JsonIgnore
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  private List<NovelReplyEntity> replyLikeList = new ArrayList<>();
+
 
   @Builder
   public MemberEntity(String id, String pw, String name, String nickname, int gender, String birthday, String oFile, String sFile, int grade, String deletedYn) {

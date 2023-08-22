@@ -11,6 +11,7 @@ p {
   padding: 0;
 }
 
+
 .main-title {
   letter-spacing: -0.05em;
   font-size: 1.5rem;
@@ -94,6 +95,26 @@ p {
   font-weight: 500;
 }
 
-.rank-info .item-star::before {
+.rank-info .item-star::before { }
 
+.more-link {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #888;
+}
+
+.more-link:hover {
+  color: #7b3cfa;
+}
+
+/* 공용 메세지 */
+
+.empty-box {
+  background-color: #ddd;
+  border-radius: 5px;
+}
+
+.empty-list {
+  letter-spacing: -0.05em;
+  font-weight: bold;
 }

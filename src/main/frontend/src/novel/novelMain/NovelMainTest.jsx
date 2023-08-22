@@ -31,7 +31,7 @@ function NovelMainTest() {
 
   const getTest = () => {
     //alert('테스트 메세지입니다.');
-    axios.get(`/novel/getTest1`)
+    axios.get(`/novel/getTest2`)
       .then(res => {
         // MessageUtils.infoMessage("비동기 통신에 성공했습니다.");
         console.log(res.data.result);
