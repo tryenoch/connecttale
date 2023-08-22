@@ -145,6 +145,7 @@ function NovelDetailReview(props) {
                       ))
                     }
                   </button>
+                  {/*리뷰(댓글) 신고 부분*/}
                   <NovelDetailReport replyIdx={item.replyIdx} suspect={item.id.id} replyContent={item.replyContent}/>
                 </div>
               </div>

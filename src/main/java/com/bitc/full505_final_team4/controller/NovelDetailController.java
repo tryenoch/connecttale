@@ -321,12 +321,27 @@ public class NovelDetailController {
     try {
       novelDetailService.updateReviewLike(id, replyIdx);
 
-
       return "댓글 좋아요 성공";
     }
     catch (Exception e) {
       e.printStackTrace();
       return "댓글 좋아요 실패";
+    }
+  }
+
+  // ----------------------------- 리뷰(댓글) 신고 ----------------------------------
+  @RequestMapping(value = "/novelDetailReport", method = RequestMethod.POST)
+  public String insertReplyReport(@RequestParam("replyIdx") int replyIdx, @RequestParam("reportContent") String reportContent, @RequestParam("reporter") String reporter, @RequestParam("suspect") String suspect) throws Exception {
+    String reportCheck = novelDetailService.insertReplyReport(replyIdx, reportContent, reporter, suspect);
+
+    if (reportCheck == "success") {
+      return "댓글 신고 완료";
+    }
+    else if (reportCheck == "exist") {
+      return "이미 신고한 댓글입니다.";
+    }
+    else {
+      return "댓글 신고 중 오류가 발생했습니다.";
     }
   }
 
