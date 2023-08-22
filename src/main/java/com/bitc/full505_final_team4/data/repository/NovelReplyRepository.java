@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.data.repository;
 
+import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelReplyEntity;
 import org.springframework.data.domain.Page;

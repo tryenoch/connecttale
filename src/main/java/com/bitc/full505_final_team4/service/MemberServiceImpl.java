@@ -2,23 +2,18 @@ package com.bitc.full505_final_team4.service;
 
 import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
-import com.bitc.full505_final_team4.data.dto.NovelReplyDto;
+import com.bitc.full505_final_team4.data.dto.NovelReplyDto2;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
-import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
 import com.bitc.full505_final_team4.data.entity.NovelReplyEntity;
 import com.bitc.full505_final_team4.data.repository.MemberRepository;
 import com.bitc.full505_final_team4.data.repository.NovelLikeRepository;
 import com.bitc.full505_final_team4.data.repository.NovelReplyRepository;
-import com.bitc.full505_final_team4.data.repository.NovelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,21 +101,18 @@ public class MemberServiceImpl implements MemberService {
   public Object getReplyList(Pageable pageable, String id) {
     Map<String, Object> result = new HashMap<>();
 
-    List<NovelEntity> novel = new ArrayList<>();
-    List<NovelReplyDto> replyList = new ArrayList<>();
+    List<NovelReplyDto2> replyList = new ArrayList<>();
     MemberEntity replyId = memberRepository.findAllById(id);
     Page<NovelReplyEntity> replyPage = novelReplyRepository.findById(replyId, pageable);
 
     int totalPages = replyPage.getTotalPages();
 
     for (NovelReplyEntity reply : replyPage.getContent()) {
-      NovelReplyDto req = NovelReplyDto.toDto(reply);
+      NovelReplyDto2 req = NovelReplyDto2.toDto(reply);
       replyList.add(req);
-      novel.add(req.getNovelIdx());
     }
 
-    result.put("replyLost", replyList);
-    result.put("novel", novel);
+    result.put("replyList", replyList);
     result.put("totalPages", totalPages);
     result.put("nowPage", pageable.getPageNumber() + 1);
     return result;

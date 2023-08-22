@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import {fetchData} from "../../common/NovelDetailFetch2";
 function MyContent(props) {
     const [keyword, setKeyword] = useState('');
     // 카테고리 변경 시 페이지 번호가 0으로 초기화 x
@@ -9,8 +10,7 @@ function MyContent(props) {
     const [endPage, setEndPage] = useState(0);
     const [pages, setPages] = useState([1]);
     const [replyList, setReplyList] = useState([{}]);
-    const [novel, setNovel] = useState([{}]);
-
+    const navi = useNavigate();
 
     useEffect(() => {
         setNowPage(props.defaultPage);
@@ -38,45 +38,42 @@ function MyContent(props) {
                 setPages(arr);
                 setEndPage(res.data.totalPages);
                 setReplyList(res.data.replyList);
-                setNovel(res.data.novel);
+                console.log(res.data.replyList);
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);
             })
     }
 
-    const handleSubmit = (event) => {
-        alert(`검색어 : ${keyword}`);
-        event.preventDefault();
-    }
+    const handleLinkClick = async (novel) => {
+        console.log(novel);
+        try {
+            const novelDetail = await fetchData(novel.novelThumbnail, novel.novelTitle, novel.ebookCheck, novel.novelIdx, novel.novelAdult);
+            navi(`/novelDetail/${novel.novelTitle}`, {
+                state: {
+                    novelDetail: novelDetail,
+                }
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
 
     return (
         <Row>
             <Col xs={10} className={'my-5 mx-auto'}>
                 <Row className={'border-3 border-black border-bottom py-2'}>
                     <Col className={'ps-0'}><h3 className={'fw-bold'}>MyQnA</h3></Col>
-                    <Col className={'pe-0'}>
-                        <Row>
-                            <Col xs={8} className={'search-bar'}>
-                                <input
-                                    type={'text'}
-                                    value={keyword}
-                                    placeholder={'검색어를 입력하세요'}
-                                    onChange={(e) => setKeyword(e.target.value)}
-                                />
-                                <button type={'submit'}><i className="bi bi-search"></i></button>
-                            </Col>
-                        </Row>
-                    </Col>
                 </Row>
                 <Row>
                     <table className={'text-center table'}>
                         <colgroup>
-                            <col width={'10%'}/>
-                            <col width={'20%'}/>
+                            <col width={'8%'}/>
+                            <col width={'30%'}/>
                             <col width={'40%'}/>
-                            <col width={'15%'}/>
-                            <col width={'15%'}/>
+                            <col width={'10%'}/>
+                            <col width={'12%'}/>
                         </colgroup>
                         <thead>
                         <tr>
@@ -89,18 +86,22 @@ function MyContent(props) {
                         </thead>
                         <tbody>
                         {
-                            replyList.map((board, index) => {
+                            replyList.map((reply, index) => {
+                                console.log(reply);
                                 return (
                                     <tr key={index}>
-                                        <td>{board.replyIdx}</td>
+                                        <td>{reply.replyIdx}</td>
                                         <td className={'text-start cursor'}>
-                                            <Link>
-                                                {board.novelIdx.novelTitle}
-                                            </Link>
+                                            <Link onClick={e => {
+                                                e.preventDefault();
+                                                handleLinkClick(reply);
+                                            }} to={`/novelDetail/${reply.novelTitle}`}>{reply.novelTitle}</Link>
                                         </td>
-                                        <td>{board.replyContent}</td>
-                                        <td>{board.id}</td>
-                                        <td>{board.createDt}</td>
+                                        <td>{reply.replyContent}</td>
+                                        <td>
+                                            {reply.id}
+                                        </td>
+                                        <td>{reply.createDt}</td>
                                     </tr>
                                 )
                             })
