@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Link, Route, Routes} from "react-router-dom";
 import MemberList from "./MemberList";
 import ReportList from "./ReportList";
+import RecentNovelInsert from "../../novel/novelMain/RecentNovelInsert";
 
 function StaffMain(props) {
     const [page, setPage] = useState('member');
@@ -9,7 +10,8 @@ function StaffMain(props) {
 
     const selectComponent = {
         member: <MemberList/>,
-        report: <ReportList/>
+        report: <ReportList/>,
+        button: <RecentNovelInsert/>
     };
     return (
         <div>
@@ -40,6 +42,15 @@ function StaffMain(props) {
                                     }}>
                                 <i className="bi bi-file-earmark-text fs-button"></i><br/>
                                 <p className={'fs-5'}>신고 목록</p>
+                            </button>
+                        </div>
+                        <div className={'col-sm d-grid justify-content-center'}>
+                            <button className={'btn btn-light-purple mini-block'}
+                                    onClick={() => {
+                                        setPage('button');
+                                    }}>
+                                <i className="bi bi-book fs-button"></i><br/>
+                                <p className={'fs-5'}>소설 정보 갱신</p>
                             </button>
                         </div>
                         <div className={'col-sm d-grid justify-content-center'}>
