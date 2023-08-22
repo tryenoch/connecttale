@@ -158,6 +158,23 @@ public class NovelMainController {
     return result;
   }
 
+  // 카테고리별로 소설 목록 들고오기
+  @GetMapping("/cateNovelList")
+  public Object getCateNovelList(@RequestParam("cate") String cate, @RequestParam(value = "page", defaultValue = "0") String page) throws Exception {
+    Map<String, Object> result = new HashMap<>();
+
+    List<NovelPlatformDto> cateNovelList = novelMainService.getCateNovelList(cate, page);
+
+    if (!ObjectUtils.isEmpty(cateNovelList)){
+      result.put("list", cateNovelList);
+      result.put("result", "success");
+    } else {
+      result.put("result", "Backend Error");
+    }
+
+    return result;
+  }
+
   /**************** 최신 소설 업데이트 버튼 ****************/
 
   // 리디 최신 소설 업데이트
