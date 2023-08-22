@@ -7,17 +7,11 @@ import * as MessageUtils from "../../../common/MessageUtils";
 function TotalList(props) {
  // 수정
   const platform = props.platform;
-  const [category, setCategory] = useState(props.category);
   const [rankList, setRankList] = useState([]);
 
   useEffect(() => {
     setTotalList(platform);
   }, []);
-
-  useEffect(() => {
-    setCategory(props.category);
-    getRidiList(category);
-  }, [props.category]);
 
 
   let list = rankList.filter(novel => novel.novelIndexNum < 21);
@@ -39,7 +33,6 @@ function TotalList(props) {
   function setTotalList(platform) {
     if(platform == "naver"){ getNaverList(0, 20); }
     else if(platform == "kakao") { getKakaoList(); }
-    else if(platform == "ridi") { getRidiList(); }
   }
 
   function getNaverList(startNum, endNum){
@@ -72,17 +65,6 @@ function TotalList(props) {
 
     }).catch(err => {
       MessageUtils.errorMessage("getKakaoList", err);
-    })
-  }
-
-  function getRidiList(category){
-    axios.get(`/novel/ridiRankList`, {
-      params : { category : category}
-    }).then(res => {
-      console.log(res.data.ridiNovelList);
-      setRankList(res.data.ridiNovelList);
-    }).catch(err => {
-      MessageUtils.errorMessage("getRidiList", err);
     })
   }
 

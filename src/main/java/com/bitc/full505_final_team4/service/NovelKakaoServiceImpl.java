@@ -119,29 +119,29 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
 
         String platformId = (String) novelInfo.get("platformId");
         NovelEntity novelEntity = (NovelEntity) novelInfo.get("novel");
-        NovelDto novelDto = NovelDto.toDto(novelEntity);
+//        NovelDto novelDto = NovelDto.toDto(novelEntity);
 
         // Json 으로 정보 얻어옴
-        NovelPlatformDto platformDto = getNovelPlatformDto(platformId, novelDto);
+        NovelPlatformEntity platformEntity = getNovelPlatformEntity(platformId, novelEntity);
         // Selenium 으로 추가 정보 얻어옴
         HashMap<String, Object> remainData = addRemainData(driver, platformId);
 
 
-        platformDto.setNovelCount((int) remainData.get("novelCount"));
-        platformDto.setNovelCompleteYn((String) remainData.get("novelCompleteYn"));
-        platformDto.setNovelStarRate((double) remainData.get("novelStarRate"));
-        platformDto.setNovelUpdateDate((String) remainData.get("novelUpdateDate"));
-        platformDto.setNovelRelease((String) remainData.get("novelReleaseDate"));
+        platformEntity.setNovelCount((int) remainData.get("novelCount"));
+        platformEntity.setNovelCompleteYn((String) remainData.get("novelCompleteYn"));
+        platformEntity.setNovelStarRate((double) remainData.get("novelStarRate"));
+        platformEntity.setNovelUpdateDate((String) remainData.get("novelUpdateDate"));
+        platformEntity.setNovelRelease((String) remainData.get("novelReleaseDate"));
 
 
-        NovelPlatformEntity novelPlatformEntity = platformDto.toEntity(platformDto);
+//        NovelPlatformEntity novelPlatformEntity = platformDto.toEntity(platformDto);
 
-        novelPlatformRepository.save(novelPlatformEntity);
-        platformNovelList.add(novelPlatformEntity);
+//        novelPlatformRepository.save(platformEntity);
+        platformNovelList.add(platformEntity);
 
       }
 
-//      novelPlatformRepository.saveAll(platformNovelList);
+      novelPlatformRepository.saveAll(platformNovelList);
       System.out.println("[SUCCESS] 카카오 최신 웹소설 리스트가 총 "+ platformNovelList.size() + "개 업데이트 되었습니다. (전체 연령가) ");
 
       success = true;
@@ -277,33 +277,33 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
   // 이후 selenium 함수로 얻어온 데이터를 더하여 dto 완성, driver 선언부 확인하기
   @Override
   @Transactional
-  public  NovelPlatformDto getNovelPlatformDto(String platformId, NovelDto novelDto) throws Exception {
+  public  NovelPlatformEntity getNovelPlatformEntity(String platformId, NovelEntity novelEntity) throws Exception {
 
     String url = "https://page.kakao.com/_next/data/2.12.2/ko/content/" + platformId +".json";
-    NovelPlatformDto dto = new NovelPlatformDto(); // 데이터 넣을 entity 생성
+    NovelPlatformEntity entity = new NovelPlatformEntity(); // 데이터 넣을 entity 생성
 
     try {
       JSONObject novelResult = (JSONObject) JsonUtils.jsonUrlParser(url).get("pageProps");
 
-      dto.setPlatform(1); // platform, 카카오로 1번 고정
-      dto.setPlatformId(platformId); // platform_id
-      dto.setNovelKeyDto(novelDto); // novel_idx
+      entity.setPlatform(1); // platform, 카카오로 1번 고정
+      entity.setPlatformId(platformId); // platform_id
+      entity.setNovelIdx(novelEntity); // novel_idx
 
       // novel 주요 정보
       JSONObject metaInfo = (JSONObject) novelResult.get("metaInfo");
       String ogTitle = metaInfo.get("ogTitle").toString();
-      dto.setEbookCheck(getEbookCheck(ogTitle)); // ebook_check
-      dto.setNovelTitle(novelDto.getNovelTitle()); // novel_title
+      entity.setEbookCheck(getEbookCheck(ogTitle)); // ebook_check
+      entity.setNovelTitle(novelEntity.getNovelTitle()); // novel_title
 
       String img = metaInfo.get("image").toString();
       img = img.substring(0, img.length() -1);
-      dto.setNovelThumbnail(img); // novel_thumbnail
+      entity.setNovelThumbnail(img); // novel_thumbnail
 
       String introDesc = metaInfo.get("description").toString();
-      dto.setNovelIntro(introDesc); // novel_intro
+      entity.setNovelIntro(introDesc); // novel_intro
 
       String author = metaInfo.get("author").toString(); // novel_author
-      dto.setNovelAuthor(author);
+      entity.setNovelAuthor(author);
 
       JSONObject dehydratedState = (JSONObject) novelResult.get("dehydratedState");
       ArrayList<JSONObject> queries = (ArrayList<JSONObject>) dehydratedState.get("queries");
@@ -313,26 +313,26 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
       JSONObject detail = (JSONObject) contentHomeAbout.get("detail");
 
       String publi = detail.get("publisherName").toString();
-      dto.setNovelPubli(publi); // novel_publi
+      entity.setNovelPubli(publi); // novel_publi
 
       String priceText = detail.get("retailPrice").toString();
       int price = getPriceInfo(priceText);
 
-      dto.setNovelPrice(price); // novel_price
+      entity.setNovelPrice(price); // novel_price
 
       String cate = detail.get("category").toString();
       cate = cateListConverterIn(cate);
-      dto.setCateList(cate); // cate_list
+      entity.setCateList(cate); // cate_list
 
       String ageGrade = detail.get("ageGrade").toString();
-      dto.setNovelAdult(getAgeInfoFromJson(ageGrade)); // novel_adult
+      entity.setNovelAdult(getAgeInfoFromJson(ageGrade)); // novel_adult
 
 
     } catch (Exception e){
       System.out.println("[ERROR] " + platformId + "JSON으로 데이터를 불러오는 중 오류가 발생했습니다.");
     }
 
-    return dto;
+    return entity;
   }
 
   // json 에서 얻어오지 못하는 데이터 Selenium 으로 얻어오기

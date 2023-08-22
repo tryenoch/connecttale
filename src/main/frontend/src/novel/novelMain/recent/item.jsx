@@ -1,10 +1,13 @@
 import React from 'react';
 import {CategoryConverter} from "../../../common/NovelInfoConverter";
+import {Link, useNavigate} from "react-router-dom";
+import {fetchData} from "../../../common/NovelDetailFetch2";
 
-function item(props) {
+function Item(props) {
+
+  const navi = useNavigate();
 
   const novel = props.novel; // 개별 소설 정보 객체
-
   const sessionAdult = sessionStorage.getItem("adult");
 
   const title = novel.novelTitle;
@@ -16,8 +19,26 @@ function item(props) {
 
   const novelKey = novel.novelKeyDto.novelIdx;
 
+  const handleLinkClick = async (novel) => {
+    try {
+      const novelDetail = await fetchData(novel.platformId, novel.novelTitle, novel.ebookCheck, novel.novelAdult);
+      navi(`/novelDetail/${novel.novelTitle}`, {
+        state: {
+          novelDetail: novelDetail,
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
-    <div>
+    <Link
+      onClick={(e) => {
+        e.preventDefault();
+        handleLinkClick(novel);
+      }} to={`/novelDetail/${novel.title}`}
+      >
       <div className={"text-center"}>
         {/* 세션 영역에 저장된 성인 여부가 Y다 그럼 다 보여줌 */}
         {/* 세션 영역에 저장된 성인 여부가 Y가 아니다, 그럼 안 보여줌*/}
@@ -65,8 +86,8 @@ function item(props) {
           }
         </p>
       </div>
-    </div>
+    </Link>
   )
 }
 
-export default item;
+export default Item;

@@ -1,7 +1,11 @@
 import React from 'react';
 import {Col, Row} from "react-bootstrap";
+import {Link, useNavigate} from "react-router-dom";
+import {fetchData} from "../../../common/NovelDetailFetch2";
 
 function TotalItem(props) {
+
+  const navi = useNavigate();
 
   const novel = props.novel;
   const sessionAdult = sessionStorage.getItem("adult"); // 세션 성인여부 정보
@@ -13,7 +17,27 @@ function TotalItem(props) {
   const thumbnail = novel.novelThumbnail;
   let adultsOnly = novel.adultsOnly;
 
+  let ageGrade = "N";
+  if(adultsOnly){ ageGrade = "Y"; }
+
+  const handleLinkClick = async (novel) => {
+    try {
+      const novelDetail = await fetchData(novel.platformId, novel.novelTitle, novel.ebookCheck, ageGrade);
+      navi(`/novelDetail/${novel.novelTitle}`, {
+        state: {
+          novelDetail: novelDetail,
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
+    <Link onClick={(e) => {
+      e.preventDefault();
+      handleLinkClick(novel);
+    }} to={`/novelDetail/${novel.title}`}>
     <Row className={'total-item align-items-center p-2 mt-1'}>
       <Col sm={1} className={''}>
         <h3 className={'total-num align-middle'}>
@@ -66,6 +90,7 @@ function TotalItem(props) {
         </div>
       </Col>
     </Row>
+    </Link>
   )
 }
 

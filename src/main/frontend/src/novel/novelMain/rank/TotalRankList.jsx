@@ -2,10 +2,9 @@ import React, {useState} from 'react';
 import {Col, Row} from "react-bootstrap";
 import TotalList from "./TotalList";
 import {Link} from "react-router-dom";
+import TotalRidiList from "./TotalRidiList";
 
 function TotalRankList(props) {
-
-  const [category, setCategory] = useState("1750");
 
   return (
     <div>
@@ -35,30 +34,7 @@ function TotalRankList(props) {
           <TotalList platform={"kakao"}/>
         </Col>
         <Col className={'ms-3'}>
-          <div className={'d-flex justify-content-between align-items-center'}>
-
-            <div className={'clearfix'}>
-              <h3 className={'float-start sub-rank-title'}>리디북스</h3>
-              <div className="float-start btn-group btn-group-sm pt-1" role="group">
-                <button type="button" className="btn btn-outline-purple btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                  카테고리
-                </button>
-                <ul className="dropdown-menu">
-                  <li><button className="dropdown-item btn-sm" onClick={(e) => {setCategory('1750')}}>판타지</button></li>
-                  <li><button className="dropdown-item btn-sm" onClick={(e) => {setCategory('1650')}}>로맨스</button></li>
-                  <li><button className="dropdown-item btn-sm" onClick={(e) => {setCategory('6050')}}>로판</button></li>
-                  <li><button className="dropdown-item btn-sm" onClick={(e) => {setCategory('4150')}}>BL</button></li>
-                </ul>
-              </div>
-            </div>
-
-            <Link to={'https://ridibooks.com/category/1750'} target={'_blank'}>
-              <span className={'me-2 more-link'}>더 보기
-                <i className="bi bi-arrow-right-circle-fill ms-1 pt-1"></i>
-              </span>
-            </Link>
-          </div>
-          <TotalList platform={"ridi"} category={category}/>
+          <TotalRidiList />
         </Col>
       </Row>
     </div>
