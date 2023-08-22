@@ -3,6 +3,7 @@
 .block {width: 200px; height: 200px;}
 .mini-block {width: 150px; height: 150px;}
 .fs-button {font-size: 50px;}
+.fs-button-heart {font-size: 80px;}
 .text-color-red {-webkit-text-fill-color: #ff2626}
 .text-color-blue {-webkit-text-fill-color: #262aff}
 

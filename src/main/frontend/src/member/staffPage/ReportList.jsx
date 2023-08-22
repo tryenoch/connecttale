@@ -19,28 +19,28 @@ function ReportList(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        // axios.get(`/staffPage/reportList?page=${nowPage}&size=10`)
-        //     .then(res => {
-        //
-        //         console.log(res.data);
-        //
-        //         let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
-        //         let arr = [];
-        //         let lastNum = offset + 5;
-        //         if (lastNum > Math.ceil(res.data.totalPages / 5)) {
-        //             lastNum = Math.ceil(res.data.totalPages / 5) + 1;
-        //         }
-        //         for (let i = offset; i <= lastNum; i++) {
-        //             arr.push(i);
-        //         }
-        //         setPages(arr);
-        //         setEndPage(res.data.totalPages);
-        //         setReportList(res.data.reportList);
-        //     })
-        //     .catch(err => {
-        //         alert(`통신에 실패했습니다. err : ${err}`);
-        //     })
-        alert('신고 구현 안됬습니다...');
+        axios.get(`/staffPage/reportList?page=${nowPage}&size=10`)
+            .then(res => {
+
+                console.log(res.data);
+
+                let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
+                let arr = [];
+                let lastNum = offset + 5;
+                if (lastNum > Math.ceil(res.data.totalPages / 5)) {
+                    lastNum = Math.ceil(res.data.totalPages / 5) + 1;
+                }
+                for (let i = offset; i <= lastNum; i++) {
+                    arr.push(i);
+                }
+                setPages(arr);
+                setEndPage(res.data.totalPages);
+                setReportList(res.data.reportList);
+            })
+            .catch(err => {
+                alert(`통신에 실패했습니다. err : ${err}`);
+            })
+        // alert('신고 구현 안됬습니다...');
     }
 
     const handleSubmit = (event) => {
@@ -58,23 +58,23 @@ function ReportList(props) {
                 <Row>
                     <table className={'text-center table'}>
                         <colgroup>
-                            <col width={'14.5%'}/>
-                            <col width={'14.5%'}/>
-                            <col width={'14%'}/>
-                            <col width={'14%'}/>
-                            <col width={'14%'}/>
-                            <col width={'14%'}/>
-                            <col width={'14%'}/>
+                            <col width={'7%'}/>
+                            <col width={'13%'}/>
+                            <col width={'25%'}/>
+                            <col width={'25%'}/>
+                            <col width={'10%'}/>
+                            <col width={'10%'}/>
+                            <col width={'10%'}/>
                         </colgroup>
                         <thead>
                         <tr>
-                            <th>아이디</th>
-                            <th>이름</th>
-                            <th>닉네임</th>
-                            <th>생일</th>
-                            <th>성별</th>
-                            <th>등급</th>
-                            <th>삭제</th>
+                            <th>신고번호</th>
+                            <th>소설제목</th>
+                            <th>신고된 댓글내용</th>
+                            <th>신고 내용</th>
+                            <th>신고자</th>
+                            <th>피의자</th>
+                            <th>신고시간</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -82,16 +82,13 @@ function ReportList(props) {
                             reportList.map((report, index) => {
                                 return (
                                     <tr key={index}>
-                                        <td>{report.id}</td>
-                                        <td>{report.name}</td>
-                                        <td>{report.nickname}</td>
-                                        <td>{report.birthday}</td>
-                                        <td>{report.gender}</td>
-                                        <td>
-                                            {report.grade}
-                                            <button>등업</button>
-                                        </td>
-                                        <td><button>삭제</button></td>
+                                        <td>{report.reportIdx}</td>
+                                        <td>{report.novelTitle}</td>
+                                        <td>{report.replyContent}</td>
+                                        <td>{report.reportContent}</td>
+                                        <td>{report.reporter}</td>
+                                        <td>{report.suspect}</td>
+                                        <td>{report.reportDt}</td>
                                     </tr>
                                 )
                             })
