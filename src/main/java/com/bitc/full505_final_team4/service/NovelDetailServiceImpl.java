@@ -129,9 +129,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // updateDate
               ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-              String updateDate = updateDates.get("title").toString();
-              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              if (!updateDateList.isEmpty()) {
+                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                String updateDate = updateDates.get("title").toString();
+                ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              }
 
               // cateList
               String cateItem = novelList.get(i).get("parent_category_name").toString();
@@ -211,9 +213,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // updateDate
               ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-              String updateDate = updateDates.get("title").toString();
-              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              if (!updateDateList.isEmpty()) {
+                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                String updateDate = updateDates.get("title").toString();
+                ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              }
 
               // cateList
               String cateItem = novelList.get(i).get("parent_category_name").toString();
@@ -293,9 +297,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // updateDate
               ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-              String updateDate = updateDates.get("title").toString();
-              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              if (!updateDateList.isEmpty()) {
+                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                String updateDate = updateDates.get("title").toString();
+                ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              }
 
               // cateList
               String cateItem = novelList.get(i).get("parent_category_name").toString();
@@ -375,9 +381,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // updateDate
               ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-              String updateDate = updateDates.get("title").toString();
-              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              if (!updateDateList.isEmpty()) {
+                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                String updateDate = updateDates.get("title").toString();
+                ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              }
 
               // cateList
               String cateItem = novelList.get(i).get("parent_category_name").toString();
