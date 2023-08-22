@@ -94,7 +94,7 @@ function RidiSearchResult2(props) {
       }
     }
     else {
-      alert("성인만 이용가능한 컨텐츠입니다. 로그인하여 성인인증 하시기 바랍니다.")
+      alert("성인만 이용가능한 컨텐츠입니다. 로그인하여 성인인증 하시기 바랍니다.");
     }
   };
   
