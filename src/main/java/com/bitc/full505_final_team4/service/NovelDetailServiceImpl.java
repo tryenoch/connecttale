@@ -969,7 +969,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
 
               // novelCount 가져오기
-              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3).replace(",", "")));
 
               // starRate 가져오기
               WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
@@ -1077,7 +1077,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
 
               // novelCount 가져오기
-              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3).replace(",", "")));
 
               // starRate 가져오기
               WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
@@ -1185,7 +1185,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
 
               // novelCount 가져오기
-              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3).replace(",", "")));
 
               // starRate 가져오기
               WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
@@ -1293,7 +1293,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
 
               // novelCount 가져오기
-              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3).replace(",", "")));
 
               // starRate 가져오기
               WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
