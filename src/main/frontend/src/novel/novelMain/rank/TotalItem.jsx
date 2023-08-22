@@ -1,27 +1,28 @@
 import React from 'react';
-import {CategoryConverter} from "../../../common/NovelInfoConverter";
+import {Col, Row} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {fetchData} from "../../../common/NovelDetailFetch2";
 
-function Item(props) {
+function TotalItem(props) {
 
   const navi = useNavigate();
 
-  const novel = props.novel; // 개별 소설 정보 객체
-  const sessionAdult = sessionStorage.getItem("adult");
+  const novel = props.novel;
+  const sessionAdult = sessionStorage.getItem("adult"); // 세션 성인여부 정보
 
+  const rank = novel.novelIndexNum;
   const title = novel.novelTitle;
-  const thumbnail = novel.novelThumbnail;
-  const platform = novel.platform;
   const author = novel.novelAuthor;
-  const novelAdult = novel.novelAdult;
-  const cateList = CategoryConverter(novel.cateList);
+  const cate = novel.cateList;
+  const thumbnail = novel.novelThumbnail;
+  let adultsOnly = novel.adultsOnly;
 
-  const novelKey = novel.novelKeyDto.novelIdx;
+  let ageGrade = "N";
+  if(adultsOnly){ ageGrade = "Y"; }
 
   const handleLinkClick = async (novel) => {
     try {
-      const novelDetail = await fetchData(novel.platformId, novel.novelTitle, novel.ebookCheck, novel.novelAdult);
+      const novelDetail = await fetchData(novel.platformId, novel.novelTitle, novel.ebookCheck, ageGrade);
       navi(`/novelDetail/${novel.novelTitle}`, {
         state: {
           novelDetail: novelDetail,
@@ -33,18 +34,23 @@ function Item(props) {
   };
 
   return (
-    <Link
-      onClick={(e) => {
-        e.preventDefault();
-        handleLinkClick(novel);
-      }} to={`/novelDetail/${novel.title}`}
-      >
-      <div className={"text-center"}>
-        {/* 세션 영역에 저장된 성인 여부가 Y다 그럼 다 보여줌 */}
-        {/* 세션 영역에 저장된 성인 여부가 Y가 아니다, 그럼 안 보여줌*/}
-        { novelAdult == "Y" ? // 성인작품일 경우
+    <Link onClick={(e) => {
+      e.preventDefault();
+      handleLinkClick(novel);
+    }} to={`/novelDetail/${novel.title}`}>
+    <Row className={'total-item align-items-center p-2 mt-1'}>
+      <Col sm={1} className={''}>
+        <h3 className={'total-num align-middle'}>
+          {rank}
+        </h3>
+      </Col>
+      <Col sm={3}>
+        {/*<div className={'total-img'}>
+          <img src={thumbnail} alt={title} className={'img-item rounded-1'}/>
+        </div>*/}
+        { adultsOnly ? // 성인작품일 경우
           sessionAdult =="Y" ? // 세션 정보가 있고 사용자가 성인일 경우
-            <div className={"rank-item-img"}>
+            <div className={"total-img"}>
               <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="19세 미만 구독불가" className="adult-img">
                 <circle cx="12" cy="12" r="12" fill="#fff"></circle>
                 <path opacity="0.8" d="M.5 12a11.5 11.5 0 1023 0 11.5 11.5 0 10-23 0" stroke="#DC3232"></path>
@@ -59,35 +65,33 @@ function Item(props) {
                   </clipPath>
                 </defs>
               </svg>
-              <div className={"rank-item-img"}>
-              <img src={thumbnail} alt=""/>
+              <div className={"total-img"}>
+                <img src={thumbnail} alt={title} className={'img-item rounded-1'}/>
               </div>
             </div>
             // 세션 정보가 없거나 성인 유저가 아닐 경우
             :
-            <div className={"rank-item-img"}>
-              <img src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"} alt={"Adults content"}/>
+            <div className={"total-img"}>
+              <img src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"} alt={"Adults content"} className={'img-item rounded-1'}/>
             </div>
           // 세션 여부와 상관 없이 성인 작품이 아닐 경우
-          : <div className={"rank-item-img"}>
-            <img src={thumbnail} alt=""/>
+          : <div className={"total-img"}>
+            <img src={thumbnail} alt={title} className={'img-item rounded-1'}/>
           </div>
         }
-      </div>
-      <div className={"rank-info w-100"}>
-        <p className={"item-title"}>{title}</p>
-        <p className={"item-detail"}>
-          <span className={"item-author"}>{author}</span>
-          {
-            cateList == null? null :
-              <span>|
-              <span className="item-cate ms-2">{cateList}</span>
-              </span>
-          }
-        </p>
-      </div>
+      </Col>
+      <Col>
+        <div className={'w-100 info'}>
+          <h5>{title}</h5>
+          <div>
+            {author != null ? <span>{author}</span> : null}
+            {cate != null ? <span className={'ms-2'}><span className={'me-2'}>|</span>{cate}</span> : null}
+          </div>
+        </div>
+      </Col>
+    </Row>
     </Link>
   )
 }
 
-export default Item;
+export default TotalItem;

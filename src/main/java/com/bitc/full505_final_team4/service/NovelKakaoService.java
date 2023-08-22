@@ -4,6 +4,7 @@ import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.WebDriver;
@@ -34,7 +35,7 @@ public interface NovelKakaoService {
 
   // NovelEntity 와 아이디에 해당하는 json 파일에서 Dto 정보 얻어오기
   // 이후 selenium 함수로 얻어온 데이터를 더하여 dto 완성, driver 선언부 확인하기
-  NovelPlatformDto getNovelPlatformDto(String platformId, NovelDto novelEntity) throws Exception;
+  NovelPlatformEntity getNovelPlatformEntity(String platformId, NovelEntity novelEntity) throws Exception;
 
   // json 에서 얻어오지 못하는 데이터 Selenium 으로 얻어오기
   // 함수 선언부 밖에서 driver.quit 해줘야함

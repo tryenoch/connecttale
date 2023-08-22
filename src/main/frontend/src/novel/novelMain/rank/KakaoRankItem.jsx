@@ -1,9 +1,12 @@
 import React from 'react';
 import {Col, Row} from "react-bootstrap";
 import '../../../static/css/novel.css';
+import {Link, useNavigate} from "react-router-dom";
+import {fetchData} from "../../../common/NovelDetailFetch2";
 
 function KakaoRankItem(props) {
 
+  const navi = useNavigate();
   const novel = props.novel; // 개별 소설 정보 객체
   const sessionAdult = sessionStorage.getItem("adult"); // 세션 성인여부 정보
 
@@ -16,8 +19,29 @@ function KakaoRankItem(props) {
   // const starRate = novel.novelStarRate;
   let adultsOnly = novel.adultsOnly;
 
+  let ageGrade = "N";
+  if(adultsOnly){ ageGrade = "Y"; }
+
+  const handleLinkClick = async (novel) => {
+    try {
+      const novelDetail = await fetchData(novel.platformId, novel.novelTitle, novel.ebookCheck, ageGrade);
+      navi(`/novelDetail/${novel.novelTitle}`, {
+        state: {
+          novelDetail: novelDetail,
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
-    <div>
+    <Link
+      onClick={(e) => {
+        e.preventDefault();
+        handleLinkClick(novel);
+      }} to={`/novelDetail/${novel.title}`}
+    >
       <div>
         <div className={"rank-item-img text-center"}>
           <h3 className={"rank-num"}>{rankNum}</h3>
@@ -72,7 +96,7 @@ function KakaoRankItem(props) {
           {/*  <span className={"ms-1"}>{starRate}</span></p>*/}
         </div>
       </div>
-    </div>
+    </Link>
 
   )
 }
