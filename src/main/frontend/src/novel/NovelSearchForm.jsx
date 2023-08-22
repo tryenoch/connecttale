@@ -17,12 +17,12 @@ function NovelSearchForm(props) {
   
   return (
     <div className={'novel-search-input py-1 float-end'} >
-      <form action="#" className={'mx-2 px-3'}>
+      <div className={'mx-2 py-1 px-3 border rounded-4'}>
         <input type="text" placeholder={'검색어를 입력해주세요.'} className={''} value={searchWord} onChange={searchWordChange} onKeyDown={activeEnter}/>
         <Link to={`/novelSearch?keyword=${searchWord}`} id={'search-btn'} className={''}>
           <i className="bi bi-search me-1"></i>
         </Link>
-      </form>
+      </div>
     </div>
   )
 }
