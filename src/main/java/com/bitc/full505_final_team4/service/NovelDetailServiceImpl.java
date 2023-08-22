@@ -1,6 +1,7 @@
 package com.bitc.full505_final_team4.service;
 
-import com.bitc.full505_final_team4.data.dto.NovelReplyLikeInterface;
+import com.bitc.full505_final_team4.data.dto.ReplyLikeInterface;
+import com.bitc.full505_final_team4.data.dto.ReportDto;
 import com.bitc.full505_final_team4.data.entity.*;
 import com.bitc.full505_final_team4.data.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,12 @@ public class NovelDetailServiceImpl implements NovelDetailService {
   private final MemberRepository memberRepository;
   private final NovelReplyRepository novelReplyRepository;
   private final ReplyLikeRepository replyLikeRepository;
+  private final ReportRepository reportRepository;
 
 
-
+  // 셀레니움 사용을 위한 크롬드라이버 설정
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
-
 
 
   // 매개변수인 title, ebookCheck, novelAdult로 platform 테이블에서 가져오기
@@ -49,8 +50,6 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
     return novelDetail;
   }
-
-
 
 
   // 네이버 디테일 페이지 정보 크롤링
@@ -1227,24 +1226,71 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     }
   }
 
-  // replyIdx를 통해 replyLike 테이블 데이터 리스트 가져오기
-//  @Override
-//  public List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity) {
-//    List<ReplyLikeEntity> replyLikeEntityList = new ArrayList<>();
-//
-//    // novelReplyEntity(replyIdx)를 통해 모든 replyLike 테이블 정보 얻어오기
-//    Optional<List<ReplyLikeEntity>> replyLikeOptList = replyLikeRepository.findAllByReplyIdx(novelReplyEntity);
-//
-//    if (replyLikeOptList.isPresent()) {
-//      for (ReplyLikeEntity replyLikeEntity : replyLikeOptList.get()) {
-//        replyLikeEntityList.add(replyLikeEntity);
-//      }
-//    }
-//
-//    return replyLikeEntityList;
-//  }
+  // novelReplyEntity(replyIdx)를 통해 replyLikeEntity 리스트 가져오기
+  @Override
+  public List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity) {
+    List<ReplyLikeEntity> replyLikeEntityList = new ArrayList<>();
+
+    // novelReplyEntity(replyIdx)를 통해 모든 replyLike 테이블 정보 얻어오기
+    Optional<List<ReplyLikeEntity>> replyLikeOptList = replyLikeRepository.findAllByReplyIdx(novelReplyEntity);
+
+    if (replyLikeOptList.isPresent()) {
+      for (ReplyLikeEntity replyLikeEntity : replyLikeOptList.get()) {
+        replyLikeEntityList.add(replyLikeEntity);
+      }
+    }
+
+    return replyLikeEntityList;
+  }
+
+  // novelReplyEntity(replyIdx)를 통해 좋아요가 'Y'인 개수가 출력되는 엔티티 가져오기
+  @Override
+  public List<ReplyLikeInterface> getReplyLikeCount() {
+    List<ReplyLikeInterface> replyLikeInterfaceList = replyLikeRepository.findReplyLikeCount();
+
+    return replyLikeInterfaceList;
+  }
+
+  // 리뷰(댓글)에 대한 신고 insert
+  @Override
+  public String insertReplyReport(int replyIdx, String reportContent, String reporter, String suspect) {
+
+    // int 값인 replyIdx를 통해 replyIdx로 사용될 entity 가져오기
+    Optional<NovelReplyEntity> novelReplyEntityOpt = novelReplyRepository.findById(replyIdx);
+    NovelReplyEntity novelReplyEntity = novelReplyEntityOpt.get(); // replyIdx
+
+    // 중복 신고인지 확인하는 절차
+    Optional<ReportEntity> reportExist = reportRepository.findByReplyIdxAndReporter(novelReplyEntity, reporter);
+
+    // 해당 유저가 해당 댓글에 신고한 기록이 없으면
+    if (!reportExist.isPresent()) {
+      // 매개변수로 넘어온 데이터들로 ReportEntity 객체 생성
+      ReportEntity reportEntity = new ReportEntity();
+      reportEntity.setReplyIdx(novelReplyEntity);
+      reportEntity.setReportContent(reportContent);
+      reportEntity.setReporter(reporter);
+      reportEntity.setSuspect(suspect);
+
+      // db에 저장
+      reportRepository.save(reportEntity);
+
+      // 신고 접수가 정상적으로 완료되었는지 확인 절차
+      Optional<ReportEntity> reportEntityCheck = reportRepository.findByReplyIdx(novelReplyEntity);
+
+      if (reportEntityCheck.isPresent()) {
+        return "success";
+      }
+      else {
+        return "failed";
+      }
+    }
+    // 해당 유저가 해당 댓글에 신고한 기록 이있으면
+    else {
+      return "exist";
+    }
 
 
+  }
 }
 
 
