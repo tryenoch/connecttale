@@ -5,7 +5,7 @@ import axios from "axios";
 import * as MessageUtils from "../../../common/MessageUtils";
 
 function TotalList(props) {
-
+ // 수정
   const platform = props.platform;
   const [category, setCategory] = useState(props.category);
   const [rankList, setRankList] = useState([]);
