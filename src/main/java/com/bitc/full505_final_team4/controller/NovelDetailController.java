@@ -4,6 +4,7 @@ import com.bitc.full505_final_team4.data.dto.*;
 import com.bitc.full505_final_team4.data.entity.*;
 import com.bitc.full505_final_team4.service.NovelDetailService;
 import lombok.RequiredArgsConstructor;
+import org.openqa.selenium.devtools.Reply;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -67,6 +68,8 @@ public class NovelDetailController {
       for (NovelLikeEntity novelLikeEntity : novelLikeEntityList) {
         NovelLikeDto novelLikeDto = NovelLikeDto.toDto(novelLikeEntity);
         novelLikeList.add(novelLikeDto);
+
+
       }
     }
 
@@ -76,8 +79,9 @@ public class NovelDetailController {
 
 
     // --------------------------------- 리뷰 관련 정보 가져오기 ----------------------------------
-    List<NovelReplyDto>  novelReplyList = new ArrayList<>();
-
+    List<NovelReplyDto> novelReplyList = new ArrayList<>();
+    List<ReplyLikeDto> replyLikeList = new ArrayList<>();
+    // COUNT 함수가 사용된 ENTITY를 가져오기 위해 필요한 인터페이스 객체 생성
 
 
     // novelIdx를 통해 novel_reply 테이블 데이터 가져오기
@@ -86,12 +90,26 @@ public class NovelDetailController {
       NovelReplyDto novelReplyDto = NovelReplyDto.toDto(novelReplyEntity);
       novelReplyList.add(novelReplyDto);
 
-      // novelIdx를 통해 reply_like 테이블 리스트 가져오기
+      // novelIdx를 통해 찾은 reply_like 테이블의 reply_idx를 이용해서 like_yn='Y'인 개수 구하기
+      // 1. replyIdx에 해당하는 replyLike 엔티티 가져오기
+      List<ReplyLikeEntity> replyLikeEntityList = novelDetailService.getReplyLikeList(novelReplyEntity);
+      for (ReplyLikeEntity replyLikeEntity : replyLikeEntityList) {
+        ReplyLikeDto replyLikeDto = ReplyLikeDto.toDto(replyLikeEntity);
+        replyLikeList.add(replyLikeDto);
+      }
+
     }
+//
+    // 2. reply 해당하는 좋아요 'Y'인 개수가 나오는 entity 가져오기
+    List<ReplyLikeInterface> replyLikeCountList = new ArrayList<>();
+    List<ReplyLikeInterface> replyLikeInterfaceList = novelDetailService.getReplyLikeCount();
 
+    for (ReplyLikeInterface replyLikeInterface : replyLikeInterfaceList) {
+      replyLikeCountList.add(replyLikeInterface);
+    }
     novelDetail.put("novelReplyList", novelReplyList);
-
-
+//    novelDetail.put("replyLikeList", replyLikeList);
+    novelDetail.put("replyLikeCountList", replyLikeCountList);
 
 
     // -------------------신고------------------
@@ -106,7 +124,7 @@ public class NovelDetailController {
   // 리디북스 디테일 페이지 정보 db 저장
 
   @RequestMapping(value = "/novelDetail", method = RequestMethod.POST)
-  public void insertRidiDetail(@RequestParam("title") String title, @RequestParam("ne") String ne, @RequestParam("ageGrade") String novelAdult ,NovelPlatformEntity ridiPlatformEntity) throws Exception {
+  public void insertNovelDetail(@RequestParam("title") String title, @RequestParam("ne") String ne, @RequestParam("ageGrade") String novelAdult ,NovelPlatformEntity ridiPlatformEntity) throws Exception {
 //
 //    System.out.println(title);
 //    System.out.println(id);
