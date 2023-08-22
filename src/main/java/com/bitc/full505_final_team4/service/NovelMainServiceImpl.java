@@ -249,11 +249,11 @@ public class NovelMainServiceImpl implements NovelMainService{
 
           // 제목
           String title = rankItem.select("h3").select("a").text();
-          if (title.contains("[")){
+          /*if (title.contains("[")){
             int idx = title.lastIndexOf("[");
             title = title.substring(0, idx -1);
-          }
-
+          }*/
+          title = commonEditService.editTitleForNovelEntity(title);
           novel.setNovelTitle(title);
 
           // 작가
