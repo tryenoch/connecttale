@@ -67,14 +67,13 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
 
           // 썸네일
           String thumbnail = "";
-
-          thumbnail = element.select(".select-none.object-cover").attr("src");
-          thumbnail = thumbnail.substring(0, thumbnail.length() -1);
-
           boolean adultsOnly = false;
 
           if (ObjectUtils.isEmpty(element.select(".select-none.object-cover"))){
             adultsOnly = true;
+          } else {
+            thumbnail = element.select(".select-none.object-cover").attr("src");
+            thumbnail = thumbnail.substring(0, thumbnail.length() -1);
           }
 
           novel.setNovelThumbnail(thumbnail);
