@@ -156,10 +156,10 @@ public class MemberController {
     return result;
   }
 
-  // 신고내역 => 신고 구현 완료 되면 구현예정
-//  @RequestMapping(value = "/staffPage/reportList", method = RequestMethod.GET)
-//  // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
-//  public Object reportList(Pageable pageable) throws Exception {
+//   신고내역 => 신고 구현 완료 되면 구현예정
+  @RequestMapping(value = "/staffPage/reportList", method = RequestMethod.GET)
+  // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
+  public Object reportList(Pageable pageable) throws Exception {
 //
 //    Map<String, Object> result = new HashMap<>();
 //
@@ -177,7 +177,8 @@ public class MemberController {
 //    result.put("nowPage", pageable.getPageNumber() + 1);
 //    result.put("memberList", memberList);
 //    return result;
-//  }
+    return memberService.getReportList(pageable);
+  }
 
   @RequestMapping(value = "/staffPage/levelUp", method = RequestMethod.POST)
   public Object levelUp(@RequestParam("id") String id) throws Exception {

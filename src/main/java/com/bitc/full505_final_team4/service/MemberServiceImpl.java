@@ -3,12 +3,15 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
 import com.bitc.full505_final_team4.data.dto.NovelReplyDto2;
+import com.bitc.full505_final_team4.data.dto.ReportDto2;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
 import com.bitc.full505_final_team4.data.entity.NovelReplyEntity;
+import com.bitc.full505_final_team4.data.entity.ReportEntity;
 import com.bitc.full505_final_team4.data.repository.MemberRepository;
 import com.bitc.full505_final_team4.data.repository.NovelLikeRepository;
 import com.bitc.full505_final_team4.data.repository.NovelReplyRepository;
+import com.bitc.full505_final_team4.data.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +29,7 @@ public class MemberServiceImpl implements MemberService {
   private final MemberRepository memberRepository;
   private final NovelLikeRepository novelLikeRepository;
   private final NovelReplyRepository novelReplyRepository;
+  private final ReportRepository reportRepository;
 
   @Override
   public MemberEntity login(String id, String pw) throws Exception {
@@ -113,6 +117,25 @@ public class MemberServiceImpl implements MemberService {
     }
 
     result.put("replyList", replyList);
+    result.put("totalPages", totalPages);
+    result.put("nowPage", pageable.getPageNumber() + 1);
+    return result;
+  }
+
+  @Override
+  public Object getReportList(Pageable pageable) {
+    Map<String, Object> result = new HashMap<>();
+
+    List<ReportDto2> reportList = new ArrayList<>();
+    Page<ReportEntity> reportPage = reportRepository.findAll(pageable);
+    int totalPages = reportPage.getTotalPages();
+
+    for (ReportEntity report : reportPage.getContent()) {
+      ReportDto2 req = ReportDto2.toDto(report);
+      reportList.add(req);
+    }
+
+    result.put("reportList", reportList);
     result.put("totalPages", totalPages);
     result.put("nowPage", pageable.getPageNumber() + 1);
     return result;

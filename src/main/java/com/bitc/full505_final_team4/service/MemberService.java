@@ -30,4 +30,6 @@ public interface MemberService {
   void deleteMember(String id) throws Exception;
 
   Object getReplyList(Pageable pageable, String id);
+
+  Object getReportList(Pageable pageable);
 }
