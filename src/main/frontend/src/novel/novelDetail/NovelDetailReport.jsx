@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import axios from "axios";
 
 function NovelDetailReport(props) {
   // 신고하고자 하는 reply_idx 및 id(글쓴이)
@@ -17,12 +18,40 @@ function NovelDetailReport(props) {
   const [show, setShow] = useState(false);
   
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    if (sessionStorage.getItem("id")) {
+      setShow(true);
+    }
+    else {
+      alert("회원만 이용 가능한 서비스입니다.");
+    }
+  }
   const reportContentChange = (e) => setReportContent(e.target.value);
   
   
   const reportSubmit = () => {
-  
+    axios.post("/novelDetailReport", null, {
+      params: {
+        replyIdx: replyIdx,
+        reportContent: reportContent,
+        reporter: loginId,
+        suspect: suspect
+      }
+    })
+      .then(res => {
+        console.log(res);
+        if (res.data == '댓글 신고 완료') {
+          handleClose();
+          alert("신고가 접수되었습니다.");
+        }
+        else if (res.data == '이미 신고한 댓글입니다.') {
+          handleClose();
+          alert("이미 신고한 댓글입니다.");
+        }
+        else {
+          alert("신고 접수 중 오류가 발생했습니다.");
+        }
+      })
   }
 
   return (
@@ -41,7 +70,6 @@ function NovelDetailReport(props) {
               <Form.Control
                 type="text"
                 placeholder={replyContent}
-                autoFocus
               />
             </Form.Group>
             <Form.Group
@@ -49,7 +77,7 @@ function NovelDetailReport(props) {
               controlId="exampleForm.ControlTextarea1"
             >
               <Form.Label>신고 사유</Form.Label>
-              <Form.Control as={'textarea'} rows={5} value={reportContent} onChange={reportContentChange} placeholder={'신고 사유를 입력해주세요'} />
+              <Form.Control as={'textarea'} rows={5} value={reportContent} onChange={reportContentChange} placeholder={'신고 사유를 입력해주세요'} autoFocus/>
             </Form.Group>
           </Form>
         </Modal.Body>

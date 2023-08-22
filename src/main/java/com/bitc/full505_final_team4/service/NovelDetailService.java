@@ -43,6 +43,8 @@ public interface NovelDetailService {
 
   List<ReplyLikeInterface> getReplyLikeCount();
 
+  String insertReplyReport(int replyIdx, String reportContent, String reporter, String suspect);
+
 //  List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity);
 
 }
