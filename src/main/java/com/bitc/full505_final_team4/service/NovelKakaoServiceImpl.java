@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor //수정1
 public class NovelKakaoServiceImpl implements NovelKakaoService{
 
   private final NovelCommonEditService novelCommonEditService;
