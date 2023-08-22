@@ -9,6 +9,7 @@ function MyContent(props) {
     const [endPage, setEndPage] = useState(0);
     const [pages, setPages] = useState([1]);
     const [replyList, setReplyList] = useState([{}]);
+    const [novel, setNovel] = useState([{}]);
 
 
     useEffect(() => {
@@ -36,7 +37,8 @@ function MyContent(props) {
                 }
                 setPages(arr);
                 setEndPage(res.data.totalPages);
-                setReplyList(res.data.boardList);
+                setReplyList(res.data.replyList);
+                setNovel(res.data.novel);
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);

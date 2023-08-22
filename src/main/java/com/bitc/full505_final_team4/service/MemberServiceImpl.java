@@ -124,7 +124,6 @@ public class MemberServiceImpl implements MemberService {
     result.put("totalPages", totalPages);
     result.put("nowPage", pageable.getPageNumber() + 1);
     return result;
-
   }
 
   @Override
