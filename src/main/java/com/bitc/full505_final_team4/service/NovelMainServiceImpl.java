@@ -46,6 +46,7 @@ public class NovelMainServiceImpl implements NovelMainService{
 
   private final NovelCommonEditService commonEditService;
   private final NovelRankRepository novelRankRepository;
+  private final NovelNaverService novelNaverService;
   private final PlatformMainRepository platformMainRepository;
 
   // 확인용 데이터 불러오기
@@ -249,11 +250,15 @@ public class NovelMainServiceImpl implements NovelMainService{
 
           // 제목
           String title = rankItem.select("h3").select("a").text();
-          if (title.contains("[")){
+          /*if (title.contains("[")){
             int idx = title.lastIndexOf("[");
             title = title.substring(0, idx -1);
-          }
+          }*/
 
+          String ebookCheck = novelNaverService.getEbookCheck(title); // 웹소설 여부
+          novel.setEbookCheck(ebookCheck);
+
+          title = commonEditService.editTitleForNovelEntity(title);
           novel.setNovelTitle(title);
 
           // 작가
@@ -270,7 +275,9 @@ public class NovelMainServiceImpl implements NovelMainService{
             adultsOnly = true;
           }
 
-          novel.setAdultsOnly(adultsOnly);
+          novel.setAdultsOnly(adultsOnly); // 성인여부
+
+
 
           novelList.add(novel);
 

@@ -62,6 +62,10 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
 
           // 제목
           String title = element.select(".text-el-60.line-clamp-2").text();
+
+          String ebookCheck = getEbookCheck(title);
+          novel.setEbookCheck(ebookCheck);
+
           title = novelCommonEditService.editTitleForNovelEntity(title);
           novel.setNovelTitle(title);
 
@@ -76,8 +80,8 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
             thumbnail = thumbnail.substring(0, thumbnail.length() -1);
           }
 
-          novel.setNovelThumbnail(thumbnail);
-          novel.setAdultsOnly(adultsOnly);
+          novel.setNovelThumbnail(thumbnail); // 썸네일
+          novel.setAdultsOnly(adultsOnly); // 성인여부
 
           list.add(novel);
         }
