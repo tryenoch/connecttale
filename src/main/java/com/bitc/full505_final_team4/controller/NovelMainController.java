@@ -124,6 +124,23 @@ public class NovelMainController {
     return result;
   }
 
+  // db 에서 좋아요 인기 순 목록 들고오기
+  @GetMapping("/MaxLikeNovelList")
+  public Object getMaxLikeNovelList(@RequestParam("itemCount") String itemCount) throws Exception {
+    Map<String, Object> result = new HashMap<>();
+
+    List<NovelPlatformDto> list = novelMainService.getMaxLikeNovelList(Integer.parseInt(itemCount));
+
+    if (!ObjectUtils.isEmpty(list)){
+      result.put("list", list);
+      result.put("result", "success");
+    } else {
+      result.put("result", "Backend Error");
+    }
+
+    return result;
+  }
+
   // db 에서 최신 소설 목록 들고오기
   @GetMapping("/recentNovelList")
   public Object getRecentNovelList(@RequestParam("itemCount") String itemCount) throws Exception {
@@ -247,17 +264,16 @@ public class NovelMainController {
   @GetMapping("/getTest2")
   public Object getTest2() throws Exception {
 
-
     try {
 
-      List<NovelMainDto> list = novelKakaoService.getKakaoList("94");
+      List<NovelPlatformDto> list = novelMainService.getMaxLikeNovelList(6);
 
-      for(NovelMainDto item : list){
+      for(NovelPlatformDto item : list){
         System.out.println(item);
       }
 
     }catch (Exception e){
-      System.out.println("RESULT : 크롤링 시도 중 오류가 발생 했습니다.");
+      System.out.println("RESULT : 테스트 시도 중 오류가 발생 했습니다.");
       e.printStackTrace();
     }
 

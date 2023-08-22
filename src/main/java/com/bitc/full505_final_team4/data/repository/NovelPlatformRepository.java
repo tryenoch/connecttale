@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.data.repository;
 
+import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatFormIdx;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
@@ -14,6 +15,5 @@ public interface NovelPlatformRepository extends JpaRepository<NovelPlatformEnti
 
 // 작품 title로 db내 저장된 platform 테이블 데이터 불러오기
   List <NovelPlatformEntity> findAllByNovelTitleAndEbookCheckAndNovelAdult(String title, String ebookCheck, String ageGrade);
-
 
 }

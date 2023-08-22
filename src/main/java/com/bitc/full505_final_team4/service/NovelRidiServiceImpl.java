@@ -558,7 +558,7 @@ public class NovelRidiServiceImpl implements NovelRidiService {
     // 자바 소수점 자리수 표현 포맷
     DecimalFormat form = new DecimalFormat("#.#");
 
-    double total = (multiRating / totalCount) * 2;
+    double total = (multiRating / totalCount);
     total = Double.parseDouble(form.format(total));
 
     // 왜 한자리수 올림이 안되는 건지...
