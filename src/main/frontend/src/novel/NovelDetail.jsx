@@ -10,9 +10,9 @@ function NovelDetail(props) {
   // const state = location.state;
   // console.log(state.novelDetail);
   
-  console.log(location.state);
+  console.log(location.state.novelDetail);
   
-  if (!location.state || !location.state.novelDetail) {
+  if (location.state.novelDetail.isEmpty || !location.state.novelDetail) {
     return <div>스테이트로 정보가 넘어오지 않았습니다.</div>; // 데이터가 없을 경우 로딩 처리
   }
   else {
