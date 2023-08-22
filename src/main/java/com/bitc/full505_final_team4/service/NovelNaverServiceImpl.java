@@ -485,9 +485,9 @@ public class NovelNaverServiceImpl implements NovelNaverService{
       price = Integer.parseInt(priceNum);
     }
 
-    if(price != 0){
+    /*if(price != 0){
       price = (price * 100);
-    }
+    }*/
 
     return price;
   }

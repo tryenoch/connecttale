@@ -5,8 +5,11 @@ import com.bitc.full505_final_team4.common.WebDriverUtil;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.dto.NovelRankDto;
+import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import com.bitc.full505_final_team4.data.entity.NovelRankEntity;
+import com.bitc.full505_final_team4.data.repository.NovelLikeRepository;
+import com.bitc.full505_final_team4.data.repository.NovelMainRepository;
 import com.bitc.full505_final_team4.data.repository.NovelRankRepository;
 import com.bitc.full505_final_team4.data.repository.PlatformMainRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -37,6 +40,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -46,7 +50,10 @@ public class NovelMainServiceImpl implements NovelMainService{
 
   private final NovelCommonEditService commonEditService;
   private final NovelRankRepository novelRankRepository;
+  private final NovelLikeRepository novelLikeRepository;
+  private final NovelNaverService novelNaverService;
   private final PlatformMainRepository platformMainRepository;
+  private final NovelMainRepository novelMainRepository;
 
   // 확인용 데이터 불러오기
   @Override
@@ -249,11 +256,15 @@ public class NovelMainServiceImpl implements NovelMainService{
 
           // 제목
           String title = rankItem.select("h3").select("a").text();
-          if (title.contains("[")){
+          /*if (title.contains("[")){
             int idx = title.lastIndexOf("[");
             title = title.substring(0, idx -1);
-          }
+          }*/
 
+          String ebookCheck = novelNaverService.getEbookCheck(title); // 웹소설 여부
+          novel.setEbookCheck(ebookCheck);
+
+          title = commonEditService.editTitleForNovelEntity(title);
           novel.setNovelTitle(title);
 
           // 작가
@@ -270,7 +281,9 @@ public class NovelMainServiceImpl implements NovelMainService{
             adultsOnly = true;
           }
 
-          novel.setAdultsOnly(adultsOnly);
+          novel.setAdultsOnly(adultsOnly); // 성인여부
+
+
 
           novelList.add(novel);
 
@@ -486,6 +499,33 @@ public class NovelMainServiceImpl implements NovelMainService{
     // entity 리스트를 dto 리스트로 변환
     List<NovelPlatformDto> list = entityList.stream().map(m -> new NovelPlatformDto().toDto(m)).collect(Collectors.toList());
 
+
+    return list;
+  }
+
+  // 좋아요 높은 순대로 itemCount 수만큼 들고오기
+  @Override
+  public List<NovelPlatformDto> getMaxLikeNovelList(int itemCount) throws Exception {
+    Pageable pageable = PageRequest.of(0, itemCount);
+
+    List<Integer> likeNovelList = novelLikeRepository.findNovelLikeMaxCount(pageable);
+
+    List<NovelPlatformEntity> entityList = new ArrayList<>();
+
+    /* platform num 3 > 2 > 1 순으로 platform 정보 얻어오기 */
+    for (int novelIdx : likeNovelList){
+      for (int i = 3; i > 0; i--) {
+        // 3번 플랫폼부터 entity 가 존재하는 지 찾아보기 있으면 list 에 더하고 for 문에서 탈출
+        Optional<NovelPlatformEntity> entity = platformMainRepository.findByNovelIdx_NovelIdxAndPlatform(novelIdx, i);
+        if(!ObjectUtils.isEmpty(entity)){
+          entityList.add(entity.get());
+          break;
+        }
+      }
+    }
+
+    // entity 리스트를 dto 리스트로 변환
+    List<NovelPlatformDto> list = entityList.stream().map(m -> new NovelPlatformDto().toDto(m)).collect(Collectors.toList());
 
     return list;
   }

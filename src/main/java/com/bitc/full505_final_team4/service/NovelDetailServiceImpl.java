@@ -73,7 +73,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     if (!novelList.isEmpty()) {
       // 제목, 성인여부, 종류가 일치하는 작품의 platformId 찾기
       for (int i = 0; i < novelList.size(); i++) {
-        if (novelList.get(i).get("title").toString().equals(title)) {
+        String searchTitle = novelCommonEditService.editTitleForNovelEntity(novelList.get(i).get("title").toString());
+        if (searchTitle.equals(title)) {
           if (ne.equals("단행본") && novelAdult.equals("Y")) {
             if (novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) == 19) {
               // 플랫폼 설정
@@ -129,9 +130,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // updateDate
               ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-              String updateDate = updateDates.get("title").toString();
-              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              if (!updateDateList.isEmpty()) {
+                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                String updateDate = updateDates.get("title").toString();
+                ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              }
 
               // cateList
               String cateItem = novelList.get(i).get("parent_category_name").toString();
@@ -211,9 +214,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // updateDate
               ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-              String updateDate = updateDates.get("title").toString();
-              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              if (!updateDateList.isEmpty()) {
+                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                String updateDate = updateDates.get("title").toString();
+                ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              }
 
               // cateList
               String cateItem = novelList.get(i).get("parent_category_name").toString();
@@ -293,9 +298,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // updateDate
               ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-              String updateDate = updateDates.get("title").toString();
-              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              if (!updateDateList.isEmpty()) {
+                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                String updateDate = updateDates.get("title").toString();
+                ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              }
 
               // cateList
               String cateItem = novelList.get(i).get("parent_category_name").toString();
@@ -375,9 +382,11 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // updateDate
               ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-              String updateDate = updateDates.get("title").toString();
-              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              if (!updateDateList.isEmpty()) {
+                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                String updateDate = updateDates.get("title").toString();
+                ridiPlatformEntity.setNovelUpdateDate(updateDate);
+              }
 
               // cateList
               String cateItem = novelList.get(i).get("parent_category_name").toString();
@@ -477,9 +486,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
         List<WebElement> titleEls = driver.findElements(By.className("N=a:nov.title"));
         if (ebookCheck.equals("단행본") && ageGrade.equals("Y")) {
           for (WebElement titleEl : titleEls) {
+            String searchTitle = novelCommonEditService.editTitleForNovelEntity(titleEl.getText());
 //            String testTitle = titleEl.getText();
             // 제목, ebookCheck, 성인여부가 일치하는 제목의 url 주소 얻기(같은 제목, 같은 ebookCheck인데 19세, 전체이용가 모두 있는 경우가 있기 때문)
-            if (titleEl.getText().contains(title) && titleEl.getText().contains("[단행본]") && !titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
+            if (searchTitle.equals(title) && titleEl.getText().contains("[단행본]") && titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
 
               // 검색결과 페이지에서 가져올 정보
@@ -571,9 +581,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
         }
         else if (ebookCheck.equals("단행본") && ageGrade.equals("N")) {
           for (WebElement titleEl : titleEls) {
+            String searchTitle = novelCommonEditService.editTitleForNovelEntity(titleEl.getText());
 //            String testTitle = titleEl.getText();
             // 제목, ebookCheck, 성인여부가 일치하는 제목의 url 주소 얻기(같은 제목, 같은 ebookCheck인데 19세, 전체이용가 모두 있는 경우가 있기 때문)
-            if (titleEl.getText().contains(title) && titleEl.getText().contains("[단행본]") && titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
+            if (searchTitle.equals(title) && titleEl.getText().contains("[단행본]") && titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
 
               // 검색결과 페이지에서 가져올 정보
@@ -666,9 +677,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
         else if (ebookCheck.equals("웹소설") && ageGrade.equals("Y")) {
           for (WebElement titleEl : titleEls) {
+            String searchTitle = novelCommonEditService.editTitleForNovelEntity(titleEl.getText());
 //            String testTitle = titleEl.getText();
             // 제목, ebookCheck, 성인여부가 일치하는 제목의 url 주소 얻기(같은 제목, 같은 ebookCheck인데 19세, 전체이용가 모두 있는 경우가 있기 때문)
-            if (titleEl.getText().contains(title) && !titleEl.getText().contains("[단행본]") && !titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
+            if (searchTitle.equals(title) && !titleEl.getText().contains("[단행본]") && !titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
 
               // 검색결과 페이지에서 가져올 정보
@@ -760,9 +772,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
         }
         else if (ebookCheck.equals("웹소설") && ageGrade.equals("N")) {
           for (WebElement titleEl : titleEls) {
+            String searchTitle = novelCommonEditService.editTitleForNovelEntity(titleEl.getText());
 //            String testTitle = titleEl.getText();
             // 제목, ebookCheck, 성인여부가 일치하는 제목의 url 주소 얻기(같은 제목, 같은 ebookCheck인데 19세, 전체이용가 모두 있는 경우가 있기 때문)
-            if (titleEl.getText().contains(title) && !titleEl.getText().contains("[단행본]") && titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
+            if (searchTitle.equals(title) && !titleEl.getText().contains("[단행본]") && titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()){
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
 
               // 검색결과 페이지에서 가져올 정보
@@ -894,14 +907,13 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
     String kakaoSearchUrl = "https://page.kakao.com/search/result?keyword=" + title + "&categoryUid=11";
 
-    String kakaoId = "jeti11@naver.com";
+    String kakaoId = "jjeti11@kakao.com";
     String kakaoPw = "qntks505!";
 
     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     StringSelection userId = new StringSelection(kakaoId);
     StringSelection userPw = new StringSelection(kakaoPw);
 
-//    String starRateIcon = "data:image/svg+xml,%3csvg width='17' height='16' viewBox='0 0 17 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3e %3cpath fill-rule='evenodd' clip-rule='evenodd' d='M8.45224 10.8714L5.5916 12.4254C5.47603 12.4858 5.34147 12.4989 5.21632 12.4622C5.09118 12.4255 4.98518 12.3418 4.92076 12.2287C4.8868 12.1232 4.8868 12.0097 4.92076 11.9042L5.52254 8.70769L3.15505 6.4849C3.08698 6.42097 3.03853 6.33905 3.01537 6.24871C2.99221 6.15838 2.99527 6.06333 3.02422 5.97467C3.05317 5.88601 3.10683 5.8074 3.1789 5.74797C3.25096 5.68855 3.33851 5.65076 3.43129 5.63905L6.65691 5.21614L8.0577 2.26554C8.10061 2.18533 8.16453 2.11824 8.24272 2.07147C8.32091 2.02469 8.41037 2 8.50155 2C8.59273 2 8.6822 2.02469 8.76039 2.07147C8.83857 2.11824 8.90256 2.18533 8.94546 2.26554L10.3364 5.21614L13.562 5.63905C13.627 5.64635 13.6898 5.66647 13.7469 5.69821C13.804 5.72994 13.8542 5.77266 13.8946 5.82391C13.935 5.87516 13.9648 5.93389 13.9822 5.99671C13.9996 6.05953 14.0043 6.1252 13.996 6.18985C13.9781 6.30306 13.9225 6.40696 13.8382 6.4849L11.4806 8.70769L12.0725 11.9042C12.0853 11.9676 12.0852 12.0328 12.0721 12.0962C12.0591 12.1595 12.0334 12.2196 11.9965 12.2728C11.9597 12.326 11.9126 12.3713 11.8578 12.406C11.8031 12.4407 11.7419 12.464 11.6779 12.4746C11.5721 12.5085 11.4582 12.5085 11.3524 12.4746L8.45224 10.8714Z' fill='black'/%3e %3c/svg%3e";
 
     try {
 //       카카오 로그인 페이지 접속하기
@@ -949,7 +961,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
           for (WebElement aEl : aEls) {
             WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
             WebElement ariaLabelEl = aEl.findElement(By.tagName("div"));
-            if (searchTitleEl.getText().contains(title) && searchTitleEl.getText().contains("[단행본]") && ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")) {
+            String searchTitle = novelCommonEditService.editTitleForNovelEntity(searchTitleEl.getText());
+            if (searchTitle.equals(title) && searchTitleEl.getText().contains("[단행본]") && ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")) {
               kakaoCrollingData.setPlatform(1);
 
               // platformId 가져오기
@@ -988,11 +1001,6 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                 kakaoCrollingData.setNovelCompleteYn("N");
               }
 
-              // novelUpdateDate 가져오기
-//              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
-//                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
-//                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
-//              }
 
               // cateList 가져오기
               String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();
@@ -1057,7 +1065,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
           for (WebElement aEl : aEls) {
             WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
             WebElement ariaLabelEl = aEl.findElement(By.tagName("div"));
-            if (searchTitleEl.getText().contains(title) && searchTitleEl.getText().contains("[단행본]") && !ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")) {
+            String searchTitle = novelCommonEditService.editTitleForNovelEntity(searchTitleEl.getText());
+            if (searchTitle.equals(title) && searchTitleEl.getText().contains("[단행본]") && !ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")){
               kakaoCrollingData.setPlatform(1);
 
               // platformId 가져오기
@@ -1095,12 +1104,6 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               else {
                 kakaoCrollingData.setNovelCompleteYn("N");
               }
-
-              // novelUpdateDate 가져오기
-//              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
-//                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
-//                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
-//              }
 
               // cateList 가져오기
               String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();
@@ -1165,7 +1168,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
           for (WebElement aEl : aEls) {
             WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
             WebElement ariaLabelEl = aEl.findElement(By.tagName("div"));
-            if (searchTitleEl.getText().contains(title) && !searchTitleEl.getText().contains("[단행본]") && ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")) {
+            String searchTitle = novelCommonEditService.editTitleForNovelEntity(searchTitleEl.getText());
+            if (searchTitle.equals(title) && !searchTitleEl.getText().contains("[단행본]") && ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")){
               kakaoCrollingData.setPlatform(1);
 
               // platformId 가져오기
@@ -1204,11 +1208,6 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                 kakaoCrollingData.setNovelCompleteYn("N");
               }
 
-              // novelUpdateDate 가져오기
-//              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
-//                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
-//                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
-//              }
 
               // cateList 가져오기
               String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();
@@ -1273,7 +1272,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
           for (WebElement aEl : aEls) {
             WebElement searchTitleEl = aEl.findElement(By.cssSelector(".font-medium2.pb-2pxr"));
             WebElement ariaLabelEl = aEl.findElement(By.tagName("div"));
-            if (searchTitleEl.getText().contains(title) && !searchTitleEl.getText().contains("[단행본]") && !ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")) {
+            String searchTitle = novelCommonEditService.editTitleForNovelEntity(searchTitleEl.getText());
+            if (searchTitle.equals(title) && !searchTitleEl.getText().contains("[단행본]") && !ariaLabelEl.getAttribute("aria-label").contains("19세 연령 제한")){
               kakaoCrollingData.setPlatform(1);
 
               // platformId 가져오기
@@ -1312,11 +1312,6 @@ public class NovelDetailServiceImpl implements NovelDetailService {
                 kakaoCrollingData.setNovelCompleteYn("N");
               }
 
-              // novelUpdateDate 가져오기
-//              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
-//                int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
-//                kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
-//              }
 
               // cateList 가져오기
               String category = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[1]")).getText();

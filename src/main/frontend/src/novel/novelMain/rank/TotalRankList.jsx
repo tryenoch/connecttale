@@ -8,7 +8,7 @@ function TotalRankList(props) {
 
   return (
     <div>
-      <h1 className={'main-title'}>TOP 30 순위 리스트</h1>
+      <h1 className={'main-title mt-3'}>TOP 30 일간 순위 리스트</h1>
       <Row className={'align-item-center mt-4 mb-5'}>
         <Col className={'me-3'}>
           <div className={'d-flex justify-content-between align-items-center'}>
