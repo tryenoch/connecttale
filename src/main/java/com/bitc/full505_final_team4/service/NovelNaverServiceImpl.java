@@ -56,10 +56,16 @@ public class NovelNaverServiceImpl implements NovelNaverService{
       String platformId = dto.getPlatformId();
       String ebookCheck = dto.getEbookCheck(); // 단행본 웹소설 여부
       String updateDate = dto.getNovelUpdateDate(); // 네이버 플랫폼 해당 작품 출시일
+      boolean adultOnly = dto.isAdultsOnly();
+
+      String adultYn = "N";
+      if (adultOnly){
+        adultYn = "Y";
+      }
 
       try {
         // novel table 에 일치하는 제목이 있는지 확인, 없을 경우 exception 반환
-        Optional<NovelEntity> entityNovel = novelMainRepository.findByNovelTitleAndEbookCheck(title, ebookCheck);
+        Optional<NovelEntity> entityNovel = novelMainRepository.findByNovelTitleAndEbookCheckAndNovelAdult(title, ebookCheck, adultYn);
 
         // 일치하는 제목이 없다면 부여한 예외 지점으로 넘김
         if (entityNovel.isEmpty()){
@@ -92,7 +98,7 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
         // platform entity 생성
         NovelPlatformEntity novelPlatformEntity = getNovelPlatformEntityFromJsoup(novelEntity, platformId);
-        novelPlatformEntity.setNovelUpdateDate(updateDate); // 출시일 정보 더하기
+        novelPlatformEntity.setNovelRelease(updateDate); // 출시일 정보 더하기
 
         // list 에 더하기
         novelPlatformEntityList.add(novelPlatformEntity);
@@ -179,6 +185,8 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
           title = editNaverNovelTitle(title); // 소설 제목만 들고오기 [, (제외
           novel.setNovelTitle(title);
+
+          novel.setAdultsOnly(false);
 
 
           // 플랫폼 전용 아이디 들고오기
@@ -333,7 +341,7 @@ public class NovelNaverServiceImpl implements NovelNaverService{
       completeYn = getCompleteYn(completeYn);
       entity.setNovelCompleteYn(completeYn); // novel_complete_yn
 
-      String priceInfo = page.select("div.area_price").select(".point_color").text();
+      String priceInfo = page.select("div.area_price").select(".point_color").get(0).text();
       int price = getNovelPrice(priceInfo);
       entity.setNovelPrice(price); // novel_price
 
