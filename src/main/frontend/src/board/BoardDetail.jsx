@@ -4,6 +4,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {boardList} from "./BoardMain";
 import button from "bootstrap/js/src/button";
+import parse from "html-react-parser";
 
 function BoardDetail(props) {
   // html 파싱을 위한 라이브러리
@@ -87,78 +88,89 @@ function BoardDetail(props) {
         })
   }
   return (
-      <Container className={'my-4'}>
-        <h2>boardDetail</h2>
-        <Row>
-          <Col xs={10} className={'my-5 mx-auto'}>
-            <Row className={'border-3 border-black border-bottom py-2 mb-5'}>
-              <div className={'text-center mb-5'}>
-                <h1 className={'fw-bold'}>{boardList[profile.cate].title}</h1>
-              </div>
-            </Row>
-            <Row className={'border-bottom border-1 my-2'}>
-              {
-                  (reqCate.trim().length > 0) &&
-                  (<Col xs={2}>
-                    <h3 className={'text-center'}>{reqCate}</h3>
-                  </Col>)
-              }
-              <Col>
-                <h3>{title}</h3>
-              </Col>
-            </Row>
-            <div className={'d-flex justify-content-between p-2'}>
-              <span>작성자: {nickName}</span>
-              <span>작성일: {createDt}</span>
-              <span>조회수: {hitCnt}</span>
+    <Container className={'my-4'}>
+      <div>
+      </div>
+      <Row>
+        <Col xs={10} className={'my-5 mx-auto'}>
+          <Row className={'py-2 mb-3'}>
+            <div className={'text-center mb-3'}>
+              <h1 className={'fw-bold board-title lg'}>{boardList[profile.cate].title}</h1>
             </div>
-            <div className={'border-top border-bottom border-1 p-3'}>
-              {parse(contents)}
-            </div>
-            <div className={'d-flex justify-content-center my-3 delete-left'}>
-              <button type={'button'} className={'btn btn-primary px-4'} onClick={handleGotoMain}>목록</button>
-              {
-                // 본인 or 관리자로 로그인했을 경우 렌더링하게 구현
-                  true &&
-                  (<button type={'button'} className={'btn btn-danger'} onClick={handleDelete}>삭제</button>)
-              }
-            </div>
-            {/*    댓글 구현부*/}
+          </Row>
+          <Row className={'my-2 board-content-header align-items-center'}>
             {
+                (reqCate.trim().length > 0) &&
+                (<Col xs={2} className={''}>
+                  <h3 className={'text-center cate'}>{reqCate}</h3>
+                </Col>)
+            }
+            <Col>
+              <h3>{title}</h3>
+            </Col>
+          </Row>
+          <Row>
+            <Col className={'ps-0'}>
+              <div className={'d-flex justify-content-between content-info'}>
+                <span>{nickName}</span>
+                <div>
+                  <span>{createDt}</span>
+                  <span className={'mx-3'}>|</span>
+                  <span> {hitCnt}</span>
+                </div>
+              </div>
+              <div className={'p-3 content-desc'}>
+                {parse(contents)}
+              </div>
+              <div className={'d-flex justify-content-between my-3 delete-left'}>
+                <button type={'button'} className={'btn btn-dark px-4'} onClick={handleGotoMain}>목록</button>
+                {
+                  // 본인 or 관리자로 로그인했을 경우 렌더링하게 구현
+                    true &&
+                    (<button type={'button'} className={'btn btn-outline-dark px-4'} onClick={handleDelete}>삭제</button>)
+                }
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col className={'ps-0'}>
+              {/*    댓글 구현부*/}
+              {
                 (profile.cate == 0) &&
                 (<div>
                   <form onSubmit={handleReply}>
-                    <p>{JSON.parse(sessionStorage.getItem('member')).nickname}</p>
-                    <div className={'reply-input py-1'}>
+                    {/*<p>{JSON.parse(sessionStorage.getItem('member')).nickname}</p>*/}
+                    <div className={'py-2'}>
                       <input
                           type="text"
                           value={reply}
-                          className={'input-s6'}
+                          className={'reply-input board'}
                           onChange={(event) =>
                               setReply(event.target.value)}/>
-                      <button type={'submit'} className={'btn'}><i className="bi bi-send text-purple"></i>
+                      <button type={'submit'} className={'reply-btn text-center'}><i className="bi bi-send"></i>
                       </button>
                     </div>
                   </form>
                   {/* 댓글 배열을 이용하여 댓글 구현*/}
                   {
                     replyList.map((value, index) => {
-                      return (<div key={index} className={'mt-3'}>
-                        <Row>
-                          <Col>
-                            <h4>{value.nickName}</h4>
-                          </Col>
-                          <Col className={'d-flex justify-content-end'}>
-                            {
-                              //댓글 닉네임 가져오기 id랑
-                                ((sessionStorage.getItem('id') == value.createId) || (sessionStorage.getItem('grade') == 2)) &&
-                                <button type={"button"} className={'btn btn-danger'}
-                                        onClick={(event) => handelReplyDelete(event, value.idx)}>삭제
-                                </button>
-                            }
-                          </Col>
-                        </Row>
-                        <p>{value.createDt}</p>
+                      return (
+                        <div key={index} className={'mt-3 reply-content'}>
+                          <div className={'d-flex justify-content-between'}>
+                            <div>
+                              <span className={'fw-bold'}>{value.nickName}</span>
+                              <span className={'ms-3 text-black-50'}>{value.createDt}</span>
+                            </div>
+                            <div>
+                              {
+                                //댓글 닉네임 가져오기 id랑
+                                  ((sessionStorage.getItem('id') == value.createId) || (sessionStorage.getItem('grade') == 2)) &&
+                                  <button type={"button"} className={'btn btn-dark'}
+                                          onClick={(event) => handelReplyDelete(event, value.idx)}>삭제
+                                  </button>
+                              }
+                            </div>
+                          </div>
                         <p>{value.reply}</p>
                       </div>)
                     })
@@ -166,9 +178,13 @@ function BoardDetail(props) {
 
                 </div>)
             }
-          </Col>
-        </Row>
-      </Container>
+            </Col>
+          </Row>
+
+
+        </Col>
+      </Row>
+    </Container>
   )
 }
 
