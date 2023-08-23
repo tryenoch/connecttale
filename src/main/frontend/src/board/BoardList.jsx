@@ -9,16 +9,22 @@ function BoardList(props) {
     const [cate, setCate] = useState(0);
     const [keyword, setKeyword] = useState('');
     // 카테고리 변경 시 페이지 번호가 0으로 초기화 x
+    const [type, setType] = useState('');
     const [nowPage, setNowPage] = useState(0);
     const [endPage, setEndPage] = useState(0);
     const [pages, setPages] = useState([1]);
     const [boardList, setBoardList] = useState([{}]);
 
     useEffect(() => {
+        setType(props.data.type);
         setNowPage(props.defaultPage);
     }, [])
 
     useEffect(() => {
+        if (type != props.data.type) {
+            setType(props.data.type);
+            setNowPage(0);
+        }
         requestData();
         setCate(0);
         setKeyword('');
@@ -52,6 +58,7 @@ function BoardList(props) {
         axios.get(`/board/${cate}/${keyword}`)
             .then(res => {
                 setBoardList(res.data.boardList);
+                setPages([1]);
             })
             .catch(err => {
                 alert(`통신에 실패했습니다. err : ${err}`);
