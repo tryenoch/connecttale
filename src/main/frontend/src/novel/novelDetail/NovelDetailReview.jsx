@@ -34,7 +34,7 @@ function NovelDetailReview(props) {
     })
       .then(res => {
         setNovelInfo(res.data)
-        // console.log(novelInfo);
+        console.log(novelInfo);
       })
 
   }, [])
@@ -103,6 +103,25 @@ function NovelDetailReview(props) {
     }
   }
   
+  // 자식 컴포넌트(NovelDetailReport)로부터 result를 전달받아 novelInfo 스테이트를 수정하기 위한 함수
+  const parentFunction = (result) => {
+    if (result === 'success') {
+      axios.get('/novelDetail', {
+        params : {
+          title: title,
+          ebookCheck: ebookCheck,
+          ageGrade: novelAdult
+        }
+      })
+        .then(res2 => {
+          setNovelInfo(res2.data);
+        })
+        .catch(err => {
+          console.log(err.message);
+        })
+    }
+  }
+  
   return (
     <div>
       <h4 className={'detail-subtit'}>작품 리뷰</h4>
@@ -121,7 +140,7 @@ function NovelDetailReview(props) {
       {/* 리뷰(댓글) 리스트 구간*/}
       {
         novelInfo.novelReplyList.map((item, index) => (
-          item.spoilerYn == 'N' ?
+          item.spoilerYn == 'N' && item.deletedYn == 'N'?
             (
               <Row key={index} className={'my-4 d-flex align-items-center detail-reply-item'}>
                 <Col className={'ps-0'}>
@@ -131,7 +150,9 @@ function NovelDetailReview(props) {
                     <span>{item.createDt.substring(0, 10)}</span>
                   </div>
                   {/*리뷰(댓글) 신고 부분*/}
-                  <NovelDetailReport replyIdx={item.replyIdx} suspect={item.id.id} replyContent={item.replyContent}/>
+                  <NovelDetailReport
+                    replyIdx={item.replyIdx} suspect={item.id.id} replyContent={item.replyContent} id={item.id.id} grade={sessionStorage.getItem("grade")} parentFunction={parentFunction}
+                  />
                 </div>
                 <div className={'detail-reply-content'}>
                   <p>{item.replyContent}</p>
