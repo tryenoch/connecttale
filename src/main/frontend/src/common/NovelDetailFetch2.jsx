@@ -19,14 +19,14 @@ export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
       }
     })
     
-    console.log(res.data);
+    // console.log(res.data);
     
     // DB에 저장되어있는지 유무 확인
     // db에 해당 작품이 있으면 정보 꺼내오기
     if (res.data != '') {
       // DB에 저장되어 있다면 db에서 platform 데이터 들고와서 novelInfo 변경하기
       novelDetail = res.data;
-      console.log(novelDetail);
+      // console.log(novelDetail);
       
     }
     // db에 해당 작품이 없으면 db 저장하기
@@ -47,12 +47,12 @@ export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
           ageGrade: ageGrade
         }
       })
-      console.log(res2);
+      // console.log(res2);
       
       if (res2.data != '') {
         // DB에 저장되어 있다면 db에서 platform 데이터 들고와서 novelInfo 변경하기
         novelDetail = res2.data;
-        console.log(novelDetail);
+        // console.log(novelDetail);
       }
     }
   }

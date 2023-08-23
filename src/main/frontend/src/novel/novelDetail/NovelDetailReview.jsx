@@ -22,7 +22,7 @@ function NovelDetailReview(props) {
   
   
   useEffect(() => {
-    console.log(novelInfo);
+    // console.log(novelInfo);
     axios.get('/novelDetail', {
       params:
         {
@@ -33,7 +33,7 @@ function NovelDetailReview(props) {
     })
       .then(res => {
         setNovelInfo(res.data)
-        console.log(novelInfo);
+        // console.log(novelInfo);
       })
 
   }, [])
