@@ -17,6 +17,7 @@ function CateITem(props) {
   const author = novel.novelAuthor;
   const novelAdult = novel.novelAdult;
   const cateList = CategoryConverter(novel.cateList);
+  const description = novel.novelIntro;
 
   const handleLinkClick = async (novel) => {
     try {
@@ -60,9 +61,7 @@ function CateITem(props) {
                         </clipPath>
                       </defs>
                     </svg>
-                    <div className={"total-img"}>
                       <img src={thumbnail} alt={title} className={'img-item rounded-1'}/>
-                    </div>
                   </div>
                   // 세션 정보가 없거나 성인 유저가 아닐 경우
                   :
@@ -77,12 +76,15 @@ function CateITem(props) {
         </Col>
         <Col>
           <div className={'w-100 info'}>
-            <div className={'head clearfix'}>
-              <h5 className={'float-left'}>{title}</h5>
-              <div className={'float-left'}>
+            <div className={'info-head'}>
+              <h5 className={'tit'}>{title}</h5>
+              <div className={''}>
                 {author != null ? <span>{author}</span> : null}
                 {cateList != null ? <span className={'ms-2'}><span className={'me-2'}>|</span>{cateList}</span> : null}
               </div>
+            </div>
+            <div className={'info-head'}>
+              <div className={'info-desc'}>{description}</div>
             </div>
           </div>
         </Col>
