@@ -1,5 +1,6 @@
 package com.bitc.full505_final_team4.data.repository;
 
+import com.bitc.full505_final_team4.data.dto.NovelLikeCountDto;
 import com.bitc.full505_final_team4.data.entity.MemberEntity;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
@@ -25,6 +26,15 @@ public interface NovelLikeRepository extends JpaRepository<NovelLikeEntity, Nove
   int countByNovelIdxAndLikeYn(NovelEntity novelIdx, String y);
 
   Optional<List<NovelLikeEntity>> findAllByNovelIdx(NovelEntity novelIdx);
+
+  // 좋아요 높은 순 구하기
+  @Query(
+    value = "SELECT novel_idx " +
+      "FROM novel_like " +
+      "WHERE like_yn = 'Y' GROUP BY novel_idx ORDER BY count(novel_idx) desc ",
+    nativeQuery = true
+  )
+  List<Integer> findNovelLikeMaxCount(Pageable pageable);
 
 
 }

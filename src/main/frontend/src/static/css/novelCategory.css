@@ -1,0 +1,74 @@
+
+/* cate-tabs */
+
+input[type=radio] {
+  appearance: none;
+}
+
+.cate-tabs ul {
+  padding: 0;
+}
+.cate-tabs ul li{
+  float: left;
+  list-style-type: none;
+}
+
+.cate-list li + li {
+  margin-left: 0.4em;
+}
+
+.cate-list label {
+  padding: 0.3em 1.0em;
+  border-radius: 2em;
+  border: 1px solid #d4c0ff;
+  transition: all ease 0.5s;
+}
+
+
+.cate-list input:checked + label   {
+  color: #fff;
+  background-color: #8c52fc;
+  border: 1px solid #8c52fc;
+  transition: all ease 0.3s;
+}
+
+/* cate-item */
+
+.cate-item {
+  height: 13rem;
+}
+
+.cate-item:hover {
+  cursor: pointer;
+  background-color: #e8e0ff;
+  transition: all 0.5s ease;
+  border-radius: 8px;
+}
+
+.cate-img {
+  height: 11em;
+  width: 100%;
+  position: relative;
+}
+
+.cate-img .adult-img{
+  font-size: 1.0em;
+  right: 1.0rem;
+  top : 0.3em;
+}
+
+.cate-img img{
+  height: 100%;
+  margin-left: 0.2em;
+  border-radius: 5px;
+  object-fit: cover;
+  background-color: #ddd; /* 이미지 없을 경우 */
+}
+
+.cate-item .info {
+
+}
+
+.cate-item .info .head {
+  float: left;
+}

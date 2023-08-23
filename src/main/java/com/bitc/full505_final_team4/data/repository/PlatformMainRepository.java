@@ -27,4 +27,11 @@ public interface PlatformMainRepository extends JpaRepository<NovelPlatformEntit
     "SELECT p FROM NovelPlatformEntity AS p ORDER BY p.novelRelease"
   )*/
   List<NovelPlatformEntity> findNovelPlatformEntitiesByOrderByNovelReleaseDesc(Pageable pageable);
+
+  Optional<NovelPlatformEntity> findByNovelIdx_NovelIdxAndPlatform(int novelIdx, int platform);
+
+  // cateList에 cateItem이 포함되어 있는 리스트 들고오기
+  List<NovelPlatformEntity> findNovelPlatformEntitiesByCateListLike(String cateItem, Pageable pageable);
+
+  List<NovelPlatformEntity> findAllBy(Pageable pageable);
 }

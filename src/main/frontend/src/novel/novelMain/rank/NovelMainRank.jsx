@@ -22,7 +22,7 @@ function NovelMainRank() {
     rankList = novelList.filter(novel => novel.novelIndexNum <13);
     rankList = rankList.map(novel =>
       /* 나중에 링크 추가 해야함 */
-      <Col className={"rank-item"} key={novel.novelIndexNum}>
+      <Col className={"rank-item align-items-center"} key={novel.novelIndexNum}>
         <RankItem novel={novel} />
       </Col>
     );
