@@ -31,10 +31,14 @@
     color: #8b66d7;
 }
 
-.detail-image {
-    width: 260px;
-    border-radius: 5px;
+.img-area {
     position: relative;
+}
+.detail-image {
+    height: 100%;
+    border-radius: 5px;
+    position: absolute;
+    left: 0;
     overflow:hidden;
     margin:0 auto;
 }
@@ -50,7 +54,7 @@
 .detail-image img {
     width:100%;
     height:100%;
-    object-fit: contain;
+    object-fit: cover;
     background-color: #ddd; /* 이미지 없을 경우 */
 }
 
@@ -106,10 +110,16 @@
 
 .detail-price-table td {
     border: none;
+    background-color: transparent;
 }
 
 .detail-price-table tr {
     border-bottom: 1px dashed #9890c5;
+}
+
+.detail-price-table tr:hover {
+    background-color: #f4f1ff;
+    cursor: pointer;
 }
 
 .detail-price-table tr:last-child {
