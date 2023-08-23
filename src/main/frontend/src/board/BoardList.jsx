@@ -89,13 +89,13 @@ function BoardList(props) {
                       </Col>
                       <Col xs={9} className={'search-bar ps-1'}>
                         <div className={''}>
-                        <input
-                            type={'text'}
-                            value={keyword}
-                            placeholder={'검색어를 입력하세요'}
-                            onChange={(e) => setKeyword(e.target.value)}
-                        />
-                        <button type={'submit'}><i className="bi bi-search"></i></button>
+                          <input
+                              type={'text'}
+                              value={keyword}
+                              placeholder={'검색어를 입력하세요'}
+                              onChange={(e) => setKeyword(e.target.value)}
+                          />
+                          <button type={'submit'}><i className="bi bi-search"></i></button>
                         </div>
                       </Col>
                     </Row>
@@ -127,6 +127,10 @@ function BoardList(props) {
                           <td>{board.boardIdx}</td>
                           <td className={'text-start cursor'}>
                             <Link to={`/board/detail/${props.data.id}/${board.boardIdx}`}>
+                              {
+                                  (board.reqCate != "") &&
+                                  (<span className={'list-cate me-1'}>{board.reqCate}</span>)
+                              }
                               {board.boardTitle}
                             </Link>
                           </td>
@@ -138,7 +142,7 @@ function BoardList(props) {
                     return (
                         <tr key={index}>
                           <td>{board.boardIdx}</td>
-                          <td className={'text-start'}>비밀글 입니다.</td>
+                          <td className={'text-start cursor'}>비밀글 입니다.</td>
                           <td>{board.nickName}</td>
                           <td>{board.createDt}</td>
                         </tr>
@@ -210,7 +214,8 @@ function BoardList(props) {
                     ((props.data.type === 'req' &&
                             sessionStorage.getItem('id') != null) ||
                         (sessionStorage.getItem('grade') == 2)) &&
-                    (<Link to={`/board/write/${props.data.id}`} className={'btn btn-purple purple-round px-4'}>글 쓰기</Link>)
+                    (<Link to={`/board/write/${props.data.id}`} className={'btn btn-purple purple-round px-4'}>글
+                      쓰기</Link>)
                 }
 
               </div>

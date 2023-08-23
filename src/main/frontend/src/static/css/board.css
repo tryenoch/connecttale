@@ -263,3 +263,11 @@ table {
 .delete-left {
     position: relative;
 }
+
+.list-cate {
+    font-weight: 600;
+    background-color: #ddd;
+    border-radius: 40px;
+    display: inline-block;
+    padding: 0.1em 1em 0.1em;
+}
