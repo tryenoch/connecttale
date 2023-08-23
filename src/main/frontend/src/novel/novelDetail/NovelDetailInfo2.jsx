@@ -17,17 +17,9 @@ function NovelDetailInfo(props) {
   const [kakao, setKakao] = useState({});
   const [baseItem, setBaseItem] = useState({});
   
-  const [likeFlag, setLikeFlag] = useState(false);
-  // const [novelLikeList, setNovelLikeList] = useState([]);
-  // const [novelLikeCount, setNovelLikeCount] = useState(0);
-  
   // 세션id값 받아오기, 세션 정보 없으면 noUser가 됨 -> 서버에서 memberEntity 못찾게끔
   const [loginId, setLoginId] = useState(sessionStorage.getItem("id") ? sessionStorage.getItem("id") : 'noUser');
   
-  // console.log(kakao);
-  // console.log(naver);
-  // console.log(ridi);
-  // console.log(baseItem);
   
   useEffect(() => {
     axios.get('/novelDetail', {
@@ -72,17 +64,10 @@ function NovelDetailInfo(props) {
           setKakao(novelInfo.kakao);
         }
         
-        for (let i = 0; i < novelInfo.novelLikeList.length; i++) {
-          if (novelInfo.novelLikeList[i].likeYn == 'Y' && novelInfo.novelLikeList[i].id.id == loginId) {
-            setLikeFlag(true);
-            break;
-          }
-          else {
-            setLikeFlag(false);
-          }
-        }
-        
 
+      })
+      .catch(err => {
+        console.log(err.message);
       })
     
   }, []);
@@ -114,29 +99,17 @@ function NovelDetailInfo(props) {
           
           setNovelInfo(res2.data);
           console.log(novelInfo);
-  
-          for (let i = 0; i < novelInfo.novelLikeList.length; i++) {
-            if (novelInfo.novelLikeList[i].likeYn == 'Y' && novelInfo.novelLikeList[i].id.id == loginId) {
-              setLikeFlag(true);
-              break;
-            }
-            else {
-              setLikeFlag(false);
-            }
-          }
-          
+
         })
         .catch(err => {
           console.log(err.message);
         })
     }
-    // 세션 값이 없으면 로그인 화면으로 이동
+    // 세션 값이 없기 때문에 로그인하라는 알림창
     else {
       alert("회원만 이용 가능한 서비스입니다.");
     }
-    
   }
-  
   
   return (
     <div>
@@ -172,32 +145,18 @@ function NovelDetailInfo(props) {
                   {baseItem.novelTitle} [{baseItem.ebookCheck}] </p>
               </div>
               <div className={'col-sm-3'}>
-                {/*<button type={'button'} className={'btn-outline-purple ms-2'} onClick={likeClickHandler}>*/}
-                {/*  <i className="bi bi-heart detail-heart"></i>*/}
-                {/*  <span>*/}
-                {/*  {novelInfo.novelLikeCount}*/}
-                {/*  </span>*/}
-                {/*</button>*/}
-                {
-                  novelInfo.novelLikeList.map((item, index) => {
-                    return (
-                      <div key={index}>
-                        <p>좋아요 아이디 : {item.id.id}</p>
-                        <p>로그인 아이디 : {loginId}</p>
-                        <p>{item.likeYn}</p>
-                        <hr/>
-                      </div>
-                    )
-                  })
-                }
-                
-                <button type={'button'} className={likeFlag ? 'btn btn-outline-purple ms-2' : 'btn btn-purple ms-2'} onClick={likeClickHandler}>
+                <button type={'button'} className={`btn-outline-purple ms-2`} onClick={likeClickHandler}>
                   <i className="bi bi-heart detail-heart"></i>
                   <span>
-                  {novelInfo.novelLikeCount}
+                    {novelInfo.novelLikeCount}
+                    {
+                      novelInfo.novelLikeList.map((item) => (
+                      item.id.id == loginId && item.likeYn == 'Y' ? '찜' : null
+                      ))
+                    }
                   </span>
                 </button>
-                {/*{likeButton}*/}
+                
               </div>
             </div>
             
