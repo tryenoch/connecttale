@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {Link, Route, Routes} from "react-router-dom";
+import {Link} from "react-router-dom";
 import MemberList from "./MemberList";
 import ReportList from "./ReportList";
 import RecentNovelInsert from "../../novel/novelMain/RecentNovelInsert";
+import UserImg from "../Logo/user.png";
 
 function StaffMain(props) {
     const [page, setPage] = useState('member');
@@ -17,12 +18,27 @@ function StaffMain(props) {
         <div>
             <div className={'row border rounded-1 p-1'}>
                 <div className={'col-sm-3 bg-purple-light p-3 grid box-board'}>
-                    <Link to={'/myPage/changeInfo'}>
-                        <p href="" className={'fs-4 text-purple'}>{member.nickname}
-                            <i className="bi bi-chevron-right text-secondary opacity-50 fw-bold"></i>
-                        </p>
-                        <p className={'text-secondary opacity-50 fw-bolder'}>{sessionStorage.getItem('id')}</p>
-                    </Link>
+                    <div className={'row'}>
+                        <div className={'col-sm'}>
+                            <div className={'box-sm'}>
+                                {
+                                    sessionStorage.getItem("profile") === null ?
+                                        <img src={require("../Logo/user.png").default} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                        :
+                                        <img src={`/profile/${sessionStorage.getItem("profile")}`} alt="" id={'preview'}
+                                             className={'img-fluid profile'}/>
+                                }
+                            </div>
+                        </div>
+                        <div className={'col-sm'}>
+                            <Link to={'/myPage/changeInfo'}>
+                                <a href="" className={'fs-4 text-purple'}>{member.nickname}
+                                    <i className="bi bi-chevron-right text-secondary opacity-50 fw-bold"></i>
+                                </a>
+                                <p className={'text-secondary opacity-50 fw-bolder'}>{sessionStorage.getItem('id')}</p>
+                            </Link>
+                        </div>
+                    </div>
                 </div>
                 <div className={'col-sm-9 p-3'}>
                     <div className={'row justify-content-between'}>

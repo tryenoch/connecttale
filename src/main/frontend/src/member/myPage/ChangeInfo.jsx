@@ -1,7 +1,6 @@
 import React, {useCallback, useRef, useState} from 'react';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import JoinLogoTop2 from "../join/JoinLogoTop2";
 
 
 function ChangeInfo(props) {
@@ -153,7 +152,7 @@ function ChangeInfo(props) {
                     }
                 });
 
-                sessionStorage.setItem("sFile", response.data.sFile);
+                sessionStorage.setItem("profile", response.data.sFile);
                 console.log('File uploaded:', response.data.sFile);
                 // 업로드 성공 시 처리
             } catch (error) {
@@ -189,7 +188,10 @@ function ChangeInfo(props) {
                                         <label htmlFor="image-file" className={'w-100 h-100'}>
                                             {
                                                 imgFile === null || imgFile === "" ?
-                                                    <img src={`${sessionStorage.getItem("sFile")}`} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                                    sessionStorage.getItem("profile") === null ?
+                                                        <img src="../Logo/user.png" alt="" id={'preview'} className={'img-fluid profile'}/>
+                                                        :
+                                                        <img src={`/profile/${sessionStorage.getItem("profile")}`} alt="" id={'preview'} className={'img-fluid profile'}/>
                                                     :
                                                     <img src={imgFile} alt="" id={'preview'} className={'img-fluid profile'}/>
                                             }
