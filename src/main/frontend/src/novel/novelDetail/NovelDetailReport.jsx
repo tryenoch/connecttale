@@ -57,7 +57,8 @@ function NovelDetailReport(props) {
   return (
 
     <div>
-      <Button variant={'btn btn-outline-danger fs-6'} onClick={handleShow}>신고</Button>
+      <span className={'badge-sm text-bg-dark px-3 py-1 rounded-pill me-1'} onClick={handleShow}>신고</span>
+      <span className={'badge-sm text-bg-dark px-3 py-1 rounded-pill ms-1'} onClick={handleShow}>삭제</span>
       
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

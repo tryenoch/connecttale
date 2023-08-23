@@ -202,9 +202,9 @@ function NovelDetailInfo(props) {
               <p className={'fw-bold'}>{baseItem.novelPubli}<span className={'ms-2 text-muted'}>출판</span></p>
               {
                 baseItem.ebookCheck == '웹소설'
-                  ? <p className={'fw-bold'}>총 {baseItem.novelCount} 화 | {baseItem.novelCompleteYn == 'Y' ? '완결' : baseItem.novelUpdateDate ? `완결 | ${baseItem.novelUpdateDate}` : '연재중'}</p>
+                  ? <p className={'fw-bold'}>총 {baseItem.novelCount} 화 | {baseItem.novelCompleteYn == 'Y' ? '완결' : baseItem.novelUpdateDate ? `연재중 | ${baseItem.novelUpdateDate}` : '연재중'}</p>
                   : <p className={'fw-bold'}>총 {baseItem.novelCount} 권
-                                             | {baseItem.novelCompleteYn == 'Y' ? '완결' : '연재중'}</p>
+                                             | {baseItem.novelCompleteYn == 'Y' ? '완결' : baseItem.novelUpdateDate ? `연재중 | ${baseItem.novelUpdateDate}` : '연재중'}</p>
               }
               {
                 baseItem.novelRelease

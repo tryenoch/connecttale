@@ -16,3 +16,47 @@
     padding: 10px;
     line-height: 2em;
 }
+
+.detail-subtit {
+    color : #444;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin: 1em 0 0.8em;
+}
+
+.sub-info {
+    font-weight: 600;
+    color:#8c52fc;
+    font-size: 1.2em;
+    margin-bottom: 0.3em;
+}
+
+.detail-reply textarea {
+    resize: none;
+    padding: 0.8em;
+}
+
+.detail-reply-item {
+    background-color: #f6f6f6;
+    border-radius: 5px;
+    padding: 1em 1.3em;
+}
+.detail-reply-item .reply-info{
+    margin-bottom: 0.4em;
+    border-bottom: 1px dashed #b6b6b6;
+    padding-bottom:4px;
+}
+
+.detail-reply-item .reply-info span:first-of-type {
+    margin-right: 0.7em;
+    font-weight: 700;
+    font-size: 1.2em;
+}
+.detail-reply-item .detail-reply-content{
+    background-color: transparent;
+}
+
+span.badge-sm {
+    cursor: pointer;
+    font-size: 0.8em !important;
+}

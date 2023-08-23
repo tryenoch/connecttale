@@ -1,4 +1,13 @@
 
+.cate-low + .cate-low::before {
+  content:"";
+  display: block;
+  border-top: 1px dashed #ae89ff;
+  width: 90%;
+  margin: auto auto 0.3rem auto;
+  /*margin: 0 auto;*/
+}
+
 /* cate-tabs */
 
 input[type=radio] {
