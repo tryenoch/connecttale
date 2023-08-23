@@ -4,7 +4,7 @@ import axios from "axios";
 import NovelDetailReport from "./NovelDetailReport";
 
 function NovelDetailReview(props) {
-  const [title, setTitle] = useState(props.novelDetail.novelIdx.novelTitle);
+  const [title, setTitle] = useState(encodeURIComponent(props.novelDetail.novelIdx.novelTitle));
   const [ebookCheck, setEbookCheck] = useState(props.novelDetail.novelIdx.ebookCheck);
   const [novelAdult, setNovelAdult] = useState(props.novelDetail.novelIdx.novelAdult);
   
@@ -22,7 +22,7 @@ function NovelDetailReview(props) {
   
   
   useEffect(() => {
-    console.log(novelInfo);
+    // console.log(novelInfo);
     axios.get('/novelDetail', {
       params:
         {
@@ -33,7 +33,7 @@ function NovelDetailReview(props) {
     })
       .then(res => {
         setNovelInfo(res.data)
-        console.log(novelInfo);
+        // console.log(novelInfo);
       })
 
   }, [])

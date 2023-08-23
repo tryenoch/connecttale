@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.devtools.Reply;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +21,12 @@ public class NovelDetailController {
 
   // ---------------------db에 있는 디테일페이지 데이터 불러오기-------------------------
   @RequestMapping(value = "/novelDetail", method = RequestMethod.GET)
-  public Object getNovelDetail(@RequestParam("title") String title, @RequestParam("ebookCheck") String ebookCheck, @RequestParam("ageGrade") String novelAdult) throws Exception {
+  public Object getNovelDetail(@RequestParam("title") String encodeTitle, @RequestParam("ebookCheck") String ebookCheck, @RequestParam("ageGrade") String novelAdult) throws Exception {
     Map<String, Object> novelDetail = new HashMap<>();
 
+    System.out.println(encodeTitle);
+    String title = URLDecoder.decode(encodeTitle, "UTF-8");
+    System.out.println(title);
 
     // 소설 디테일 정보(제목, 저자, 인트로, 등) 관련 내용
     // 매개변수 title, ebookCheck를 통해 db에 해당 이름으로 저장된 소설 정보 다가져오기
@@ -115,7 +120,6 @@ public class NovelDetailController {
     else {
       return null;
     }
-
   }
 
 
@@ -123,8 +127,12 @@ public class NovelDetailController {
   // 리디북스 디테일 페이지 정보 db 저장
 
   @RequestMapping(value = "/novelDetail", method = RequestMethod.POST)
-  public void insertNovelDetail(@RequestParam("title") String title, @RequestParam("ne") String ne, @RequestParam("ageGrade") String novelAdult) throws Exception {
-//
+  public void insertNovelDetail(@RequestParam("title") String encodeTitle, @RequestParam("ne") String ne, @RequestParam("ageGrade") String novelAdult) throws Exception {
+    // 인코딩된 문자열을 다시 원래의 문자열로 디코딩해주는 절차 필요함
+    System.out.println(encodeTitle);
+    String title = URLDecoder.decode(encodeTitle, "UTF-8");
+    System.out.println(title);
+
 //    System.out.println(title);
 //    System.out.println(id);
 //    System.out.println(ne);
