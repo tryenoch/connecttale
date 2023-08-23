@@ -121,7 +121,7 @@
     padding: 10px;
     line-height: 1.7em;
     font-size: 1.05em;
-    white-space: pre;
+    white-space: pre-wrap;
 }
 
 .detail-subtit {
