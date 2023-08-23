@@ -198,3 +198,5 @@ p {
   letter-spacing: -0.05em;
   margin-bottom: 0.1em;
 }
+
+@import "novelCategory.css";

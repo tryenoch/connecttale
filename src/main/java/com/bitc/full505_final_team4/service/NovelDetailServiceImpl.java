@@ -541,10 +541,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
 
               // novelRelease 가져오기
-              int novelReleaseStartIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf("(");
-              int novelReleaseEndIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf(")");
+              int novelReleaseStartIndex = driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().indexOf("(");
+              int novelReleaseEndIndex = driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().indexOf(".)");
 
-              naverCrollingData.setNovelRelease(driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex - 1));
+              naverCrollingData.setNovelRelease(driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex));
 
               // cateList 가져오기
               if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("판타지")) {
@@ -636,10 +636,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
 
               // novelRelease 가져오기
-              int novelReleaseStartIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf("(");
-              int novelReleaseEndIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf(")");
+              int novelReleaseStartIndex = driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().indexOf("(");
+              int novelReleaseEndIndex = driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().indexOf(".)");
 
-              naverCrollingData.setNovelRelease(driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex - 1));
+              naverCrollingData.setNovelRelease(driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex));
 
               // cateList 가져오기
               if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("판타지")) {
@@ -732,10 +732,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
 
               // novelRelease 가져오기
-              int novelReleaseStartIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf("(");
-              int novelReleaseEndIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf(")");
+              int novelReleaseStartIndex = driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().indexOf("(");
+              int novelReleaseEndIndex = driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().indexOf(".)");
 
-              naverCrollingData.setNovelRelease(driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex - 1));
+              naverCrollingData.setNovelRelease(driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex));
 
               // cateList 가져오기
               if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("판타지")) {
@@ -827,10 +827,10 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
 
               // novelRelease 가져오기
-              int novelReleaseStartIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf("(");
-              int novelReleaseEndIndex = driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().indexOf(")");
+              int novelReleaseStartIndex = driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().indexOf("(");
+              int novelReleaseEndIndex = driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().indexOf(".)");
 
-              naverCrollingData.setNovelRelease(driver.findElement(By.xpath("//*[@id=\"volumeList\"]/tr[1]/td[1]/div/em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex - 1));
+              naverCrollingData.setNovelRelease(driver.findElement(By.id("volumeList")).findElement(By.tagName("em")).getText().substring(novelReleaseStartIndex + 1, novelReleaseEndIndex));
 
               // cateList 가져오기
               if (driver.findElement(By.xpath("//*[@id=\"content\"]/ul[1]/li/ul/li[2]/span/a")).getText().equals("판타지")) {

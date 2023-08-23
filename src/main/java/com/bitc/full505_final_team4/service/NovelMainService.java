@@ -33,6 +33,8 @@ public interface NovelMainService {
 
   List<NovelPlatformDto> getMaxLikeNovelList(int itemCount) throws Exception;
 
+  List<NovelPlatformDto> getCateNovelList (String cateItem, String itemCount) throws Exception;
+
   /* 리디 별점 계산기 */
   double getStarRate(JSONArray ratings) throws Exception;
 

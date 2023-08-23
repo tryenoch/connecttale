@@ -530,6 +530,23 @@ public class NovelMainServiceImpl implements NovelMainService{
     return list;
   }
 
+  @Override
+  public List<NovelPlatformDto> getCateNovelList (String cateItem, String page) throws Exception{
+    Pageable pageable = PageRequest.of(Integer.parseInt(page), 10);
+
+    List<NovelPlatformEntity> entityList = new ArrayList<>();
+
+    if (cateItem.equals("0")){
+      entityList = platformMainRepository.findAllBy(pageable);
+    } else {
+      entityList = platformMainRepository.findNovelPlatformEntitiesByCateListLike(cateItem, pageable);
+    }
+
+    // entity 리스트를 dto 리스트로 변환
+    List<NovelPlatformDto> list = entityList.stream().map(m -> new NovelPlatformDto().toDto(m)).collect(Collectors.toList());
+
+    return list;
+  }
 
   /* Ridi Json 에서 들고온 ratings 별점으로 변환하기 (10점 만점 기준) */
   @Override
