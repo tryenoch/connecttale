@@ -148,9 +148,13 @@ function ChangeInfo(props) {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
+                    params: {
+                        id: sessionStorage.getItem('id')
+                    }
                 });
 
-                console.log('File uploaded:', response.data);
+                sessionStorage.setItem("sFile", response.data.sFile);
+                console.log('File uploaded:', response.data.sFile);
                 // 업로드 성공 시 처리
             } catch (error) {
                 console.error('Error uploading file:', error);
@@ -183,7 +187,12 @@ function ChangeInfo(props) {
                                 <div className={'col-sm-3 mx-auto '}>
                                     <div className={'box'}>
                                         <label htmlFor="image-file" className={'w-100 h-100'}>
-                                            <img src={imgFile} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                            {
+                                                imgFile === null || imgFile === "" ?
+                                                    <img src={`${sessionStorage.getItem("sFile")}`} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                                    :
+                                                    <img src={imgFile} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                            }
                                         </label>
                                         <input type="file" name={'imageFile'} id={'image-file'} accept={'image/*'}
                                                className={'invisible'} onChange={handleFileChange} ref={imgRef}/>

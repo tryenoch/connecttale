@@ -1,15 +1,16 @@
 package com.bitc.full505_final_team4.service;
 
-import com.bitc.full505_final_team4.data.dto.NovelDto;
-import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
-import com.bitc.full505_final_team4.data.dto.NovelReplyDto2;
-import com.bitc.full505_final_team4.data.dto.ReportDto2;
+import com.bitc.full505_final_team4.common.ProfileUtils;
+import com.bitc.full505_final_team4.data.dto.*;
 import com.bitc.full505_final_team4.data.entity.*;
 import com.bitc.full505_final_team4.data.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +27,11 @@ public class MemberServiceImpl implements MemberService {
   private final ReportRepository reportRepository;
   private final BoardRepository boardRepository;
 
-// 회원가입
+  @Autowired
+  private ProfileUtils profileUtils;
+
+
+  // 회원가입
   @Override
   public void join(MemberEntity member) throws Exception {
     memberRepository.save(member);
@@ -140,7 +145,19 @@ public class MemberServiceImpl implements MemberService {
     return result;
   }
 
-//  등업(update)
+  @Override
+  public String profileUpload(String id, MultipartHttpServletRequest multipart) throws Exception {
+
+    MemberDto file = profileUtils.parseProfileInfo(id, multipart);
+
+    MemberEntity member = memberRepository.findAllById(id);
+    member.setSFile(file.getSFile());
+    memberRepository.save(member);
+
+    return file.getSFile();
+  }
+
+  //  등업(update)
   @Override
   public void levelUp(String id) throws Exception {
     MemberEntity member = memberRepository.findAllById(id);

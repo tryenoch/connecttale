@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +19,7 @@ public class ReportDto2 {
   private String reportContent;
   private String reporter;
   private String suspect;
-  private LocalDateTime reportDt = LocalDateTime.now();
+  private String reportDt;
 
 
   @Builder
@@ -30,7 +31,7 @@ public class ReportDto2 {
     this.reportContent = reportContent;
     this.reporter = reporter;
     this.suspect = suspect;
-    this.reportDt = reportDt;
+    this.reportDt = reportDt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
   }
 
   public static ReportDto2 toDto(ReportEntity entity) {

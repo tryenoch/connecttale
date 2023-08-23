@@ -31,7 +31,7 @@ function LikeList(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/myPage/likeList?id=${sessionStorage.getItem('id')}&page=${nowPage}&size=10`)
+        axios.get(`/myPage/likeList?id=${sessionStorage.getItem('id')}&page=${nowPage}&size=12`)
             .then(res => {
 
                 console.log(res.data);

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -208,6 +209,14 @@ public class MemberController {
 
     Object result = memberService.getReplyList(pageable, id);
 
+    return result;
+  }
+
+  @RequestMapping(value = "/profile/upload", method = RequestMethod.POST)
+  public Object profileUpload(@RequestParam("id")String  id, MultipartHttpServletRequest multipart) throws Exception {
+    Map<String, String> result = new HashMap<>();
+    String sFile = memberService.profileUpload(id, multipart);
+    result.put("sFile", sFile);
     return result;
   }
 }
