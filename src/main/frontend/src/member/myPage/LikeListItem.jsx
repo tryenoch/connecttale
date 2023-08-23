@@ -32,7 +32,7 @@ function LikeListItem(props) {
     const handleLinkClick = async (like) => {
         console.log(like);
         try {
-            const novelDetail = await fetchData(like.novelThumbnail, like.novelTitle, like.ebookCheck, like.novelIdx, like.novelAdult);
+            const novelDetail = await fetchData('123', like.novelTitle, like.ebookCheck, like.novelAdult);
             navi(`/novelDetail/${title}`, {
                 state: {
                     novelDetail: novelDetail,
