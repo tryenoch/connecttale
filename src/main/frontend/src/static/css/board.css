@@ -27,21 +27,23 @@ td.cursor,
 
 /*custom search bar*/
 .search-bar {
-    position: relative;
-    width: 400px;
     margin: 0 auto;
 }
 
 .search-bar:after {
     clear: both;
 }
+.search-bar div {
+    position: relative;
+    border: 1px solid #a1a1a1;
+    border-radius: 42px;
+    margin-left: 0.3em;
+    padding: 0.45em 1.2em;
+}
 
 .search-bar input {
-    width: 375px;
-    height: 42px;
-    padding-left: 15px;
-    border-radius: 42px;
-    border: 2px solid black;
+    width: 15em;
+    border : none;
     outline: none;
     position: relative;
     transition: .3s linear;
@@ -62,6 +64,17 @@ td.cursor,
     box-shadow: none;
 }
 
+.select-box {
+    border: 1px solid #a1a1a1;
+    border-radius: 42px;
+    padding: 0.5em 1.0em;
+    color : #666;
+}
+
+.select-box:focus {
+    border: 1px solid #a1a1a1 !important;
+}
+
 .select-box > option {
     font-weight: bold;
 }
@@ -74,13 +87,168 @@ td.cursor,
     /*background-color: rgba(123, 60, 250, 0.36);*/
 }
 
-/* table 줄 간격 css*/
-table {
-    border-collapse: separate;
-    border-spacing: 0 10px;
+.board-title {
+    letter-spacing: -0.03em;
+    font-weight: 800 !important;
+    color: #444;
+}
+.board-title.lg::after {
+    content : "";
+    width : 2.8em;
+    height: 4px;
+    display: block;
+    background-color: #676767;
+    margin: 0.6em auto 0;
 }
 
+.board-title.lg {}
+
+.purple-round {
+    border-radius: 1.4em;
+}
+
+/* table 줄 간격 css*/
+table {
+    /*border-collapse: separate;*/
+    /*border-spacing: 0 10px;*/
+}
+
+.board-table {
+    border-top: 2px solid #646464;
+}
+
+.board-table td {
+    padding: 0.8em 0.9em;
+}
+
+.board-table tbody tr:last-child {
+    border-bottom: 2px solid #646464;
+}
+
+.board-table thead {
+    color : #777;
+}
+
+.board-write-header {
+    border: 1px solid #a1a1a1;
+    margin : auto 0.05em;
+    border-radius: 5px;
+}
+
+.board-content-header {
+    border-top: 2px solid #777777;
+    border-bottom: 1px dashed #777777;
+    /*margin : auto 0.05em;*/
+    padding : 0.8em 0.5em 0.5em;
+}
+
+.board-content-header h3 {
+    font-size: 1.2rem;
+    padding-top: 0.2em;
+    font-weight: 800;
+}
+
+.board-content-header h3.cate {
+    font-weight: 600;
+    background-color: #ddd;
+    border-radius: 40px;
+    display: inline-block;
+    padding: 0.4em 1.2em 0.3em;
+}
+
+.content-info {
+    border-bottom: 1px dashed #777777;
+    padding: 0.3em 0.8em 0.6em;
+}
+
+.content-desc {
+    border-bottom: 2px solid #777777;
+    min-height: 400px;
+}
+
+.select-cate {
+    padding: 0.5em 1.1em;
+    color : #666;
+    outline: none;
+    border : none;
+}
+
+.seperate {
+    border-right: 1px solid #818181;
+}
+
+.select-cate option {
+    padding: 0.2em 0.2em;
+}
+
+/*.seperate::after {
+    content: "";
+    height: 1em;
+    width : 10px;
+    display: inline-block;
+    background-color: #444;
+}*/
+
+.reply-input.board {
+    border-radius: 5px;
+    background-color: #c5a9ff;
+    width: 95%;
+    min-height: 80px;
+    transition: all ease 0.5s;
+    padding: 0.4em 1em;
+}
+
+.reply-input.board:focus {
+    background-color: #efefef;
+    outline: none;
+    border: 1px solid #efefef;
+    transition: all ease 0.5s;
+}
+
+.input-title {
+    outline: none;
+    border : none;
+    padding-top: 0.5em;
+}
+
+.reply-btn {
+    background-color: #fff;
+    border : 1px solid #9c6dfd;
+    color : #9c6dfd;
+    vertical-align: bottom;
+    border-radius: 3em;
+    outline: none;
+    padding: 0.5em 0.7em;
+    margin-left: 0.3em;
+    transition: all ease 0.5s;
+}
+
+.reply-btn:hover {
+    background-color: #9c6dfd;
+    border : 1px solid #9c6dfd;
+    color : #fff;
+    transition: all ease 0.5s;
+}
+
+.reply-content {
+    background-color: #eaeaea;
+    border-radius: 5px;
+    padding: 0.5em 1em;
+    min-height: 85px;
+}
+
+.select-cate:focus, .input-title:focus {
+    box-shadow: none !important;
+
+}
+
+
 /* 페이지네이션 관련 css*/
+
+.pages {
+    padding-left: 0 !important;
+}
+
 .pages.cursor > a {
     margin-right: 6px;
 }

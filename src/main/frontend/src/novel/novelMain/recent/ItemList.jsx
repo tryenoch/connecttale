@@ -33,7 +33,7 @@ function ItemList(props) {
             {/*<button onClick={getRecentNovelList}>테스트</button>*/}
             <Col sm className={"d-flex justify-content-center empty-box"}>
               <div className={"p-5"}>
-                <h3 className={'empty-list'}>최신 리스트가 없습니다.</h3>
+                <h3 className={'empty-list'}>좋아요 리스트가 없습니다.</h3>
               </div>
             </Col>
           </Row>
