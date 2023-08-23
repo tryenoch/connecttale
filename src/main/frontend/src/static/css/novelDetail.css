@@ -4,17 +4,124 @@
 
 .novel-price, .novel-score {
     color: rgb(250, 114, 46);
-    font-weight: bold;
+    font-weight: 800;
+}
+
+.rating-base {
+    color: #8271a2;
 }
 
 .detail-heart {
     font-size: 30px;
 }
 
-.novel-intro {
+.detail-intro {
+    border-bottom: 1px dashed #888;
+}
+
+.detail-cate {
+    color: #fff;
+    background-color: #8c52fc;
+    border-radius: 2em;
+}
+
+.detail-sub-info {
+    font-size: 1.2em;
+    font-weight: 800;
+    color: #8b66d7;
+}
+
+.detail-image {
+    width: 260px;
+    border-radius: 5px;
+    position: relative;
+    overflow:hidden;
+    margin:0 auto;
+}
+
+.detail-title + p {
+    margin-left: 0.8em;
+    font-size: 1.2em;
+    letter-spacing: -0.05em;
+    font-weight: 600;
+    color : #9474d5;
+}
+
+.detail-image img {
+    width:100%;
+    height:100%;
+    object-fit: contain;
+    background-color: #ddd; /* 이미지 없을 경우 */
+}
+
+.detail-like-btn {
+    display: inline-block;
+    background-color: #f1ecff;
+    width: 5em;
+    padding: 0.5em;
+    border-radius: 5px;
+}
+
+.detail-like-btn button {
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+.detail-title {
+    letter-spacing: -0.05em;
+    font-size: 2em;
+    font-weight: 800;
+}
+
+/* 찜 버튼 크기*/
+.heart-ico {
+    width: 3em;
+    height: auto;
+    fill: #b7b7b7;
+}
+
+/* 찜한 사용자가 아닐 때*/
+.heart-style{
+    fill: #ddd;
+    transition: all ease 0.3s ;
+}
+
+/* 찜한 사용자일 떄*/
+.heart-click{
+    fill: #fc5c5c;
+    transition: all ease 0.5s ;
+}
+
+.like-count{
+    font-size: 1.2em;
+    font-weight: 700;
+    color : #544f5b;
+}
+
+/* 가격 정보 전용 테이블*/
+.detail-price-table {
+    border-top : 2px solid #5e5e5e;
+}
+
+.detail-price-table td {
+    border: none;
+}
+
+.detail-price-table tr {
+    border-bottom: 1px dashed #9890c5;
+}
+
+.detail-price-table tr:last-child {
+    border-bottom: 2px solid #5e5e5e;
+}
+
+.novel-desc {
     font-family: 'NanumSquare', sans-serif;
     padding: 10px;
-    line-height: 2em;
+    line-height: 1.7em;
+    font-size: 1.05em;
+    white-space: pre;
 }
 
 .detail-subtit {
