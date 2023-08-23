@@ -7,7 +7,7 @@ import MyQNA from "./MyQNA";
 import MyComment from "./MyComment";
 import {fetchData} from "../../common/NovelDetailFetch2";
 
-function LikeList(props) {
+function LikeListItem(props) {
     const navi = useNavigate();
 
     const like = props.like; // 개별 소설 정보 객체
@@ -98,4 +98,4 @@ function LikeList(props) {
     )
 }
 
-export default LikeList;
+export default LikeListItem;

@@ -1,19 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import novel from "../Novel";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 
 
 function NovelDetailInfo(props) {
+  const [title, setTitle] = useState(props.novelDetail.novelIdx.novelTitle);
+  const [ebookCheck, setEbookCheck] = useState(props.novelDetail.novelIdx.ebookCheck);
+  const [novelAdult, setNovelAdult] = useState(props.novelDetail.novelIdx.novelAdult);
+  
+  // 랜더링에 사용되는 state 들
   const [novelInfo, setNovelInfo] = useState(props.novelDetail);
   const [ridi, setRidi] = useState({});
   const [naver, setNaver] = useState({});
   const [kakao, setKakao] = useState({});
   const [baseItem, setBaseItem] = useState({});
-  const [novelLikeList, setNovelLikeList] = useState([]);
-  const [novelLikeCount, setNovelLikeCount] = useState(0);
   
-  const [id, setId] = useState(sessionStorage.getItem('id'));
+  // const [novelLikeList, setNovelLikeList] = useState([]);
+  // const [novelLikeCount, setNovelLikeCount] = useState(0);
+  
+  // 세션id값 받아오기, 세션 정보 없으면 noUser가 됨 -> 서버에서 memberEntity 못찾게끔
+  const [loginId, setLoginId] = useState(sessionStorage.getItem("id")? sessionStorage.getItem("id") : 'noUser');
   
   // console.log(kakao);
   // console.log(naver);
@@ -21,91 +28,110 @@ function NovelDetailInfo(props) {
   // console.log(baseItem);
   
   useEffect(() => {
-    setNovelInfo(props.novelDetail);
-    
-    // 소설 디테일 정보 setState 해주는 곳
-    if (novelInfo.ridi) {
-      setBaseItem(novelInfo.ridi);
-    } else if (novelInfo.naver) {
-      setBaseItem(novelInfo.naver);
-    } else if (novelInfo.kakao) {
-      setBaseItem(novelInfo.kakao);
-    }
-    
-    if (novelInfo.ridi != undefined && novelInfo.naver != undefined && novelInfo.kakao != undefined) {
-      setRidi(novelInfo.ridi);
-      setNaver(novelInfo.naver);
-      setKakao(novelInfo.kakao);
-    }
-    else if (novelInfo.ridi != undefined && novelInfo.naver != undefined) {
-      setRidi(novelInfo.ridi);
-      setNaver(novelInfo.naver);
-    }
-    else if (novelInfo.ridi != undefined && novelInfo.kakao != undefined) {
-      setRidi(novelInfo.ridi);
-      setKakao(novelInfo.kakao);
-    }
-    else if (novelInfo.ridi != undefined) {
-      setRidi(novelInfo.ridi);
-    }
-    else if (novelInfo.naver != undefined && novelInfo.kakao != undefined) {
-      setNaver(novelInfo.naver);
-      setKakao(novelInfo.kakao);
-    }
-    else if (novelInfo.naver != undefined) {
-      setNaver(novelInfo.naver);
-    }
-    else if (novelInfo.kakao != undefined) {
-      setKakao(novelInfo.kakao);
-    }
-    
-    // 좋아요 정보 setState 해주는 곳
-    if (novelInfo.novelLikeCount) {
-      setNovelLikeCount(novelInfo.novelLikeCount);
-    }
-    
-    if (novelInfo.novelLikeList) {
-      setNovelLikeList(novelInfo.novelLikeList);
-    }
-    
-    
-  }, [props.novelDetail]);
+    axios.get('/novelDetail', {
+      params:
+        {
+          title: title,
+          ebookCheck: ebookCheck,
+          ageGrade: novelAdult
+        }
+    })
+      .then(res => {
+        setNovelInfo(res.data)
+        console.log(novelInfo);
   
+        // 소설 디테일 정보 setState 해주는 곳
+        if (novelInfo.ridi) {
+          setBaseItem(novelInfo.ridi);
+        } else if (novelInfo.naver) {
+          setBaseItem(novelInfo.naver);
+        } else if (novelInfo.kakao) {
+          setBaseItem(novelInfo.kakao);
+        }
+  
+        if (novelInfo.ridi != undefined && novelInfo.naver != undefined && novelInfo.kakao != undefined) {
+          setRidi(novelInfo.ridi);
+          setNaver(novelInfo.naver);
+          setKakao(novelInfo.kakao);
+        }
+        else if (novelInfo.ridi != undefined && novelInfo.naver != undefined) {
+          setRidi(novelInfo.ridi);
+          setNaver(novelInfo.naver);
+        }
+        else if (novelInfo.ridi != undefined && novelInfo.kakao != undefined) {
+          setRidi(novelInfo.ridi);
+          setKakao(novelInfo.kakao);
+        }
+        else if (novelInfo.ridi != undefined) {
+          setRidi(novelInfo.ridi);
+        }
+        else if (novelInfo.naver != undefined && novelInfo.kakao != undefined) {
+          setNaver(novelInfo.naver);
+          setKakao(novelInfo.kakao);
+        }
+        else if (novelInfo.naver != undefined) {
+          setNaver(novelInfo.naver);
+        }
+        else if (novelInfo.kakao != undefined) {
+          setKakao(novelInfo.kakao);
+        }
+  
+        // 좋아요 정보 setState 해주는 곳
+        // if (novelInfo.novelLikeCount) {
+        //   setNovelLikeCount(novelInfo.novelLikeCount);
+        // }
+        //
+        // if (novelInfo.novelLikeList) {
+        //   setNovelLikeList(novelInfo.novelLikeList);
+        // }
+  
+      })
+    
+  }, []);
   
   
   // 좋아요 버튼 클릭이벤트
   const likeClickHandler = () => {
-    // 좋아요 버튼 눌렀을때 db에 like_yn값을 'Y'/'N'으로 변경하는 axios 통신
-    axios.put('/novelDetailLike', null, {
-      params: {
-        novelIdx : baseItem.novelKeyDto.novelIdx,
-        id: id
-      }
-    })
-      .then((res) => {
-        
-        // console.log(res);
-        // db의 작품 정보(제목, 저자, 별점 등)와 함께 좋아요 관련 정보를 받아오기 위한 axios통신
-        axios.get("/novelDetail", {
-          params: {
-            title: baseItem.novelTitle,
-            ebookCheck: baseItem.ebookCheck,
-            ageGrade: baseItem.novelAdult
-          }
+    // 세션 값이 존재하면 좋아요 버튼 동작
+    if (sessionStorage.getItem("id")) {
+      // 좋아요 버튼 눌렀을때 db에 like_yn값을 'Y'/'N'으로 변경하는 axios 통신
+      axios.put('/novelDetailLike', null, {
+        params: {
+          novelIdx : baseItem.novelKeyDto.novelIdx,
+          id: loginId
+        }
+      })
+        .then((res) => {
+      
+          // console.log(res);
+          // db의 작품 정보(제목, 저자, 별점 등)와 함께 좋아요 관련 정보를 받아오기 위한 axios통신
+          axios.get("/novelDetail", {
+            params: {
+              title: title,
+              ebookCheck: ebookCheck,
+              ageGrade: novelAdult
+            }
+          })
+            .then(res2 => {
+              console.log(res2);
+              setNovelInfo(res2.data);
+              // setNovelLikeList(res2.data.novelLikeList);
+              // setNovelLikeCount(res2.data.novelLikeCount);
+            })
+            .catch(err => {
+              console.log(err.message)
+            })
+      
         })
-          .then(res2 => {
-            console.log(res2);
-            setNovelLikeList(res2.data.novelLikeList);
-            setNovelLikeCount(res2.data.novelLikeCount);
-          })
-          .catch(err => {
-            console.log(err.message)
-          })
-
-      })
-      .catch(err => {
-        console.log(err.message);
-      })
+        .catch(err => {
+          console.log(err.message);
+        })
+    }
+    // 세션 값이 없으면 로그인 화면으로 이동
+    else {
+      alert("회원만 이용 가능한 서비스입니다.");
+    }
+    
   }
   
   return (
@@ -130,7 +156,9 @@ function NovelDetailInfo(props) {
                         : baseItem.cateList == 6
                           ? <span>[드라마]</span>
                           : baseItem.cateList == 7
-                            ? <span>[BL]</span> : <p>카테고리</p>
+                            ? <span>[BL]</span>
+                            : baseItem.cateList == 8
+                              ?<p>기타</p> : null
             }
         
             {/*제목, 좋아요 버튼*/}
@@ -142,8 +170,8 @@ function NovelDetailInfo(props) {
               </div>
               <div className={'col-sm-3'}>
                 <button type={'button'} className={'btn-outline-purple ms-2'} onClick={likeClickHandler}>
-                  <i className="bi bi-heart" ></i>
-                  <span>{novelLikeCount}</span>
+                  <i className="bi bi-heart detail-heart" ></i>
+                  <span>{novelInfo.novelLikeCount}</span>
                 </button>
               </div>
             </div>

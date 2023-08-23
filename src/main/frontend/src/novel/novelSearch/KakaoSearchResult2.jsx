@@ -61,16 +61,20 @@ function KakaoSearchResult2(props) {
   
   // 링크 클릭시 상세페이지로 이동과 동시에 fetchData() 함수 실행시켜서 db로 부터 온 데이터도 함께 전송하기 위한 클릭이벤트
   const handleLinkClick = async (item) => {
-    console.log(item);
-    try {
-      const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck, item.ageGrade);
-      navi(`/novelDetail/${item.title}`, {
-        state: {
-          novelDetail: novelDetail,
-        }
-      });
-    } catch (error) {
-      console.log(error.message);
+    if (sessionStorage.getItem("adult") == 'Y' || item.ageGrade == 'N') {
+      try {
+        const novelDetail = await fetchData(item.platformId, item.title, item.ebookCheck, item.ageGrade);
+        navi(`/novelDetail/${item.title}`, {
+          state: {
+            novelDetail: novelDetail,
+          }
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    else {
+      alert("성인만 이용가능한 컨텐츠입니다. 로그인하여 성인인증 하시기 바랍니다.")
     }
   };
   
@@ -88,7 +92,10 @@ function KakaoSearchResult2(props) {
                 
                 <div className={'row my-4 border-top border-bottom py-2 d-flex align-items-center'} >
                   <div className={'col-sm-2'}>
-                    <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
+                    {
+                      sessionStorage.getItem("adult") == 'Y' ? <img src={item.thumbnail} alt="" className={'w-100 h-100'}/> : item.ageGrade == 'Y' ? <img src="https://ssl.pstatic.net/static/nstore/thumb/19over_book2_79x119.gif" alt="성인 컨텐츠입니다." className={'w-100 h-100'}/> : <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
+                    }
+
                   </div>
                   <div className={'col-sm-10'}>
                     <div className={'ms-2'}>

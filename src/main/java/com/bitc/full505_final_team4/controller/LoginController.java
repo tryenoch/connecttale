@@ -6,6 +6,7 @@ import com.bitc.full505_final_team4.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -28,6 +29,16 @@ public class LoginController {
         result.put("user", isUser);
         Optional<MemberEntity> en = loginService.getUserInfo(login.getId());
         if (isUser) result.put("userInfo", loginService.getUserInfo(login.getId()));
+
+        return result;
+    }
+
+    @RequestMapping(value = "/login/reload", method = RequestMethod.POST)
+    public Object loginReload(@RequestParam("id") String id) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("result", "success");
+        result.put("userInfo", loginService.getUserInfo(id));
 
         return result;
     }

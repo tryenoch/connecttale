@@ -44,7 +44,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NovelMainServiceImpl implements NovelMainService{
 
+  private final NovelCommonEditService commonEditService;
   private final NovelRankRepository novelRankRepository;
+  private final NovelNaverService novelNaverService;
   private final PlatformMainRepository platformMainRepository;
 
   // 확인용 데이터 불러오기
@@ -173,7 +175,7 @@ public class NovelMainServiceImpl implements NovelMainService{
 
         // 소설 제목 얻어오기
         JSONObject serial = (JSONObject) book.get("serial");
-        novel.setNovelTitle(serial.get("title").toString());
+        novel.setNovelTitle(commonEditService.editTitleForNovelEntity(serial.get("title").toString()));
 
         // 작가 이름 얻어오기
         ArrayList authorsList = (ArrayList) book.get("authors");
@@ -196,6 +198,8 @@ public class NovelMainServiceImpl implements NovelMainService{
         // 성인 여부
         novel.setAdultsOnly((Boolean) book.get("adults_only"));
 
+        // "웹소설" 또는 "단행본" 여부
+        novel.setEbookCheck("웹소설");
 
 
         novelDtoList.add(novel);
@@ -226,7 +230,6 @@ public class NovelMainServiceImpl implements NovelMainService{
         Elements listDoc = doc.getElementsByClass("comic_top_lst").select("li");
         List<Element> list = listDoc.subList(start, end);
 
-
         for (Element rankItem : list){
           NovelMainDto novel = new NovelMainDto();
 
@@ -247,11 +250,15 @@ public class NovelMainServiceImpl implements NovelMainService{
 
           // 제목
           String title = rankItem.select("h3").select("a").text();
-          if (title.contains("[")){
+          /*if (title.contains("[")){
             int idx = title.lastIndexOf("[");
             title = title.substring(0, idx -1);
-          }
+          }*/
 
+          String ebookCheck = novelNaverService.getEbookCheck(title); // 웹소설 여부
+          novel.setEbookCheck(ebookCheck);
+
+          title = commonEditService.editTitleForNovelEntity(title);
           novel.setNovelTitle(title);
 
           // 작가
@@ -261,6 +268,16 @@ public class NovelMainServiceImpl implements NovelMainService{
           // 별점
           double starRate = Double.parseDouble(rankItem.select(".score_num").text());
           novel.setNovelStarRate(starRate);
+
+          boolean adultsOnly = false;
+
+          if(!ObjectUtils.isEmpty(rankItem.select("em.ico.n19"))){
+            adultsOnly = true;
+          }
+
+          novel.setAdultsOnly(adultsOnly); // 성인여부
+
+
 
           novelList.add(novel);
 

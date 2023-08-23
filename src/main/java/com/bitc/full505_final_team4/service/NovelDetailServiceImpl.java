@@ -1,9 +1,17 @@
 package com.bitc.full505_final_team4.service;
 
-import com.bitc.full505_final_team4.data.dto.NovelReplyLikeInterface;
+import com.bitc.full505_final_team4.common.JsonUtils;
+import com.bitc.full505_final_team4.data.dto.ReplyLikeInterface;
+import com.bitc.full505_final_team4.data.dto.ReportDto;
 import com.bitc.full505_final_team4.data.entity.*;
 import com.bitc.full505_final_team4.data.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.openqa.selenium.json.Json;
+import org.springframework.util.ObjectUtils;
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,6 +23,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.net.URLEncoder;
 import java.time.Duration;
 import java.util.*;
 import java.util.List;
@@ -25,19 +34,19 @@ import java.util.concurrent.TimeUnit;
 public class NovelDetailServiceImpl implements NovelDetailService {
 
   private final NovelCommonEditService novelCommonEditService;
-
+  private final NovelRidiService novelRidiService;
   private final NovelPlatformRepository novelPlatformRepository;
   private final NovelRepository novelRepository;
   private final NovelLikeRepository novelLikeRepository;
   private final MemberRepository memberRepository;
   private final NovelReplyRepository novelReplyRepository;
   private final ReplyLikeRepository replyLikeRepository;
+  private final ReportRepository reportRepository;
 
 
-
+  // 셀레니움 사용을 위한 크롬드라이버 설정
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
   public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
-
 
 
   // 매개변수인 title, ebookCheck, novelAdult로 platform 테이블에서 가져오기
@@ -50,8 +59,355 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     return novelDetail;
   }
 
+  // 리디북스 디테일 정보 크롤링
+  @Override
+  public NovelPlatformEntity getRidiCrolling(String title, String ne, String novelAdult) throws Exception {
+    NovelPlatformEntity ridiPlatformEntity = new NovelPlatformEntity();
 
+    String encodeTitle = URLEncoder.encode(title, "UTF-8");
+    // 매개변수로 받은 title을 키워드로 리디북스 api에서 json 데이터 가져오기
+    String url1 = "https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword=" + encodeTitle; // 대부분의 정보 찾기용
+    JSONObject json = (JSONObject) JsonUtils.jsonUrlParser(url1);
+    ArrayList<JSONObject> novelList = (ArrayList<JSONObject>) json.get("books");
 
+    if (!novelList.isEmpty()) {
+      // 제목, 성인여부, 종류가 일치하는 작품의 platformId 찾기
+      for (int i = 0; i < novelList.size(); i++) {
+        if (novelList.get(i).get("title").toString().equals(title)) {
+          if (ne.equals("단행본") && novelAdult.equals("Y")) {
+            if (novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) == 19) {
+              // 플랫폼 설정
+              ridiPlatformEntity.setPlatform(3);
+
+              String platformId = novelList.get(i).get("b_id").toString();
+              ridiPlatformEntity.setPlatformId(platformId);
+
+              // novelTitle 설정
+              ridiPlatformEntity.setNovelTitle(title);
+
+              // novelThumbnail 설정
+              String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
+              ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
+
+              // novelIntro 설정
+              JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
+              String novelIntro = introDesc.get("intro").toString();
+              ridiPlatformEntity.setNovelIntro(novelIntro);
+
+              // novelAuthor 설정
+              ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
+              HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+              String author = authors.get("name").toString();
+              ridiPlatformEntity.setNovelAuthor(author);
+
+              // novelPubli 설정
+              String novelPubli = novelList.get(i).get("publisher").toString();
+              ridiPlatformEntity.setNovelPubli(novelPubli);
+
+              // novelCount
+              int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
+              ridiPlatformEntity.setNovelCount(novelCount);
+
+              // novelPrice
+              ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
+              HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+              int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString()) != 0 ? Integer.parseInt(novelList.get(i).get("price").toString()) : Integer.parseInt(prices.get("max_price").toString());
+              ridiPlatformEntity.setNovelPrice(novelPrice);
+
+              // starRate
+              double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
+              ridiPlatformEntity.setNovelStarRate(novelStarRate);
+
+              // completeYn
+              String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
+              ridiPlatformEntity.setNovelCompleteYn(completeYn);
+
+              // novelAdult
+              ridiPlatformEntity.setNovelAdult(novelAdult);
+
+              // novelRelease => 애매해서 생략
+
+              // updateDate
+              ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
+              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+              String updateDate = updateDates.get("title").toString();
+              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+
+              // cateList
+              String cateItem = novelList.get(i).get("parent_category_name").toString();
+              if (cateItem.contains("BL")) {
+                ridiPlatformEntity.setCateList("7");
+              }
+              else if (cateItem.contains("로맨스")) {
+                ridiPlatformEntity.setCateList("3");
+              }
+              else if (cateItem.contains("로판")) {
+                ridiPlatformEntity.setCateList("4");
+              }
+              else if (cateItem.contains("판타지")) {
+                ridiPlatformEntity.setCateList("1");
+              }
+              else {
+                ridiPlatformEntity.setCateList("8");
+              }
+
+              // ebookCheck
+              ridiPlatformEntity.setEbookCheck(ne);
+              break;
+            }
+          }
+          else if (ne.equals("단행본") && novelAdult.equals("N")) {
+            if (novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) != 19) {
+              // 플랫폼 설정
+              ridiPlatformEntity.setPlatform(3);
+
+              String platformId = novelList.get(i).get("b_id").toString();
+              ridiPlatformEntity.setPlatformId(platformId);
+
+              // novelTitle 설정
+              ridiPlatformEntity.setNovelTitle(title);
+
+              // novelThumbnail 설정
+              String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
+              ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
+
+              // novelIntro 설정
+              JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
+              String novelIntro = introDesc.get("intro").toString();
+              ridiPlatformEntity.setNovelIntro(novelIntro);
+
+              // novelAuthor 설정
+              ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
+              HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+              String author = authors.get("name").toString();
+              ridiPlatformEntity.setNovelAuthor(author);
+
+              // novelPubli 설정
+              String novelPubli = novelList.get(i).get("publisher").toString();
+              ridiPlatformEntity.setNovelPubli(novelPubli);
+
+              // novelCount
+              int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
+              ridiPlatformEntity.setNovelCount(novelCount);
+
+              // novelPrice
+              ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
+              HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+              int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString()) != 0 ? Integer.parseInt(novelList.get(i).get("price").toString()) : Integer.parseInt(prices.get("max_price").toString());
+              ridiPlatformEntity.setNovelPrice(novelPrice);
+
+              // starRate
+              double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
+              ridiPlatformEntity.setNovelStarRate(novelStarRate);
+
+              // completeYn
+              String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
+              ridiPlatformEntity.setNovelCompleteYn(completeYn);
+
+              // novelAdult
+              ridiPlatformEntity.setNovelAdult(novelAdult);
+
+              // novelRelease => 애매해서 생략
+
+              // updateDate
+              ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
+              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+              String updateDate = updateDates.get("title").toString();
+              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+
+              // cateList
+              String cateItem = novelList.get(i).get("parent_category_name").toString();
+              if (cateItem.contains("BL")) {
+                ridiPlatformEntity.setCateList("7");
+              }
+              else if (cateItem.contains("로맨스")) {
+                ridiPlatformEntity.setCateList("3");
+              }
+              else if (cateItem.contains("로판")) {
+                ridiPlatformEntity.setCateList("4");
+              }
+              else if (cateItem.contains("판타지")) {
+                ridiPlatformEntity.setCateList("1");
+              }
+              else {
+                ridiPlatformEntity.setCateList("8");
+              }
+
+              // ebookCheck
+              ridiPlatformEntity.setEbookCheck(ne);
+              break;
+            }
+          }
+          else if (ne.equals("웹소설") && novelAdult.equals("Y")) {
+            if (!novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) == 19) {
+              // 플랫폼 설정
+              ridiPlatformEntity.setPlatform(3);
+
+              String platformId = novelList.get(i).get("b_id").toString();
+              ridiPlatformEntity.setPlatformId(platformId);
+
+              // novelTitle 설정
+              ridiPlatformEntity.setNovelTitle(title);
+
+              // novelThumbnail 설정
+              String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
+              ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
+
+              // novelIntro 설정
+              JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
+              String novelIntro = introDesc.get("intro").toString();
+              ridiPlatformEntity.setNovelIntro(novelIntro);
+
+              // novelAuthor 설정
+              ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
+              HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+              String author = authors.get("name").toString();
+              ridiPlatformEntity.setNovelAuthor(author);
+
+              // novelPubli 설정
+              String novelPubli = novelList.get(i).get("publisher").toString();
+              ridiPlatformEntity.setNovelPubli(novelPubli);
+
+              // novelCount
+              int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
+              ridiPlatformEntity.setNovelCount(novelCount);
+
+              // novelPrice
+              ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
+              HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+              int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString()) != 0 ? Integer.parseInt(novelList.get(i).get("price").toString()) : Integer.parseInt(prices.get("max_price").toString());
+              ridiPlatformEntity.setNovelPrice(novelPrice);
+
+              // starRate
+              double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
+              ridiPlatformEntity.setNovelStarRate(novelStarRate);
+
+              // completeYn
+              String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
+              ridiPlatformEntity.setNovelCompleteYn(completeYn);
+
+              // novelAdult
+              ridiPlatformEntity.setNovelAdult(novelAdult);
+
+              // novelRelease => 애매해서 생략
+
+              // updateDate
+              ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
+              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+              String updateDate = updateDates.get("title").toString();
+              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+
+              // cateList
+              String cateItem = novelList.get(i).get("parent_category_name").toString();
+              if (cateItem.contains("BL")) {
+                ridiPlatformEntity.setCateList("7");
+              }
+              else if (cateItem.contains("로맨스")) {
+                ridiPlatformEntity.setCateList("3");
+              }
+              else if (cateItem.contains("로판")) {
+                ridiPlatformEntity.setCateList("4");
+              }
+              else if (cateItem.contains("판타지")) {
+                ridiPlatformEntity.setCateList("1");
+              }
+              else {
+                ridiPlatformEntity.setCateList("8");
+              }
+
+              // ebookCheck
+              ridiPlatformEntity.setEbookCheck(ne);
+              break;
+            }
+          }
+          else if (ne.equals("웹소설") && novelAdult.equals("N")) {
+            if (!novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) != 19) {
+              // 플랫폼 설정
+              ridiPlatformEntity.setPlatform(3);
+
+              String platformId = novelList.get(i).get("b_id").toString();
+              ridiPlatformEntity.setPlatformId(platformId);
+
+              // novelTitle 설정
+              ridiPlatformEntity.setNovelTitle(title);
+
+              // novelThumbnail 설정
+              String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
+              ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
+
+              // novelIntro 설정
+              JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
+              String novelIntro = introDesc.get("intro").toString();
+              ridiPlatformEntity.setNovelIntro(novelIntro);
+
+              // novelAuthor 설정
+              ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
+              HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+              String author = authors.get("name").toString();
+              ridiPlatformEntity.setNovelAuthor(author);
+
+              // novelPubli 설정
+              String novelPubli = novelList.get(i).get("publisher").toString();
+              ridiPlatformEntity.setNovelPubli(novelPubli);
+
+              // novelCount
+              int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
+              ridiPlatformEntity.setNovelCount(novelCount);
+
+              // novelPrice
+              ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
+              HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+              int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString()) != 0 ? Integer.parseInt(novelList.get(i).get("price").toString()) : Integer.parseInt(prices.get("max_price").toString());
+              ridiPlatformEntity.setNovelPrice(novelPrice);
+
+              // starRate
+              double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
+              ridiPlatformEntity.setNovelStarRate(novelStarRate);
+
+              // completeYn
+              String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
+              ridiPlatformEntity.setNovelCompleteYn(completeYn);
+
+              // novelAdult
+              ridiPlatformEntity.setNovelAdult(novelAdult);
+
+              // novelRelease => 애매해서 생략
+
+              // updateDate
+              ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
+              HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+              String updateDate = updateDates.get("title").toString();
+              ridiPlatformEntity.setNovelUpdateDate(updateDate);
+
+              // cateList
+              String cateItem = novelList.get(i).get("parent_category_name").toString();
+              if (cateItem.contains("BL")) {
+                ridiPlatformEntity.setCateList("7");
+              }
+              else if (cateItem.contains("로맨스")) {
+                ridiPlatformEntity.setCateList("3");
+              }
+              else if (cateItem.contains("로판")) {
+                ridiPlatformEntity.setCateList("4");
+              }
+              else if (cateItem.contains("판타지")) {
+                ridiPlatformEntity.setCateList("1");
+              }
+              else {
+                ridiPlatformEntity.setCateList("8");
+              }
+
+              // ebookCheck
+              ridiPlatformEntity.setEbookCheck(ne);
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    return ridiPlatformEntity;
+  }
 
   // 네이버 디테일 페이지 정보 크롤링
   @Override
@@ -613,7 +969,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
 
               // novelCount 가져오기
-              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3).replace(",", "")));
 
               // starRate 가져오기
               WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
@@ -721,7 +1077,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
 
               // novelCount 가져오기
-              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3).replace(",", "")));
 
               // starRate 가져오기
               WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
@@ -829,7 +1185,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
 
               // novelCount 가져오기
-              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3).replace(",", "")));
 
               // starRate 가져오기
               WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
@@ -937,7 +1293,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               kakaoCrollingData.setNovelAuthor(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/div/span")).getText());
 
               // novelCount 가져오기
-              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3)));
+              kakaoCrollingData.setNovelCount(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/span")).getText().substring(3).replace(",", "")));
 
               // starRate 가져오기
               WebElement starRateDivEl = driver.findElement(By.cssSelector(".justify-center.mt-16pxr"));
@@ -1045,6 +1401,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     novelPlatformRepository.save(novelPlatformEntity);
   }
 
+
+
   // 네이버 디테일 페이지 정보 db에 저장하기
   @Override
   public void insertNaverToNovel(NovelEntity novelEntity) {
@@ -1143,20 +1501,20 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     return novelLikeEntityList;
   }
 
-
+  // ----------------------------------- 리뷰 관련 --------------------------------------------------
   // novelIdx로 리뷰(댓글) 테이블 정보 가져오기(댓글 좋아요 수도 함께 가져오기)
   @Override
-  public List<NovelReplyLikeInterface> getNovelReply(NovelEntity novelIdx) {
-    List<NovelReplyLikeInterface> novelReplyLikeInterfaceList = new ArrayList<>();
+  public List<NovelReplyEntity> getNovelReply(NovelEntity novelIdx) {
+    List<NovelReplyEntity> novelReplyEntityList= new ArrayList<>();
     // novelIdx에 해당하는 리뷰 테이블 데이터 optional 타입으로 가져오기
-    Optional<List<NovelReplyLikeInterface>> opt = novelReplyRepository.findNovelReplyFetchJoin(novelIdx);
+    Optional<List<NovelReplyEntity>> opt = novelReplyRepository.findAllByNovelIdxOrderByCreateDtDesc(novelIdx);
 
     if (opt.isPresent()) {
-      for (NovelReplyLikeInterface novelReplyLikeInterface : opt.get()) {
-        novelReplyLikeInterfaceList.add(novelReplyLikeInterface);
+      for (NovelReplyEntity novelReplyEntity : opt.get()) {
+        novelReplyEntityList.add(novelReplyEntity);
       }
     }
-    return novelReplyLikeInterfaceList;
+    return novelReplyEntityList;
   }
 
   // 리뷰 등록하기
@@ -1171,21 +1529,26 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     Optional<MemberEntity> memberEntity = memberRepository.findById(id);
     MemberEntity replyId = memberEntity.get();
 
-    // db등록을 위해 NovelReplyEntity 정보 설정하기
-    novelReplyEntity.setId(replyId);
-    novelReplyEntity.setNovelIdx(replyNovelIdx);
-    novelReplyEntity.setReplyContent(replyContent);
-    novelReplyEntity.setSpoilerYn(spoilerYn);
+    try {
+      // db등록을 위해 NovelReplyEntity 정보 설정하기
+      novelReplyEntity.setId(replyId);
+      novelReplyEntity.setNovelIdx(replyNovelIdx);
+      novelReplyEntity.setReplyContent(replyContent);
+      novelReplyEntity.setSpoilerYn(spoilerYn);
 
-    // 기본값 'N'이 적용이 안되서 수동으로 설정해줌
-    novelReplyEntity.setDeletedYn("N");
+      // 기본값 'N'이 적용이 안되서 수동으로 설정해줌
+      novelReplyEntity.setDeletedYn("N");
 
-    // db등록을 위해 NovelReplyEntity 정보 설정하기
-    novelReplyRepository.save(novelReplyEntity);
+      // db등록을 위해 NovelReplyEntity 정보 설정하기
+      novelReplyRepository.save(novelReplyEntity);
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
 
   }
 
-  // 리뷰에 좋아요 클릭
+  // 리뷰(댓글)에 좋아요 클릭
   @Override
   public void updateReviewLike(String id, int replyIdx) {
 
@@ -1202,7 +1565,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     Optional<ReplyLikeEntity> replyLikeOpt = replyLikeRepository.findByIdAndReplyIdx(memberEntity, novelReplyEntity);
 
     // 조회된 데이터가 없을 경우, 좋아요 Y 값 입력하기
-    if (!replyLikeOpt.isPresent()) {
+    if (replyLikeOpt.isEmpty()) {
       replyLikeEntity.setId(memberEntity);
       replyLikeEntity.setReplyIdx(novelReplyEntity);
       replyLikeEntity.setLikeYn("Y");
@@ -1215,31 +1578,78 @@ public class NovelDetailServiceImpl implements NovelDetailService {
         replyLikeEntity.setLikeYn("N");
         replyLikeRepository.save(replyLikeEntity);
       }
-      else {
+      else if (replyLikeEntity.getLikeYn().equals("N")){
         replyLikeEntity.setLikeYn("Y");
         replyLikeRepository.save(replyLikeEntity);
       }
     }
   }
 
-  // replyIdx를 통해 replyLike 테이블 데이터 리스트 가져오기
-//  @Override
-//  public List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity) {
-//    List<ReplyLikeEntity> replyLikeEntityList = new ArrayList<>();
-//
-//    // novelReplyEntity(replyIdx)를 통해 모든 replyLike 테이블 정보 얻어오기
-//    Optional<List<ReplyLikeEntity>> replyLikeOptList = replyLikeRepository.findAllByReplyIdx(novelReplyEntity);
-//
-//    if (replyLikeOptList.isPresent()) {
-//      for (ReplyLikeEntity replyLikeEntity : replyLikeOptList.get()) {
-//        replyLikeEntityList.add(replyLikeEntity);
-//      }
-//    }
-//
-//    return replyLikeEntityList;
-//  }
+  // novelReplyEntity(replyIdx)를 통해 replyLikeEntity 리스트 가져오기
+  @Override
+  public List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity) {
+    List<ReplyLikeEntity> replyLikeEntityList = new ArrayList<>();
+
+    // novelReplyEntity(replyIdx)를 통해 모든 replyLike 테이블 정보 얻어오기
+    Optional<List<ReplyLikeEntity>> replyLikeOptList = replyLikeRepository.findAllByReplyIdx(novelReplyEntity);
+
+    if (replyLikeOptList.isPresent()) {
+      for (ReplyLikeEntity replyLikeEntity : replyLikeOptList.get()) {
+        replyLikeEntityList.add(replyLikeEntity);
+      }
+    }
+
+    return replyLikeEntityList;
+  }
+
+  // novelReplyEntity(replyIdx)를 통해 좋아요가 'Y'인 개수가 출력되는 엔티티 가져오기
+  @Override
+  public List<ReplyLikeInterface> getReplyLikeCount() {
+    List<ReplyLikeInterface> replyLikeInterfaceList = replyLikeRepository.findReplyLikeCount();
+
+    return replyLikeInterfaceList;
+  }
+
+  // 리뷰(댓글)에 대한 신고 insert
+  @Override
+  public String insertReplyReport(int replyIdx, String reportContent, String reporter, String suspect) {
+
+    // int 값인 replyIdx를 통해 replyIdx로 사용될 entity 가져오기
+    Optional<NovelReplyEntity> novelReplyEntityOpt = novelReplyRepository.findById(replyIdx);
+    NovelReplyEntity novelReplyEntity = novelReplyEntityOpt.get(); // replyIdx
+
+    // 중복 신고인지 확인하는 절차
+    Optional<ReportEntity> reportExist = reportRepository.findByReplyIdxAndReporter(novelReplyEntity, reporter);
+
+    // 해당 유저가 해당 댓글에 신고한 기록이 없으면
+    if (!reportExist.isPresent()) {
+      // 매개변수로 넘어온 데이터들로 ReportEntity 객체 생성
+      ReportEntity reportEntity = new ReportEntity();
+      reportEntity.setReplyIdx(novelReplyEntity);
+      reportEntity.setReportContent(reportContent);
+      reportEntity.setReporter(reporter);
+      reportEntity.setSuspect(suspect);
+
+      // db에 저장
+      reportRepository.save(reportEntity);
+
+      // 신고 접수가 정상적으로 완료되었는지 확인 절차
+      Optional<ReportEntity> reportEntityCheck = reportRepository.findByReplyIdx(novelReplyEntity);
+
+      if (reportEntityCheck.isPresent()) {
+        return "success";
+      }
+      else {
+        return "failed";
+      }
+    }
+    // 해당 유저가 해당 댓글에 신고한 기록 이있으면
+    else {
+      return "exist";
+    }
 
 
+  }
 }
 
 
