@@ -27,7 +27,7 @@ function NovelCate(props) {
   let list = novelList.map(novel =>
     /* 나중에 링크 추가 해야함 */
     <Row>
-      <Col className={"rank-item"} key={novelList.indexOf(novel)}>
+      <Col className={""} key={novelList.indexOf(novel)}>
         <CateITem novel={novel} />
       </Col>
     </Row>
