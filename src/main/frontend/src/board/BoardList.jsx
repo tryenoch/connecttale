@@ -38,7 +38,7 @@ function BoardList(props) {
 
                 let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
                 let arr = [];
-                let lastNum = offset + 5;
+                let lastNum = offset + 4;
                 if (lastNum > res.data.totalPages) {
                     lastNum = res.data.totalPages;
                 }
@@ -119,7 +119,7 @@ function BoardList(props) {
                         <tbody>
                         {
                             boardList.map((board, index) => {
-                                if (sessionStorage.getItem('id') == board.createId || sessionStorage.getItem('grade') == 2) {
+                                if (sessionStorage.getItem('id') == board.createId || sessionStorage.getItem('grade') == 2 || (type != 'req')) {
                                     return (
                                         <tr key={index}>
                                             <td>{board.boardIdx}</td>
@@ -136,7 +136,7 @@ function BoardList(props) {
                                     return (
                                         <tr key={index}>
                                             <td>{board.boardIdx}</td>
-                                            <td className={'text-start'}>{board.boardTitle}</td>
+                                            <td className={'text-start'}>비밀글 입니다.</td>
                                             <td>{board.nickName}</td>
                                             <td>{board.createDt}</td>
                                         </tr>
