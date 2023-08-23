@@ -4,14 +4,16 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
 export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
-  
-  // console.log(ebookCheck);
   let novelDetail = {};
+  // title의 경우 url 파라미터로 서버에 전달되는데, 문자열에 [] 등의 특수문자가 있을 경우 서버에서 인식하지 못하는 오류가 발생하기 때문에 encoding 해줌
+  // => 서버에서는 인코딩된 문자열을 다시 디코딩해서 문자열로 바꿔줘야 함
+  // let editTitle = title.replace('[', '\[').replace(']', '\]');
+  let encodeTitle = encodeURIComponent(title);
   
   try {
     const res = await axios.get("/novelDetail", {
       params: {
-        title: title,
+        title: encodeTitle,
         ebookCheck: ebookCheck,
         ageGrade: ageGrade
       }
@@ -31,15 +33,16 @@ export const fetchData = async (platformId, title, ebookCheck, ageGrade) => {
     else {
       const res = await axios.post("/novelDetail", null, {
         params: {
-          title: title,
+          title: encodeTitle,
           ne: ebookCheck,
           ageGrade: ageGrade
         }
       })
+      console.log(encodeTitle);
   
       const res2 = await axios.get("/novelDetail", {
         params: {
-          title: title,
+          title: encodeTitle,
           ebookCheck: ebookCheck,
           ageGrade: ageGrade
         }
