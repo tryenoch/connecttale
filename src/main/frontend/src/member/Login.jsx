@@ -31,6 +31,7 @@ function Login(props) {
                     const adult = (year - birth) >= 19 ? 'Y' : 'N';
                     sessionStorage.setItem("adult",adult);
                     sessionStorage.setItem('grade', member.grade);
+                    sessionStorage.setItem('profile', member.sFile);
                     navi('/');
                 } else {
                     alert('존재하지 않는 사용자 또는 잘못된 비밀번호입니다.');

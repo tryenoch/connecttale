@@ -4,14 +4,8 @@ import com.bitc.full505_final_team4.data.dto.NovelDto;
 import com.bitc.full505_final_team4.data.dto.NovelLikeDto;
 import com.bitc.full505_final_team4.data.dto.NovelReplyDto2;
 import com.bitc.full505_final_team4.data.dto.ReportDto2;
-import com.bitc.full505_final_team4.data.entity.MemberEntity;
-import com.bitc.full505_final_team4.data.entity.NovelLikeEntity;
-import com.bitc.full505_final_team4.data.entity.NovelReplyEntity;
-import com.bitc.full505_final_team4.data.entity.ReportEntity;
-import com.bitc.full505_final_team4.data.repository.MemberRepository;
-import com.bitc.full505_final_team4.data.repository.NovelLikeRepository;
-import com.bitc.full505_final_team4.data.repository.NovelReplyRepository;
-import com.bitc.full505_final_team4.data.repository.ReportRepository;
+import com.bitc.full505_final_team4.data.entity.*;
+import com.bitc.full505_final_team4.data.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,18 +24,14 @@ public class MemberServiceImpl implements MemberService {
   private final NovelLikeRepository novelLikeRepository;
   private final NovelReplyRepository novelReplyRepository;
   private final ReportRepository reportRepository;
+  private final BoardRepository boardRepository;
 
-  @Override
-  public MemberEntity login(String id, String pw) throws Exception {
-    MemberEntity login = memberRepository.findByIdAndPw(id, pw);
-    return login;
-  }
-
+// 회원가입
   @Override
   public void join(MemberEntity member) throws Exception {
     memberRepository.save(member);
   }
-
+// 회원정보 변경
   @Override
   public void change(String id, String pw, String nickName) throws Exception {
     MemberEntity member = memberRepository.findAllById(id);
@@ -49,50 +39,57 @@ public class MemberServiceImpl implements MemberService {
     member.setNickname(nickName);
     memberRepository.save(member);
   }
-
+  // 회원정보 변경(nickname만)
   @Override
   public void changeNick(String id, String nickName) throws Exception {
     MemberEntity member = memberRepository.findAllById(id);
     member.setNickname(nickName);
     memberRepository.save(member);
   }
-
+  // 회원정보 변경(pw만)
   @Override
   public void changePw(String id, String pw) throws Exception {
     MemberEntity member = memberRepository.findAllById(id);
     member.setPw(pw);
     memberRepository.save(member);
   }
-
+// id 중복확인
   @Override
   public boolean confirmId(String id) throws Exception {
     return memberRepository.existsById(id);
   }
-
+  // nickname 중복확인
   @Override
   public boolean confirmNick(String nickname) throws Exception {
     return memberRepository.existsByNickname(nickname);
   }
 
-
+// 회원목록 Pagenation으로 가져오기(Pageable)활용
   @Override
   public Page<MemberEntity> getMemberList(Pageable pageable) throws Exception {
     return memberRepository.findByDeletedYn("N", pageable);
   }
 
+  // myQna 구현
+  @Override
+  public Page<BoardEntity> getQnaList(Pageable pageable, String id) throws Exception {
+    return boardRepository.findByCreateId_IdAndBoardCate_IdxOrderByBoardIdxDesc(id, 1, pageable);
+  }
+
+//  찜한목록 가져오기(Pageable활용)
   @Override
   public Object getLikeList(String id, Pageable pageable) throws Exception {
 
     Map<String, Object> result = new HashMap<>();
 
     List<NovelDto> likeList = new ArrayList<>();
-    MemberEntity member = memberRepository.findAllById(id);
-    Page<NovelLikeEntity> likedPage = novelLikeRepository.findAllByIdAndLikeYn(member, "Y", pageable);
+    MemberEntity member = memberRepository.findAllById(id); // id를 통해 MemberEntity 타입의 회원정보 객체 가져오기
+    Page<NovelLikeEntity> likedPage = novelLikeRepository.findAllByIdAndLikeYn(member, "Y", pageable); // id가 외래키로 MemberEntity타입임.
     int totalPages = likedPage.getTotalPages();
 
-    for (NovelLikeEntity like : likedPage.getContent()) {
-      NovelLikeDto req = NovelLikeDto.toDto(like);
-      likeList.add(req.getNovelIdx());
+    for (NovelLikeEntity like : likedPage.getContent()) { // Page타입의 객체의 내용을 NovelLikeEntity타입의 객체에 대입
+      NovelLikeDto req = NovelLikeDto.toDto(like); // 대입한 NovelLikeEntity타입의 객체를 NovelLikeDto타입의 객체로 변환
+      likeList.add(req.getNovelIdx()); // novelIdx또한 외래키로 NovelEntity타입이므로, List<NovelDto>타입의 객체에 저장
     }
 
     result.put("likeList", likeList);
@@ -101,6 +98,7 @@ public class MemberServiceImpl implements MemberService {
     return result;
   }
 
+//  내가 쓴 댓글 목록 가져오기
   @Override
   public Object getReplyList(Pageable pageable, String id) {
     Map<String, Object> result = new HashMap<>();
@@ -122,6 +120,7 @@ public class MemberServiceImpl implements MemberService {
     return result;
   }
 
+//  신고목록 가져오기
   @Override
   public Object getReportList(Pageable pageable) {
     Map<String, Object> result = new HashMap<>();
@@ -141,6 +140,7 @@ public class MemberServiceImpl implements MemberService {
     return result;
   }
 
+//  등업(update)
   @Override
   public void levelUp(String id) throws Exception {
     MemberEntity member = memberRepository.findAllById(id);
@@ -148,6 +148,7 @@ public class MemberServiceImpl implements MemberService {
     memberRepository.save(member);
   }
 
+//  회원정보 제거(deleteYn => Y 업데이트)
   @Override
   public void deleteMember(String id) throws Exception {
     MemberEntity member = memberRepository.findAllById(id);

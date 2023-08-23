@@ -43,4 +43,6 @@ public class LoginController {
         return result;
     }
 
-}
+//    @RequestMapping(value = "/profile/upload", method = RequestMethod.POST)
+//    public Object profileUpload()
+//}
