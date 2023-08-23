@@ -994,7 +994,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelCompleteYn 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("완결")) {
                 kakaoCrollingData.setNovelCompleteYn("Y");
               }
               else {
@@ -1098,7 +1098,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelCompleteYn 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("완결")) {
                 kakaoCrollingData.setNovelCompleteYn("Y");
               }
               else {
@@ -1201,7 +1201,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelCompleteYn 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("완결")) {
                 kakaoCrollingData.setNovelCompleteYn("Y");
               }
               else {
@@ -1305,7 +1305,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelCompleteYn 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().equals("완결")) {
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("완결")) {
                 kakaoCrollingData.setNovelCompleteYn("Y");
               }
               else {
