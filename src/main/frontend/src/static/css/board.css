@@ -281,6 +281,7 @@ ul.nav-pills {
   --bs-nav-pills-link-active-color: rgba(140, 82, 252, 0.68);
   --bs-nav-pills-link-active-bg: var(--bs-white);
   background-color: rgba(140, 82, 252, 0.68);
+  margin-top: 6em;
 }
 
 /*페이지 네이션 배경*/
