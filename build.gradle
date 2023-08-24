@@ -71,6 +71,7 @@ sourceSets {
 	}
 }
 
+/*
 processResources {
 	dependsOn "copyReactBuildFiles"
 }
@@ -108,4 +109,4 @@ task copyReactBuildFiles(type: Copy) {
 
 tasks.bootJar {
 	dependsOn "copyReactBuildFiles"
-}
+}*/
