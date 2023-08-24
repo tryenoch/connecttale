@@ -23,11 +23,16 @@ function LikeListItem(props) {
         Y: true,
         N: false
     };
+    let ageGrade = "N";
+    if (adultsOnly[adult]) {
+        ageGrade = "Y";
+    }
+
 
     const handleLinkClick = async (like) => {
         console.log(like);
         try {
-            const novelDetail = await fetchData(like.novelThumbnail, like.novelTitle, like.ebookCheck, like.novelIdx, like.novelAdult);
+            const novelDetail = await fetchData('123', like.novelTitle, like.ebookCheck, like.novelAdult);
             navi(`/novelDetail/${title}`, {
                 state: {
                     novelDetail: novelDetail,
@@ -48,9 +53,13 @@ function LikeListItem(props) {
                         handleLinkClick(like);
                     }} to={`/novelDetail/${title}`}>
                     {
-                        adultsOnly[adult] ? <img
-                                src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"}
-                                alt={"Adults content"}/>
+                        adultsOnly[adult] ?
+                            sessionStorage.getItem("adult") === "Y" ?
+                                <img src={like.novelThumbnail} alt=""/>
+                                :
+                                <img
+                                    src={"https://page.kakaocdn.net/pageweb/2.12.2/public/images/img_age_19_Thumbnail_43.svg"}
+                                    alt={"Adults content"}/>
                             : <img src={like.novelThumbnail} alt=""/>
                     }
                 </Link>

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +21,7 @@ public class NovelReplyDto2 {
   private String ebookCheck;
   private String replyContent;
   private String id;
-  private LocalDateTime createDt = LocalDateTime.now();
+  private String createDt;
   private String deletedYn;
   private String spoilerYn;
 
@@ -35,7 +36,9 @@ public class NovelReplyDto2 {
     this.ebookCheck = ebookCheck;
     this.replyContent = replyContent;
     this.id = id;
-    this.createDt = createDt;
+    if (createDt != null) {
+      this.createDt = createDt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+    }
     this.deletedYn = deletedYn;
     this.spoilerYn = spoilerYn;
   }

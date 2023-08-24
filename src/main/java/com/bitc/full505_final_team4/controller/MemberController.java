@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,19 +22,7 @@ import java.util.Map;
 public class MemberController {
   private final MemberService memberService;
 
-
-  @RequestMapping(value = "/login", method = RequestMethod.POST)
-  public Object login(@RequestParam("id") String id, @RequestParam("pw") String pw) throws Exception {
-
-    MemberEntity member = memberService.login(id, pw);
-    Map<String, MemberEntity> result = new HashMap<>();
-    if (member.getId() == "" || member.getId() == null) {
-      result.put("result", member);
-    }
-
-    return result;
-  }
-
+  // 회원가입
   @RequestMapping(value = "/join/join2", method = RequestMethod.POST)
   public Object join(@RequestParam("id") String id, @RequestParam("pw") String pw, @RequestParam("name") String name, @RequestParam("nickname") String nickname, @RequestParam("gender") int gender, @RequestParam("year") String year, @RequestParam("mon") String mon, @RequestParam("day") String day) throws Exception {
 
@@ -59,6 +48,7 @@ public class MemberController {
     return result;
   }
 
+//  회원정보 수정
   @RequestMapping(value = "/myPage/changeInfo", method = RequestMethod.POST)
   public Object changeInfo(@RequestParam("id") String id, @RequestParam("pw") String pw, @RequestParam("nickname") String nickname) throws Exception {
 
@@ -70,6 +60,7 @@ public class MemberController {
     return result;
   }
 
+//  닉네임만 변경
   @RequestMapping(value = "/myPage/changeNick", method = RequestMethod.POST)
   public Object changeNick(@RequestParam("id") String id, @RequestParam("nickname") String nickname) throws Exception {
 
@@ -81,6 +72,7 @@ public class MemberController {
     return result;
   }
 
+  // PW만 변경
   @RequestMapping(value = "/myPage/changePw", method = RequestMethod.POST)
   public Object changePw(@RequestParam("id") String id, @RequestParam("pw") String pw) throws Exception {
 
@@ -92,6 +84,7 @@ public class MemberController {
     return result;
   }
 
+  // id 유효성 검사(이미 있는 id인지)
   @RequestMapping(value = "/join/join2", method = RequestMethod.GET)
   public Object confirmId(@RequestParam("id") String id) throws Exception {
 
@@ -108,6 +101,7 @@ public class MemberController {
     return result;
   }
 
+  // nickname 유효성 검사
   @RequestMapping(value = "/join/join2", method = RequestMethod.PATCH)
   public Object confirmNick(@RequestParam("nickname") String nickname) throws Exception {
 
@@ -124,7 +118,7 @@ public class MemberController {
     return result;
   }
 
-// StaffPage 구현
+// 관리자 페이지(회원목록)
   @RequestMapping(value = "/staffPage/memberList", method = RequestMethod.GET)
   // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
   public Object memberList(Pageable pageable) throws Exception {
@@ -147,39 +141,13 @@ public class MemberController {
     return result;
   }
 
-//  pagenation 실패.
-  @RequestMapping(value = "/myPage/likeList", method = RequestMethod.GET)
-  public Object likeList(Pageable pageable, @RequestParam String id) throws Exception {
-
-    Object result = memberService.getLikeList(id, pageable);
-
-    return result;
-  }
-
-//   신고내역 => 신고 구현 완료 되면 구현예정
+//  관리자페이지(신고내역)
   @RequestMapping(value = "/staffPage/reportList", method = RequestMethod.GET)
-  // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
   public Object reportList(Pageable pageable) throws Exception {
-//
-//    Map<String, Object> result = new HashMap<>();
-//
-//    List<MemberDto> memberList = new ArrayList<>();
-//    Page<MemberEntity> memberPages = memberService.getMemberList(pageable);
-//    int totalPages = memberPages.getTotalPages();
-//
-//    for (MemberEntity member : memberPages.getContent()) {
-//      MemberDto mem = MemberDto.toDto(member);
-//      memberList.add(mem);
-//    }
-//
-//    result.put("result", "성공");
-//    result.put("totalPages", totalPages);
-//    result.put("nowPage", pageable.getPageNumber() + 1);
-//    result.put("memberList", memberList);
-//    return result;
-    return memberService.getReportList(pageable);
+    return memberService.getReportList(pageable); // MemberServiceImpl에서 Map타입으로 정의하여 넘겨줌.
   }
 
+//  관리자 페이지(회원목록 중 등급 upgrade)
   @RequestMapping(value = "/staffPage/levelUp", method = RequestMethod.POST)
   public Object levelUp(@RequestParam("id") String id) throws Exception {
 
@@ -191,6 +159,7 @@ public class MemberController {
     return result;
   }
 
+//  관리자페이지(회원 목록 중 회원정보 삭제(deleteYn = Y)
   @RequestMapping(value = "/staffPage/deleteMember", method = RequestMethod.POST)
   public Object deleteMember(@RequestParam("id") String id) throws Exception {
 
@@ -202,12 +171,52 @@ public class MemberController {
     return result;
   }
 
+  //  마이페이지(찜한목록)
+  @RequestMapping(value = "/myPage/likeList", method = RequestMethod.GET)
+  public Object likeList(Pageable pageable, @RequestParam String id) throws Exception {
+
+    Object result = memberService.getLikeList(id, pageable);
+
+    return result;
+  }
+
+  //  마이페이지(QnA)
+  @RequestMapping(value = "/myPage/myQna", method = RequestMethod.GET)
+  public Object myQna(Pageable pageable, @RequestParam String id) throws Exception {
+
+    Map<String, Object> result = new HashMap<>();
+
+    List<BoardDTO> qnaList = new ArrayList<>();
+    Page<BoardEntity> boardPages = memberService.getQnaList(pageable, id);
+    int totalPages = boardPages.getTotalPages();
+
+    for (BoardEntity board : boardPages.getContent()) {
+      BoardDTO req = BoardDTO.toDTO(board);
+      qnaList.add(req);
+    }
+
+    result.put("result", "성공");
+    result.put("totalPages", totalPages);
+    result.put("nowPage", pageable.getPageNumber() + 1);
+    result.put("boardList", qnaList);
+    return result;
+  }
+
+  //  마이페이지(내가 쓴 댓글목록)
   @RequestMapping(value = "/myPage/myComment", method = RequestMethod.GET)
   // JPA Pageable 사용(페이지네이션을 도와주는 인터페이스)
   public Object myComment(Pageable pageable, @RequestParam String id) throws Exception {
 
     Object result = memberService.getReplyList(pageable, id);
 
+    return result;
+  }
+
+  @RequestMapping(value = "/profile/upload", method = RequestMethod.POST)
+  public Object profileUpload(@RequestParam("id")String  id, MultipartHttpServletRequest multipart) throws Exception {
+    Map<String, String> result = new HashMap<>();
+    String sFile = memberService.profileUpload(id, multipart);
+    result.put("sFile", sFile);
     return result;
   }
 }

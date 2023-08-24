@@ -3,9 +3,10 @@ import {Swiper, SwiperSlide} from 'swiper/react';
 import {Col, Row} from "react-bootstrap";
 import 'swiper/css';
 import 'swiper/css/pagination';
+import test3 from '../../static/img/test3.png';
 
 /* 필요한 모듈 추가하기 */
-import {Autoplay, EffectFade, Pagination} from 'swiper/modules';
+import {Autoplay, EffectFade, Navigation, Pagination} from 'swiper/modules';
 
 function MainCarousel(props) {
 
@@ -15,24 +16,29 @@ function MainCarousel(props) {
       <Col sm className={"d-flex justify-content-center my-4"}>
 
         <Swiper
-          pagination={{
-            /* 슬라이드 정도에 따라 캐러셀 하단 bullet 크기가 변함 */
-            dynamicBullets : true,
-          }}
           centeredSlides={true}
           autoplay={{
-            delay: 2500,
+            delay: 3000,
             disableOnInteraction: false,
           }}
-          loop={true}
-          effect={'fade'}
-          modules={[Autoplay, Pagination, EffectFade]}
+          pagination={{
+            clickable: true,
+            dynamicBullets : true,
+          }}
+          navigation={true}
+          modules={[Autoplay, Pagination, Navigation]}
           className="mySwiper"
         >
-          <SwiperSlide className={""}>캐러셀 화면 1</SwiperSlide>
-          <SwiperSlide>캐러셀 화면 2</SwiperSlide>
-          <SwiperSlide>캐러셀 화면 3</SwiperSlide>
-          <SwiperSlide>캐러셀 화면 4</SwiperSlide>
+          <SwiperSlide>
+            <img src={test3} alt="test1"/>
+            <div className={'slide-msg'}>
+              {/* 임시 이미지 */}
+              <h3>신규 플랫폼 Open!</h3>
+              <h2>이야기를 잇다 <span className={'ft-yg'}>CONNECTTALE</span></h2>
+            </div>
+          </SwiperSlide>
+          {/*<SwiperSlide><img src={test1} alt="test1"/></SwiperSlide>
+          <SwiperSlide><img src={test1} alt="test1"/></SwiperSlide>*/}
         </Swiper>
 
       </Col>
