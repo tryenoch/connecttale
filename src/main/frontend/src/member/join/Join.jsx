@@ -8,14 +8,8 @@ import Join3 from "./Join3";
 function Join(props) {
 
     return (
-        <div className={'container mt-5'}>
-            <div className={'my-5'}>
-                <br/>
-            </div>
-            <h1 className={'text-center my-5'}>회원가입</h1>
-            <div className={'my-5'}>
-                <br/>
-            </div>
+        <div className={'container mt-5 pt-3'}>
+            <h1 className={'text-center my-5 join-title'}>회원가입</h1>
             <div className={'row justify-content-center mt-5'}>
                 <Routes>
                     <Route index path={"/"} element={<Join1/>}/>
@@ -23,7 +17,6 @@ function Join(props) {
                     <Route path={"/Join3"} element={<Join3/>}/>
                 </Routes>
             </div>
-            <br/><br/><br/><br/><br/><br/><br/>
         </div>
 
     )

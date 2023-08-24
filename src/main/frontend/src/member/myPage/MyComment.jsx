@@ -48,7 +48,7 @@ function MyContent(props) {
     const handleLinkClick = async (novel) => {
         console.log(novel);
         try {
-            const novelDetail = await fetchData(novel.novelThumbnail, novel.novelTitle, novel.ebookCheck, novel.novelIdx, novel.novelAdult);
+            const novelDetail = await fetchData("123", novel.novelTitle, novel.ebookCheck, novel.novelAdult);
             navi(`/novelDetail/${novel.novelTitle}`, {
                 state: {
                     novelDetail: novelDetail,

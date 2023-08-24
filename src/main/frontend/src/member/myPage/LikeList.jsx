@@ -31,7 +31,7 @@ function LikeList(props) {
     }, [props.data, nowPage]);
 
     const requestData = () => {
-        axios.get(`/myPage/likeList?id=${sessionStorage.getItem('id')}&page=${nowPage}&size=10`)
+        axios.get(`/myPage/likeList?id=${sessionStorage.getItem('id')}&page=${nowPage}&size=12`)
             .then(res => {
 
                 console.log(res.data);
@@ -55,24 +55,6 @@ function LikeList(props) {
             })
     }
 
-
-    // const handleLinkClick = async (like) => {
-    //     console.log(like);
-    //     try {
-    //         const novelDetail = await fetchData(like.novelThumbnail, like.novelTitle, like.ebookCheck, like.novelIdx, like.novelAdult);
-    //         navi(`/novelDetail/${like.novelTitle}`, {
-    //             state: {
-    //                 novelDetail: novelDetail,
-    //             }
-    //         });
-    //     } catch (error) {
-    //         console.log(error.message);
-    //     }
-    // };
-    // const handleSubmit = (event) => {
-    //     alert(`검색어 : ${keyword}`);
-    //     event.preventDefault();
-    // }
 
     return (
         <div className={'container'}>

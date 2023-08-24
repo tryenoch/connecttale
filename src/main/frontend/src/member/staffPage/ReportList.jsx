@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import {fetchData} from "../../common/NovelDetailFetch2";
 
 function ReportList(props) {
+    const navi = useNavigate();
 
     const [nowPage, setNowPage] = useState(0);
     const [endPage, setEndPage] = useState(0);
@@ -48,6 +50,19 @@ function ReportList(props) {
         event.preventDefault();
     }
 
+    const handleLinkClick = async (novel) => {
+        console.log(novel);
+        try {
+            const novelDetail = await fetchData('123', novel.novelTitle, novel.ebookCheck, novel.novelAdult);
+            navi(`/novelDetail/${novel.novelTitle}`, {
+                state: {
+                    novelDetail: novelDetail,
+                }
+            });
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
     return (
         <Row>
@@ -83,7 +98,14 @@ function ReportList(props) {
                                 return (
                                     <tr key={index}>
                                         <td>{report.reportIdx}</td>
-                                        <td>{report.novelTitle}</td>
+                                        <td>
+                                            <Link onClick={e => {
+                                                e.preventDefault();
+                                                handleLinkClick(report);
+                                            }} to={`/novelDetail/${report.novelTitle}`}>
+                                                {report.novelTitle}
+                                            </Link>
+                                        </td>
                                         <td>{report.replyContent}</td>
                                         <td>{report.reportContent}</td>
                                         <td>{report.reporter}</td>
