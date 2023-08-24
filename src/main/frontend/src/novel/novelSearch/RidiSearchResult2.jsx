@@ -18,7 +18,8 @@ function RidiSearchResult2(props) {
       
       for (let s = 0; s <= 216; s += 24) {
         try {
-          const response = await axios.get("https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword=" + props.keyword + "&start=" + s + "&what=base&where%5B%5D=book&site=ridi-store");
+          const response = await axios.get("https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword="
+            + props.keyword + "&start=" + s + "&what=base&where%5B%5D=book&site=ridi-store");
           const item = response.data.books;
           // console.log(item);
           
