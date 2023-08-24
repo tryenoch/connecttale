@@ -6,6 +6,7 @@ import MyContent from "./MyContent";
 import MyQNA from "./MyQNA";
 import MyComment from "./MyComment";
 import Logo from "../Logo/joinLogo1.svg";
+import User from "../Logo/user.png"
 
 
 function MyMain(props) {
@@ -30,7 +31,7 @@ function MyMain(props) {
                                         <img src={`/profile/${sessionStorage.getItem("profile")}`} alt="" id={'preview'}
                                              className={'img-fluid profile'}/>
                                         :
-                                        <img src={require("../Logo/user.png").default} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                        <img src={User} alt="" id={'preview'} className={'img-fluid profile bg-white'}/>
                                 }
                             </div>
                         </div>
