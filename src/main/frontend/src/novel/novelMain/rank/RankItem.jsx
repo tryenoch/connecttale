@@ -19,6 +19,7 @@ function RankItem(props) {
   const starRate = novel.novelStarRate;
   const adultsOnly = novel.adultsOnly;
 
+
   let ageGrade = "N";
   if(adultsOnly){ ageGrade = "Y"; }
 
@@ -80,14 +81,14 @@ function RankItem(props) {
           }
         </div>
       </div>
-      <div className={"rank-info w-100"}>
+      <div className={"rank-info w-100 px-2"}>
         <p className={"item-title"}>{title}</p>
         <p className={"item-detail"}>
           <span className={"item-author"}>{author}</span>
           {
             cate == null? null :
               <span>|
-              <span className="item-cate ms-2">{cate}</span>
+                <span className="item-cate ms-2">{cate}</span>
               </span>
           }
         </p>
