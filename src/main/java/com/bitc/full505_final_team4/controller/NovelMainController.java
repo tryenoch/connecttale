@@ -23,6 +23,8 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -160,14 +163,22 @@ public class NovelMainController {
 
   // 카테고리별로 소설 목록 들고오기
   @GetMapping("/cateNovelList")
-  public Object getCateNovelList(@RequestParam("cate") String cate, @RequestParam(value = "page", defaultValue = "0") String page) throws Exception {
+  public Object getCateNovelList(@RequestParam("cate") String cate, Pageable pageable) throws Exception {
     Map<String, Object> result = new HashMap<>();
 
-    List<NovelPlatformDto> cateNovelList = novelMainService.getCateNovelList(cate, page);
+    Page<NovelPlatformEntity> entityList = novelMainService.getCateNovelList(cate, pageable);
 
-    if (!ObjectUtils.isEmpty(cateNovelList)){
-      result.put("list", cateNovelList);
+    List<NovelPlatformDto> list = entityList.stream().map(m -> NovelPlatformDto.toDto(m)).collect(Collectors.toList());
+
+    int totalPage = entityList.getTotalPages();
+
+    if (!ObjectUtils.isEmpty(list)){
+
+      result.put("totalPages", totalPage);
+      result.put("nowPage", pageable.getPageNumber() + 1);
+      result.put("list", list);
       result.put("result", "success");
+
     } else {
       result.put("result", "Backend Error");
     }
