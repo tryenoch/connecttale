@@ -53,6 +53,7 @@ public class BoardController {
         result.put("nowPage", pageable.getPageNumber() + 1);
         result.put("boardType", "req");
         result.put("boardList", reqList);
+
         return result;
     }
 

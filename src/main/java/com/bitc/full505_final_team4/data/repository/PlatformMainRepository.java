@@ -3,6 +3,7 @@ package com.bitc.full505_final_team4.data.repository;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
 import com.bitc.full505_final_team4.data.entity.NovelPlatFormIdx;
 import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,7 +32,7 @@ public interface PlatformMainRepository extends JpaRepository<NovelPlatformEntit
   Optional<NovelPlatformEntity> findByNovelIdx_NovelIdxAndPlatform(int novelIdx, int platform);
 
   // cateList에 cateItem이 포함되어 있는 리스트 들고오기
-  List<NovelPlatformEntity> findNovelPlatformEntitiesByCateListLike(String cateItem, Pageable pageable);
+  Page<NovelPlatformEntity> findNovelPlatformEntitiesByCateListLike(String cateItem, Pageable pageable);
 
-  List<NovelPlatformEntity> findAllBy(Pageable pageable);
+  Page<NovelPlatformEntity> findAllBy(Pageable pageable);
 }
