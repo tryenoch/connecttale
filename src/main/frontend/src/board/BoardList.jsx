@@ -181,7 +181,7 @@ function BoardList(props) {
                     return (
                         <a
                             key={value}
-                            className={nowPage === value - 1 ? 'text-black' : 'text-black-50'}
+                            className={nowPage === value - 1 ? 'selected-page' : 'text-black-50'}
                             onClick={() => setNowPage(value - 1)}
                         >{value}</a>);
                   })
