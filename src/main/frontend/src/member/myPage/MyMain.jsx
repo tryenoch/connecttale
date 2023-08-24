@@ -5,6 +5,7 @@ import LikeList from "./LikeList";
 import MyContent from "./MyContent";
 import MyQNA from "./MyQNA";
 import MyComment from "./MyComment";
+import Logo from "../Logo/joinLogo1.svg";
 
 
 function MyMain(props) {
@@ -20,13 +21,28 @@ function MyMain(props) {
     return (
         <div>
             <div className={'row border rounded-1 p-1'}>
-                <div className={'col-sm-3 bg-purple-light p-3 grid box-board'}>
-                    <Link to={'/myPage/changeInfo'}>
-                        <a href="" className={'fs-4 text-purple'}>{member.nickname}
-                            <i className="bi bi-chevron-right text-secondary opacity-50 fw-bold"></i>
-                        </a>
-                        <p className={'text-secondary opacity-50 fw-bolder'}>{sessionStorage.getItem('id')}</p>
-                    </Link>
+                <div className={'col-sm-3 bg-purple-light p-3 d-block box-board'}>
+                    <div className={'row'}>
+                        <div className={'col-sm'}>
+                            <div className={'box-sm'}>
+                                {
+                                    sessionStorage.getItem("profile") !== null ?
+                                        <img src={`/profile/${sessionStorage.getItem("profile")}`} alt="" id={'preview'}
+                                             className={'img-fluid profile'}/>
+                                        :
+                                        <img src={require("../Logo/user.png").default} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                }
+                            </div>
+                        </div>
+                        <div className={'col-sm'}>
+                            <Link to={'/myPage/changeInfo'}>
+                                <a href="" className={'fs-4 text-purple'}>{member.nickname}
+                                    <i className="bi bi-chevron-right text-secondary opacity-50 fw-bold"></i>
+                                </a>
+                                <p className={'text-secondary opacity-50 fw-bolder'}>{sessionStorage.getItem('id')}</p>
+                            </Link>
+                        </div>
+                    </div>
                 </div>
                 <div className={'col-sm-9 p-3 justify-content-around'}>
                     <button className={'btn btn-light-purple mini-block ms-1'} onClick={() => {

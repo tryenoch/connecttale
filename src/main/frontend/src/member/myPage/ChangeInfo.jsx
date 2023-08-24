@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import JoinLogoTop2 from "../join/JoinLogoTop2";
+
 
 function ChangeInfo(props) {
     const [confirm, setConfirm] = useState({
@@ -123,6 +123,45 @@ function ChangeInfo(props) {
 
     }
 
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [imgFile, setImgFile] = useState("");
+    const imgRef = useRef();
+
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+        const file = imgRef.current.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setImgFile(reader.result);
+        };
+    };
+
+    const handleFileUpload = async () => {
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await axios.post('/profile/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                    params: {
+                        id: sessionStorage.getItem('id')
+                    }
+                });
+
+                sessionStorage.setItem("profile", response.data.sFile);
+                console.log('File uploaded:', response.data.sFile);
+                // 업로드 성공 시 처리
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                // 업로드 실패 시 처리
+            }
+        }
+    };
+
     return (
         <div>
 
@@ -143,6 +182,30 @@ function ChangeInfo(props) {
                 <div className={'row mt-3'}>
                     <div className={'col-sm-10 ms-4 ms-auto'}>
                         <div className={'row mt-2'}>
+                            <form encType={'multipart/form-data'} onSubmit={'upload'}>
+                                <div className={'col-sm-3 mx-auto '}>
+                                    <div className={'box'}>
+                                        <label htmlFor="image-file" className={'w-100 h-100'}>
+                                            {
+                                                imgFile === null || imgFile === "" ?
+                                                    sessionStorage.getItem("profile") === null ?
+                                                        <img src="../Logo/user.png" alt="" id={'preview'} className={'img-fluid profile'}/>
+                                                        :
+                                                        <img src={`/profile/${sessionStorage.getItem("profile")}`} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                                    :
+                                                    <img src={imgFile} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                            }
+                                        </label>
+                                        <input type="file" name={'imageFile'} id={'image-file'} accept={'image/*'}
+                                               className={'invisible'} onChange={handleFileChange} ref={imgRef}/>
+                                    </div>
+                                    <button type={'submit'} className={'btn btn-outline-purple mt-1 ms-4'}
+                                            onClick={handleFileUpload}>사진 변경
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div className={'row mt-5'}>
                             <div className={'col-sm-3'}>
                                 <h4 className={'fw-bold'}>아이디</h4>
                             </div>
@@ -202,7 +265,10 @@ function ChangeInfo(props) {
                                 }}
                                         className={'btn btn-secondary ms-3'}>취소
                                 </button>
-                                <button type={'button'} onClick={() => {eventClickOK(); reload();}}
+                                <button type={'button'} onClick={() => {
+                                    eventClickOK();
+                                    reload();
+                                }}
                                         className={'btn btn-purple ms-5'}>수정
                                 </button>
                             </div>

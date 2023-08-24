@@ -85,4 +85,5 @@ public class MemberEntity {
     this.deletedYn = deletedYn;
   }
 
+
 }
