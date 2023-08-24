@@ -121,7 +121,7 @@ function RidiSearchResult2(props) {
                       {/*onClick이벤트에 매개변수가 있을때는 페이지 로딩되자마자 함수가 바로 발생되서 이벤트가 발생했을때만 함수가 실행되도록 e => 를 붙여줘야 함*/}
                       <p className={'text-decoration-none text-black fs-5 fw-bold'}>
                         {item.title}
-                        <span className={'text-danger'}>{item.ageGrade=='Y' ? '[성인]' : null}</span>
+                        <span className={'text-danger'}>{item.ageGrade=='Y' ? ' [성인]' : null}</span>
                         {
                           item.ebookCheck == '단행본' ? <span className={'ms-2'}>[{item.ebookCheck}]</span> : null
                         }
