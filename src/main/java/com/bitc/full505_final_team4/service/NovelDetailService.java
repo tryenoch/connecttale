@@ -46,6 +46,8 @@ public interface NovelDetailService {
 
   String insertReplyReport(int replyIdx, String reportContent, String reporter, String suspect);
 
+  String deleteNovelReply(int replyIdx);
+
 
 //  List<ReplyLikeEntity> getReplyLikeList(NovelReplyEntity novelReplyEntity);
 
