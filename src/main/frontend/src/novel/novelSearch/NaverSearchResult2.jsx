@@ -90,7 +90,7 @@ function NaverSearchResult2(props) {
                         {item.title}
                         <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
                         {
-                          item.ebookCheck == '단행본' ? <span>[{item.ebookCheck}]</span> : null
+                          item.ebookCheck == '단행본' ? <span> [{item.ebookCheck}]</span> : null
                         }
                       </p>
                       <p className={'search-info'}>작가 : {item.author}</p>
@@ -106,7 +106,7 @@ function NaverSearchResult2(props) {
                         <p>
                           &nbsp;<span className={'fw-bold'}>{item.completeYn}
                           {
-                            item.title.indexOf('[단행본]') == -1
+                            item.ebookCheck === '웹소설'
                               ? <span>&nbsp;(총{item.count}화)</span>
                               : <span>&nbsp;(총{item.count}권)</span>
                           }

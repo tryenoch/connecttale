@@ -54,6 +54,24 @@ public class NovelCommonEditService {
       editTitle1 = editTitle1 + editTitle2;
     }
 
+    if(editTitle1.contains("[로맨스]")){
+      idx1 = editTitle1.indexOf("[로맨스]");
+
+      // 뒤에 붙일 문자열을 먼저 정의
+      editTitle2 = editTitle1.substring(idx1 + 5); // [특전포함]
+      editTitle1 = editTitle1.substring(0, idx1); // 익명으로 전해드립니다
+      editTitle1 = editTitle1 + editTitle2;
+    }
+
+    if(editTitle1.contains("[판타지]")){
+      idx1 = editTitle1.indexOf("[판타지]");
+
+      // 뒤에 붙일 문자열을 먼저 정의
+      editTitle2 = editTitle1.substring(idx1 + 5); // [특전포함]
+      editTitle1 = editTitle1.substring(0, idx1); // 익명으로 전해드립니다
+      editTitle1 = editTitle1 + editTitle2;
+    }
+
     // 왕비가 된 기녀, 아라 홍련 [단행본/할인중] 과 같이(출처 카카오)
     // 할인 정보가 붙어 있을 경우 별도의 문서로 보고 자르지 않음(그대로 유지)
     if(editTitle1.contains("[단행본]")) {

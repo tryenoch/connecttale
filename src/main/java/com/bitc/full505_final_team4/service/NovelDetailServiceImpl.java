@@ -111,9 +111,15 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // novelPrice
               ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
-              HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
-              int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString()) != 0 ? Integer.parseInt(novelList.get(i).get("price").toString()) : Integer.parseInt(prices.get("max_price").toString());
-              ridiPlatformEntity.setNovelPrice(novelPrice);
+              if (!priceList.isEmpty()) {
+                HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+                int novelPrice = Integer.parseInt(prices.get("max_price").toString());
+                ridiPlatformEntity.setNovelPrice(novelPrice);
+              }
+              else {
+                int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
+                ridiPlatformEntity.setNovelPrice(novelPrice);
+              }
 
               // starRate
               double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
@@ -195,9 +201,16 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // novelPrice
               ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
-              HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
-              int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString()) != 0 ? Integer.parseInt(novelList.get(i).get("price").toString()) : Integer.parseInt(prices.get("max_price").toString());
-              ridiPlatformEntity.setNovelPrice(novelPrice);
+              if (!priceList.isEmpty()) {
+                HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+                int novelPrice = Integer.parseInt(prices.get("max_price").toString());
+                ridiPlatformEntity.setNovelPrice(novelPrice);
+              }
+              else {
+                int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
+                ridiPlatformEntity.setNovelPrice(novelPrice);
+              }
+
 
               // starRate
               double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
@@ -279,9 +292,15 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // novelPrice
               ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
-              HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
-              int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString()) != 0 ? Integer.parseInt(novelList.get(i).get("price").toString()) : Integer.parseInt(prices.get("max_price").toString());
-              ridiPlatformEntity.setNovelPrice(novelPrice);
+              if (!priceList.isEmpty()) {
+                HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+                int novelPrice = Integer.parseInt(prices.get("max_price").toString());
+                ridiPlatformEntity.setNovelPrice(novelPrice);
+              }
+              else {
+                int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
+                ridiPlatformEntity.setNovelPrice(novelPrice);
+              }
 
               // starRate
               double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
@@ -363,9 +382,15 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
               // novelPrice
               ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
-              HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
-              int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString()) != 0 ? Integer.parseInt(novelList.get(i).get("price").toString()) : Integer.parseInt(prices.get("max_price").toString());
-              ridiPlatformEntity.setNovelPrice(novelPrice);
+              if (!priceList.isEmpty()) {
+                HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+                int novelPrice = Integer.parseInt(prices.get("max_price").toString());
+                ridiPlatformEntity.setNovelPrice(novelPrice);
+              }
+              else {
+                int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
+                ridiPlatformEntity.setNovelPrice(novelPrice);
+              }
 
               // starRate
               double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
@@ -535,7 +560,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelPrice 가져오기
-              naverCrollingData.setNovelPrice(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"content\"]/div[4]/div/dl/dd/div/div[1]/span/span")).getText()));
+              int novelPrice = Integer.parseInt(driver.findElement(By.cssSelector(".area_ebook_price_information")).findElement(By.tagName("div")).findElement(By.cssSelector(".point_color")).getText());
+              naverCrollingData.setNovelPrice(novelPrice);
 
               // novelStarRate 가져오기
               naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
@@ -630,7 +656,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelPrice 가져오기
-              naverCrollingData.setNovelPrice(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"content\"]/div[4]/div/dl/dd/div/div[1]/span/span")).getText()));
+              int novelPrice = Integer.parseInt(driver.findElement(By.cssSelector(".area_ebook_price_information")).findElement(By.tagName("div")).findElement(By.cssSelector(".point_color")).getText());
+              naverCrollingData.setNovelPrice(novelPrice);
 
               // novelStarRate 가져오기
               naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
@@ -726,7 +753,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelPrice 가져오기
-              naverCrollingData.setNovelPrice(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"content\"]/div[4]/div/dl/dd/div/div[1]/span/span")).getText()));
+              int novelPrice = Integer.parseInt(driver.findElement(By.cssSelector(".area_ebook_price_information")).findElement(By.tagName("div")).findElement(By.cssSelector(".point_color")).getText());
+              naverCrollingData.setNovelPrice(novelPrice);
 
               // novelStarRate 가져오기
               naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
@@ -821,7 +849,8 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelPrice 가져오기
-              naverCrollingData.setNovelPrice(Integer.parseInt(driver.findElement(By.xpath("//*[@id=\"content\"]/div[4]/div/dl/dd/div/div[1]/span/span")).getText()));
+              int novelPrice = Integer.parseInt(driver.findElement(By.cssSelector(".area_ebook_price_information")).findElement(By.tagName("div")).findElement(By.cssSelector(".point_color")).getText());
+              naverCrollingData.setNovelPrice(novelPrice);
 
               // novelStarRate 가져오기
               naverCrollingData.setNovelStarRate(Double.parseDouble(driver.findElement(By.xpath("//*[@id=\"content\"]/div[1]/div[1]/em")).getText()));
@@ -1046,7 +1075,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelUpdateDate 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재") && driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재") != 0) {
                 int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
                 kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
               }
@@ -1155,7 +1184,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelUpdateDate 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재") && driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재") != 0) {
                 int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
                 kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
               }
@@ -1265,7 +1294,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelUpdateDate 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재") && driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재") != 0) {
                 int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
                 kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
               }
@@ -1375,7 +1404,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
               }
 
               // novelUpdateDate 가져오기
-              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재")) {
+              if (driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().contains("연재") && driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재") != 0) {
                 int novelUpdateDateIndex = driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().indexOf("연재");
                 kakaoCrollingData.setNovelUpdateDate(driver.findElement(By.xpath("//*[@id=\"__next\"]/div/div[2]/div[1]/div[1]/div[1]/div[1]/div/div[3]/div[2]/div[1]/div[2]/span")).getText().substring(0, novelUpdateDateIndex - 1));
               }

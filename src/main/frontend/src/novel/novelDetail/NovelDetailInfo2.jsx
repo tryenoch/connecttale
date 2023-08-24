@@ -256,7 +256,7 @@ function NovelDetailInfo(props) {
                   {
                     Object.keys(naver).length != 0
                       ? <tr>
-                        <Link to={`https://series.naver.com/novel/detail.series?productNo=${naver.platformId}`}>
+                        <Link to={`https://series.naver.com/novel/detail.series?productNo=${naver.platformId}`} target={'_blank'}>
                           <td><p><img src="/naver-series-icon.png" alt="" className={'platform-logo me-2'} target={'_blank'}/>네이버시리즈 <span
                             className={'novel-price'}>{naver.novelPrice}</span>쿠키</p>
                           </td>
@@ -318,8 +318,6 @@ function NovelDetailInfo(props) {
                 }*/}
               </div>
             </div>
-
-
           </div>
         </div>
       </div>
