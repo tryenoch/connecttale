@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+// input 태그를 통해 입력된 file형태의 데이터를
 @Component
 public class ProfileUtils {
 

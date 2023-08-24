@@ -29,6 +29,23 @@ export function titleEdit(title) {
     editTitle1 = editTitle1 + editTitle2;
   }
   
+  if (editTitle1.includes('[로맨스]')) {
+    idx1 = editTitle1.indexOf('[로맨스]')
+    
+    editTitle2 = editTitle1.substring(idx1 + 5);
+    editTitle1 = editTitle1.substring(0, idx1);
+    editTitle1 = editTitle1 + editTitle2;
+  }
+  
+  if (editTitle1.includes('[판타지]')) {
+    idx1 = editTitle1.indexOf('[판타지]')
+    
+    editTitle2 = editTitle1.substring(idx1 + 5);
+    editTitle1 = editTitle1.substring(0, idx1);
+    editTitle1 = editTitle1 + editTitle2;
+  }
+  
+  
   // [단행본/할인중] 과 같이 할인정보 추가로 붙어있는 경우는 그대로 유지
   if (editTitle1.includes('[단행본]')) {
     idx1 = editTitle1.indexOf('[단행본]');

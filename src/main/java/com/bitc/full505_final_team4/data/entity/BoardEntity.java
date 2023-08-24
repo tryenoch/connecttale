@@ -21,7 +21,7 @@ public class BoardEntity {
     @Column(nullable = false, length = 100)
     private String boardTitle;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 2000)
     private String boardContents;
 
     @JsonIgnore
