@@ -14,12 +14,12 @@ function NovelSearch(props) {
   }, [keyword.get("keyword")])
   
   return (
-    <div className={'container my-4'}>
+    <div className={'container'}>
       <div className={'row'}>
         <div className={'col-sm-9 mx-auto'}>
           <div className={'row'}>
             <div className={'col-sm'}>
-              <h4 className={'fw-bold'}>'{searchWord}' 검색 결과</h4>
+              <h4 className={'fw-bold main-title'}>'{searchWord}' 검색 결과</h4>
             </div>
           </div>
           {/* 플랫폼 별 검색결과를 나타내기 위한 탭 3개*/}

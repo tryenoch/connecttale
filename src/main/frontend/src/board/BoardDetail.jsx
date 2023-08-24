@@ -4,7 +4,6 @@ import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {boardList} from "./BoardMain";
 import button from "bootstrap/js/src/button";
-import parse from "html-react-parser";
 
 function BoardDetail(props) {
   // html 파싱을 위한 라이브러리
