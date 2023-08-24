@@ -10,7 +10,7 @@
 
 /* cate-tabs */
 
-input[type=radio] {
+.cate-tabs input[type=radio] {
   appearance: none;
 }
 
