@@ -25,11 +25,9 @@ function BoardDetail(props) {
   const [loginId, setLoginId] = useState('');
   const [isRender, setIsRender] = useState(false);
 
-  useEffect(() => {
-    getDate();
-  }, []);
 
   useEffect(() => {
+    console.log('[isrender]')
     getDate();
   }, [isRender]);
 

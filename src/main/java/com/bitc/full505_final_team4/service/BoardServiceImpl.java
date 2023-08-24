@@ -104,8 +104,9 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardReplyDTO> getBoardReplyList(int idx) throws Exception {
         List<BoardReplyDTO> replyList = new ArrayList<>();
 
+        int count = boardRepository.updateCnt(idx);
         BoardEntity board = boardRepository.getReferenceById(idx);
-
+        board.setHitCnt(count);
         List<BoardReplyEntity> replyEntityList = boardReplyRepository.findByBoardIdx(board);
         for (BoardReplyEntity reply : replyEntityList) {
             replyList.add(BoardReplyDTO.toDTO(reply));
