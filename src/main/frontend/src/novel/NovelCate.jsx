@@ -24,6 +24,7 @@ function NovelCate(props) {
     getCateNovelList(cate, 0);
   }, [cate])
 
+
   let list = novelList.map(novel =>
     /* 나중에 링크 추가 해야함 */
     <Row className={'cate-low mb-2'}>
@@ -35,7 +36,6 @@ function NovelCate(props) {
   
   return (
     <div>
-
       <Row>
         <Col>
         <h1 className={'main-title my-3'}>카테고리별로 보기</h1>

@@ -32,6 +32,7 @@ function NovelDetailInfo(props) {
   }
 
   useEffect(() => {
+    console.log(novelInfo);
     axios.get('/novelDetail', {
       params:
         {

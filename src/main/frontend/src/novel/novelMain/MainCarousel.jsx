@@ -14,7 +14,6 @@ function MainCarousel(props) {
     <div>
     <Row className={"mx-auto"}>
       <Col sm className={"d-flex justify-content-center my-4"}>
-
         <Swiper
           centeredSlides={true}
           autoplay={{
