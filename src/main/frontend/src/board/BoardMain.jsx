@@ -36,7 +36,7 @@ function BoardMain() {
   return (
       <Container className={'my-4'}>
         <Row>
-          <Col xs={6} className={'mx-auto mt-5'}>
+          <Col xs={6} className={'mx-auto'}>
             <ul className="nav nav-pills nav-fill gap-2 p-1 small rounded-5 shadow-sm">
               {
                 boardList.map((value, index) => {
