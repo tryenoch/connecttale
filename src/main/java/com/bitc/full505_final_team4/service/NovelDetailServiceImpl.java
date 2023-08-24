@@ -73,367 +73,370 @@ public class NovelDetailServiceImpl implements NovelDetailService {
     if (!novelList.isEmpty()) {
       // 제목, 성인여부, 종류가 일치하는 작품의 platformId 찾기
       for (int i = 0; i < novelList.size(); i++) {
-        String searchTitle = novelCommonEditService.editTitleForNovelEntity(novelList.get(i).get("title").toString());
-        if (searchTitle.equals(title)) {
-          if (ne.equals("단행본") && novelAdult.equals("Y")) {
-            if (novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) == 19) {
-              // 플랫폼 설정
-              ridiPlatformEntity.setPlatform(3);
+        if (!novelList.get(i).get("parent_category_name").toString().contains("웹툰")) {
 
-              String platformId = novelList.get(i).get("b_id").toString();
-              ridiPlatformEntity.setPlatformId(platformId);
+          String searchTitle = novelCommonEditService.editTitleForNovelEntity(novelList.get(i).get("title").toString());
+          if (searchTitle.equals(title)) {
+            if (ne.equals("단행본") && novelAdult.equals("Y")) {
+              if (novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) == 19) {
+                // 플랫폼 설정
+                ridiPlatformEntity.setPlatform(3);
 
-              // novelTitle 설정
-              ridiPlatformEntity.setNovelTitle(title);
+                String platformId = novelList.get(i).get("b_id").toString();
+                ridiPlatformEntity.setPlatformId(platformId);
 
-              // novelThumbnail 설정
-              String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
-              ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
+                // novelTitle 설정
+                ridiPlatformEntity.setNovelTitle(title);
 
-              // novelIntro 설정
-              JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
-              String novelIntro = introDesc.get("intro").toString();
-              ridiPlatformEntity.setNovelIntro(novelIntro);
+                // novelThumbnail 설정
+                String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
+                ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
 
-              // novelAuthor 설정
-              ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
-              HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
-              String author = authors.get("name").toString();
-              ridiPlatformEntity.setNovelAuthor(author);
+                // novelIntro 설정
+                JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
+                String novelIntro = introDesc.get("intro").toString();
+                ridiPlatformEntity.setNovelIntro(novelIntro);
 
-              // novelPubli 설정
-              String novelPubli = novelList.get(i).get("publisher").toString();
-              ridiPlatformEntity.setNovelPubli(novelPubli);
+                // novelAuthor 설정
+                ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
+                HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+                String author = authors.get("name").toString();
+                ridiPlatformEntity.setNovelAuthor(author);
 
-              // novelCount
-              int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
-              ridiPlatformEntity.setNovelCount(novelCount);
+                // novelPubli 설정
+                String novelPubli = novelList.get(i).get("publisher").toString();
+                ridiPlatformEntity.setNovelPubli(novelPubli);
 
-              // novelPrice
-              ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
-              if (!priceList.isEmpty()) {
-                HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
-                int novelPrice = Integer.parseInt(prices.get("max_price").toString());
-                ridiPlatformEntity.setNovelPrice(novelPrice);
+                // novelCount
+                int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
+                ridiPlatformEntity.setNovelCount(novelCount);
+
+                // novelPrice
+                ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
+                if (!priceList.isEmpty()) {
+                  HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+                  int novelPrice = Integer.parseInt(prices.get("max_price").toString());
+                  ridiPlatformEntity.setNovelPrice(novelPrice);
+                }
+                else {
+                  int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
+                  ridiPlatformEntity.setNovelPrice(novelPrice);
+                }
+
+                // starRate
+                double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
+                ridiPlatformEntity.setNovelStarRate(novelStarRate);
+
+                // completeYn
+                String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
+                ridiPlatformEntity.setNovelCompleteYn(completeYn);
+
+                // novelAdult
+                ridiPlatformEntity.setNovelAdult(novelAdult);
+
+                // novelRelease => 애매해서 생략
+
+                // updateDate
+                ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
+                if (!updateDateList.isEmpty()) {
+                  HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                  String updateDate = updateDates.get("title").toString();
+                  ridiPlatformEntity.setNovelUpdateDate(updateDate);
+                }
+
+                // cateList
+                String cateItem = novelList.get(i).get("parent_category_name").toString();
+                if (cateItem.contains("BL")) {
+                  ridiPlatformEntity.setCateList("7");
+                }
+                else if (cateItem.contains("로맨스")) {
+                  ridiPlatformEntity.setCateList("3");
+                }
+                else if (cateItem.contains("로판")) {
+                  ridiPlatformEntity.setCateList("4");
+                }
+                else if (cateItem.contains("판타지")) {
+                  ridiPlatformEntity.setCateList("1");
+                }
+                else {
+                  ridiPlatformEntity.setCateList("8");
+                }
+
+                // ebookCheck
+                ridiPlatformEntity.setEbookCheck(ne);
+                break;
               }
-              else {
-                int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
-                ridiPlatformEntity.setNovelPrice(novelPrice);
-              }
-
-              // starRate
-              double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
-              ridiPlatformEntity.setNovelStarRate(novelStarRate);
-
-              // completeYn
-              String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
-              ridiPlatformEntity.setNovelCompleteYn(completeYn);
-
-              // novelAdult
-              ridiPlatformEntity.setNovelAdult(novelAdult);
-
-              // novelRelease => 애매해서 생략
-
-              // updateDate
-              ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              if (!updateDateList.isEmpty()) {
-                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-                String updateDate = updateDates.get("title").toString();
-                ridiPlatformEntity.setNovelUpdateDate(updateDate);
-              }
-
-              // cateList
-              String cateItem = novelList.get(i).get("parent_category_name").toString();
-              if (cateItem.contains("BL")) {
-                ridiPlatformEntity.setCateList("7");
-              }
-              else if (cateItem.contains("로맨스")) {
-                ridiPlatformEntity.setCateList("3");
-              }
-              else if (cateItem.contains("로판")) {
-                ridiPlatformEntity.setCateList("4");
-              }
-              else if (cateItem.contains("판타지")) {
-                ridiPlatformEntity.setCateList("1");
-              }
-              else {
-                ridiPlatformEntity.setCateList("8");
-              }
-
-              // ebookCheck
-              ridiPlatformEntity.setEbookCheck(ne);
-              break;
             }
-          }
-          else if (ne.equals("단행본") && novelAdult.equals("N")) {
-            if (novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) != 19) {
-              // 플랫폼 설정
-              ridiPlatformEntity.setPlatform(3);
+            else if (ne.equals("단행본") && novelAdult.equals("N")) {
+              if (novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) != 19) {
+                // 플랫폼 설정
+                ridiPlatformEntity.setPlatform(3);
 
-              String platformId = novelList.get(i).get("b_id").toString();
-              ridiPlatformEntity.setPlatformId(platformId);
+                String platformId = novelList.get(i).get("b_id").toString();
+                ridiPlatformEntity.setPlatformId(platformId);
 
-              // novelTitle 설정
-              ridiPlatformEntity.setNovelTitle(title);
+                // novelTitle 설정
+                ridiPlatformEntity.setNovelTitle(title);
 
-              // novelThumbnail 설정
-              String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
-              ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
+                // novelThumbnail 설정
+                String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
+                ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
 
-              // novelIntro 설정
-              JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
-              String novelIntro = introDesc.get("intro").toString();
-              ridiPlatformEntity.setNovelIntro(novelIntro);
+                // novelIntro 설정
+                JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
+                String novelIntro = introDesc.get("intro").toString();
+                ridiPlatformEntity.setNovelIntro(novelIntro);
 
-              // novelAuthor 설정
-              ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
-              HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
-              String author = authors.get("name").toString();
-              ridiPlatformEntity.setNovelAuthor(author);
+                // novelAuthor 설정
+                ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
+                HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+                String author = authors.get("name").toString();
+                ridiPlatformEntity.setNovelAuthor(author);
 
-              // novelPubli 설정
-              String novelPubli = novelList.get(i).get("publisher").toString();
-              ridiPlatformEntity.setNovelPubli(novelPubli);
+                // novelPubli 설정
+                String novelPubli = novelList.get(i).get("publisher").toString();
+                ridiPlatformEntity.setNovelPubli(novelPubli);
 
-              // novelCount
-              int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
-              ridiPlatformEntity.setNovelCount(novelCount);
+                // novelCount
+                int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
+                ridiPlatformEntity.setNovelCount(novelCount);
 
-              // novelPrice
-              ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
-              if (!priceList.isEmpty()) {
-                HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
-                int novelPrice = Integer.parseInt(prices.get("max_price").toString());
-                ridiPlatformEntity.setNovelPrice(novelPrice);
+                // novelPrice
+                ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
+                if (!priceList.isEmpty()) {
+                  HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+                  int novelPrice = Integer.parseInt(prices.get("max_price").toString());
+                  ridiPlatformEntity.setNovelPrice(novelPrice);
+                }
+                else {
+                  int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
+                  ridiPlatformEntity.setNovelPrice(novelPrice);
+                }
+
+
+                // starRate
+                double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
+                ridiPlatformEntity.setNovelStarRate(novelStarRate);
+
+                // completeYn
+                String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
+                ridiPlatformEntity.setNovelCompleteYn(completeYn);
+
+                // novelAdult
+                ridiPlatformEntity.setNovelAdult(novelAdult);
+
+                // novelRelease => 애매해서 생략
+
+                // updateDate
+                ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
+                if (!updateDateList.isEmpty()) {
+                  HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                  String updateDate = updateDates.get("title").toString();
+                  ridiPlatformEntity.setNovelUpdateDate(updateDate);
+                }
+
+                // cateList
+                String cateItem = novelList.get(i).get("parent_category_name").toString();
+                if (cateItem.contains("BL")) {
+                  ridiPlatformEntity.setCateList("7");
+                }
+                else if (cateItem.contains("로맨스")) {
+                  ridiPlatformEntity.setCateList("3");
+                }
+                else if (cateItem.contains("로판")) {
+                  ridiPlatformEntity.setCateList("4");
+                }
+                else if (cateItem.contains("판타지")) {
+                  ridiPlatformEntity.setCateList("1");
+                }
+                else {
+                  ridiPlatformEntity.setCateList("8");
+                }
+
+                // ebookCheck
+                ridiPlatformEntity.setEbookCheck(ne);
+                break;
               }
-              else {
-                int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
-                ridiPlatformEntity.setNovelPrice(novelPrice);
-              }
-
-
-              // starRate
-              double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
-              ridiPlatformEntity.setNovelStarRate(novelStarRate);
-
-              // completeYn
-              String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
-              ridiPlatformEntity.setNovelCompleteYn(completeYn);
-
-              // novelAdult
-              ridiPlatformEntity.setNovelAdult(novelAdult);
-
-              // novelRelease => 애매해서 생략
-
-              // updateDate
-              ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              if (!updateDateList.isEmpty()) {
-                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-                String updateDate = updateDates.get("title").toString();
-                ridiPlatformEntity.setNovelUpdateDate(updateDate);
-              }
-
-              // cateList
-              String cateItem = novelList.get(i).get("parent_category_name").toString();
-              if (cateItem.contains("BL")) {
-                ridiPlatformEntity.setCateList("7");
-              }
-              else if (cateItem.contains("로맨스")) {
-                ridiPlatformEntity.setCateList("3");
-              }
-              else if (cateItem.contains("로판")) {
-                ridiPlatformEntity.setCateList("4");
-              }
-              else if (cateItem.contains("판타지")) {
-                ridiPlatformEntity.setCateList("1");
-              }
-              else {
-                ridiPlatformEntity.setCateList("8");
-              }
-
-              // ebookCheck
-              ridiPlatformEntity.setEbookCheck(ne);
-              break;
             }
-          }
-          else if (ne.equals("웹소설") && novelAdult.equals("Y")) {
-            if (!novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) == 19) {
-              // 플랫폼 설정
-              ridiPlatformEntity.setPlatform(3);
+            else if (ne.equals("웹소설") && novelAdult.equals("Y")) {
+              if (!novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) == 19) {
+                // 플랫폼 설정
+                ridiPlatformEntity.setPlatform(3);
 
-              String platformId = novelList.get(i).get("b_id").toString();
-              ridiPlatformEntity.setPlatformId(platformId);
+                String platformId = novelList.get(i).get("b_id").toString();
+                ridiPlatformEntity.setPlatformId(platformId);
 
-              // novelTitle 설정
-              ridiPlatformEntity.setNovelTitle(title);
+                // novelTitle 설정
+                ridiPlatformEntity.setNovelTitle(title);
 
-              // novelThumbnail 설정
-              String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
-              ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
+                // novelThumbnail 설정
+                String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
+                ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
 
-              // novelIntro 설정
-              JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
-              String novelIntro = introDesc.get("intro").toString();
-              ridiPlatformEntity.setNovelIntro(novelIntro);
+                // novelIntro 설정
+                JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
+                String novelIntro = introDesc.get("intro").toString();
+                ridiPlatformEntity.setNovelIntro(novelIntro);
 
-              // novelAuthor 설정
-              ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
-              HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
-              String author = authors.get("name").toString();
-              ridiPlatformEntity.setNovelAuthor(author);
+                // novelAuthor 설정
+                ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
+                HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+                String author = authors.get("name").toString();
+                ridiPlatformEntity.setNovelAuthor(author);
 
-              // novelPubli 설정
-              String novelPubli = novelList.get(i).get("publisher").toString();
-              ridiPlatformEntity.setNovelPubli(novelPubli);
+                // novelPubli 설정
+                String novelPubli = novelList.get(i).get("publisher").toString();
+                ridiPlatformEntity.setNovelPubli(novelPubli);
 
-              // novelCount
-              int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
-              ridiPlatformEntity.setNovelCount(novelCount);
+                // novelCount
+                int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
+                ridiPlatformEntity.setNovelCount(novelCount);
 
-              // novelPrice
-              ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
-              if (!priceList.isEmpty()) {
-                HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
-                int novelPrice = Integer.parseInt(prices.get("max_price").toString());
-                ridiPlatformEntity.setNovelPrice(novelPrice);
+                // novelPrice
+                ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
+                if (!priceList.isEmpty()) {
+                  HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+                  int novelPrice = Integer.parseInt(prices.get("max_price").toString());
+                  ridiPlatformEntity.setNovelPrice(novelPrice);
+                }
+                else {
+                  int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
+                  ridiPlatformEntity.setNovelPrice(novelPrice);
+                }
+
+                // starRate
+                double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
+                ridiPlatformEntity.setNovelStarRate(novelStarRate);
+
+                // completeYn
+                String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
+                ridiPlatformEntity.setNovelCompleteYn(completeYn);
+
+                // novelAdult
+                ridiPlatformEntity.setNovelAdult(novelAdult);
+
+                // novelRelease => 애매해서 생략
+
+                // updateDate
+                ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
+                if (!updateDateList.isEmpty()) {
+                  HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                  String updateDate = updateDates.get("title").toString();
+                  ridiPlatformEntity.setNovelUpdateDate(updateDate);
+                }
+
+                // cateList
+                String cateItem = novelList.get(i).get("parent_category_name").toString();
+                if (cateItem.contains("BL")) {
+                  ridiPlatformEntity.setCateList("7");
+                }
+                else if (cateItem.contains("로맨스")) {
+                  ridiPlatformEntity.setCateList("3");
+                }
+                else if (cateItem.contains("로판")) {
+                  ridiPlatformEntity.setCateList("4");
+                }
+                else if (cateItem.contains("판타지")) {
+                  ridiPlatformEntity.setCateList("1");
+                }
+                else {
+                  ridiPlatformEntity.setCateList("8");
+                }
+
+                // ebookCheck
+                ridiPlatformEntity.setEbookCheck(ne);
+                break;
               }
-              else {
-                int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
-                ridiPlatformEntity.setNovelPrice(novelPrice);
-              }
-
-              // starRate
-              double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
-              ridiPlatformEntity.setNovelStarRate(novelStarRate);
-
-              // completeYn
-              String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
-              ridiPlatformEntity.setNovelCompleteYn(completeYn);
-
-              // novelAdult
-              ridiPlatformEntity.setNovelAdult(novelAdult);
-
-              // novelRelease => 애매해서 생략
-
-              // updateDate
-              ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              if (!updateDateList.isEmpty()) {
-                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-                String updateDate = updateDates.get("title").toString();
-                ridiPlatformEntity.setNovelUpdateDate(updateDate);
-              }
-
-              // cateList
-              String cateItem = novelList.get(i).get("parent_category_name").toString();
-              if (cateItem.contains("BL")) {
-                ridiPlatformEntity.setCateList("7");
-              }
-              else if (cateItem.contains("로맨스")) {
-                ridiPlatformEntity.setCateList("3");
-              }
-              else if (cateItem.contains("로판")) {
-                ridiPlatformEntity.setCateList("4");
-              }
-              else if (cateItem.contains("판타지")) {
-                ridiPlatformEntity.setCateList("1");
-              }
-              else {
-                ridiPlatformEntity.setCateList("8");
-              }
-
-              // ebookCheck
-              ridiPlatformEntity.setEbookCheck(ne);
-              break;
             }
-          }
-          else if (ne.equals("웹소설") && novelAdult.equals("N")) {
-            if (!novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) != 19) {
-              // 플랫폼 설정
-              ridiPlatformEntity.setPlatform(3);
+            else if (ne.equals("웹소설") && novelAdult.equals("N")) {
+              if (!novelList.get(i).get("web_title").toString().contains("e북") && Integer.parseInt(novelList.get(i).get("age_limit").toString()) != 19) {
+                // 플랫폼 설정
+                ridiPlatformEntity.setPlatform(3);
 
-              String platformId = novelList.get(i).get("b_id").toString();
-              ridiPlatformEntity.setPlatformId(platformId);
+                String platformId = novelList.get(i).get("b_id").toString();
+                ridiPlatformEntity.setPlatformId(platformId);
 
-              // novelTitle 설정
-              ridiPlatformEntity.setNovelTitle(title);
+                // novelTitle 설정
+                ridiPlatformEntity.setNovelTitle(title);
 
-              // novelThumbnail 설정
-              String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
-              ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
+                // novelThumbnail 설정
+                String novelThumbnail = "https://img.ridicdn.net/cover/" + platformId +"/xxlarge";
+                ridiPlatformEntity.setNovelThumbnail(novelThumbnail);
 
-              // novelIntro 설정
-              JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
-              String novelIntro = introDesc.get("intro").toString();
-              ridiPlatformEntity.setNovelIntro(novelIntro);
+                // novelIntro 설정
+                JSONObject introDesc = (JSONObject) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/descriptions").get("descriptions");
+                String novelIntro = introDesc.get("intro").toString();
+                ridiPlatformEntity.setNovelIntro(novelIntro);
 
-              // novelAuthor 설정
-              ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
-              HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
-              String author = authors.get("name").toString();
-              ridiPlatformEntity.setNovelAuthor(author);
+                // novelAuthor 설정
+                ArrayList authorsList = (ArrayList) novelList.get(i).get("authors_info");
+                HashMap<String, Object> authors = (HashMap<String, Object>) authorsList.get(0);
+                String author = authors.get("name").toString();
+                ridiPlatformEntity.setNovelAuthor(author);
 
-              // novelPubli 설정
-              String novelPubli = novelList.get(i).get("publisher").toString();
-              ridiPlatformEntity.setNovelPubli(novelPubli);
+                // novelPubli 설정
+                String novelPubli = novelList.get(i).get("publisher").toString();
+                ridiPlatformEntity.setNovelPubli(novelPubli);
 
-              // novelCount
-              int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
-              ridiPlatformEntity.setNovelCount(novelCount);
+                // novelCount
+                int novelCount = Integer.parseInt(novelList.get(i).get("book_count").toString());
+                ridiPlatformEntity.setNovelCount(novelCount);
 
-              // novelPrice
-              ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
-              if (!priceList.isEmpty()) {
-                HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
-                int novelPrice = Integer.parseInt(prices.get("max_price").toString());
-                ridiPlatformEntity.setNovelPrice(novelPrice);
+                // novelPrice
+                ArrayList priceList = (ArrayList) novelList.get(i).get("series_prices_info");
+                if (!priceList.isEmpty()) {
+                  HashMap<String, Object> prices = (HashMap<String, Object>) priceList.get(0);
+                  int novelPrice = Integer.parseInt(prices.get("max_price").toString());
+                  ridiPlatformEntity.setNovelPrice(novelPrice);
+                }
+                else {
+                  int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
+                  ridiPlatformEntity.setNovelPrice(novelPrice);
+                }
+
+                // starRate
+                double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
+                ridiPlatformEntity.setNovelStarRate(novelStarRate);
+
+                // completeYn
+                String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
+                ridiPlatformEntity.setNovelCompleteYn(completeYn);
+
+                // novelAdult
+                ridiPlatformEntity.setNovelAdult(novelAdult);
+
+                // novelRelease => 애매해서 생략
+
+                // updateDate
+                ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
+                if (!updateDateList.isEmpty()) {
+                  HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
+                  String updateDate = updateDates.get("title").toString();
+                  ridiPlatformEntity.setNovelUpdateDate(updateDate);
+                }
+
+                // cateList
+                String cateItem = novelList.get(i).get("parent_category_name").toString();
+                if (cateItem.contains("BL")) {
+                  ridiPlatformEntity.setCateList("7");
+                }
+                else if (cateItem.contains("로맨스")) {
+                  ridiPlatformEntity.setCateList("3");
+                }
+                else if (cateItem.contains("로판")) {
+                  ridiPlatformEntity.setCateList("4");
+                }
+                else if (cateItem.contains("판타지")) {
+                  ridiPlatformEntity.setCateList("1");
+                }
+                else {
+                  ridiPlatformEntity.setCateList("8");
+                }
+
+                // ebookCheck
+                ridiPlatformEntity.setEbookCheck(ne);
+                break;
               }
-              else {
-                int novelPrice = Integer.parseInt(novelList.get(i).get("price").toString());
-                ridiPlatformEntity.setNovelPrice(novelPrice);
-              }
-
-              // starRate
-              double novelStarRate = Double.parseDouble(novelList.get(i).get("buyer_rating_score").toString());
-              ridiPlatformEntity.setNovelStarRate(novelStarRate);
-
-              // completeYn
-              String completeYn = Boolean.parseBoolean(novelList.get(i).get("is_series_complete").toString()) ? "Y" : "N";
-              ridiPlatformEntity.setNovelCompleteYn(completeYn);
-
-              // novelAdult
-              ridiPlatformEntity.setNovelAdult(novelAdult);
-
-              // novelRelease => 애매해서 생략
-
-              // updateDate
-              ArrayList updateDateList = (ArrayList) JsonUtils.jsonUrlParser("https://book-api.ridibooks.com/books/" + platformId + "/notices").get("notices");
-              if (!updateDateList.isEmpty()) {
-                HashMap<String, Object> updateDates = (HashMap<String, Object>) updateDateList.get(0);
-                String updateDate = updateDates.get("title").toString();
-                ridiPlatformEntity.setNovelUpdateDate(updateDate);
-              }
-
-              // cateList
-              String cateItem = novelList.get(i).get("parent_category_name").toString();
-              if (cateItem.contains("BL")) {
-                ridiPlatformEntity.setCateList("7");
-              }
-              else if (cateItem.contains("로맨스")) {
-                ridiPlatformEntity.setCateList("3");
-              }
-              else if (cateItem.contains("로판")) {
-                ridiPlatformEntity.setCateList("4");
-              }
-              else if (cateItem.contains("판타지")) {
-                ridiPlatformEntity.setCateList("1");
-              }
-              else {
-                ridiPlatformEntity.setCateList("8");
-              }
-
-              // ebookCheck
-              ridiPlatformEntity.setEbookCheck(ne);
-              break;
             }
           }
         }
@@ -514,7 +517,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
             String searchTitle = novelCommonEditService.editTitleForNovelEntity(titleEl.getText());
 //            String testTitle = titleEl.getText();
             // 제목, ebookCheck, 성인여부가 일치하는 제목의 url 주소 얻기(같은 제목, 같은 ebookCheck인데 19세, 전체이용가 모두 있는 경우가 있기 때문)
-            if (searchTitle.equals(title) && titleEl.getText().contains("[단행본]") && titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
+            if (searchTitle.equals(title) && titleEl.getText().contains("[단행본]") && !titleEl.findElement(By.xpath("..")).findElements(By.cssSelector(".ico.n19")).isEmpty()) {
               int platformIdIndex = titleEl.getAttribute("href").indexOf("=");
 
               // 검색결과 페이지에서 가져올 정보

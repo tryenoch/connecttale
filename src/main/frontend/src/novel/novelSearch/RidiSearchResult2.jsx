@@ -27,29 +27,29 @@ function RidiSearchResult2(props) {
               let intro = '';
               const res = await axios.get(`https://book-api.ridibooks.com/books/${item[i].b_id}/descriptions`)
                 intro = res.data.descriptions.intro.replace(/(<([^>]+)>)/ig, '');
-              
               // console.log(res);
               
-              const data = {
-                platform: 3,
-                platformId: item[i].b_id,
-                title: titleEdit(item[i].title),
-                thumbnail: "https://img.ridicdn.net/cover/"+ item[i].b_id +"/xxlarge",
-                author: item[i].authors_info.map(auth => {
-                  return auth.name;
-                }),
-                starRate: item[i].buyer_rating_score,
-                publi: item[i].publisher,
-                category: item[i].parent_category_name.replace(" " + param, ""),
-                count: item[i].book_count,
-                price: item[i].price != 0 ? item[i].price : item[i].series_prices_info[0].max_price,
-                completeYn: item[i].is_series_complete ? '완결' : '연재중',
-                description: intro,
-                ageGrade: item[i].age_limit == 19 ? "Y" : "N",
-                ebookCheck: item[i].web_title.includes('e북') ? '단행본' : '웹소설'
+              if (!item[i].parent_category_name.includes('웹툰')) {
+                const data = {
+                  platform: 3,
+                  platformId: item[i].b_id,
+                  title: titleEdit(item[i].title),
+                  thumbnail: "https://img.ridicdn.net/cover/"+ item[i].b_id +"/xxlarge",
+                  author: item[i].authors_info.map(auth => {
+                    return auth.name;
+                  }),
+                  starRate: item[i].buyer_rating_score,
+                  publi: item[i].publisher,
+                  category: item[i].parent_category_name.replace(" " + param, ""),
+                  count: item[i].book_count,
+                  price: item[i].price != 0 ? item[i].price : item[i].series_prices_info[0].max_price,
+                  completeYn: item[i].is_series_complete ? '완결' : '연재중',
+                  description: intro,
+                  ageGrade: item[i].age_limit == 19 ? "Y" : "N",
+                  ebookCheck: item[i].web_title.includes('e북') ? '단행본' : '웹소설'
+                }
+                ridiSearchList.push(data);
               }
-              
-              ridiSearchList.push(data);
             }
             if (item[i].parent_category_name.includes('웹소설')) {
               saveWebNovel(webNovel);
