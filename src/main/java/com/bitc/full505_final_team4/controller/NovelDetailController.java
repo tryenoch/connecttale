@@ -353,6 +353,13 @@ public class NovelDetailController {
     }
   }
 
+  // -------------------------------- 리뷰(댓글) 삭제 ----------------------------------
+  @RequestMapping(value = "/novelDetailReplyDelete", method = RequestMethod.DELETE)
+  public String deleteNovelReply(@RequestParam("replyIdx") int replyIdx) throws Exception {
+    String deleteCheck = novelDetailService.deleteNovelReply(replyIdx);
+
+    return deleteCheck;
+  }
 }
 
 

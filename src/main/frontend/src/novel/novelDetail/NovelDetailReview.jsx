@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from "axios";
 
 import NovelDetailReport from "./NovelDetailReport";
+import {Col, Row} from "react-bootstrap";
 
 function NovelDetailReview(props) {
   const [title, setTitle] = useState(encodeURIComponent(props.novelDetail.novelIdx.novelTitle));
@@ -104,20 +105,17 @@ function NovelDetailReview(props) {
   
   return (
     <div>
-      <p className={'fs-4 text-bold'}>#작품 리뷰</p>
-      <br/>
-      <p className={'text-center fs-5'}>이 작품을 평가해주세요!!</p>
-      
-      <div className={'mb-5 d-grid'}>
-        <textarea rows={3} className={'form-control my-3'} placeholder={'스포성 댓글이나 악플은 삭제될 수 있습니다.'} value={replyContent} onChange={replyInputChange}></textarea>
+      <h4 className={'detail-subtit'}>작품 리뷰</h4>
+      <h5 className={'sub-info'}>이 작품을 평가해주세요!</h5>
+      <div className={'mb-5 d-grid detail-reply'}>
+        <textarea rows={3} className={'form-control my-2'} placeholder={'스포성 댓글이나 악플은 삭제될 수 있습니다.'} value={replyContent} onChange={replyInputChange}></textarea>
         <div className={'d-flex justify-content-end'}>
           <div className={'d-flex align-items-center'}>
             <input type="checkbox" id={'spo-check'} className={'form-check-input mb-1 me-1'} checked={spoCheck} onChange={spoCheckClick}/>
             <label htmlFor="spo-check" className={'form-check-label'}>스포일러가 있습니다.</label>
-            <button type={'button'} onClick={replySubmit} className={'btn btn-purple px-3 btn-sm ms-2 me-0'}>등록</button>
+            <button type={'button'} onClick={replySubmit} className={'btn btn-purple purple-round px-4 btn-sm ms-2 me-0'}>등록</button>
           </div>
         </div>
-
       </div>
       
       {/* 리뷰(댓글) 리스트 구간*/}
@@ -125,16 +123,21 @@ function NovelDetailReview(props) {
         novelInfo.novelReplyList.map((item, index) => (
           item.spoilerYn == 'N' ?
             (
-              <div key={index} className={'row my-4 d-flex align-items-center border-bottom'}>
-                <div className={'col-sm-3'}>
-                  <p>{item.id.nickname} ({item.id.id})</p>
-                  <p className={'text-muted fs-6'}>{item.createDt}</p>
+              <Row key={index} className={'my-4 d-flex align-items-center detail-reply-item'}>
+                <Col className={'ps-0'}>
+                <div className={'reply-info d-flex justify-content-between'}>
+                  <div>
+                    <span>{item.id.nickname} {/*({item.id.id})*/}</span>
+                    <span>{item.createDt.substring(0, 10)}</span>
+                  </div>
+                  {/*리뷰(댓글) 신고 부분*/}
+                  <NovelDetailReport replyIdx={item.replyIdx} suspect={item.id.id} replyContent={item.replyContent}/>
                 </div>
-                <div className={'col-sm-6'}>
+                <div className={'detail-reply-content'}>
                   <p>{item.replyContent}</p>
                 </div>
-                <div className={'col-sm-3 d-flex justify-content-end'}>
-                  <button type={'button'} key={index} onClick={() => replyLikeClick(item, index)} className={'btn btn-outline-purple fs-6'} >
+                <div className={'d-flex justify-content-end'}>
+                  <button type={'button'} key={index} onClick={() => replyLikeClick(item, index)} className={'btn btn-outline-purple purple-round fs-6 px-3'} >
                     <i className="bi bi-hand-thumbs-up me-1"></i>
                     {/*좋아요 count 출력*/}
                     {
@@ -143,10 +146,9 @@ function NovelDetailReview(props) {
                       ))
                     }
                   </button>
-                  {/*리뷰(댓글) 신고 부분*/}
-                  <NovelDetailReport replyIdx={item.replyIdx} suspect={item.id.id} replyContent={item.replyContent}/>
                 </div>
-              </div>
+                </Col>
+              </Row>
             )
             : null
         ))

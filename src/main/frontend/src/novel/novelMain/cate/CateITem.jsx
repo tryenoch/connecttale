@@ -18,6 +18,9 @@ function CateITem(props) {
   const novelAdult = novel.novelAdult;
   const cateList = CategoryConverter(novel.cateList);
   const description = novel.novelIntro;
+  const ebookCheck = novel.ebookCheck;
+  const novelCount = novel.novelCount;
+  const novelComplete = novel.novelCompleteYn;
 
   const handleLinkClick = async (novel) => {
     try {
@@ -76,11 +79,17 @@ function CateITem(props) {
         </Col>
         <Col>
           <div className={'w-100 info'}>
-            <div className={'info-head'}>
+            <div className={'info-head mb-2'}>
               <h5 className={'tit'}>{title}</h5>
               <div className={''}>
                 {author != null ? <span>{author}</span> : null}
                 {cateList != null ? <span className={'ms-2'}><span className={'me-2'}>|</span>{cateList}</span> : null}
+                {
+                  ebookCheck === "웹소설" ?
+                      <span className={'ms-2'}><span className={'me-2'}>|</span>총 {novelCount}화</span> :
+                      <span className={'ms-2'}><span className={'me-2'}>|</span>총 {novelCount}권</span>
+                }
+                {novelComplete === 'Y' ? <span className={'ms-2'}><span className={'me-2'}>|</span>완결</span> : <span className={'ms-2'}><span className={'me-2'}>|</span>연재중</span>}
               </div>
             </div>
             <div className={'info-head'}>
