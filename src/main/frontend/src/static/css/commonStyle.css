@@ -7,12 +7,100 @@
   font-weight:800;
 }
 
-.logo span:first-of-type {
+.logo span:first-of-type, .logo h1 {
   background: linear-gradient(to Right, #7b3cfa, #f388dd);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.05rem;
 }
+
+.logo h1 {
+  margin : 8rem auto 0.7rem;
+}
+
+.login-info {
+  font-size: 1.2em;
+  color: #8a8a8a;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.login-form input{
+  background-color: #f1f1f1;
+  padding: 0.6em 1em;
+  margin-bottom: 0.3em;
+  border: none;
+}
+
+.join-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1.05em;
+}
+
+.join-link a {
+  color: #727171;
+  font-weight: 550;
+}
+
+.join-link a:hover {
+  color: #9b7ce8;
+}
+
+.join-title {
+  letter-spacing: -0.05em;
+  font-weight: 800;
+  color: #7d4ae3;
+}
+
+.join-sub-tit h2, .join-sub-tit h1{
+  letter-spacing: -0.08em;
+  font-weight: 700;
+  color: #6c6c6e;
+}
+.join-sub-tit h5{
+  letter-spacing: -0.08em;
+  font-weight: 600;
+  color: #6c6c6e;
+}
+
+.join-step span {
+  color: #9b9b9b;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.join-step.active-step span{
+  font-weight: 800;
+  color: #7d4ae3;
+}
+
+.join-step span:first-of-type {
+  font-size: 1.0em;
+  font-weight: 600;
+}
+
+.join-step.active-step span:first-of-type{
+  color: #5e5e5e;
+}
+
+.join-step div {
+  padding-bottom: 0.5em;
+}
+
+.join-form h4{
+  letter-spacing: -0.08em;
+  font-weight: 700;
+  color: #6c6c6e;
+}
+
+.join-form input[type="text"], .join-form input[type="number"], .join-form input[type="password"] {
+  background-color: #f1f1f1;
+  padding: 0.6em 1em;
+  margin-bottom: 0.3em;
+  border: none;
+}
+
 
 /*
 .logo span:last-of-type {
@@ -110,3 +198,5 @@ Container.board, div.board {
 .logout a:hover {
   color: #5d1bec;
 }
+
+/* 로그인 페이지 */

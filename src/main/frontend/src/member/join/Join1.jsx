@@ -9,17 +9,17 @@ function Join1(props) {
     return (
         <div className={'col-sm-10'}>
             <div className={'row justify-content-center'}>
-                <div className={'col-sm-10'}>
+                <div className={'col-sm-10 ps-0'}>
                     <JoinLogoTop1/>
                 </div>
             </div>
-            <div className={'row mt-4 ms-4 mb-2'}>
-                <div className={'col-sm-10 ms-auto'}>
+            <div className={'row mt-4 justify-content-center'}>
+                <div className={'col-sm-8 join-sub-tit ps-0'}>
                     <h2>약관 동의</h2>
                 </div>
             </div>
             <Link to={'/join/join2'}>
-                <div className={'row justify-content-center mt-5'}>
+                <div className={'row justify-content-center mt-2'}>
                     <button className={'btn btn-outline-purple block m-3'}>
                         14세 이상<br/>
                         <i className="bi bi-person fs-button"></i>
@@ -30,18 +30,18 @@ function Join1(props) {
                     </button>
                 </div>
             </Link>
-            <div className={'row mt-3 justify-content-center mt-5'}>
-                <div className={'col-sm-10'}>
-                    <div className={'row justify-content-center'}>
-                        <div className={'col-sm-8 ms-auto text-center'}>
+            <div className={'row mt-3 justify-content-center mt-3'}>
+                <div className={'col-sm-6'}>
+                    <div className={'d-flex justify-content-between'}>
+                        <div className={''}>
                             <input type="checkbox" id={'useOk'}/>
                             <label htmlFor="useOk" className={'ms-2'}>
                                 <span className={'text-color-red'}>[필수]</span>
                                 개인정보 수집 및 이용동의
                             </label>
                         </div>
-                        <div className={'col-sm-4'}>
-                            <Link href="#" className={'text-decoration-none ms-5'}>[전문보기]</Link>
+                        <div className={'me-3'}>
+                            <Link href="#" className={'text-decoration-none'}>[전문보기]</Link>
                         </div>
                     </div>
                 </div>

@@ -23,18 +23,43 @@ Link, a {
 }
 
 .swiper-slide {
+  width: 100%;
   text-align: center;
-  background-color: #9b71ff;
   color: #fff;
-
+  position: relative;
   /* Center slide text vertically */
   display: flex;
   justify-content: center;
   align-items: center;
+  background-position: center;
+  background-size: cover;
+  background-color: #e14f25;
 }
 
 .swiper-slide img{
-  display: block;
-  width: 100%;
-  object-fit: cover;
+  height: 100%;
+  /*width: 100%;*/
+  object-fit: contain;
+}
+
+.swiper-slide .slide-msg {
+  color: #fff;
+  position: absolute;
+  left: 2rem;
+  bottom: 1.8rem;
+  letter-spacing: -0.03em;
+  z-index: 1;
+  text-align: start;
+}
+
+.slide-msg > * {
+  font-weight: 800;
+}
+
+.slide-msg > h2 {
+  font-size: 2.3rem;
+}
+
+.ft-yg {
+  font-family: 'yg-jalnan';
 }

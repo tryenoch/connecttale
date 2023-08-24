@@ -146,46 +146,38 @@ function Join2(props) {
     return (
         <div className={'col-sm-10'}>
             <div className={'row justify-content-center'}>
-                <div className={'col-sm-10'}>
+                <div className={'col-sm-10 ps-0'}>
                     <JoinLogoTop2/>
                 </div>
             </div>
-            <div className={'row mt-4 ms-4 mb-5'}>
-                <div className={'col-sm-10 ms-auto'}>
+            <div className={'row mt-4 justify-content-center'}>
+                <div className={'col-sm-8 join-sub-tit ps-0'}>
                     <h2>필수 입력 정보</h2>
                     <h6>아래의 내용을 입력해 주세요</h6>
                 </div>
             </div>
-            <div className={'row'}>
-                <div className={'col-sm-1'}></div>
-                <div className={'col-sm-10'}>
-                    <hr/>
-                </div>
-                <div className={'col-sm-1'}></div>
-            </div>
             {/*<form onSubmit={eventClickOK} method={'POST'}>*/}
-            <form method={'POST'}>
-                <div className={'row mt-3'}>
-                    <div className={'col-sm-10 ms-4 ms-auto'}>
-                        <div className={'row'}>
+            <form method={'POST'} className={'mt-5 join-form'}>
+                <div className={'row mt-3 d-flex justify-content-center'}>
+                    <div className={'col-sm-10'}>
+                        <div className={'row justify-content-center'}>
                             <div className={'col-sm-3'}>
-                                <h4 className={'fw-bold'}>아이디</h4>
+                                <h4>아이디</h4>
                             </div>
-                            <div className={'col-sm-9 d-flex'}>
-                                <input type="text" name={'id'} id={'id'} className={'input-s4 form-control rounded-1'}
-                                       placeholder={'아이디를 입력하세요'} onChange={changeId}/>
-                                <button type={'button'} id={'confirmId'} className={'btn btn-outline-purple ms-3'}
+                            <div className={'col-sm-8 ps-0 d-flex'}>
+                                <input type="text" name={'id'} id={'id'} className={'input-s4 form-control rounded-1'} placeholder={'아이디를 입력하세요'} onChange={changeId}/>
+                                <button type={'button'} id={'confirmId'} className={'btn btn-outline-purple ms-3 '}
                                         onClick={confirmId}>중복확인
                                 </button>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.idConfirm}</span></div>
+                            <div className={'col-sm-8 ps-0'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.idConfirm}</span></div>
                         </div>
-                        <div className={'row mt-2'}>
+                        <div className={'row mt-2 justify-content-center'}>
                             <div className={'col-sm-3'}>
-                                <h4 className={'fw-bold'}>닉네임</h4>
+                                <h4>닉네임</h4>
                             </div>
-                            <div className={'col-sm-9 d-flex'}>
+                            <div className={'col-sm-8 ps-0 d-flex'}>
                                 <input type="text" name={'nick'} id={'nick'}
                                        className={'input-s4 form-control rounded-1'} placeholder={'닉네임을 입력하세요'}
                                        onChange={changeNick}/>
@@ -194,49 +186,46 @@ function Join2(props) {
                                 </button>
                             </div>
                             <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.nickConfirm}</span></div>
+                            <div className={'col-sm-8 ps-0'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.nickConfirm}</span></div>
                         </div>
-                        <div className={'row mt-2'}>
+                        <div className={'row mt-2 justify-content-center'}>
                             <div className={'col-sm-3'}>
-                                <h4 className={'fw-bold'}>비밀번호</h4>
+                                <h4>비밀번호</h4>
                             </div>
-                            <div className={'col-sm-9 d-flex'}>
+                            <div className={'col-sm-8 ps-0 d-flex'}>
                                 <input type="password" name={'pw'} id={'pw'}
                                        className={'input-s5 form-control rounded-1'} placeholder={'비밀번호를 입력하세요'}
                                        onChange={changePw}/>
                             </div>
-                            <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.pwConfirm}</span></div>
+                            <div className={'col-sm-8 ps-0'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.pwConfirm}</span></div>
                         </div>
-                        <div className={'row mt-2'}>
+                        <div className={'row mt-2 justify-content-center'}>
                             <div className={'col-sm-3'}>
-                                <h4 className={'fw-bold'}>비밀번호 확인</h4>
+                                <h4>비밀번호 확인</h4>
                             </div>
-                            <div className={'col-sm-9 d-flex'}>
+                            <div className={'col-sm-8 ps-0 d-flex'}>
                                 <input type="password" name={'pw'} id={'cfPw'}
                                        className={'input-s5 form-control rounded-1'} placeholder={'한번 더 비밀번호를 입력하세요'}
                                        onChange={changeConfirmPw}/>
                             </div>
-                            <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-outline-purple bold'}>{confirm.confirmPwConfirm}</span></div>
+                            <div className={'col-sm-8 ps-0'}><span className={'ms-2 text-outline-purple bold'}>{confirm.confirmPwConfirm}</span></div>
                         </div>
-                        <div className={'row mt-2'}>
+                        <div className={'row mt-2 justify-content-center'}>
                             <div className={'col-sm-3'}>
-                                <h4 className={'fw-bold'}>이름</h4>
+                                <h4>이름</h4>
                             </div>
-                            <div className={'col-sm-9 d-flex'}>
+                            <div className={'col-sm-8 ps-0 d-flex'}>
                                 <input type="text" name={'name'} id={'name'}
                                        className={'input-s5 form-control rounded-1'} placeholder={'이름을 입력하세요'}
                                        onChange={changeName}/>
                             </div>
-                            <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-outline-purple bold'}>{confirm.nameConfirm}</span></div>
+                            <div className={'col-sm-8 ps-0'}><span className={'ms-2 mt-2 text-outline-purple bold'}>{confirm.nameConfirm}</span></div>
                         </div>
-                        <div className={'row mt-4'}>
+                        <div className={'row mt-4 justify-content-center'}>
                             <div className={'col-sm-3'}>
-                                <h4 className={'fw-bold'}>생년월일</h4>
+                                <h4>생년월일</h4>
                             </div>
-                            <div className={'col-sm-9 d-flex'}>
+                            <div className={'col-sm-8 d-flex ps-0'}>
                                 <input type="number" name={'birth'} id={'yy'} min={1950} max={9999}
                                        className={'input-s2 form-control rounded-1'}
                                        onChange={changeYear}/>
@@ -250,27 +239,24 @@ function Join2(props) {
                                        onChange={changeDay}/>
                                 <span className={'mt-2 ms-2'}>일</span>
                             </div>
-                            <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.birthConfirm}</span></div>
+                            <div className={'col-sm-8'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.birthConfirm}</span></div>
                         </div>
-                        <div className={'row mt-2'}>
+                        <div className={'row mt-2 justify-content-center'}>
                             <div className={'col-sm-3'}>
-                                <h4 className={'fw-bold'}>성별</h4>
+                                <h4>성별</h4>
                             </div>
-                            <div className={'col-sm-9 d-flex'}>
+                            <div className={'col-sm-8 d-flex ps-0'}>
                                 <input type="radio" name={'gender'} id={'male'} value={1} onChange={changeGender}/>
                                 <label htmlFor="male" className={'ms-1 mt-2 me-5'}>남성</label>
                                 <input type="radio" name={'gender'} id={'female'} value={2} onChange={changeGender}/>
                                 <label htmlFor="female" className={'ms-1 mt-2'}>여성</label>
                             </div>
-                            <div className={'col-sm-3'}></div>
-                            <div className={'col-sm-9'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.genderConfirm}</span></div>
+                            <div className={'col-sm-8 ps-0'}><span className={'ms-2 mt-2 text-purple bold'}>{confirm.genderConfirm}</span></div>
                         </div>
-                        <div className={'row mt-5 justify-content-end'}>
-                            <div className={'col-sm-8'}></div>
-                            <div className={'col-sm-4'}>
+                        <div className={'row mt-5 d-flex justify-content-end'}>
+                            <div className={'col d-flex justify-content-end'}>
                                 <button type={'button'} onClick={eventClickOK}
-                                        className={'btn btn-purple ms-5'}>회원가입
+                                        className={'btn btn-purple purple-round'}>회원가입
                                 </button>
                             </div>
                         </div>

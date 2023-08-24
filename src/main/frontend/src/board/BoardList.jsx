@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Col, Form, Row} from "react-bootstrap";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 function BoardList(props) {
 
+  const navi = useNavigate();
   //페이지가 변할 때 cate 값 0으로 초기화 - 검색 종류 cate
   const [cate, setCate] = useState(0);
   const [keyword, setKeyword] = useState('');
@@ -35,16 +36,25 @@ function BoardList(props) {
         .then(res => {
 
           console.log(res.data);
-
-          let offset = (Math.ceil(res.data.nowPage / 5) - 1) * 5 + 1;
+          
           let arr = [];
-          let lastNum = offset + 4;
-          if (lastNum > res.data.totalPages) {
-            lastNum = res.data.totalPages;
+          let now = res.data.nowPage;
+          let end = res.data.totalPages;
+          let firstPage = now - 2 > 0 ? now - 2 : 1;
+          let lastPage = now + 2 > end ? end : now + 2;
+          if (lastPage === end) {
+            console.log('if')
+            firstPage = end - 4 > 1 ? end - 4 : 1;
           }
-          for (let i = offset; i <= lastNum; i++) {
+          if (firstPage === 1) {
+            lastPage = end > 5 ? 5 : end;
+          }
+
+          for (let i = firstPage; i <= lastPage; i++) {
             arr.push(i);
           }
+          console.log(`arr : ${arr}, first : ${firstPage}, last : ${lastPage}, nowPage : ${now}, total: ${end}`);
+
           setPages(arr);
           setEndPage(res.data.totalPages);
           setBoardList(res.data.boardList);
@@ -67,6 +77,9 @@ function BoardList(props) {
     event.preventDefault();
   }
 
+  const moveDetail = (url) => {
+    navi(url);
+  }
   return (
       <Row className={''}>
         <Col xs={10} className={'my-5 mx-auto'}>
@@ -89,13 +102,13 @@ function BoardList(props) {
                       </Col>
                       <Col xs={9} className={'search-bar ps-1'}>
                         <div className={''}>
-                        <input
-                            type={'text'}
-                            value={keyword}
-                            placeholder={'검색어를 입력하세요'}
-                            onChange={(e) => setKeyword(e.target.value)}
-                        />
-                        <button type={'submit'}><i className="bi bi-search"></i></button>
+                          <input
+                              type={'text'}
+                              value={keyword}
+                              placeholder={'검색어를 입력하세요'}
+                              onChange={(e) => setKeyword(e.target.value)}
+                          />
+                          <button type={'submit'}><i className="bi bi-search"></i></button>
                         </div>
                       </Col>
                     </Row>
@@ -123,12 +136,19 @@ function BoardList(props) {
                 boardList.map((board, index) => {
                   if (sessionStorage.getItem('id') == board.createId || sessionStorage.getItem('grade') == 2 || (type != 'req')) {
                     return (
-                        <tr key={index}>
+                        <tr
+                            key={index}
+                            onClick={() => {
+                              moveDetail(`/board/detail/${props.data.id}/${board.boardIdx}`)
+                            }}
+                        >
                           <td>{board.boardIdx}</td>
                           <td className={'text-start cursor'}>
-                            <Link to={`/board/detail/${props.data.id}/${board.boardIdx}`}>
-                              {board.boardTitle}
-                            </Link>
+                            {
+                                (board.reqCate != "") &&
+                                (<span className={'list-cate me-1'}>{board.reqCate}</span>)
+                            }
+                            {board.boardTitle}
                           </td>
                           <td>{board.nickName}</td>
                           <td>{board.createDt}</td>
@@ -138,7 +158,7 @@ function BoardList(props) {
                     return (
                         <tr key={index}>
                           <td>{board.boardIdx}</td>
-                          <td className={'text-start'}>비밀글 입니다.</td>
+                          <td className={'text-start cursor'}>비밀글 입니다.</td>
                           <td>{board.nickName}</td>
                           <td>{board.createDt}</td>
                         </tr>
@@ -177,7 +197,7 @@ function BoardList(props) {
                     return (
                         <a
                             key={value}
-                            className={nowPage === value - 1 ? 'text-black' : 'text-black-50'}
+                            className={nowPage === value - 1 ? 'selected-page mx-2' : 'text-black-50 mx-2'}
                             onClick={() => setNowPage(value - 1)}
                         >{value}</a>);
                   })
@@ -210,7 +230,8 @@ function BoardList(props) {
                     ((props.data.type === 'req' &&
                             sessionStorage.getItem('id') != null) ||
                         (sessionStorage.getItem('grade') == 2)) &&
-                    (<Link to={`/board/write/${props.data.id}`} className={'btn btn-purple purple-round px-4'}>글 쓰기</Link>)
+                    (<Link to={`/board/write/${props.data.id}`} className={'btn btn-purple purple-round px-4'}>글
+                      쓰기</Link>)
                 }
 
               </div>
