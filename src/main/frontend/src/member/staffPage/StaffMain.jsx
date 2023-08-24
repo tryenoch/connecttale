@@ -4,6 +4,7 @@ import MemberList from "./MemberList";
 import ReportList from "./ReportList";
 import RecentNovelInsert from "../../novel/novelMain/RecentNovelInsert";
 import UserImg from "../Logo/user.png";
+import User from "../Logo/user.png";
 
 function StaffMain(props) {
     const [page, setPage] = useState('member');
@@ -23,7 +24,7 @@ function StaffMain(props) {
                             <div className={'box-sm'}>
                                 {
                                     sessionStorage.getItem("profile") === null ?
-                                        <img src={require("../Logo/user.png").default} alt="" id={'preview'} className={'img-fluid profile'}/>
+                                        <img src={User} alt="" id={'preview'} className={'img-fluid profile bg-white'}/>
                                         :
                                         <img src={`/profile/${sessionStorage.getItem("profile")}`} alt="" id={'preview'}
                                              className={'img-fluid profile'}/>

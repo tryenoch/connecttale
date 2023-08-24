@@ -212,6 +212,7 @@ public class MemberController {
     return result;
   }
 
+//  프로필 사진 업로드
   @RequestMapping(value = "/profile/upload", method = RequestMethod.POST)
   public Object profileUpload(@RequestParam("id")String  id, MultipartHttpServletRequest multipart) throws Exception {
     Map<String, String> result = new HashMap<>();

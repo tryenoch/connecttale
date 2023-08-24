@@ -38,6 +38,7 @@ public class ReportDto2 {
     this.reportDt = reportDt.format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
   }
 
+//  replyIdx 는 NovelReplyEntity형식으로 그 안에 novelIdx 값이 존재하며, novelIdx는 또 NovelEntity형식으로 NovelTitle 등 콜롬들의 값을 가져올 수 있다. 이를통해 필요한 해당 값들을 정의하는 새로운 Dto를 만들어 변환하여 저장함.
   public static ReportDto2 toDto(ReportEntity entity) {
     return ReportDto2.builder()
       .reportIdx(entity.getReportIdx())
