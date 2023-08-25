@@ -3,7 +3,10 @@ package com.bitc.full505_final_team4.service;
 import com.bitc.full505_final_team4.data.dto.NovelMainDto;
 import com.bitc.full505_final_team4.data.dto.NovelPlatformDto;
 import com.bitc.full505_final_team4.data.entity.NovelEntity;
+import com.bitc.full505_final_team4.data.entity.NovelPlatformEntity;
 import org.json.simple.JSONArray;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,7 +36,7 @@ public interface NovelMainService {
 
   List<NovelPlatformDto> getMaxLikeNovelList(int itemCount) throws Exception;
 
-  List<NovelPlatformDto> getCateNovelList (String cateItem, String itemCount) throws Exception;
+  Page<NovelPlatformEntity> getCateNovelList (String cateItem, Pageable pageable) throws Exception;
 
   /* 리디 별점 계산기 */
   double getStarRate(JSONArray ratings) throws Exception;

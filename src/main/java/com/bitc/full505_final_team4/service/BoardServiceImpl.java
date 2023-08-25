@@ -73,6 +73,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardDTO getBoard(int idx) throws Exception {
+        boardRepository.updateCnt(idx);
         BoardEntity boardEntity = boardRepository.findByBoardIdx(idx);
         return BoardDTO.toDTO(boardEntity);
     }
@@ -105,7 +106,6 @@ public class BoardServiceImpl implements BoardService {
         List<BoardReplyDTO> replyList = new ArrayList<>();
 
         BoardEntity board = boardRepository.getReferenceById(idx);
-
         List<BoardReplyEntity> replyEntityList = boardReplyRepository.findByBoardIdx(board);
         for (BoardReplyEntity reply : replyEntityList) {
             replyList.add(BoardReplyDTO.toDTO(reply));

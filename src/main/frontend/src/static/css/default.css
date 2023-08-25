@@ -33,8 +33,16 @@ Link, a {
   align-items: center;
   background-position: center;
   background-size: cover;
-  background-color: #e14f25;
 }
+
+.swiper-slide.bg1 {
+  background-color: #9766ff;
+}
+
+.swiper-slide.bg2 {
+  background-color: #6526ec;
+}
+
 
 .swiper-slide img{
   height: 100%;
@@ -45,8 +53,8 @@ Link, a {
 .swiper-slide .slide-msg {
   color: #fff;
   position: absolute;
-  left: 2rem;
-  bottom: 1.8rem;
+  left: 2.4rem;
+  bottom: 2rem;
   letter-spacing: -0.03em;
   z-index: 1;
   text-align: start;
@@ -62,4 +70,5 @@ Link, a {
 
 .ft-yg {
   font-family: 'yg-jalnan';
+  letter-spacing: -0.01em;
 }

@@ -3,7 +3,8 @@ import {Swiper, SwiperSlide} from 'swiper/react';
 import {Col, Row} from "react-bootstrap";
 import 'swiper/css';
 import 'swiper/css/pagination';
-import test3 from '../../static/img/test3.png';
+import bg1 from '../../static/img/bg1.png';
+import bg2 from '../../static/img/bg2.png';
 
 /* 필요한 모듈 추가하기 */
 import {Autoplay, EffectFade, Navigation, Pagination} from 'swiper/modules';
@@ -28,12 +29,20 @@ function MainCarousel(props) {
           modules={[Autoplay, Pagination, Navigation]}
           className="mySwiper"
         >
-          <SwiperSlide>
-            <img src={test3} alt="test1"/>
+          <SwiperSlide className={'bg1'}>
+            <img src={bg1} alt="bg1"/>
             <div className={'slide-msg'}>
               {/* 임시 이미지 */}
               <h3>신규 플랫폼 Open!</h3>
               <h2>이야기를 잇다 <span className={'ft-yg'}>CONNECTTALE</span></h2>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide className={'bg2'}>
+            <img src={bg2} alt="bg2"/>
+            <div className={'slide-msg'}>
+              {/* 임시 이미지 */}
+              <h3>롯데가 우승하는 판타지가 있다?!</h3>
+              <h2><span className={'ft-yg'}>천재타자가 강속구를 숨김</span></h2>
             </div>
           </SwiperSlide>
           {/*<SwiperSlide><img src={test1} alt="test1"/></SwiperSlide>
