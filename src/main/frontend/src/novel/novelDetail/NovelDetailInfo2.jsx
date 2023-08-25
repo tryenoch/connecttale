@@ -277,46 +277,7 @@ function NovelDetailInfo(props) {
                       : null
                   }
                 </table>
-
-                {/*<div className={'border p-3 rounded-3 my-2'}>
-                  {
-                    Object.keys(kakao).length != 0
-                        ? <p><img src="/kakao-page-icon.png" alt="" className={'platform-logo me-2'}/>카카오페이지 <span
-                            className={'novel-price'}>{kakao.novelPrice}</span>원</p>
-                        : null
-                  }
-                  {
-                    Object.keys(naver).length != 0
-                        ? <p><img src="/naver-series-icon.png" alt="" className={'platform-logo me-2'}/>네이버시리즈 <span
-                            className={'novel-price'}>{naver.novelPrice}</span>쿠키</p>
-                        : null
-                  }
-                  {
-                    Object.keys(ridi).length != 0
-                        ? <p><img src="/ridibooks-icon.jpg" alt="" className={'platform-logo me-2'}/>리디북스 <span
-                            className={'novel-price'}>{ridi.novelPrice}</span>원</p>
-                        : null
-                  }
-                </div>*/}
-                {/*{
-                  Object.keys(kakao).length != 0
-                      ?
-                      <Link to={`https://page.kakao.com/content/${kakao.platformId}`} className={'mx-2 btn-outline-purple'}>카카오페이지
-                        바로가기</Link>
-                      : null
-                }
-                {
-                  Object.keys(naver).length != 0
-                      ? <Link to={`https://series.naver.com/novel/detail.series?productNo=${naver.platformId}`}
-                              className={'mx-2 btn-outline-purple'}>네이버시리즈 바로가기</Link>
-                      : null
-                }
-                {
-                  Object.keys(ridi).length != 0
-                      ? <Link to={`https://ridibooks.com/books/${ridi.platformId}`} className={' btn-outline-purple'}>리디북스
-                        바로가기</Link>
-                      : null
-                }*/}
+                
               </div>
             </div>
           </div>

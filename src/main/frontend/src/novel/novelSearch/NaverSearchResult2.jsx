@@ -88,7 +88,7 @@ function NaverSearchResult2(props) {
                     <div className={'ms-2'}>
                       <p className={'search-info text-decoration-none text-black fs-5 fw-bold tit'}>
                         {item.title}
-                        <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
+                        <span className={'text-danger'}>{item.ageGrade == "Y" ? " [성인]" : null}</span>
                         {
                           item.ebookCheck == '단행본' ? <span> [{item.ebookCheck}]</span> : null
                         }

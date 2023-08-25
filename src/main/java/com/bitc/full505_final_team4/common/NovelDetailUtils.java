@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 @RequiredArgsConstructor
 public class NovelDetailUtils {
-
-
   public static NovelPlatformEntity naverDetailCrolling(WebDriver driver, String novelTitle, String ebookCheck, WebElement titleEl)  {
     NovelPlatformEntity naverCrollingData = new NovelPlatformEntity();
     // 검색결과 페이지에서 가져올 정보
