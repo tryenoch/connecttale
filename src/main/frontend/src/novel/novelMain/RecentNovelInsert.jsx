@@ -7,15 +7,14 @@ function RecentNovelInsert(props) {
 
     return (
         <div className={'container'}>
-            <h1>신작 갱신 버튼</h1>
-            <div className={'mt-5 row justify-content-between'}>
-                <div className={'col-sm align-content-center'}>
+            <h1 className={'main-title mt-3'}>신작 갱신 버튼</h1>
+            <div>
+
+            </div>
+            <div className={'mt-5 row'}>
+                <div className={'col'}>
                     <button className={"btn btn-purple me-2"} onClick={getRidiRecentNovel}>리디북스 신작 추가</button>
-                </div>
-                <div className={'col-sm align-content-center'}>
                     <button className={"btn btn-purple me-2"} onClick={getNaverRecentNovel}>네이버 신작 추가</button>
-                </div>
-                <div className={'col-sm align-content-center'}>
                     <button className={"btn btn-purple"} onClick={getKakaoRecentNovel}>카카오 신작 추가</button>
                 </div>
             </div>

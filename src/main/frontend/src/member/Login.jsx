@@ -49,7 +49,7 @@ function Login(props) {
     };
 
     return (
-        <div className={'container'}>
+        <div className={'container pb-5'}>
             <div className={'text-center logo'}>
                 <h1>CONNECTTALE</h1>
             </div>
