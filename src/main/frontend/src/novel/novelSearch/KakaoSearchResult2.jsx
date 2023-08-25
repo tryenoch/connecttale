@@ -90,7 +90,7 @@ function KakaoSearchResult2(props) {
                   handleLinkClick(item);
               }} to={`/novelDetail/${item.title}`} key={index}>
                 
-                <div className={'row my-4 border-top border-bottom py-2 d-flex align-items-center'} >
+                <div className={'row mt-2 mb-1 py-2 d-flex align-items-center cate-item'} >
                   <div className={'col-sm-2'}>
                     {
                       sessionStorage.getItem("adult") == 'Y' ? <img src={item.thumbnail} alt="" className={'w-100 h-100'}/> : item.ageGrade == 'Y' ? <img src="https://ssl.pstatic.net/static/nstore/thumb/19over_book2_79x119.gif" alt="성인 컨텐츠입니다." className={'w-100 h-100'}/> : <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
@@ -99,7 +99,7 @@ function KakaoSearchResult2(props) {
                   </div>
                   <div className={'col-sm-10'}>
                     <div className={'ms-2'}>
-                      <p className={'search-info text-decoration-none text-black fs-5 fw-bold'}>
+                      <p className={'search-info text-decoration-none text-black fs-5 fw-bold tit'}>
                         {item.title}
                         <span className={'text-danger'}>{item.ageGrade == "Y" ? "[성인]" : null}</span>
                         {item.ebookCheck == '단행본' ? <span>[{item.ebookCheck}]</span> : null}
@@ -111,10 +111,11 @@ function KakaoSearchResult2(props) {
                           ? <p className={'search-price fw-bold'}>가격 : {item.price}</p>
                           : <p className={'search-price text-muted'}>가격 정보 없음</p>
                       }
-                      <p className={'mt-2'}>{item.description.substring(0, 170)}</p>
+                      <p className={'mt-2 info-desc'}>{item.description.substring(0, 170)}</p>
                     </div>
                   </div>
                 </div>
+                <hr className={'search-border-bottom'} />
               </Link>
             )
           })

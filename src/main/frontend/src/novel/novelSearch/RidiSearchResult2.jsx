@@ -18,7 +18,8 @@ function RidiSearchResult2(props) {
       
       for (let s = 0; s <= 216; s += 24) {
         try {
-          const response = await axios.get("https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword=" + props.keyword + "&start=" + s + "&what=base&where%5B%5D=book&site=ridi-store");
+          const response = await axios.get("https://ridibooks.com/api/search-api/search?adult_exclude=n&keyword="
+            + props.keyword + "&start=" + s + "&what=base&where%5B%5D=book&site=ridi-store");
           const item = response.data.books;
           // console.log(item);
           
@@ -110,7 +111,7 @@ function RidiSearchResult2(props) {
                   handleLinkClick(item); // 서버에서 데이터 유무 확인후 저장 및 가져오기
               }} to={`/novelDetail/${item.title}`} key={index}>
                 
-                <div className={'row my-4 border-top border-bottom py-2 d-flex align-items-center'}>
+                <div className={'row mt-2 mb-1 py-2 d-flex align-items-center cate-item'}>
                   <div className={'col-sm-2'}>
                     {
                       sessionStorage.getItem("adult") == 'Y' ? <img src={item.thumbnail} alt="" className={'w-100 h-100'}/> : item.ageGrade == 'Y' ? <img src="https://ssl.pstatic.net/static/nstore/thumb/19over_book2_79x119.gif" alt="성인 컨텐츠입니다." className={'w-100 h-100'}/> : <img src={item.thumbnail} alt="" className={'w-100 h-100'}/>
@@ -119,7 +120,7 @@ function RidiSearchResult2(props) {
                   <div className={'col-sm-10'}>
                     <div>
                       {/*onClick이벤트에 매개변수가 있을때는 페이지 로딩되자마자 함수가 바로 발생되서 이벤트가 발생했을때만 함수가 실행되도록 e => 를 붙여줘야 함*/}
-                      <p className={'text-decoration-none text-black fs-5 fw-bold'}>
+                      <p className={'text-decoration-none text-black fs-5 fw-bold tit'}>
                         {item.title}
                         <span className={'text-danger'}>{item.ageGrade=='Y' ? ' [성인]' : null}</span>
                         {
@@ -147,10 +148,11 @@ function RidiSearchResult2(props) {
                   </span>
                         </p>
                       </div>
-                      <p className={'mt-2'}>{item.description.substring(0, 170)}</p>
+                      <p className={'mt-2 info-desc'}>{item.description.substring(0, 170)}</p>
                     </div>
                   </div>
                 </div>
+                <hr className={'search-border-bottom'} />
               </Link>
             )
           })

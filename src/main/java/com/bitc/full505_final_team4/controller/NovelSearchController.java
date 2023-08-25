@@ -44,11 +44,6 @@ public class NovelSearchController {
     return naverSearchList;
   }
 
-//  @RequestMapping(value = "/searchRidi", method = RequestMethod.GET)
-//  public Object searchRidiResult(@RequestParam("searchWord") String searchWord) throws Exception {
-//    Map<String, Object> ridiSearchList = novelSearchService.getRidiSearchList(searchWord);
-//
-//    return ridiSearchList;
-//  }
+
 
 }

@@ -98,6 +98,19 @@ export function titleEdit(title) {
     editTitle1 = editTitle1 + editTitle2;
   }
   
+  if (editTitle1.includes('[연재]')) {
+    idx1 = editTitle1.indexOf('[연재]');
+    editTitle2 = editTitle1.substring(idx1 + 4);
+    editTitle1 = editTitle1.substring(0, idx1);
+    editTitle1 = editTitle1 + editTitle2;
+  }
+  else if (editTitle1.includes('(연재)')) {
+    idx1 = editTitle1.indexOf('(연재)');
+    editTitle2 = editTitle1.substring(idx1 + 4);
+    editTitle1 = editTitle1.substring(0, idx1);
+    editTitle1 = editTitle1 + editTitle2;
+  }
+  
   editTitle1 = editTitle1.trim();
   
   return editTitle1;

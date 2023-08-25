@@ -8,7 +8,7 @@ import Join3 from "./Join3";
 function Join(props) {
 
     return (
-        <div className={'container mt-5 pt-3'}>
+        <div className={'container mt-5 pt-3 pb-5'}>
             <h1 className={'text-center my-5 join-title'}>회원가입</h1>
             <div className={'row justify-content-center mt-5'}>
                 <Routes>
@@ -18,7 +18,6 @@ function Join(props) {
                 </Routes>
             </div>
         </div>
-
     )
 }
 
