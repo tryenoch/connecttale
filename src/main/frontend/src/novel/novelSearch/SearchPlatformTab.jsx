@@ -16,7 +16,7 @@ function SearchPlatformTab(props) {
   
   
   return (
-    <Tabs defaultActiveKey="ridi" id="fill-tab-example" className={'nav-pills2 nav-fill gap-2 p-2 small rounded-5 shadow-sm mb-4'}>
+    <Tabs defaultActiveKey="ridi" id="fill-tab-example" className={'search-nav nav-pills2 nav-fill gap-2 p-2 small rounded-5 shadow-sm mb-4'}>
       <Tab eventKey="ridi" title="리디북스 검색결과" className={'nav-link cursor rounded-5'} >
         <RidiSearchResult2 keyword={searchWord} />
       </Tab>
