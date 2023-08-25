@@ -26,7 +26,7 @@ function BoardWrite() {
     // submit으로 인한 화면이동을 막기 위해 preventDefault 추가
     event.preventDefault();
     //빈 데이터 안 보내도록 조건 추가
-    if (reqCate === 0) {
+    if ((reqCate === 0) && (boardCate === 1)) {
       alert('문의 종류를 입력하세요.');
       return;
     }

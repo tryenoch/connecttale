@@ -30,5 +30,5 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
     @Transactional
     @Modifying
     @Query("update BoardEntity p set p.hitCnt = p.hitCnt + 1 where p.boardIdx = :id")
-    int updateCnt(@Param("id") int id);
+    void updateCnt(@Param("id") int id);
 }
