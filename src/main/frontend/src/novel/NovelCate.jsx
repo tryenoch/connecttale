@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Col, Row} from "react-bootstrap";
 import axios from "axios";
 import {errorMessage} from "../common/MessageUtils";
-import Item from "./novelMain/recent/item";
+import {cateList, CategoryConverter} from "../common/NovelInfoConverter";
 import CateITem from "./novelMain/cate/CateITem";
 
 function NovelCate(props) {
@@ -94,69 +94,21 @@ function NovelCate(props) {
       <Row>
         <Col>
         <h1 className={'main-title my-3'}>카테고리별로 보기</h1>
-        <div className={'cate-tabs'}>
-          <ul className={'clearfix cate-list'}>
-
+          <div className={'cate-tabs'}>
+            <ul className={'clearfix cate-list'}>
+            {/* 카테고리 리스트 */}
             {
-
+              cateList.map(item =>
+                <li>
+                  <input type={"radio"} value={`${item.id}`} checked={ cate === `${item.id}`} onChange={handleChangeCateValue} id={`cate_${item.id}`}/>
+                  <label htmlFor={`cate_${item.id}`}>
+                    {item.title}
+                  </label>
+                </li>
+              )
             }
-
-            <li>
-              <input type={"radio"} value={"0"} checked={ cate === "0"} onChange={handleChangeCateValue} id={'cate_0'}/>
-              <label htmlFor={'cate_0'}>
-                전체
-              </label>
-            </li>
-            <li>
-              <input type={"radio"} value={"1"} checked={ cate === "1"} onChange={handleChangeCateValue} id={'cate_1'}/>
-              <label htmlFor={'cate_1'}>
-                판타지
-              </label>
-            </li>
-            <li>
-              <input type={"radio"} value={"2"} checked={ cate === "2"} onChange={handleChangeCateValue} id={'cate_2'}/>
-              <label htmlFor={'cate_2'}>
-                현판
-              </label>
-            </li>
-            <li>
-              <input type={"radio"} value={"3"} checked={ cate === "3"} onChange={handleChangeCateValue} id={'cate_3'}/>
-              <label htmlFor={'cate_3'}>
-                로맨스
-              </label>
-            </li>
-            <li>
-              <input type={"radio"} value={"4"} checked={ cate === "4"} onChange={handleChangeCateValue} id={'cate_4'}/>
-              <label htmlFor={'cate_4'}>
-                로판
-              </label>
-            </li>
-            <li>
-              <input type={"radio"} value={"5"} checked={ cate === "5"} onChange={handleChangeCateValue} id={'cate_5'}/>
-              <label htmlFor={'cate_5'}>
-                무협
-              </label>
-            </li>
-            <li>
-              <input type={"radio"} value={"6"} checked={ cate === "6"} onChange={handleChangeCateValue} id={'cate_6'}/>
-              <label htmlFor={'cate_6'}>
-                드라마
-              </label>
-            </li>
-            <li>
-              <input type={"radio"} value={"7"} checked={ cate === "7"} onChange={handleChangeCateValue} id={'cate_7'}/>
-              <label htmlFor={'cate_7'}>
-                BL
-              </label>
-            </li>
-            <li>
-              <input type={"radio"} value={"8"} checked={ cate === "8"} onChange={handleChangeCateValue} id={'cate_8'}/>
-              <label htmlFor={'cate_8'}>
-                기타
-              </label>
-            </li>
-          </ul>
-        </div>
+            </ul>
+          </div>
         </Col>
       </Row>
       <Row className={'mb-3'}>
