@@ -8,8 +8,15 @@ import bg2 from '../../static/img/bg2.png';
 
 /* 필요한 모듈 추가하기 */
 import {Autoplay, EffectFade, Navigation, Pagination} from 'swiper/modules';
+import {useNavigate} from "react-router-dom";
 
 function MainCarousel(props) {
+
+  const navi = useNavigate();
+
+  const moveToLink = (url) => {
+    navi(url);
+  }
 
   return (
     <div>
@@ -29,7 +36,7 @@ function MainCarousel(props) {
           modules={[Autoplay, Pagination, Navigation]}
           className="mySwiper"
         >
-          <SwiperSlide className={'bg1'}>
+          <SwiperSlide className={'bg1 carousel-cursor'} onClick={() => {moveToLink("/board/detail/2/121")}}>
             <img src={bg1} alt="bg1"/>
             <div className={'slide-msg'}>
               {/* 임시 이미지 */}
@@ -37,7 +44,7 @@ function MainCarousel(props) {
               <h2>이야기를 잇다 <span className={'ft-yg'}>CONNECTTALE</span></h2>
             </div>
           </SwiperSlide>
-          <SwiperSlide className={'bg2'}>
+          <SwiperSlide className={'bg2 carousel-cursor'} onClick={() => {moveToLink('/board/detail/2/115')}}>
             <img src={bg2} alt="bg2"/>
             <div className={'slide-msg'}>
               {/* 임시 이미지 */}
