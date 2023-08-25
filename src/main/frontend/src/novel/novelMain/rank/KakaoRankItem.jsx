@@ -23,15 +23,20 @@ function KakaoRankItem(props) {
   if(adultsOnly){ ageGrade = "Y"; }
 
   const handleLinkClick = async (novel) => {
-    try {
-      const novelDetail = await fetchData(novel.platformId, novel.novelTitle, novel.ebookCheck, ageGrade);
-      navi(`/novelDetail/${novel.novelTitle}`, {
-        state: {
-          novelDetail: novelDetail,
-        }
-      });
-    } catch (error) {
-      console.log(error.message);
+    if (sessionStorage.getItem("adult") == 'Y' || novel.ageGrade == 'N') {
+      try {
+        const novelDetail = await fetchData(novel.platformId, novel.novelTitle, novel.ebookCheck, ageGrade);
+        navi(`/novelDetail/${novel.novelTitle}`, {
+          state: {
+            novelDetail: novelDetail,
+          }
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    else {
+      alert("성인만 이용가능한 컨텐츠입니다. 로그인하여 성인인증 하시기 바랍니다.")
     }
   };
 
