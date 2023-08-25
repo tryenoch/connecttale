@@ -203,7 +203,8 @@ Container.board, div.board {
 
 .footer {
   background-color: #412d70;
-  min-height: 250px;
+  min-height: 297px;
+  margin-top: 4rem;
 }
 
 .foot-content > * {
