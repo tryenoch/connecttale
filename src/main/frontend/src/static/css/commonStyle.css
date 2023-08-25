@@ -199,4 +199,19 @@ Container.board, div.board {
   color: #5d1bec;
 }
 
-/* 로그인 페이지 */
+/* footer */
+
+.footer {
+  background-color: #412d70;
+  min-height: 250px;
+}
+
+.foot-content > * {
+  color: #fff;
+  font-weight: 300;
+}
+
+.foot-content .m-name {
+  font-weight: bold;
+  margin-right: 0.5em;
+}

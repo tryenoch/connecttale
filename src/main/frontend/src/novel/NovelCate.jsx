@@ -28,12 +28,12 @@ function NovelCate(props) {
 
   useEffect(() => {
     // 카테고리 명 클릭시 실행
-    setNowPage(0);
+    setNowPage(0); // 카테고리 바뀔 때 페이지 초기화
     getCateNovelList();
   }, [cate])
 
   useEffect(() => {
-    // 카테고리 명 클릭시 실행
+    // 페이지 클릭시 실행
     getCateNovelList();
   }, [nowPage])
 
@@ -96,6 +96,11 @@ function NovelCate(props) {
         <h1 className={'main-title my-3'}>카테고리별로 보기</h1>
         <div className={'cate-tabs'}>
           <ul className={'clearfix cate-list'}>
+
+            {
+
+            }
+
             <li>
               <input type={"radio"} value={"0"} checked={ cate === "0"} onChange={handleChangeCateValue} id={'cate_0'}/>
               <label htmlFor={'cate_0'}>
@@ -154,14 +159,15 @@ function NovelCate(props) {
         </div>
         </Col>
       </Row>
-      <Row className={'mb-5'}>
+      <Row className={'mb-3'}>
         {list}
       </Row>
-      <Row>
+      {/* 페이지네이션 */}
+      <Row className={'mb-5'}>
         <Col>
           <div className={'d-flex justify-content-between ps-0 align-items-center'}>
             <div className={'mx-auto my-3 pages cursor'}>
-              <a
+              {/*<a
                 className={nowPage <= 0 ? 'text-black-50' : ''}
                 onClick={() => {
                   if (nowPage <= 0) {
@@ -170,9 +176,9 @@ function NovelCate(props) {
                   return setNowPage(0)
                 }}
               ><i className="bi bi-chevron-double-left"></i>
-              </a>
+              </a>*/}
               <a
-                className={nowPage <= 0 ? 'text-black-50' : ''}
+                className={`me-3 ${nowPage <= 0 ? 'text-black-50' : ''}`}
                 onClick={() => {
                   if (nowPage <= 0) {
                     return null
@@ -186,13 +192,13 @@ function NovelCate(props) {
                   return (
                     <a
                       key={value}
-                      className={nowPage === value - 1 ? 'selected-page mx-2' : 'text-black-50 mx-2'}
+                      className={nowPage === value - 1 ? 'selected-page mx-2' : 'text-black-50 mx-3'}
                       onClick={() => setNowPage(value - 1)}
                     >{value}</a>);
                 })
               }
               <a
-                className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
+                className={`ms-3 ${nowPage >= endPage - 1 ? 'text-black-50' : ''}`}
                 onClick={() => {
                   if (nowPage >= endPage - 1) {
                     return null
@@ -201,7 +207,7 @@ function NovelCate(props) {
                 }}
               ><i className="bi bi-chevron-right"></i>
               </a>
-              <a
+              {/*<a
                 className={nowPage >= endPage - 1 ? 'text-black-50' : ''}
                 onClick={() => {
                   if (nowPage >= endPage - 1) {
@@ -210,7 +216,7 @@ function NovelCate(props) {
                   return setNowPage(endPage - 1)
                 }}
               ><i className="bi bi-chevron-double-right"></i>
-              </a>
+              </a>*/}
             </div>
           </div>
         </Col>
