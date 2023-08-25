@@ -101,7 +101,7 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/board/process", method = RequestMethod.POST)
-    public Object writeBoard(BoardDTO board) throws Exception {
+    public Object writeBoard(@RequestBody BoardDTO board) throws Exception {
         Map<String, Object> result = new HashMap<>();
 
         int boardIdx = boardService.setBoard(board);

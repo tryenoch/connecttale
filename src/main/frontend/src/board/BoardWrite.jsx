@@ -26,7 +26,7 @@ function BoardWrite() {
     // submit으로 인한 화면이동을 막기 위해 preventDefault 추가
     event.preventDefault();
     //빈 데이터 안 보내도록 조건 추가
-    if (reqCate === 0) {
+    if ((reqCate === 0) && (boardCate === 1)) {
       alert('문의 종류를 입력하세요.');
       return;
     }
@@ -41,19 +41,17 @@ function BoardWrite() {
       return;
     }
 
-    axios.post(`/board/process`, null, {
-      params: {
-        boardIdx: 0,
-        hitCnt: 0,
-        // int 타입이 null을 받지 못해서
-        // DTO와 params의 멤버가 동일 해야함
-        boardTitle: title,
-        boardContents: contents,
-        boardCate: boardCate,
-        createId: createId,
-        reqCate: reqCate
-      }
-    })
+    axios.post(`/board/process`, {
+      boardIdx: 0,
+      hitCnt: 0,
+      // int 타입이 null을 받지 못해서
+      // DTO와 params의 멤버가 동일 해야함
+      boardTitle: title,
+      boardContents: contents,
+      boardCate: boardCate,
+      createId: createId,
+      reqCate: reqCate
+    }, )
         .then(res => {
           navi("/board/main");
         })
