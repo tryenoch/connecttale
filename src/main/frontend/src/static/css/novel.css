@@ -199,4 +199,9 @@ p {
   margin-bottom: 0.1em;
 }
 
+/*carousel 커서 css*/
+.carousel-cursor {
+  cursor: pointer;
+}
+
 @import "novelCategory.css";
