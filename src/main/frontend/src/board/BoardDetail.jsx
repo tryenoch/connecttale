@@ -137,7 +137,7 @@ function BoardDetail(props) {
                   <button type={'button'} className={'btn btn-dark px-4'} onClick={handleGotoMain}>목록</button>
                   {
                     // 본인 or 관리자로 로그인했을 경우 렌더링하게 구현
-                      true &&
+                      (sessionStorage.getItem('id') == createId) || (sessionStorage.getItem('grade') == 2) &&
                       (<button type={'button'} className={'btn btn-outline-dark px-4'}
                                onClick={handleDelete}>삭제</button>)
                   }
