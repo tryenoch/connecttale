@@ -186,7 +186,7 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
     try {
 
       // 신작 리스트 Element 리스트
-      List<Element> recentList = doc.select("div.mb-4pxr.flex-col > div > div.flex.grow.flex-col > div > div > div").select("a").subList(0, 15);
+      List<Element> recentList = doc.select(".grid.foldable\\:grid-cols-6").select("a").subList(0, 15);
 
       // 반복문으로 연령이 걸리는 작품 먼저 거르기
       for (int i = 0; i < recentList.size();){
@@ -360,26 +360,35 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
       String novelReleaseDate = "";
 
       // .mt-16pxr.text-el-60
-      WebElement infoDiv = driver.findElement(By.cssSelector(".mt-16pxr.text-el-60"));
+      WebElement infoDiv = null;
 
-      String novelCountInfo = driver.findElement(By.cssSelector(".text-el-50.line-clamp-1")).getText();
+      try {
+        infoDiv = driver.findElement(By.cssSelector(".mt-16pxr.text-el-60"));
+      } catch (Exception e){
+        infoDiv = driver.findElement(By.cssSelector(".flex.flex-col.items-center"));
+      }
+
+      // 총 화수
+      String novelCountInfo = driver.findElements(By.cssSelector(".font-small2-bold.text-el-70")).get(0).getText();
       novelCount = getNovelCount(novelCountInfo);
 
-
-      novelUpdateDate = driver.findElement(By.cssSelector(".flex-col.text-el-50")).findElements(By.tagName("span")).get(0).getText();
+      // 연재일
+      novelUpdateDate = driver.findElement(By.cssSelector(".mt-6pxr.flex.items-center")).findElements(By.tagName("span")).get(0).getText();
 
       String infoDivText = infoDiv.getText();
       novelCompleteYn = getCompleteNovel(infoDivText);
 
-      novelReleaseDate = driver.findElements(By.cssSelector(".break-all.align-middle")).get(0).getText();
+      // 플랫폼 출시일
+      novelReleaseDate = driver.findElements(By.cssSelector(".break-all.align-middle")).get(2).getText();
 
 
       try {
-        WebElement starImg = infoDiv.findElement(By.xpath("//img[@alt='별점']"));
+        WebElement starImg = infoDiv.findElements(By.cssSelector(".h-16pxr")).get(0).findElement(By.xpath("//img[@alt='별점']"));
 
-        String starRate = infoDiv.findElements(By.tagName("span")).get(1).getText();
-        novelStarRate = Double.parseDouble(starRate);
-
+        if (!ObjectUtils.isEmpty(starImg)){
+          String starRate = infoDiv.findElements(By.cssSelector(".h-16pxr")).get(0).findElements(By.cssSelector(".flex.items-center")).get(2).findElement(By.tagName("span")).getText();
+          novelStarRate = Double.parseDouble(starRate);
+        }
 
       } catch (Exception e) {
         // 이미지가 없으면 별점이 아직 없는 것이므로 0.0 점
