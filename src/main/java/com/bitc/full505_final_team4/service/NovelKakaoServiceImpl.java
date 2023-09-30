@@ -283,7 +283,7 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
   @Transactional
   public  NovelPlatformEntity getNovelPlatformEntity(String platformId, NovelEntity novelEntity) throws Exception {
 
-    String url = "https://page.kakao.com/_next/data/2.12.2/ko/content/" + platformId +".json";
+    String url = "https://page.kakao.com/_next/data/2.13.2/ko/content/" + platformId +".json";
     NovelPlatformEntity entity = new NovelPlatformEntity(); // 데이터 넣을 entity 생성
 
     try {
