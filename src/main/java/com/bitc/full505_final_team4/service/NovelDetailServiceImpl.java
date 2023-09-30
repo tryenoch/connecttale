@@ -47,7 +47,7 @@ public class NovelDetailServiceImpl implements NovelDetailService {
 
   // 셀레니움 사용을 위한 크롬드라이버 설정
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
-  public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
+  private static final String WEB_DRIVER_PATH = "file:///home/ec2-user/downloads/chromedriver-linux64/chromedriver";
 
 
   // 매개변수인 title, ebookCheck, novelAdult로 platform 테이블에서 가져오기

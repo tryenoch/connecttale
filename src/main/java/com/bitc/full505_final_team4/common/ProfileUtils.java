@@ -1,6 +1,7 @@
 package com.bitc.full505_final_team4.common;
 
 import com.bitc.full505_final_team4.data.dto.MemberDto;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ import java.util.List;
 
 // input 태그를 통해 입력된 file형태의 데이터를
 @Component
+@PropertySource("classpath:/application.properties")
 public class ProfileUtils {
 
   public MemberDto parseProfileInfo(String id, MultipartHttpServletRequest uploadFiles) throws Exception {
@@ -27,7 +29,8 @@ public class ProfileUtils {
     String date = String.valueOf(System.nanoTime());
     String current_date = date + id;
 
-    String path = "C:/profile";
+    /*String path = "C:/profile";*/
+    String path = "resource.member.path";
 
     File file = new File(path);
 
