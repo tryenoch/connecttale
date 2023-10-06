@@ -29,7 +29,7 @@ public class NovelSearchServiceImpl implements NovelSearchService {
 
   // 셀레니움을 통한 크롤링(카카오페이지)
   public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
-  public static String WEB_DRIVER_PATH = "C:\\chromedriver\\chromedriver.exe";
+  private static final String WEB_DRIVER_PATH = "file:///home/ec2-user/downloads/chromedriver-linux64/chromedriver";
 
 // --------------------- 카카오페이지 작품 id 가져오기 ------------------------------
   // 셀레니움을 통해 검색 결과에 따른 카카오페이지 작품 id 리스트 가져오기
