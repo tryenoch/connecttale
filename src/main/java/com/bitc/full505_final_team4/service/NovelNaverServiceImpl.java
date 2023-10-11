@@ -282,7 +282,6 @@ public class NovelNaverServiceImpl implements NovelNaverService{
 
     }catch (Exception e){
       e.printStackTrace();
-
       return null;
     }
 

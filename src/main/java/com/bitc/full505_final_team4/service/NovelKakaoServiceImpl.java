@@ -159,9 +159,6 @@ public class NovelKakaoServiceImpl implements NovelKakaoService{
       driver.close();
     }
 
-
-
-
     return success;
   }
 
