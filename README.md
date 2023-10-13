@@ -29,8 +29,7 @@
 
 ## 개선사항 및 문제 해결 내역
 ### 여러 Novel Entity INSERT 시 에러 
-- DB에 저장되지 않은 최신 웹소설 Novel Entity와 Platform Entity List를 각각 모아 한꺼번에 저장하고자 했다.  
-- 하지만 Platform Entity가 외래키로 참조하는 Novel Entity `@ID`의 전략이 `@GeneratedValue(strategy = GenerationType.IDENTITY)` 와 같을 경우 DB에 INSERT SQL이 실행 되어야 그 id 값을 알 수 있었다. 
+- DB에 저장되지 않은 최신 웹소설 Novel Entity와 Platform Entity List를 각각 모아 한꺼번에 저장하고자 했으나 Platform Entity가 외래키로 참조하는 Novel Entity `@ID`의 전략이 `@GeneratedValue(strategy = GenerationType.IDENTITY)` 와 같을 경우 DB에 INSERT SQL이 실행 되어야 그 id 값을 알 수 있었다. 
 - IDENTITY 전략에서만 예외적으로 Entity 생성과 함께 INSERT 쿼리를 날리기로 한다.(하나의 Transaction 안에서 여러 INSERT Query가 네트워크를 탄다고 해서 비약적인 차이가 나는 것은 아니었다. [참고](https://gmlwjd9405.github.io/2019/08/12/primary-key-mapping.html)) 
 
 ### 공통 제목 양식을 위한 `NovelCommonEditService` 클래스 생성
