@@ -14,7 +14,7 @@
 - [바로가기](http://ec2-15-164-162-2.ap-northeast-2.compute.amazonaws.com:8080/)
 
 ### 진행기간 및 개발인원
-> 2023.07.31 - 2023.07.24 (4명)
+> 2023.07.31 - 2023.08.24 (4명)
 - [chanmi](https://github.com/enoch012) / 메인, 순위, 카테고리 페이지 
 - [sangwon](https://github.com/jeti11) / 소설 검색, 소설 상세 페이지
 - [seungwook](https://github.com/Wookicooki) / 회원 정보, 마이페이지
